@@ -45,6 +45,7 @@ class ConversationOptionsBottomSheet(private val parentContext: Context) : Botto
             binding.blockTextView -> onBlockTapped?.invoke()
             binding.unblockTextView -> onUnblockTapped?.invoke()
             binding.deleteTextView -> onDeleteTapped?.invoke()
+            binding.leaveTextView -> onDeleteTapped?.invoke()
             binding.markAllAsReadTextView -> onMarkAllAsReadTapped?.invoke()
             binding.notificationsTextView -> onNotificationTapped?.invoke()
             binding.unMuteNotificationsTextView -> onSetMuteTapped?.invoke(false)
@@ -76,7 +77,10 @@ class ConversationOptionsBottomSheet(private val parentContext: Context) : Botto
         binding.muteNotificationsTextView.setOnClickListener(this)
         binding.notificationsTextView.isVisible = recipient.isGroupRecipient && !recipient.isMuted
         binding.notificationsTextView.setOnClickListener(this)
+        binding.deleteTextView.isVisible = thread.recipient.isContactRecipient
         binding.deleteTextView.setOnClickListener(this)
+        binding.leaveTextView.isVisible = thread.recipient.isGroupRecipient
+        binding.leaveTextView.setOnClickListener(this)
         binding.markAllAsReadTextView.isVisible = thread.unreadCount > 0
         binding.markAllAsReadTextView.setOnClickListener(this)
         binding.pinTextView.isVisible = !thread.isPinned
