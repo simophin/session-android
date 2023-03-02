@@ -584,9 +584,9 @@
     <string name="activity_pn_mode_no_option_picked_dialog_title">Please Pick an Option</string>
     <string name="activity_home_empty_state_message">You don\'t have any contacts yet</string>
     <string name="activity_home_empty_state_button_title">Start a Session</string>
-    <string name="activity_home_leave_group_dialog_message">Are you sure you want to leave this group?</string>
+    <string name="activity_home_leave_group_dialog_message">Are you sure you want to leave %s?</string>
     <string name="activity_home_leaving_group_failed_message">"Couldn\'t leave group"</string>
-    <string name="activity_home_delete_conversation_dialog_message">Are you sure you want to delete this conversation?</string>
+    <string name="activity_home_delete_conversation_dialog_message">Are you sure you want to delete your conversation with %s?</string>
     <string name="activity_home_conversation_deleted_message">Conversation deleted</string>
     <string name="activity_seed_title">Your Recovery Phrase</string>
     <string name="activity_seed_title_2">Meet your recovery phrase</string>

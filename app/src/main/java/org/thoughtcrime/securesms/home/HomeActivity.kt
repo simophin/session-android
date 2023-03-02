@@ -569,10 +569,10 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
             if (group != null && group.admins.map { it.toString() }.contains(textSecurePreferences.getLocalNumber())) {
                 "Because you are the creator of this group it will be deleted for everyone. This cannot be undone."
             } else {
-                resources.getString(R.string.activity_home_leave_group_dialog_message)
+                String.format(resources.getString(R.string.activity_home_leave_group_dialog_message), thread.recipient.name)
             }
         } else {
-            resources.getString(R.string.activity_home_delete_conversation_dialog_message)
+            String.format(resources.getString(R.string.activity_home_delete_conversation_dialog_message), thread.recipient.name)
         }
         val dialog = AlertDialog.Builder(this)
         dialog.setMessage(message)
