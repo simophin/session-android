@@ -242,18 +242,27 @@ fun MessageSender.leave(groupPublicKey: String, notifyUser: Boolean = true): Pro
         val sentTime = System.currentTimeMillis()
         closedGroupControlMessage.sentTimestamp = sentTime
         storage.setActive(groupID, false)
+        var messageId: Long? = null
+        if (notifyUser) {
+            val infoType = SignalServiceGroup.Type.LEAVING
+            val threadID = storage.getOrCreateThreadIdFor(Address.fromSerialized(groupID))
+            messageId = storage.insertOutgoingInfoMessage(context, groupID, infoType, name, updatedMembers, admins, threadID, sentTime)
+        }
         sendNonDurably(closedGroupControlMessage, Address.fromSerialized(groupID)).success {
             // Notify the user
-            val infoType = SignalServiceGroup.Type.QUIT
-            val threadID = storage.getOrCreateThreadIdFor(Address.fromSerialized(groupID))
-            if (notifyUser) {
-                storage.insertOutgoingInfoMessage(context, groupID, infoType, name, updatedMembers, admins, threadID, sentTime)
+            if (notifyUser && (messageId != null)) {
+                val infoType = SignalServiceGroup.Type.QUIT
+                storage.updateInfoMessage(context, messageId, groupID, infoType, name, updatedMembers)
             }
             // Remove the group private key and unsubscribe from PNs
             MessageReceiver.disableLocalGroupAndUnsubscribe(groupPublicKey, groupID, userPublicKey)
             deferred.resolve(Unit)
         }.fail {
             storage.setActive(groupID, true)
+            if (notifyUser && (messageId != null)) {
+                val infoType = SignalServiceGroup.Type.ERROR_QUIT
+                storage.updateInfoMessage(context, messageId, groupID, infoType, name, updatedMembers)
+            }
         }
     }
     return deferred.promise

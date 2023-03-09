@@ -38,6 +38,8 @@ class UpdateMessageData () {
         class OpenGroupInvitation(val groupUrl: String, val groupName: String): Kind() {
             constructor(): this("", "")
         }
+        class GroupLeaving(): Kind()
+        class GroupErrorQuit(): Kind()
     }
 
     constructor(kind: Kind): this() {
@@ -54,6 +56,8 @@ class UpdateMessageData () {
                 SignalServiceGroup.Type.MEMBER_ADDED -> UpdateMessageData(Kind.GroupMemberAdded(members))
                 SignalServiceGroup.Type.MEMBER_REMOVED -> UpdateMessageData(Kind.GroupMemberRemoved(members))
                 SignalServiceGroup.Type.QUIT -> UpdateMessageData(Kind.GroupMemberLeft())
+                SignalServiceGroup.Type.LEAVING -> UpdateMessageData(Kind.GroupLeaving())
+                SignalServiceGroup.Type.ERROR_QUIT -> UpdateMessageData(Kind.GroupErrorQuit())
                 else -> null
             }
         }
