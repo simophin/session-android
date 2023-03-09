@@ -178,6 +178,9 @@
     <string name="MediaRepository_all_media">All media</string>
     <!-- MessageRecord -->
     <string name="MessageRecord_message_encrypted_with_a_legacy_protocol_version_that_is_no_longer_supported">Received a message encrypted using an old version of Session that is no longer supported. Please ask the sender to update to the most recent version and resend the message.</string>
+    <string name="MessageRecord_leaving_group">Leaving...</string>
+    <string name="MessageRecord_leave_group_error">Failed to leave Group!</string>
+    <string name="MessageRecord_unable_leave_group">Unable to leave the Group, please try again</string>
     <string name="MessageRecord_left_group">You have left the group.</string>
     <string name="MessageRecord_you_updated_group">You updated the group.</string>
     <string name="MessageRecord_s_updated_group">%s updated the group.</string>

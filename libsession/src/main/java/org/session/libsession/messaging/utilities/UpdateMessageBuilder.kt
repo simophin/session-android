@@ -73,6 +73,20 @@ object UpdateMessageBuilder {
                     context.getString(R.string.ConversationItem_group_action_left, senderName)
                 }
             }
+            is UpdateMessageData.Kind.GroupLeaving -> {
+                message = if (isOutgoing) {
+                    context.getString(R.string.MessageRecord_leaving_group)
+                } else {
+                    ""
+                }
+            }
+            is UpdateMessageData.Kind.GroupErrorQuit -> {
+                message = if (isOutgoing) {
+                    context.getString(R.string.MessageRecord_leave_group_error)
+                } else {
+                    ""
+                }
+            }
         }
         return message
     }
