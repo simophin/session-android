@@ -479,9 +479,9 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
     }
 
     override fun updateInfoMessage(context: Context, messageId: Long, groupID: String, type: SignalServiceGroup.Type, name: String, members: Collection<String>) {
-        val smsDB = DatabaseComponent.get(context).smsDatabase()
+        val mmsDB = DatabaseComponent.get(context).mmsDatabase()
         val updateData = UpdateMessageData.buildGroupUpdate(type, name, members)?.toJSON()
-        smsDB.updateBundleMessageBody(messageId, updateData)
+        mmsDB.updateInfoMessage(messageId, updateData)
     }
 
     override fun insertOutgoingInfoMessage(context: Context, groupID: String, type: SignalServiceGroup.Type, name: String, members: Collection<String>, admins: Collection<String>, threadID: Long, sentTimestamp: Long): Long? {

@@ -21,7 +21,9 @@ class UpdateMessageData () {
             JsonSubTypes.Type(Kind.GroupMemberAdded::class, name = "GroupMemberAdded"),
             JsonSubTypes.Type(Kind.GroupMemberRemoved::class, name = "GroupMemberRemoved"),
             JsonSubTypes.Type(Kind.GroupMemberLeft::class, name = "GroupMemberLeft"),
-            JsonSubTypes.Type(Kind.OpenGroupInvitation::class, name = "OpenGroupInvitation")
+            JsonSubTypes.Type(Kind.OpenGroupInvitation::class, name = "OpenGroupInvitation"),
+            JsonSubTypes.Type(Kind.GroupLeaving::class, name = "GroupLeaving"),
+            JsonSubTypes.Type(Kind.GroupErrorQuit::class, name = "GroupErrorQuit")
     )
     sealed class Kind() {
         class GroupCreation(): Kind()
