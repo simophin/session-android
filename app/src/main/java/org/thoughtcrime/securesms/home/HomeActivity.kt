@@ -582,8 +582,8 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                 // Cancel any outstanding jobs
                 DatabaseComponent.get(context).sessionJobDatabase().cancelPendingMessageSendJobs(threadID)
                 // Send a leave group message if this is an active closed group
+                var isClosedGroup: Boolean = false
                 if (recipient.address.isClosedGroup && DatabaseComponent.get(context).groupDatabase().isActive(recipient.address.toGroupString())) {
-                    var isClosedGroup: Boolean
                     var groupPublicKey: String?
                     try {
                         groupPublicKey = GroupUtil.doubleDecodeGroupID(recipient.address.toString()).toHexString()
@@ -593,14 +593,14 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                         isClosedGroup = false
                     }
                     if (isClosedGroup) {
-                        MessageSender.explicitLeave(groupPublicKey!!, false)
+                        MessageSender.explicitLeave(groupPublicKey!!, true)
                     }
                 }
                 // Delete the conversation
                 val v2OpenGroup = DatabaseComponent.get(this@HomeActivity).lokiThreadDatabase().getOpenGroupChat(threadID)
                 if (v2OpenGroup != null) {
                     OpenGroupManager.delete(v2OpenGroup.server, v2OpenGroup.room, this@HomeActivity)
-                } else {
+                } else if (!isClosedGroup) {
                     lifecycleScope.launch(Dispatchers.IO) {
                         threadDb.deleteConversation(threadID)
                     }

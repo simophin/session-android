@@ -27,6 +27,8 @@ import android.text.style.StyleSpan;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.session.libsession.messaging.utilities.UpdateMessageBuilder;
+import org.session.libsession.messaging.utilities.UpdateMessageData;
 import org.session.libsession.utilities.ExpirationUtil;
 import org.session.libsession.utilities.recipients.Recipient;
 import org.thoughtcrime.securesms.database.MmsSmsColumns;
@@ -79,6 +81,11 @@ public class ThreadRecord extends DisplayRecord {
   @Override
   public SpannableString getDisplayBody(@NonNull Context context) {
     if (isGroupUpdateMessage()) {
+      String body = getBody();
+      if (!body.isEmpty()) {
+        UpdateMessageData updateMessageData = UpdateMessageData.Companion.fromJSON(body);
+        return emphasisAdded(UpdateMessageBuilder.INSTANCE.buildGroupUpdateMessage(context, updateMessageData, null, isOutgoing()));
+      }
       return emphasisAdded(context.getString(R.string.ThreadRecord_group_updated));
     } else if (isOpenGroupInvitation()) {
       return emphasisAdded(context.getString(R.string.ThreadRecord_open_group_invitation));

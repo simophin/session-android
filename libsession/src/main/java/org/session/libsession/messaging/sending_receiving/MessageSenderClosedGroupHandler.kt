@@ -226,7 +226,7 @@ fun MessageSender.removeMembers(groupPublicKey: String, membersToRemove: List<St
     }
 }
 
-fun MessageSender.leave(groupPublicKey: String, notifyUser: Boolean = true): Promise<Unit, Exception> {
+fun MessageSender.leave(groupPublicKey: String, notifyUser: Boolean = true, deleteThread: Boolean = false): Promise<Unit, Exception> {
     val deferred = deferred<Unit, Exception>()
     ThreadUtils.queue {
         val context = MessagingModuleConfiguration.shared.context
@@ -243,9 +243,9 @@ fun MessageSender.leave(groupPublicKey: String, notifyUser: Boolean = true): Pro
         closedGroupControlMessage.sentTimestamp = sentTime
         storage.setActive(groupID, false)
         var messageId: Long? = null
+        val threadID = storage.getOrCreateThreadIdFor(Address.fromSerialized(groupID))
         if (notifyUser) {
             val infoType = SignalServiceGroup.Type.LEAVING
-            val threadID = storage.getOrCreateThreadIdFor(Address.fromSerialized(groupID))
             messageId = storage.insertOutgoingInfoMessage(context, groupID, infoType, name, updatedMembers, admins, threadID, sentTime)
         }
         sendNonDurably(closedGroupControlMessage, Address.fromSerialized(groupID)).success {
@@ -253,6 +253,10 @@ fun MessageSender.leave(groupPublicKey: String, notifyUser: Boolean = true): Pro
             if (notifyUser && (messageId != null)) {
                 val infoType = SignalServiceGroup.Type.QUIT
                 storage.updateInfoMessage(context, messageId, groupID, infoType, name, updatedMembers)
+            }
+            // Remove the thread
+            if (deleteThread) {
+                storage.removeClosedGroupThread(threadID)
             }
             // Remove the group private key and unsubscribe from PNs
             MessageReceiver.disableLocalGroupAndUnsubscribe(groupPublicKey, groupID, userPublicKey)
