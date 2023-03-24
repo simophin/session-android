@@ -538,6 +538,10 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
         DatabaseComponent.get(context).lokiAPIDatabase().removeAllClosedGroupEncryptionKeyPairs(groupPublicKey)
     }
 
+    override fun removeClosedGroupThread(threadID: Long) {
+        DatabaseComponent.get(context).threadDatabase().deleteConversation(threadID)
+    }
+
     override fun updateFormationTimestamp(groupID: String, formationTimestamp: Long) {
         DatabaseComponent.get(context).groupDatabase()
             .updateFormationTimestamp(groupID, formationTimestamp)
