@@ -10,7 +10,7 @@ import org.session.libsession.utilities.ExpirationUtil
 
 object UpdateMessageBuilder {
 
-    fun buildGroupUpdateMessage(context: Context, updateMessageData: UpdateMessageData, sender: String? = null, isOutgoing: Boolean = false): String {
+    fun buildGroupUpdateMessage(context: Context, updateMessageData: UpdateMessageData, sender: String? = null, isOutgoing: Boolean = false, isInConversation: Boolean = false): String {
         var message = ""
         val updateData = updateMessageData.kind ?: return message
         if (!isOutgoing && sender == null) return message
@@ -81,10 +81,10 @@ object UpdateMessageBuilder {
                 }
             }
             is UpdateMessageData.Kind.GroupErrorQuit -> {
-                message = if (isOutgoing) {
-                    context.getString(R.string.MessageRecord_leave_group_error)
+                message = if (isInConversation) {
+                    context.getString(R.string.MessageRecord_unable_leave_group)
                 } else {
-                    ""
+                    context.getString(R.string.MessageRecord_leave_group_error)
                 }
             }
         }

@@ -9,6 +9,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewControlMessageBinding
+import org.session.libsession.messaging.utilities.UpdateMessageData
 import org.thoughtcrime.securesms.database.model.MessageRecord
 
 class ControlMessageView : LinearLayout {
@@ -56,6 +57,12 @@ class ControlMessageView : LinearLayout {
                 }
                 binding.iconImageView.setImageDrawable(ResourcesCompat.getDrawable(resources, drawable, context.theme))
                 binding.iconImageView.visibility = View.VISIBLE
+            }
+            message.isGroupUpdateMessage -> {
+                val updateMessageData: UpdateMessageData? = UpdateMessageData.fromJSON(message.body)
+                if (updateMessageData?.isGroupErrorQuitKind() == true) {
+                    binding.textView.setTextColor(context.getColor(R.color.destructive))
+                }
             }
         }
 
