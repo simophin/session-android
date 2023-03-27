@@ -81,4 +81,12 @@ class UpdateMessageData () {
     fun toJSON(): String {
         return JsonUtil.toJson(this)
     }
+
+    fun isGroupLeavingKind(): Boolean {
+        return kind is Kind.GroupLeaving
+    }
+
+    fun isGroupErrorQuitKind(): Boolean {
+        return kind is Kind.GroupErrorQuit
+    }
 }

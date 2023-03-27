@@ -189,4 +189,26 @@ public class ThreadRecord extends DisplayRecord {
   public int getInitialRecipientHash() {
     return initialRecipientHash;
   }
+
+  public boolean isLeavingGroup() {
+    if (isGroupUpdateMessage()) {
+      String body = getBody();
+      if (!body.isEmpty()) {
+        UpdateMessageData updateMessageData = UpdateMessageData.Companion.fromJSON(body);
+        return updateMessageData.isGroupLeavingKind();
+      }
+    }
+    return false;
+  }
+
+  public boolean isErrorLeavingGroup() {
+    if (isGroupUpdateMessage()) {
+      String body = getBody();
+      if (!body.isEmpty()) {
+        UpdateMessageData updateMessageData = UpdateMessageData.Companion.fromJSON(body);
+        return updateMessageData.isGroupErrorQuitKind();
+      }
+    }
+    return false;
+  }
 }
