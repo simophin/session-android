@@ -432,8 +432,8 @@ object MessageSender {
     }
 
     @JvmStatic
-    fun explicitLeave(groupPublicKey: String, notifyUser: Boolean, deleteThread: Boolean = false): Promise<Unit, Exception> {
-        return leave(groupPublicKey, notifyUser, deleteThread)
+    fun explicitLeave(groupPublicKey: String, notifyUser: Boolean, deleteThread: Boolean = false) {
+        leave(groupPublicKey, notifyUser, deleteThread)
     }
 
 }
