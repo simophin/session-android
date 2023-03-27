@@ -593,7 +593,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                         isClosedGroup = false
                     }
                     if (isClosedGroup) {
-                        MessageSender.explicitLeave(groupPublicKey!!, true)
+                        MessageSender.explicitLeave(groupPublicKey!!, true, true)
                     }
                 }
                 // Delete the conversation
@@ -607,9 +607,12 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                 }
                 // Update the badge count
                 ApplicationContext.getInstance(context).messageNotifier.updateNotification(context)
-                // Notify the user
-                val toastMessage = if (recipient.isGroupRecipient) R.string.MessageRecord_left_group else R.string.activity_home_conversation_deleted_message
-                Toast.makeText(context, toastMessage, Toast.LENGTH_LONG).show()
+
+                if (!isClosedGroup) {
+                    // Notify the user
+                    val toastMessage = if (recipient.isGroupRecipient) R.string.MessageRecord_left_group else R.string.activity_home_conversation_deleted_message
+                    Toast.makeText(context, toastMessage, Toast.LENGTH_LONG).show()
+                }
             }
         }
         dialog.setNegativeButton(R.string.no) { _, _ ->
