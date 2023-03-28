@@ -288,30 +288,39 @@ class EditClosedGroupActivity : PassphraseRequiredActionBarActivity() {
         if (isClosedGroup) {
             isLoading = true
             loaderContainer.fadeIn()
-            val promise: Promise<Any, Exception> = if (!members.contains(Recipient.from(this, Address.fromSerialized(userPublicKey), false))) {
+            if (!members.contains(Recipient.from(this, Address.fromSerialized(userPublicKey), false))) {
                 MessageSender.explicitLeave(groupPublicKey!!, true)
-            } else {
-                task {
-                    if (hasNameChanged) {
-                        MessageSender.explicitNameChange(groupPublicKey!!, name)
-                    }
-                    members.filterNot { it in originalMembers }.let { adds ->
-                        if (adds.isNotEmpty()) MessageSender.explicitAddMembers(groupPublicKey!!, adds.map { it.address.serialize() })
-                    }
-                    originalMembers.filterNot { it in members }.let { removes ->
-                        if (removes.isNotEmpty()) MessageSender.explicitRemoveMembers(groupPublicKey!!, removes.map { it.address.serialize() })
-                    }
-                }
-            }
-            promise.successUi {
                 loaderContainer.fadeOut()
                 isLoading = false
                 finish()
-            }.failUi { exception ->
-                val message = if (exception is MessageSender.Error) exception.description else "An error occurred"
-                Toast.makeText(this@EditClosedGroupActivity, message, Toast.LENGTH_LONG).show()
-                loaderContainer.fadeOut()
-                isLoading = false
+            } else {
+                val promise: Promise<Any, Exception> =
+                    task {
+                        if (hasNameChanged) {
+                            MessageSender.explicitNameChange(groupPublicKey!!, name)
+                        }
+                        members.filterNot { it in originalMembers }.let { adds ->
+                            if (adds.isNotEmpty()) MessageSender.explicitAddMembers(
+                                groupPublicKey!!,
+                                adds.map { it.address.serialize() })
+                        }
+                        originalMembers.filterNot { it in members }.let { removes ->
+                            if (removes.isNotEmpty()) MessageSender.explicitRemoveMembers(
+                                groupPublicKey!!,
+                                removes.map { it.address.serialize() })
+                        }
+                    }
+                promise.successUi {
+                    loaderContainer.fadeOut()
+                    isLoading = false
+                    finish()
+                }.failUi { exception ->
+                    val message =
+                        if (exception is MessageSender.Error) exception.description else "An error occurred"
+                    Toast.makeText(this@EditClosedGroupActivity, message, Toast.LENGTH_LONG).show()
+                    loaderContainer.fadeOut()
+                    isLoading = false
+                }
             }
         }
     }
