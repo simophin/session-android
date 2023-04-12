@@ -417,7 +417,9 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
 
     override fun onLongConversationClick(thread: ThreadRecord) {
         val bottomSheet = ConversationOptionsBottomSheet(this)
+        bottomSheet.publicKey = publicKey
         bottomSheet.thread = thread
+        bottomSheet.group = groupDatabase.getGroup(thread.recipient.address.toString()).orNull()
         bottomSheet.onViewDetailsTapped = {
             bottomSheet.dismiss()
             val userDetailsBottomSheet = UserDetailsBottomSheet()
@@ -564,6 +566,15 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     private fun deleteConversation(thread: ThreadRecord) {
         val threadID = thread.threadId
         val recipient = thread.recipient
+        if (recipient.isGroupRecipient) {
+            val group = groupDatabase.getGroup(recipient.address.toString()).orNull()
+            if (group != null && !group.members.map { it.toString() }.contains(publicKey) || group == null) {
+                threadDb.deleteConversation(threadID)
+                // Update the badge count
+                ApplicationContext.getInstance(this).messageNotifier.updateNotification(this)
+                return
+            }
+        }
         val message = if (recipient.isGroupRecipient) {
             val group = groupDatabase.getGroup(recipient.address.toString()).orNull()
             if (group != null && group.admins.map { it.toString() }.contains(textSecurePreferences.getLocalNumber())) {
