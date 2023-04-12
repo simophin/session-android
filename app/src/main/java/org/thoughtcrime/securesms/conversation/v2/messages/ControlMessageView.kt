@@ -32,6 +32,7 @@ class ControlMessageView : LinearLayout {
         binding.dateBreakTextView.showDateBreak(message, previous)
         binding.iconImageView.visibility = View.GONE
         var messageBody: CharSequence = message.getDisplayBody(context)
+        binding.root.contentDescription= null
         when {
             message.isExpirationTimerUpdate -> {
                 binding.iconImageView.setImageDrawable(
@@ -47,6 +48,7 @@ class ControlMessageView : LinearLayout {
             }
             message.isMessageRequestResponse -> {
                 messageBody = context.getString(R.string.message_requests_accepted)
+                binding.root.contentDescription=context.getString(R.string.AccessibilityId_message_request_config_message)
             }
             message.isCallLog -> {
                 val drawable = when {

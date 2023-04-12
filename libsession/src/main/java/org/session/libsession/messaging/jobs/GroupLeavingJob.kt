@@ -6,6 +6,7 @@ import org.session.libsession.messaging.sending_receiving.MessageReceiver
 import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.messaging.sending_receiving.disableLocalGroupAndUnsubscribe
 import org.session.libsession.messaging.utilities.Data
+import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.TextSecurePreferences
@@ -41,7 +42,7 @@ class GroupLeavingJob(val groupPublicKey: String, val notifyUser: Boolean, val d
         val name = group.title
         // Send the update to the group
         val closedGroupControlMessage = ClosedGroupControlMessage(ClosedGroupControlMessage.Kind.MemberLeft())
-        val sentTime = System.currentTimeMillis()
+        val sentTime = SnodeAPI.nowWithOffset
         closedGroupControlMessage.sentTimestamp = sentTime
         storage.setActive(groupID, false)
         var messageId: Long? = null
