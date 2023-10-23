@@ -11734,6 +11734,7403 @@ public final class SignalServiceProtos {
       // @@protoc_insertion_point(class_scope:signalservice.DataMessage.GroupMessage)
     }
 
+    public interface GroupUpdateMessageOrBuilder
+        extends com.google.protobuf.MessageOrBuilder {
+
+      // optional .signalservice.DataMessage.GroupUpdateInviteMessage inviteMessage = 1;
+      /**
+       * <code>optional .signalservice.DataMessage.GroupUpdateInviteMessage inviteMessage = 1;</code>
+       */
+      boolean hasInviteMessage();
+      /**
+       * <code>optional .signalservice.DataMessage.GroupUpdateInviteMessage inviteMessage = 1;</code>
+       */
+      org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage getInviteMessage();
+      /**
+       * <code>optional .signalservice.DataMessage.GroupUpdateInviteMessage inviteMessage = 1;</code>
+       */
+      org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessageOrBuilder getInviteMessageOrBuilder();
+
+      // optional .signalservice.DataMessage.GroupUpdateDeleteMessage deleteMessage = 2;
+      /**
+       * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMessage deleteMessage = 2;</code>
+       */
+      boolean hasDeleteMessage();
+      /**
+       * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMessage deleteMessage = 2;</code>
+       */
+      org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage getDeleteMessage();
+      /**
+       * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMessage deleteMessage = 2;</code>
+       */
+      org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessageOrBuilder getDeleteMessageOrBuilder();
+
+      // optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 3;
+      /**
+       * <code>optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 3;</code>
+       */
+      boolean hasInfoChangeMessage();
+      /**
+       * <code>optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 3;</code>
+       */
+      org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage getInfoChangeMessage();
+      /**
+       * <code>optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 3;</code>
+       */
+      org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessageOrBuilder getInfoChangeMessageOrBuilder();
+
+      // optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 4;
+      /**
+       * <code>optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 4;</code>
+       */
+      boolean hasMemberChangeMessage();
+      /**
+       * <code>optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 4;</code>
+       */
+      org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage getMemberChangeMessage();
+      /**
+       * <code>optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 4;</code>
+       */
+      org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessageOrBuilder getMemberChangeMessageOrBuilder();
+
+      // optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 5;
+      /**
+       * <code>optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 5;</code>
+       */
+      boolean hasPromoteMessage();
+      /**
+       * <code>optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 5;</code>
+       */
+      org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage getPromoteMessage();
+      /**
+       * <code>optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 5;</code>
+       */
+      org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessageOrBuilder getPromoteMessageOrBuilder();
+
+      // optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 6;
+      /**
+       * <code>optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 6;</code>
+       */
+      boolean hasMemberLeftMessage();
+      /**
+       * <code>optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 6;</code>
+       */
+      org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage getMemberLeftMessage();
+      /**
+       * <code>optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 6;</code>
+       */
+      org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessageOrBuilder getMemberLeftMessageOrBuilder();
+
+      // optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 7;
+      /**
+       * <code>optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 7;</code>
+       */
+      boolean hasInviteResponse();
+      /**
+       * <code>optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 7;</code>
+       */
+      org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage getInviteResponse();
+      /**
+       * <code>optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 7;</code>
+       */
+      org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessageOrBuilder getInviteResponseOrBuilder();
+
+      // optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 8;
+      /**
+       * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 8;</code>
+       */
+      boolean hasDeleteMemberContent();
+      /**
+       * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 8;</code>
+       */
+      org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage getDeleteMemberContent();
+      /**
+       * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 8;</code>
+       */
+      org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessageOrBuilder getDeleteMemberContentOrBuilder();
+    }
+    /**
+     * Protobuf type {@code signalservice.DataMessage.GroupUpdateMessage}
+     *
+     * <pre>
+     * New closed group update messages
+     * </pre>
+     */
+    public static final class GroupUpdateMessage extends
+        com.google.protobuf.GeneratedMessage
+        implements GroupUpdateMessageOrBuilder {
+      // Use GroupUpdateMessage.newBuilder() to construct.
+      private GroupUpdateMessage(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+        super(builder);
+        this.unknownFields = builder.getUnknownFields();
+      }
+      private GroupUpdateMessage(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+      private static final GroupUpdateMessage defaultInstance;
+      public static GroupUpdateMessage getDefaultInstance() {
+        return defaultInstance;
+      }
+
+      public GroupUpdateMessage getDefaultInstanceForType() {
+        return defaultInstance;
+      }
+
+      private final com.google.protobuf.UnknownFieldSet unknownFields;
+      @java.lang.Override
+      public final com.google.protobuf.UnknownFieldSet
+          getUnknownFields() {
+        return this.unknownFields;
+      }
+      private GroupUpdateMessage(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        initFields();
+        int mutable_bitField0_ = 0;
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+            com.google.protobuf.UnknownFieldSet.newBuilder();
+        try {
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              default: {
+                if (!parseUnknownField(input, unknownFields,
+                                       extensionRegistry, tag)) {
+                  done = true;
+                }
+                break;
+              }
+              case 10: {
+                org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage.Builder subBuilder = null;
+                if (((bitField0_ & 0x00000001) == 0x00000001)) {
+                  subBuilder = inviteMessage_.toBuilder();
+                }
+                inviteMessage_ = input.readMessage(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage.PARSER, extensionRegistry);
+                if (subBuilder != null) {
+                  subBuilder.mergeFrom(inviteMessage_);
+                  inviteMessage_ = subBuilder.buildPartial();
+                }
+                bitField0_ |= 0x00000001;
+                break;
+              }
+              case 18: {
+                org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage.Builder subBuilder = null;
+                if (((bitField0_ & 0x00000002) == 0x00000002)) {
+                  subBuilder = deleteMessage_.toBuilder();
+                }
+                deleteMessage_ = input.readMessage(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage.PARSER, extensionRegistry);
+                if (subBuilder != null) {
+                  subBuilder.mergeFrom(deleteMessage_);
+                  deleteMessage_ = subBuilder.buildPartial();
+                }
+                bitField0_ |= 0x00000002;
+                break;
+              }
+              case 26: {
+                org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage.Builder subBuilder = null;
+                if (((bitField0_ & 0x00000004) == 0x00000004)) {
+                  subBuilder = infoChangeMessage_.toBuilder();
+                }
+                infoChangeMessage_ = input.readMessage(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage.PARSER, extensionRegistry);
+                if (subBuilder != null) {
+                  subBuilder.mergeFrom(infoChangeMessage_);
+                  infoChangeMessage_ = subBuilder.buildPartial();
+                }
+                bitField0_ |= 0x00000004;
+                break;
+              }
+              case 34: {
+                org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage.Builder subBuilder = null;
+                if (((bitField0_ & 0x00000008) == 0x00000008)) {
+                  subBuilder = memberChangeMessage_.toBuilder();
+                }
+                memberChangeMessage_ = input.readMessage(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage.PARSER, extensionRegistry);
+                if (subBuilder != null) {
+                  subBuilder.mergeFrom(memberChangeMessage_);
+                  memberChangeMessage_ = subBuilder.buildPartial();
+                }
+                bitField0_ |= 0x00000008;
+                break;
+              }
+              case 42: {
+                org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage.Builder subBuilder = null;
+                if (((bitField0_ & 0x00000010) == 0x00000010)) {
+                  subBuilder = promoteMessage_.toBuilder();
+                }
+                promoteMessage_ = input.readMessage(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage.PARSER, extensionRegistry);
+                if (subBuilder != null) {
+                  subBuilder.mergeFrom(promoteMessage_);
+                  promoteMessage_ = subBuilder.buildPartial();
+                }
+                bitField0_ |= 0x00000010;
+                break;
+              }
+              case 50: {
+                org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage.Builder subBuilder = null;
+                if (((bitField0_ & 0x00000020) == 0x00000020)) {
+                  subBuilder = memberLeftMessage_.toBuilder();
+                }
+                memberLeftMessage_ = input.readMessage(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage.PARSER, extensionRegistry);
+                if (subBuilder != null) {
+                  subBuilder.mergeFrom(memberLeftMessage_);
+                  memberLeftMessage_ = subBuilder.buildPartial();
+                }
+                bitField0_ |= 0x00000020;
+                break;
+              }
+              case 58: {
+                org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage.Builder subBuilder = null;
+                if (((bitField0_ & 0x00000040) == 0x00000040)) {
+                  subBuilder = inviteResponse_.toBuilder();
+                }
+                inviteResponse_ = input.readMessage(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage.PARSER, extensionRegistry);
+                if (subBuilder != null) {
+                  subBuilder.mergeFrom(inviteResponse_);
+                  inviteResponse_ = subBuilder.buildPartial();
+                }
+                bitField0_ |= 0x00000040;
+                break;
+              }
+              case 66: {
+                org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage.Builder subBuilder = null;
+                if (((bitField0_ & 0x00000080) == 0x00000080)) {
+                  subBuilder = deleteMemberContent_.toBuilder();
+                }
+                deleteMemberContent_ = input.readMessage(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage.PARSER, extensionRegistry);
+                if (subBuilder != null) {
+                  subBuilder.mergeFrom(deleteMemberContent_);
+                  deleteMemberContent_ = subBuilder.buildPartial();
+                }
+                bitField0_ |= 0x00000080;
+                break;
+              }
+            }
+          }
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(this);
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(
+              e.getMessage()).setUnfinishedMessage(this);
+        } finally {
+          this.unknownFields = unknownFields.build();
+          makeExtensionsImmutable();
+        }
+      }
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return org.session.libsignal.protos.SignalServiceProtos.internal_static_signalservice_DataMessage_GroupUpdateMessage_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return org.session.libsignal.protos.SignalServiceProtos.internal_static_signalservice_DataMessage_GroupUpdateMessage_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMessage.class, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMessage.Builder.class);
+      }
+
+      public static com.google.protobuf.Parser<GroupUpdateMessage> PARSER =
+          new com.google.protobuf.AbstractParser<GroupUpdateMessage>() {
+        public GroupUpdateMessage parsePartialFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          return new GroupUpdateMessage(input, extensionRegistry);
+        }
+      };
+
+      @java.lang.Override
+      public com.google.protobuf.Parser<GroupUpdateMessage> getParserForType() {
+        return PARSER;
+      }
+
+      private int bitField0_;
+      // optional .signalservice.DataMessage.GroupUpdateInviteMessage inviteMessage = 1;
+      public static final int INVITEMESSAGE_FIELD_NUMBER = 1;
+      private org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage inviteMessage_;
+      /**
+       * <code>optional .signalservice.DataMessage.GroupUpdateInviteMessage inviteMessage = 1;</code>
+       */
+      public boolean hasInviteMessage() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>optional .signalservice.DataMessage.GroupUpdateInviteMessage inviteMessage = 1;</code>
+       */
+      public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage getInviteMessage() {
+        return inviteMessage_;
+      }
+      /**
+       * <code>optional .signalservice.DataMessage.GroupUpdateInviteMessage inviteMessage = 1;</code>
+       */
+      public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessageOrBuilder getInviteMessageOrBuilder() {
+        return inviteMessage_;
+      }
+
+      // optional .signalservice.DataMessage.GroupUpdateDeleteMessage deleteMessage = 2;
+      public static final int DELETEMESSAGE_FIELD_NUMBER = 2;
+      private org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage deleteMessage_;
+      /**
+       * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMessage deleteMessage = 2;</code>
+       */
+      public boolean hasDeleteMessage() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMessage deleteMessage = 2;</code>
+       */
+      public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage getDeleteMessage() {
+        return deleteMessage_;
+      }
+      /**
+       * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMessage deleteMessage = 2;</code>
+       */
+      public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessageOrBuilder getDeleteMessageOrBuilder() {
+        return deleteMessage_;
+      }
+
+      // optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 3;
+      public static final int INFOCHANGEMESSAGE_FIELD_NUMBER = 3;
+      private org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage_;
+      /**
+       * <code>optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 3;</code>
+       */
+      public boolean hasInfoChangeMessage() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      /**
+       * <code>optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 3;</code>
+       */
+      public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage getInfoChangeMessage() {
+        return infoChangeMessage_;
+      }
+      /**
+       * <code>optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 3;</code>
+       */
+      public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessageOrBuilder getInfoChangeMessageOrBuilder() {
+        return infoChangeMessage_;
+      }
+
+      // optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 4;
+      public static final int MEMBERCHANGEMESSAGE_FIELD_NUMBER = 4;
+      private org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage_;
+      /**
+       * <code>optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 4;</code>
+       */
+      public boolean hasMemberChangeMessage() {
+        return ((bitField0_ & 0x00000008) == 0x00000008);
+      }
+      /**
+       * <code>optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 4;</code>
+       */
+      public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage getMemberChangeMessage() {
+        return memberChangeMessage_;
+      }
+      /**
+       * <code>optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 4;</code>
+       */
+      public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessageOrBuilder getMemberChangeMessageOrBuilder() {
+        return memberChangeMessage_;
+      }
+
+      // optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 5;
+      public static final int PROMOTEMESSAGE_FIELD_NUMBER = 5;
+      private org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage promoteMessage_;
+      /**
+       * <code>optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 5;</code>
+       */
+      public boolean hasPromoteMessage() {
+        return ((bitField0_ & 0x00000010) == 0x00000010);
+      }
+      /**
+       * <code>optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 5;</code>
+       */
+      public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage getPromoteMessage() {
+        return promoteMessage_;
+      }
+      /**
+       * <code>optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 5;</code>
+       */
+      public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessageOrBuilder getPromoteMessageOrBuilder() {
+        return promoteMessage_;
+      }
+
+      // optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 6;
+      public static final int MEMBERLEFTMESSAGE_FIELD_NUMBER = 6;
+      private org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage_;
+      /**
+       * <code>optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 6;</code>
+       */
+      public boolean hasMemberLeftMessage() {
+        return ((bitField0_ & 0x00000020) == 0x00000020);
+      }
+      /**
+       * <code>optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 6;</code>
+       */
+      public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage getMemberLeftMessage() {
+        return memberLeftMessage_;
+      }
+      /**
+       * <code>optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 6;</code>
+       */
+      public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessageOrBuilder getMemberLeftMessageOrBuilder() {
+        return memberLeftMessage_;
+      }
+
+      // optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 7;
+      public static final int INVITERESPONSE_FIELD_NUMBER = 7;
+      private org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage inviteResponse_;
+      /**
+       * <code>optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 7;</code>
+       */
+      public boolean hasInviteResponse() {
+        return ((bitField0_ & 0x00000040) == 0x00000040);
+      }
+      /**
+       * <code>optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 7;</code>
+       */
+      public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage getInviteResponse() {
+        return inviteResponse_;
+      }
+      /**
+       * <code>optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 7;</code>
+       */
+      public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessageOrBuilder getInviteResponseOrBuilder() {
+        return inviteResponse_;
+      }
+
+      // optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 8;
+      public static final int DELETEMEMBERCONTENT_FIELD_NUMBER = 8;
+      private org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent_;
+      /**
+       * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 8;</code>
+       */
+      public boolean hasDeleteMemberContent() {
+        return ((bitField0_ & 0x00000080) == 0x00000080);
+      }
+      /**
+       * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 8;</code>
+       */
+      public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage getDeleteMemberContent() {
+        return deleteMemberContent_;
+      }
+      /**
+       * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 8;</code>
+       */
+      public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessageOrBuilder getDeleteMemberContentOrBuilder() {
+        return deleteMemberContent_;
+      }
+
+      private void initFields() {
+        inviteMessage_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage.getDefaultInstance();
+        deleteMessage_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage.getDefaultInstance();
+        infoChangeMessage_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage.getDefaultInstance();
+        memberChangeMessage_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage.getDefaultInstance();
+        promoteMessage_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage.getDefaultInstance();
+        memberLeftMessage_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage.getDefaultInstance();
+        inviteResponse_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage.getDefaultInstance();
+        deleteMemberContent_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage.getDefaultInstance();
+      }
+      private byte memoizedIsInitialized = -1;
+      public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized != -1) return isInitialized == 1;
+
+        if (hasInviteMessage()) {
+          if (!getInviteMessage().isInitialized()) {
+            memoizedIsInitialized = 0;
+            return false;
+          }
+        }
+        if (hasDeleteMessage()) {
+          if (!getDeleteMessage().isInitialized()) {
+            memoizedIsInitialized = 0;
+            return false;
+          }
+        }
+        if (hasInfoChangeMessage()) {
+          if (!getInfoChangeMessage().isInitialized()) {
+            memoizedIsInitialized = 0;
+            return false;
+          }
+        }
+        if (hasMemberChangeMessage()) {
+          if (!getMemberChangeMessage().isInitialized()) {
+            memoizedIsInitialized = 0;
+            return false;
+          }
+        }
+        if (hasPromoteMessage()) {
+          if (!getPromoteMessage().isInitialized()) {
+            memoizedIsInitialized = 0;
+            return false;
+          }
+        }
+        if (hasInviteResponse()) {
+          if (!getInviteResponse().isInitialized()) {
+            memoizedIsInitialized = 0;
+            return false;
+          }
+        }
+        if (hasDeleteMemberContent()) {
+          if (!getDeleteMemberContent().isInitialized()) {
+            memoizedIsInitialized = 0;
+            return false;
+          }
+        }
+        memoizedIsInitialized = 1;
+        return true;
+      }
+
+      public void writeTo(com.google.protobuf.CodedOutputStream output)
+                          throws java.io.IOException {
+        getSerializedSize();
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          output.writeMessage(1, inviteMessage_);
+        }
+        if (((bitField0_ & 0x00000002) == 0x00000002)) {
+          output.writeMessage(2, deleteMessage_);
+        }
+        if (((bitField0_ & 0x00000004) == 0x00000004)) {
+          output.writeMessage(3, infoChangeMessage_);
+        }
+        if (((bitField0_ & 0x00000008) == 0x00000008)) {
+          output.writeMessage(4, memberChangeMessage_);
+        }
+        if (((bitField0_ & 0x00000010) == 0x00000010)) {
+          output.writeMessage(5, promoteMessage_);
+        }
+        if (((bitField0_ & 0x00000020) == 0x00000020)) {
+          output.writeMessage(6, memberLeftMessage_);
+        }
+        if (((bitField0_ & 0x00000040) == 0x00000040)) {
+          output.writeMessage(7, inviteResponse_);
+        }
+        if (((bitField0_ & 0x00000080) == 0x00000080)) {
+          output.writeMessage(8, deleteMemberContent_);
+        }
+        getUnknownFields().writeTo(output);
+      }
+
+      private int memoizedSerializedSize = -1;
+      public int getSerializedSize() {
+        int size = memoizedSerializedSize;
+        if (size != -1) return size;
+
+        size = 0;
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeMessageSize(1, inviteMessage_);
+        }
+        if (((bitField0_ & 0x00000002) == 0x00000002)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeMessageSize(2, deleteMessage_);
+        }
+        if (((bitField0_ & 0x00000004) == 0x00000004)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeMessageSize(3, infoChangeMessage_);
+        }
+        if (((bitField0_ & 0x00000008) == 0x00000008)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeMessageSize(4, memberChangeMessage_);
+        }
+        if (((bitField0_ & 0x00000010) == 0x00000010)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeMessageSize(5, promoteMessage_);
+        }
+        if (((bitField0_ & 0x00000020) == 0x00000020)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeMessageSize(6, memberLeftMessage_);
+        }
+        if (((bitField0_ & 0x00000040) == 0x00000040)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeMessageSize(7, inviteResponse_);
+        }
+        if (((bitField0_ & 0x00000080) == 0x00000080)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeMessageSize(8, deleteMemberContent_);
+        }
+        size += getUnknownFields().getSerializedSize();
+        memoizedSerializedSize = size;
+        return size;
+      }
+
+      private static final long serialVersionUID = 0L;
+      @java.lang.Override
+      protected java.lang.Object writeReplace()
+          throws java.io.ObjectStreamException {
+        return super.writeReplace();
+      }
+
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMessage parseFrom(
+          com.google.protobuf.ByteString data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMessage parseFrom(
+          com.google.protobuf.ByteString data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMessage parseFrom(byte[] data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMessage parseFrom(
+          byte[] data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMessage parseFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMessage parseFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input, extensionRegistry);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMessage parseDelimitedFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return PARSER.parseDelimitedFrom(input);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMessage parseDelimitedFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return PARSER.parseDelimitedFrom(input, extensionRegistry);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMessage parseFrom(
+          com.google.protobuf.CodedInputStream input)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMessage parseFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input, extensionRegistry);
+      }
+
+      public static Builder newBuilder() { return Builder.create(); }
+      public Builder newBuilderForType() { return newBuilder(); }
+      public static Builder newBuilder(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMessage prototype) {
+        return newBuilder().mergeFrom(prototype);
+      }
+      public Builder toBuilder() { return newBuilder(this); }
+
+      @java.lang.Override
+      protected Builder newBuilderForType(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        Builder builder = new Builder(parent);
+        return builder;
+      }
+      /**
+       * Protobuf type {@code signalservice.DataMessage.GroupUpdateMessage}
+       *
+       * <pre>
+       * New closed group update messages
+       * </pre>
+       */
+      public static final class Builder extends
+          com.google.protobuf.GeneratedMessage.Builder<Builder>
+         implements org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMessageOrBuilder {
+        public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+          return org.session.libsignal.protos.SignalServiceProtos.internal_static_signalservice_DataMessage_GroupUpdateMessage_descriptor;
+        }
+
+        protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+            internalGetFieldAccessorTable() {
+          return org.session.libsignal.protos.SignalServiceProtos.internal_static_signalservice_DataMessage_GroupUpdateMessage_fieldAccessorTable
+              .ensureFieldAccessorsInitialized(
+                  org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMessage.class, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMessage.Builder.class);
+        }
+
+        // Construct using org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMessage.newBuilder()
+        private Builder() {
+          maybeForceBuilderInitialization();
+        }
+
+        private Builder(
+            com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+          super(parent);
+          maybeForceBuilderInitialization();
+        }
+        private void maybeForceBuilderInitialization() {
+          if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+            getInviteMessageFieldBuilder();
+            getDeleteMessageFieldBuilder();
+            getInfoChangeMessageFieldBuilder();
+            getMemberChangeMessageFieldBuilder();
+            getPromoteMessageFieldBuilder();
+            getMemberLeftMessageFieldBuilder();
+            getInviteResponseFieldBuilder();
+            getDeleteMemberContentFieldBuilder();
+          }
+        }
+        private static Builder create() {
+          return new Builder();
+        }
+
+        public Builder clear() {
+          super.clear();
+          if (inviteMessageBuilder_ == null) {
+            inviteMessage_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage.getDefaultInstance();
+          } else {
+            inviteMessageBuilder_.clear();
+          }
+          bitField0_ = (bitField0_ & ~0x00000001);
+          if (deleteMessageBuilder_ == null) {
+            deleteMessage_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage.getDefaultInstance();
+          } else {
+            deleteMessageBuilder_.clear();
+          }
+          bitField0_ = (bitField0_ & ~0x00000002);
+          if (infoChangeMessageBuilder_ == null) {
+            infoChangeMessage_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage.getDefaultInstance();
+          } else {
+            infoChangeMessageBuilder_.clear();
+          }
+          bitField0_ = (bitField0_ & ~0x00000004);
+          if (memberChangeMessageBuilder_ == null) {
+            memberChangeMessage_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage.getDefaultInstance();
+          } else {
+            memberChangeMessageBuilder_.clear();
+          }
+          bitField0_ = (bitField0_ & ~0x00000008);
+          if (promoteMessageBuilder_ == null) {
+            promoteMessage_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage.getDefaultInstance();
+          } else {
+            promoteMessageBuilder_.clear();
+          }
+          bitField0_ = (bitField0_ & ~0x00000010);
+          if (memberLeftMessageBuilder_ == null) {
+            memberLeftMessage_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage.getDefaultInstance();
+          } else {
+            memberLeftMessageBuilder_.clear();
+          }
+          bitField0_ = (bitField0_ & ~0x00000020);
+          if (inviteResponseBuilder_ == null) {
+            inviteResponse_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage.getDefaultInstance();
+          } else {
+            inviteResponseBuilder_.clear();
+          }
+          bitField0_ = (bitField0_ & ~0x00000040);
+          if (deleteMemberContentBuilder_ == null) {
+            deleteMemberContent_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage.getDefaultInstance();
+          } else {
+            deleteMemberContentBuilder_.clear();
+          }
+          bitField0_ = (bitField0_ & ~0x00000080);
+          return this;
+        }
+
+        public Builder clone() {
+          return create().mergeFrom(buildPartial());
+        }
+
+        public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+          return org.session.libsignal.protos.SignalServiceProtos.internal_static_signalservice_DataMessage_GroupUpdateMessage_descriptor;
+        }
+
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMessage getDefaultInstanceForType() {
+          return org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMessage.getDefaultInstance();
+        }
+
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMessage build() {
+          org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMessage result = buildPartial();
+          if (!result.isInitialized()) {
+            throw newUninitializedMessageException(result);
+          }
+          return result;
+        }
+
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMessage buildPartial() {
+          org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMessage result = new org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMessage(this);
+          int from_bitField0_ = bitField0_;
+          int to_bitField0_ = 0;
+          if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+            to_bitField0_ |= 0x00000001;
+          }
+          if (inviteMessageBuilder_ == null) {
+            result.inviteMessage_ = inviteMessage_;
+          } else {
+            result.inviteMessage_ = inviteMessageBuilder_.build();
+          }
+          if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+            to_bitField0_ |= 0x00000002;
+          }
+          if (deleteMessageBuilder_ == null) {
+            result.deleteMessage_ = deleteMessage_;
+          } else {
+            result.deleteMessage_ = deleteMessageBuilder_.build();
+          }
+          if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+            to_bitField0_ |= 0x00000004;
+          }
+          if (infoChangeMessageBuilder_ == null) {
+            result.infoChangeMessage_ = infoChangeMessage_;
+          } else {
+            result.infoChangeMessage_ = infoChangeMessageBuilder_.build();
+          }
+          if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+            to_bitField0_ |= 0x00000008;
+          }
+          if (memberChangeMessageBuilder_ == null) {
+            result.memberChangeMessage_ = memberChangeMessage_;
+          } else {
+            result.memberChangeMessage_ = memberChangeMessageBuilder_.build();
+          }
+          if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+            to_bitField0_ |= 0x00000010;
+          }
+          if (promoteMessageBuilder_ == null) {
+            result.promoteMessage_ = promoteMessage_;
+          } else {
+            result.promoteMessage_ = promoteMessageBuilder_.build();
+          }
+          if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
+            to_bitField0_ |= 0x00000020;
+          }
+          if (memberLeftMessageBuilder_ == null) {
+            result.memberLeftMessage_ = memberLeftMessage_;
+          } else {
+            result.memberLeftMessage_ = memberLeftMessageBuilder_.build();
+          }
+          if (((from_bitField0_ & 0x00000040) == 0x00000040)) {
+            to_bitField0_ |= 0x00000040;
+          }
+          if (inviteResponseBuilder_ == null) {
+            result.inviteResponse_ = inviteResponse_;
+          } else {
+            result.inviteResponse_ = inviteResponseBuilder_.build();
+          }
+          if (((from_bitField0_ & 0x00000080) == 0x00000080)) {
+            to_bitField0_ |= 0x00000080;
+          }
+          if (deleteMemberContentBuilder_ == null) {
+            result.deleteMemberContent_ = deleteMemberContent_;
+          } else {
+            result.deleteMemberContent_ = deleteMemberContentBuilder_.build();
+          }
+          result.bitField0_ = to_bitField0_;
+          onBuilt();
+          return result;
+        }
+
+        public Builder mergeFrom(com.google.protobuf.Message other) {
+          if (other instanceof org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMessage) {
+            return mergeFrom((org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMessage)other);
+          } else {
+            super.mergeFrom(other);
+            return this;
+          }
+        }
+
+        public Builder mergeFrom(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMessage other) {
+          if (other == org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMessage.getDefaultInstance()) return this;
+          if (other.hasInviteMessage()) {
+            mergeInviteMessage(other.getInviteMessage());
+          }
+          if (other.hasDeleteMessage()) {
+            mergeDeleteMessage(other.getDeleteMessage());
+          }
+          if (other.hasInfoChangeMessage()) {
+            mergeInfoChangeMessage(other.getInfoChangeMessage());
+          }
+          if (other.hasMemberChangeMessage()) {
+            mergeMemberChangeMessage(other.getMemberChangeMessage());
+          }
+          if (other.hasPromoteMessage()) {
+            mergePromoteMessage(other.getPromoteMessage());
+          }
+          if (other.hasMemberLeftMessage()) {
+            mergeMemberLeftMessage(other.getMemberLeftMessage());
+          }
+          if (other.hasInviteResponse()) {
+            mergeInviteResponse(other.getInviteResponse());
+          }
+          if (other.hasDeleteMemberContent()) {
+            mergeDeleteMemberContent(other.getDeleteMemberContent());
+          }
+          this.mergeUnknownFields(other.getUnknownFields());
+          return this;
+        }
+
+        public final boolean isInitialized() {
+          if (hasInviteMessage()) {
+            if (!getInviteMessage().isInitialized()) {
+              
+              return false;
+            }
+          }
+          if (hasDeleteMessage()) {
+            if (!getDeleteMessage().isInitialized()) {
+              
+              return false;
+            }
+          }
+          if (hasInfoChangeMessage()) {
+            if (!getInfoChangeMessage().isInitialized()) {
+              
+              return false;
+            }
+          }
+          if (hasMemberChangeMessage()) {
+            if (!getMemberChangeMessage().isInitialized()) {
+              
+              return false;
+            }
+          }
+          if (hasPromoteMessage()) {
+            if (!getPromoteMessage().isInitialized()) {
+              
+              return false;
+            }
+          }
+          if (hasInviteResponse()) {
+            if (!getInviteResponse().isInitialized()) {
+              
+              return false;
+            }
+          }
+          if (hasDeleteMemberContent()) {
+            if (!getDeleteMemberContent().isInitialized()) {
+              
+              return false;
+            }
+          }
+          return true;
+        }
+
+        public Builder mergeFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+          org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMessage parsedMessage = null;
+          try {
+            parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            parsedMessage = (org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMessage) e.getUnfinishedMessage();
+            throw e;
+          } finally {
+            if (parsedMessage != null) {
+              mergeFrom(parsedMessage);
+            }
+          }
+          return this;
+        }
+        private int bitField0_;
+
+        // optional .signalservice.DataMessage.GroupUpdateInviteMessage inviteMessage = 1;
+        private org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage inviteMessage_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage.getDefaultInstance();
+        private com.google.protobuf.SingleFieldBuilder<
+            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessageOrBuilder> inviteMessageBuilder_;
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateInviteMessage inviteMessage = 1;</code>
+         */
+        public boolean hasInviteMessage() {
+          return ((bitField0_ & 0x00000001) == 0x00000001);
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateInviteMessage inviteMessage = 1;</code>
+         */
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage getInviteMessage() {
+          if (inviteMessageBuilder_ == null) {
+            return inviteMessage_;
+          } else {
+            return inviteMessageBuilder_.getMessage();
+          }
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateInviteMessage inviteMessage = 1;</code>
+         */
+        public Builder setInviteMessage(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage value) {
+          if (inviteMessageBuilder_ == null) {
+            if (value == null) {
+              throw new NullPointerException();
+            }
+            inviteMessage_ = value;
+            onChanged();
+          } else {
+            inviteMessageBuilder_.setMessage(value);
+          }
+          bitField0_ |= 0x00000001;
+          return this;
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateInviteMessage inviteMessage = 1;</code>
+         */
+        public Builder setInviteMessage(
+            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage.Builder builderForValue) {
+          if (inviteMessageBuilder_ == null) {
+            inviteMessage_ = builderForValue.build();
+            onChanged();
+          } else {
+            inviteMessageBuilder_.setMessage(builderForValue.build());
+          }
+          bitField0_ |= 0x00000001;
+          return this;
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateInviteMessage inviteMessage = 1;</code>
+         */
+        public Builder mergeInviteMessage(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage value) {
+          if (inviteMessageBuilder_ == null) {
+            if (((bitField0_ & 0x00000001) == 0x00000001) &&
+                inviteMessage_ != org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage.getDefaultInstance()) {
+              inviteMessage_ =
+                org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage.newBuilder(inviteMessage_).mergeFrom(value).buildPartial();
+            } else {
+              inviteMessage_ = value;
+            }
+            onChanged();
+          } else {
+            inviteMessageBuilder_.mergeFrom(value);
+          }
+          bitField0_ |= 0x00000001;
+          return this;
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateInviteMessage inviteMessage = 1;</code>
+         */
+        public Builder clearInviteMessage() {
+          if (inviteMessageBuilder_ == null) {
+            inviteMessage_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage.getDefaultInstance();
+            onChanged();
+          } else {
+            inviteMessageBuilder_.clear();
+          }
+          bitField0_ = (bitField0_ & ~0x00000001);
+          return this;
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateInviteMessage inviteMessage = 1;</code>
+         */
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage.Builder getInviteMessageBuilder() {
+          bitField0_ |= 0x00000001;
+          onChanged();
+          return getInviteMessageFieldBuilder().getBuilder();
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateInviteMessage inviteMessage = 1;</code>
+         */
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessageOrBuilder getInviteMessageOrBuilder() {
+          if (inviteMessageBuilder_ != null) {
+            return inviteMessageBuilder_.getMessageOrBuilder();
+          } else {
+            return inviteMessage_;
+          }
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateInviteMessage inviteMessage = 1;</code>
+         */
+        private com.google.protobuf.SingleFieldBuilder<
+            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessageOrBuilder> 
+            getInviteMessageFieldBuilder() {
+          if (inviteMessageBuilder_ == null) {
+            inviteMessageBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+                org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessageOrBuilder>(
+                    inviteMessage_,
+                    getParentForChildren(),
+                    isClean());
+            inviteMessage_ = null;
+          }
+          return inviteMessageBuilder_;
+        }
+
+        // optional .signalservice.DataMessage.GroupUpdateDeleteMessage deleteMessage = 2;
+        private org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage deleteMessage_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage.getDefaultInstance();
+        private com.google.protobuf.SingleFieldBuilder<
+            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessageOrBuilder> deleteMessageBuilder_;
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMessage deleteMessage = 2;</code>
+         */
+        public boolean hasDeleteMessage() {
+          return ((bitField0_ & 0x00000002) == 0x00000002);
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMessage deleteMessage = 2;</code>
+         */
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage getDeleteMessage() {
+          if (deleteMessageBuilder_ == null) {
+            return deleteMessage_;
+          } else {
+            return deleteMessageBuilder_.getMessage();
+          }
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMessage deleteMessage = 2;</code>
+         */
+        public Builder setDeleteMessage(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage value) {
+          if (deleteMessageBuilder_ == null) {
+            if (value == null) {
+              throw new NullPointerException();
+            }
+            deleteMessage_ = value;
+            onChanged();
+          } else {
+            deleteMessageBuilder_.setMessage(value);
+          }
+          bitField0_ |= 0x00000002;
+          return this;
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMessage deleteMessage = 2;</code>
+         */
+        public Builder setDeleteMessage(
+            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage.Builder builderForValue) {
+          if (deleteMessageBuilder_ == null) {
+            deleteMessage_ = builderForValue.build();
+            onChanged();
+          } else {
+            deleteMessageBuilder_.setMessage(builderForValue.build());
+          }
+          bitField0_ |= 0x00000002;
+          return this;
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMessage deleteMessage = 2;</code>
+         */
+        public Builder mergeDeleteMessage(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage value) {
+          if (deleteMessageBuilder_ == null) {
+            if (((bitField0_ & 0x00000002) == 0x00000002) &&
+                deleteMessage_ != org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage.getDefaultInstance()) {
+              deleteMessage_ =
+                org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage.newBuilder(deleteMessage_).mergeFrom(value).buildPartial();
+            } else {
+              deleteMessage_ = value;
+            }
+            onChanged();
+          } else {
+            deleteMessageBuilder_.mergeFrom(value);
+          }
+          bitField0_ |= 0x00000002;
+          return this;
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMessage deleteMessage = 2;</code>
+         */
+        public Builder clearDeleteMessage() {
+          if (deleteMessageBuilder_ == null) {
+            deleteMessage_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage.getDefaultInstance();
+            onChanged();
+          } else {
+            deleteMessageBuilder_.clear();
+          }
+          bitField0_ = (bitField0_ & ~0x00000002);
+          return this;
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMessage deleteMessage = 2;</code>
+         */
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage.Builder getDeleteMessageBuilder() {
+          bitField0_ |= 0x00000002;
+          onChanged();
+          return getDeleteMessageFieldBuilder().getBuilder();
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMessage deleteMessage = 2;</code>
+         */
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessageOrBuilder getDeleteMessageOrBuilder() {
+          if (deleteMessageBuilder_ != null) {
+            return deleteMessageBuilder_.getMessageOrBuilder();
+          } else {
+            return deleteMessage_;
+          }
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMessage deleteMessage = 2;</code>
+         */
+        private com.google.protobuf.SingleFieldBuilder<
+            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessageOrBuilder> 
+            getDeleteMessageFieldBuilder() {
+          if (deleteMessageBuilder_ == null) {
+            deleteMessageBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+                org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessageOrBuilder>(
+                    deleteMessage_,
+                    getParentForChildren(),
+                    isClean());
+            deleteMessage_ = null;
+          }
+          return deleteMessageBuilder_;
+        }
+
+        // optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 3;
+        private org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage.getDefaultInstance();
+        private com.google.protobuf.SingleFieldBuilder<
+            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessageOrBuilder> infoChangeMessageBuilder_;
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 3;</code>
+         */
+        public boolean hasInfoChangeMessage() {
+          return ((bitField0_ & 0x00000004) == 0x00000004);
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 3;</code>
+         */
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage getInfoChangeMessage() {
+          if (infoChangeMessageBuilder_ == null) {
+            return infoChangeMessage_;
+          } else {
+            return infoChangeMessageBuilder_.getMessage();
+          }
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 3;</code>
+         */
+        public Builder setInfoChangeMessage(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage value) {
+          if (infoChangeMessageBuilder_ == null) {
+            if (value == null) {
+              throw new NullPointerException();
+            }
+            infoChangeMessage_ = value;
+            onChanged();
+          } else {
+            infoChangeMessageBuilder_.setMessage(value);
+          }
+          bitField0_ |= 0x00000004;
+          return this;
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 3;</code>
+         */
+        public Builder setInfoChangeMessage(
+            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage.Builder builderForValue) {
+          if (infoChangeMessageBuilder_ == null) {
+            infoChangeMessage_ = builderForValue.build();
+            onChanged();
+          } else {
+            infoChangeMessageBuilder_.setMessage(builderForValue.build());
+          }
+          bitField0_ |= 0x00000004;
+          return this;
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 3;</code>
+         */
+        public Builder mergeInfoChangeMessage(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage value) {
+          if (infoChangeMessageBuilder_ == null) {
+            if (((bitField0_ & 0x00000004) == 0x00000004) &&
+                infoChangeMessage_ != org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage.getDefaultInstance()) {
+              infoChangeMessage_ =
+                org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage.newBuilder(infoChangeMessage_).mergeFrom(value).buildPartial();
+            } else {
+              infoChangeMessage_ = value;
+            }
+            onChanged();
+          } else {
+            infoChangeMessageBuilder_.mergeFrom(value);
+          }
+          bitField0_ |= 0x00000004;
+          return this;
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 3;</code>
+         */
+        public Builder clearInfoChangeMessage() {
+          if (infoChangeMessageBuilder_ == null) {
+            infoChangeMessage_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage.getDefaultInstance();
+            onChanged();
+          } else {
+            infoChangeMessageBuilder_.clear();
+          }
+          bitField0_ = (bitField0_ & ~0x00000004);
+          return this;
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 3;</code>
+         */
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage.Builder getInfoChangeMessageBuilder() {
+          bitField0_ |= 0x00000004;
+          onChanged();
+          return getInfoChangeMessageFieldBuilder().getBuilder();
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 3;</code>
+         */
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessageOrBuilder getInfoChangeMessageOrBuilder() {
+          if (infoChangeMessageBuilder_ != null) {
+            return infoChangeMessageBuilder_.getMessageOrBuilder();
+          } else {
+            return infoChangeMessage_;
+          }
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 3;</code>
+         */
+        private com.google.protobuf.SingleFieldBuilder<
+            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessageOrBuilder> 
+            getInfoChangeMessageFieldBuilder() {
+          if (infoChangeMessageBuilder_ == null) {
+            infoChangeMessageBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+                org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessageOrBuilder>(
+                    infoChangeMessage_,
+                    getParentForChildren(),
+                    isClean());
+            infoChangeMessage_ = null;
+          }
+          return infoChangeMessageBuilder_;
+        }
+
+        // optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 4;
+        private org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage.getDefaultInstance();
+        private com.google.protobuf.SingleFieldBuilder<
+            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessageOrBuilder> memberChangeMessageBuilder_;
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 4;</code>
+         */
+        public boolean hasMemberChangeMessage() {
+          return ((bitField0_ & 0x00000008) == 0x00000008);
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 4;</code>
+         */
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage getMemberChangeMessage() {
+          if (memberChangeMessageBuilder_ == null) {
+            return memberChangeMessage_;
+          } else {
+            return memberChangeMessageBuilder_.getMessage();
+          }
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 4;</code>
+         */
+        public Builder setMemberChangeMessage(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage value) {
+          if (memberChangeMessageBuilder_ == null) {
+            if (value == null) {
+              throw new NullPointerException();
+            }
+            memberChangeMessage_ = value;
+            onChanged();
+          } else {
+            memberChangeMessageBuilder_.setMessage(value);
+          }
+          bitField0_ |= 0x00000008;
+          return this;
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 4;</code>
+         */
+        public Builder setMemberChangeMessage(
+            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage.Builder builderForValue) {
+          if (memberChangeMessageBuilder_ == null) {
+            memberChangeMessage_ = builderForValue.build();
+            onChanged();
+          } else {
+            memberChangeMessageBuilder_.setMessage(builderForValue.build());
+          }
+          bitField0_ |= 0x00000008;
+          return this;
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 4;</code>
+         */
+        public Builder mergeMemberChangeMessage(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage value) {
+          if (memberChangeMessageBuilder_ == null) {
+            if (((bitField0_ & 0x00000008) == 0x00000008) &&
+                memberChangeMessage_ != org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage.getDefaultInstance()) {
+              memberChangeMessage_ =
+                org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage.newBuilder(memberChangeMessage_).mergeFrom(value).buildPartial();
+            } else {
+              memberChangeMessage_ = value;
+            }
+            onChanged();
+          } else {
+            memberChangeMessageBuilder_.mergeFrom(value);
+          }
+          bitField0_ |= 0x00000008;
+          return this;
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 4;</code>
+         */
+        public Builder clearMemberChangeMessage() {
+          if (memberChangeMessageBuilder_ == null) {
+            memberChangeMessage_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage.getDefaultInstance();
+            onChanged();
+          } else {
+            memberChangeMessageBuilder_.clear();
+          }
+          bitField0_ = (bitField0_ & ~0x00000008);
+          return this;
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 4;</code>
+         */
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage.Builder getMemberChangeMessageBuilder() {
+          bitField0_ |= 0x00000008;
+          onChanged();
+          return getMemberChangeMessageFieldBuilder().getBuilder();
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 4;</code>
+         */
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessageOrBuilder getMemberChangeMessageOrBuilder() {
+          if (memberChangeMessageBuilder_ != null) {
+            return memberChangeMessageBuilder_.getMessageOrBuilder();
+          } else {
+            return memberChangeMessage_;
+          }
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 4;</code>
+         */
+        private com.google.protobuf.SingleFieldBuilder<
+            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessageOrBuilder> 
+            getMemberChangeMessageFieldBuilder() {
+          if (memberChangeMessageBuilder_ == null) {
+            memberChangeMessageBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+                org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessageOrBuilder>(
+                    memberChangeMessage_,
+                    getParentForChildren(),
+                    isClean());
+            memberChangeMessage_ = null;
+          }
+          return memberChangeMessageBuilder_;
+        }
+
+        // optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 5;
+        private org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage promoteMessage_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage.getDefaultInstance();
+        private com.google.protobuf.SingleFieldBuilder<
+            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessageOrBuilder> promoteMessageBuilder_;
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 5;</code>
+         */
+        public boolean hasPromoteMessage() {
+          return ((bitField0_ & 0x00000010) == 0x00000010);
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 5;</code>
+         */
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage getPromoteMessage() {
+          if (promoteMessageBuilder_ == null) {
+            return promoteMessage_;
+          } else {
+            return promoteMessageBuilder_.getMessage();
+          }
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 5;</code>
+         */
+        public Builder setPromoteMessage(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage value) {
+          if (promoteMessageBuilder_ == null) {
+            if (value == null) {
+              throw new NullPointerException();
+            }
+            promoteMessage_ = value;
+            onChanged();
+          } else {
+            promoteMessageBuilder_.setMessage(value);
+          }
+          bitField0_ |= 0x00000010;
+          return this;
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 5;</code>
+         */
+        public Builder setPromoteMessage(
+            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage.Builder builderForValue) {
+          if (promoteMessageBuilder_ == null) {
+            promoteMessage_ = builderForValue.build();
+            onChanged();
+          } else {
+            promoteMessageBuilder_.setMessage(builderForValue.build());
+          }
+          bitField0_ |= 0x00000010;
+          return this;
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 5;</code>
+         */
+        public Builder mergePromoteMessage(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage value) {
+          if (promoteMessageBuilder_ == null) {
+            if (((bitField0_ & 0x00000010) == 0x00000010) &&
+                promoteMessage_ != org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage.getDefaultInstance()) {
+              promoteMessage_ =
+                org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage.newBuilder(promoteMessage_).mergeFrom(value).buildPartial();
+            } else {
+              promoteMessage_ = value;
+            }
+            onChanged();
+          } else {
+            promoteMessageBuilder_.mergeFrom(value);
+          }
+          bitField0_ |= 0x00000010;
+          return this;
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 5;</code>
+         */
+        public Builder clearPromoteMessage() {
+          if (promoteMessageBuilder_ == null) {
+            promoteMessage_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage.getDefaultInstance();
+            onChanged();
+          } else {
+            promoteMessageBuilder_.clear();
+          }
+          bitField0_ = (bitField0_ & ~0x00000010);
+          return this;
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 5;</code>
+         */
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage.Builder getPromoteMessageBuilder() {
+          bitField0_ |= 0x00000010;
+          onChanged();
+          return getPromoteMessageFieldBuilder().getBuilder();
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 5;</code>
+         */
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessageOrBuilder getPromoteMessageOrBuilder() {
+          if (promoteMessageBuilder_ != null) {
+            return promoteMessageBuilder_.getMessageOrBuilder();
+          } else {
+            return promoteMessage_;
+          }
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 5;</code>
+         */
+        private com.google.protobuf.SingleFieldBuilder<
+            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessageOrBuilder> 
+            getPromoteMessageFieldBuilder() {
+          if (promoteMessageBuilder_ == null) {
+            promoteMessageBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+                org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessageOrBuilder>(
+                    promoteMessage_,
+                    getParentForChildren(),
+                    isClean());
+            promoteMessage_ = null;
+          }
+          return promoteMessageBuilder_;
+        }
+
+        // optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 6;
+        private org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage.getDefaultInstance();
+        private com.google.protobuf.SingleFieldBuilder<
+            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessageOrBuilder> memberLeftMessageBuilder_;
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 6;</code>
+         */
+        public boolean hasMemberLeftMessage() {
+          return ((bitField0_ & 0x00000020) == 0x00000020);
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 6;</code>
+         */
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage getMemberLeftMessage() {
+          if (memberLeftMessageBuilder_ == null) {
+            return memberLeftMessage_;
+          } else {
+            return memberLeftMessageBuilder_.getMessage();
+          }
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 6;</code>
+         */
+        public Builder setMemberLeftMessage(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage value) {
+          if (memberLeftMessageBuilder_ == null) {
+            if (value == null) {
+              throw new NullPointerException();
+            }
+            memberLeftMessage_ = value;
+            onChanged();
+          } else {
+            memberLeftMessageBuilder_.setMessage(value);
+          }
+          bitField0_ |= 0x00000020;
+          return this;
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 6;</code>
+         */
+        public Builder setMemberLeftMessage(
+            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage.Builder builderForValue) {
+          if (memberLeftMessageBuilder_ == null) {
+            memberLeftMessage_ = builderForValue.build();
+            onChanged();
+          } else {
+            memberLeftMessageBuilder_.setMessage(builderForValue.build());
+          }
+          bitField0_ |= 0x00000020;
+          return this;
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 6;</code>
+         */
+        public Builder mergeMemberLeftMessage(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage value) {
+          if (memberLeftMessageBuilder_ == null) {
+            if (((bitField0_ & 0x00000020) == 0x00000020) &&
+                memberLeftMessage_ != org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage.getDefaultInstance()) {
+              memberLeftMessage_ =
+                org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage.newBuilder(memberLeftMessage_).mergeFrom(value).buildPartial();
+            } else {
+              memberLeftMessage_ = value;
+            }
+            onChanged();
+          } else {
+            memberLeftMessageBuilder_.mergeFrom(value);
+          }
+          bitField0_ |= 0x00000020;
+          return this;
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 6;</code>
+         */
+        public Builder clearMemberLeftMessage() {
+          if (memberLeftMessageBuilder_ == null) {
+            memberLeftMessage_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage.getDefaultInstance();
+            onChanged();
+          } else {
+            memberLeftMessageBuilder_.clear();
+          }
+          bitField0_ = (bitField0_ & ~0x00000020);
+          return this;
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 6;</code>
+         */
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage.Builder getMemberLeftMessageBuilder() {
+          bitField0_ |= 0x00000020;
+          onChanged();
+          return getMemberLeftMessageFieldBuilder().getBuilder();
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 6;</code>
+         */
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessageOrBuilder getMemberLeftMessageOrBuilder() {
+          if (memberLeftMessageBuilder_ != null) {
+            return memberLeftMessageBuilder_.getMessageOrBuilder();
+          } else {
+            return memberLeftMessage_;
+          }
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 6;</code>
+         */
+        private com.google.protobuf.SingleFieldBuilder<
+            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessageOrBuilder> 
+            getMemberLeftMessageFieldBuilder() {
+          if (memberLeftMessageBuilder_ == null) {
+            memberLeftMessageBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+                org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessageOrBuilder>(
+                    memberLeftMessage_,
+                    getParentForChildren(),
+                    isClean());
+            memberLeftMessage_ = null;
+          }
+          return memberLeftMessageBuilder_;
+        }
+
+        // optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 7;
+        private org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage inviteResponse_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage.getDefaultInstance();
+        private com.google.protobuf.SingleFieldBuilder<
+            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessageOrBuilder> inviteResponseBuilder_;
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 7;</code>
+         */
+        public boolean hasInviteResponse() {
+          return ((bitField0_ & 0x00000040) == 0x00000040);
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 7;</code>
+         */
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage getInviteResponse() {
+          if (inviteResponseBuilder_ == null) {
+            return inviteResponse_;
+          } else {
+            return inviteResponseBuilder_.getMessage();
+          }
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 7;</code>
+         */
+        public Builder setInviteResponse(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage value) {
+          if (inviteResponseBuilder_ == null) {
+            if (value == null) {
+              throw new NullPointerException();
+            }
+            inviteResponse_ = value;
+            onChanged();
+          } else {
+            inviteResponseBuilder_.setMessage(value);
+          }
+          bitField0_ |= 0x00000040;
+          return this;
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 7;</code>
+         */
+        public Builder setInviteResponse(
+            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage.Builder builderForValue) {
+          if (inviteResponseBuilder_ == null) {
+            inviteResponse_ = builderForValue.build();
+            onChanged();
+          } else {
+            inviteResponseBuilder_.setMessage(builderForValue.build());
+          }
+          bitField0_ |= 0x00000040;
+          return this;
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 7;</code>
+         */
+        public Builder mergeInviteResponse(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage value) {
+          if (inviteResponseBuilder_ == null) {
+            if (((bitField0_ & 0x00000040) == 0x00000040) &&
+                inviteResponse_ != org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage.getDefaultInstance()) {
+              inviteResponse_ =
+                org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage.newBuilder(inviteResponse_).mergeFrom(value).buildPartial();
+            } else {
+              inviteResponse_ = value;
+            }
+            onChanged();
+          } else {
+            inviteResponseBuilder_.mergeFrom(value);
+          }
+          bitField0_ |= 0x00000040;
+          return this;
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 7;</code>
+         */
+        public Builder clearInviteResponse() {
+          if (inviteResponseBuilder_ == null) {
+            inviteResponse_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage.getDefaultInstance();
+            onChanged();
+          } else {
+            inviteResponseBuilder_.clear();
+          }
+          bitField0_ = (bitField0_ & ~0x00000040);
+          return this;
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 7;</code>
+         */
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage.Builder getInviteResponseBuilder() {
+          bitField0_ |= 0x00000040;
+          onChanged();
+          return getInviteResponseFieldBuilder().getBuilder();
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 7;</code>
+         */
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessageOrBuilder getInviteResponseOrBuilder() {
+          if (inviteResponseBuilder_ != null) {
+            return inviteResponseBuilder_.getMessageOrBuilder();
+          } else {
+            return inviteResponse_;
+          }
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 7;</code>
+         */
+        private com.google.protobuf.SingleFieldBuilder<
+            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessageOrBuilder> 
+            getInviteResponseFieldBuilder() {
+          if (inviteResponseBuilder_ == null) {
+            inviteResponseBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+                org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessageOrBuilder>(
+                    inviteResponse_,
+                    getParentForChildren(),
+                    isClean());
+            inviteResponse_ = null;
+          }
+          return inviteResponseBuilder_;
+        }
+
+        // optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 8;
+        private org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage.getDefaultInstance();
+        private com.google.protobuf.SingleFieldBuilder<
+            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessageOrBuilder> deleteMemberContentBuilder_;
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 8;</code>
+         */
+        public boolean hasDeleteMemberContent() {
+          return ((bitField0_ & 0x00000080) == 0x00000080);
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 8;</code>
+         */
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage getDeleteMemberContent() {
+          if (deleteMemberContentBuilder_ == null) {
+            return deleteMemberContent_;
+          } else {
+            return deleteMemberContentBuilder_.getMessage();
+          }
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 8;</code>
+         */
+        public Builder setDeleteMemberContent(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage value) {
+          if (deleteMemberContentBuilder_ == null) {
+            if (value == null) {
+              throw new NullPointerException();
+            }
+            deleteMemberContent_ = value;
+            onChanged();
+          } else {
+            deleteMemberContentBuilder_.setMessage(value);
+          }
+          bitField0_ |= 0x00000080;
+          return this;
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 8;</code>
+         */
+        public Builder setDeleteMemberContent(
+            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage.Builder builderForValue) {
+          if (deleteMemberContentBuilder_ == null) {
+            deleteMemberContent_ = builderForValue.build();
+            onChanged();
+          } else {
+            deleteMemberContentBuilder_.setMessage(builderForValue.build());
+          }
+          bitField0_ |= 0x00000080;
+          return this;
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 8;</code>
+         */
+        public Builder mergeDeleteMemberContent(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage value) {
+          if (deleteMemberContentBuilder_ == null) {
+            if (((bitField0_ & 0x00000080) == 0x00000080) &&
+                deleteMemberContent_ != org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage.getDefaultInstance()) {
+              deleteMemberContent_ =
+                org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage.newBuilder(deleteMemberContent_).mergeFrom(value).buildPartial();
+            } else {
+              deleteMemberContent_ = value;
+            }
+            onChanged();
+          } else {
+            deleteMemberContentBuilder_.mergeFrom(value);
+          }
+          bitField0_ |= 0x00000080;
+          return this;
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 8;</code>
+         */
+        public Builder clearDeleteMemberContent() {
+          if (deleteMemberContentBuilder_ == null) {
+            deleteMemberContent_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage.getDefaultInstance();
+            onChanged();
+          } else {
+            deleteMemberContentBuilder_.clear();
+          }
+          bitField0_ = (bitField0_ & ~0x00000080);
+          return this;
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 8;</code>
+         */
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage.Builder getDeleteMemberContentBuilder() {
+          bitField0_ |= 0x00000080;
+          onChanged();
+          return getDeleteMemberContentFieldBuilder().getBuilder();
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 8;</code>
+         */
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessageOrBuilder getDeleteMemberContentOrBuilder() {
+          if (deleteMemberContentBuilder_ != null) {
+            return deleteMemberContentBuilder_.getMessageOrBuilder();
+          } else {
+            return deleteMemberContent_;
+          }
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 8;</code>
+         */
+        private com.google.protobuf.SingleFieldBuilder<
+            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessageOrBuilder> 
+            getDeleteMemberContentFieldBuilder() {
+          if (deleteMemberContentBuilder_ == null) {
+            deleteMemberContentBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+                org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessageOrBuilder>(
+                    deleteMemberContent_,
+                    getParentForChildren(),
+                    isClean());
+            deleteMemberContent_ = null;
+          }
+          return deleteMemberContentBuilder_;
+        }
+
+        // @@protoc_insertion_point(builder_scope:signalservice.DataMessage.GroupUpdateMessage)
+      }
+
+      static {
+        defaultInstance = new GroupUpdateMessage(true);
+        defaultInstance.initFields();
+      }
+
+      // @@protoc_insertion_point(class_scope:signalservice.DataMessage.GroupUpdateMessage)
+    }
+
+    public interface GroupUpdateInviteMessageOrBuilder
+        extends com.google.protobuf.MessageOrBuilder {
+
+      // required string groupSessionId = 1;
+      /**
+       * <code>required string groupSessionId = 1;</code>
+       *
+       * <pre>
+       * @required
+       * </pre>
+       */
+      boolean hasGroupSessionId();
+      /**
+       * <code>required string groupSessionId = 1;</code>
+       *
+       * <pre>
+       * @required
+       * </pre>
+       */
+      java.lang.String getGroupSessionId();
+      /**
+       * <code>required string groupSessionId = 1;</code>
+       *
+       * <pre>
+       * @required
+       * </pre>
+       */
+      com.google.protobuf.ByteString
+          getGroupSessionIdBytes();
+
+      // required string name = 2;
+      /**
+       * <code>required string name = 2;</code>
+       *
+       * <pre>
+       * @required
+       * </pre>
+       */
+      boolean hasName();
+      /**
+       * <code>required string name = 2;</code>
+       *
+       * <pre>
+       * @required
+       * </pre>
+       */
+      java.lang.String getName();
+      /**
+       * <code>required string name = 2;</code>
+       *
+       * <pre>
+       * @required
+       * </pre>
+       */
+      com.google.protobuf.ByteString
+          getNameBytes();
+
+      // required bytes memberAuthData = 3;
+      /**
+       * <code>required bytes memberAuthData = 3;</code>
+       *
+       * <pre>
+       * @required
+       * </pre>
+       */
+      boolean hasMemberAuthData();
+      /**
+       * <code>required bytes memberAuthData = 3;</code>
+       *
+       * <pre>
+       * @required
+       * </pre>
+       */
+      com.google.protobuf.ByteString getMemberAuthData();
+
+      // optional bytes profileKey = 4;
+      /**
+       * <code>optional bytes profileKey = 4;</code>
+       */
+      boolean hasProfileKey();
+      /**
+       * <code>optional bytes profileKey = 4;</code>
+       */
+      com.google.protobuf.ByteString getProfileKey();
+
+      // optional .signalservice.DataMessage.LokiProfile profile = 5;
+      /**
+       * <code>optional .signalservice.DataMessage.LokiProfile profile = 5;</code>
+       */
+      boolean hasProfile();
+      /**
+       * <code>optional .signalservice.DataMessage.LokiProfile profile = 5;</code>
+       */
+      org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile getProfile();
+      /**
+       * <code>optional .signalservice.DataMessage.LokiProfile profile = 5;</code>
+       */
+      org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfileOrBuilder getProfileOrBuilder();
+
+      // required bytes adminSignature = 6;
+      /**
+       * <code>required bytes adminSignature = 6;</code>
+       *
+       * <pre>
+       * @required
+       * </pre>
+       */
+      boolean hasAdminSignature();
+      /**
+       * <code>required bytes adminSignature = 6;</code>
+       *
+       * <pre>
+       * @required
+       * </pre>
+       */
+      com.google.protobuf.ByteString getAdminSignature();
+    }
+    /**
+     * Protobuf type {@code signalservice.DataMessage.GroupUpdateInviteMessage}
+     *
+     * <pre>
+     * New closed groups
+     * </pre>
+     */
+    public static final class GroupUpdateInviteMessage extends
+        com.google.protobuf.GeneratedMessage
+        implements GroupUpdateInviteMessageOrBuilder {
+      // Use GroupUpdateInviteMessage.newBuilder() to construct.
+      private GroupUpdateInviteMessage(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+        super(builder);
+        this.unknownFields = builder.getUnknownFields();
+      }
+      private GroupUpdateInviteMessage(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+      private static final GroupUpdateInviteMessage defaultInstance;
+      public static GroupUpdateInviteMessage getDefaultInstance() {
+        return defaultInstance;
+      }
+
+      public GroupUpdateInviteMessage getDefaultInstanceForType() {
+        return defaultInstance;
+      }
+
+      private final com.google.protobuf.UnknownFieldSet unknownFields;
+      @java.lang.Override
+      public final com.google.protobuf.UnknownFieldSet
+          getUnknownFields() {
+        return this.unknownFields;
+      }
+      private GroupUpdateInviteMessage(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        initFields();
+        int mutable_bitField0_ = 0;
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+            com.google.protobuf.UnknownFieldSet.newBuilder();
+        try {
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              default: {
+                if (!parseUnknownField(input, unknownFields,
+                                       extensionRegistry, tag)) {
+                  done = true;
+                }
+                break;
+              }
+              case 10: {
+                bitField0_ |= 0x00000001;
+                groupSessionId_ = input.readBytes();
+                break;
+              }
+              case 18: {
+                bitField0_ |= 0x00000002;
+                name_ = input.readBytes();
+                break;
+              }
+              case 26: {
+                bitField0_ |= 0x00000004;
+                memberAuthData_ = input.readBytes();
+                break;
+              }
+              case 34: {
+                bitField0_ |= 0x00000008;
+                profileKey_ = input.readBytes();
+                break;
+              }
+              case 42: {
+                org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.Builder subBuilder = null;
+                if (((bitField0_ & 0x00000010) == 0x00000010)) {
+                  subBuilder = profile_.toBuilder();
+                }
+                profile_ = input.readMessage(org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.PARSER, extensionRegistry);
+                if (subBuilder != null) {
+                  subBuilder.mergeFrom(profile_);
+                  profile_ = subBuilder.buildPartial();
+                }
+                bitField0_ |= 0x00000010;
+                break;
+              }
+              case 50: {
+                bitField0_ |= 0x00000020;
+                adminSignature_ = input.readBytes();
+                break;
+              }
+            }
+          }
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(this);
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(
+              e.getMessage()).setUnfinishedMessage(this);
+        } finally {
+          this.unknownFields = unknownFields.build();
+          makeExtensionsImmutable();
+        }
+      }
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return org.session.libsignal.protos.SignalServiceProtos.internal_static_signalservice_DataMessage_GroupUpdateInviteMessage_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return org.session.libsignal.protos.SignalServiceProtos.internal_static_signalservice_DataMessage_GroupUpdateInviteMessage_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage.class, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage.Builder.class);
+      }
+
+      public static com.google.protobuf.Parser<GroupUpdateInviteMessage> PARSER =
+          new com.google.protobuf.AbstractParser<GroupUpdateInviteMessage>() {
+        public GroupUpdateInviteMessage parsePartialFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          return new GroupUpdateInviteMessage(input, extensionRegistry);
+        }
+      };
+
+      @java.lang.Override
+      public com.google.protobuf.Parser<GroupUpdateInviteMessage> getParserForType() {
+        return PARSER;
+      }
+
+      private int bitField0_;
+      // required string groupSessionId = 1;
+      public static final int GROUPSESSIONID_FIELD_NUMBER = 1;
+      private java.lang.Object groupSessionId_;
+      /**
+       * <code>required string groupSessionId = 1;</code>
+       *
+       * <pre>
+       * @required
+       * </pre>
+       */
+      public boolean hasGroupSessionId() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required string groupSessionId = 1;</code>
+       *
+       * <pre>
+       * @required
+       * </pre>
+       */
+      public java.lang.String getGroupSessionId() {
+        java.lang.Object ref = groupSessionId_;
+        if (ref instanceof java.lang.String) {
+          return (java.lang.String) ref;
+        } else {
+          com.google.protobuf.ByteString bs = 
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            groupSessionId_ = s;
+          }
+          return s;
+        }
+      }
+      /**
+       * <code>required string groupSessionId = 1;</code>
+       *
+       * <pre>
+       * @required
+       * </pre>
+       */
+      public com.google.protobuf.ByteString
+          getGroupSessionIdBytes() {
+        java.lang.Object ref = groupSessionId_;
+        if (ref instanceof java.lang.String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          groupSessionId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+
+      // required string name = 2;
+      public static final int NAME_FIELD_NUMBER = 2;
+      private java.lang.Object name_;
+      /**
+       * <code>required string name = 2;</code>
+       *
+       * <pre>
+       * @required
+       * </pre>
+       */
+      public boolean hasName() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>required string name = 2;</code>
+       *
+       * <pre>
+       * @required
+       * </pre>
+       */
+      public java.lang.String getName() {
+        java.lang.Object ref = name_;
+        if (ref instanceof java.lang.String) {
+          return (java.lang.String) ref;
+        } else {
+          com.google.protobuf.ByteString bs = 
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            name_ = s;
+          }
+          return s;
+        }
+      }
+      /**
+       * <code>required string name = 2;</code>
+       *
+       * <pre>
+       * @required
+       * </pre>
+       */
+      public com.google.protobuf.ByteString
+          getNameBytes() {
+        java.lang.Object ref = name_;
+        if (ref instanceof java.lang.String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          name_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+
+      // required bytes memberAuthData = 3;
+      public static final int MEMBERAUTHDATA_FIELD_NUMBER = 3;
+      private com.google.protobuf.ByteString memberAuthData_;
+      /**
+       * <code>required bytes memberAuthData = 3;</code>
+       *
+       * <pre>
+       * @required
+       * </pre>
+       */
+      public boolean hasMemberAuthData() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      /**
+       * <code>required bytes memberAuthData = 3;</code>
+       *
+       * <pre>
+       * @required
+       * </pre>
+       */
+      public com.google.protobuf.ByteString getMemberAuthData() {
+        return memberAuthData_;
+      }
+
+      // optional bytes profileKey = 4;
+      public static final int PROFILEKEY_FIELD_NUMBER = 4;
+      private com.google.protobuf.ByteString profileKey_;
+      /**
+       * <code>optional bytes profileKey = 4;</code>
+       */
+      public boolean hasProfileKey() {
+        return ((bitField0_ & 0x00000008) == 0x00000008);
+      }
+      /**
+       * <code>optional bytes profileKey = 4;</code>
+       */
+      public com.google.protobuf.ByteString getProfileKey() {
+        return profileKey_;
+      }
+
+      // optional .signalservice.DataMessage.LokiProfile profile = 5;
+      public static final int PROFILE_FIELD_NUMBER = 5;
+      private org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile profile_;
+      /**
+       * <code>optional .signalservice.DataMessage.LokiProfile profile = 5;</code>
+       */
+      public boolean hasProfile() {
+        return ((bitField0_ & 0x00000010) == 0x00000010);
+      }
+      /**
+       * <code>optional .signalservice.DataMessage.LokiProfile profile = 5;</code>
+       */
+      public org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile getProfile() {
+        return profile_;
+      }
+      /**
+       * <code>optional .signalservice.DataMessage.LokiProfile profile = 5;</code>
+       */
+      public org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfileOrBuilder getProfileOrBuilder() {
+        return profile_;
+      }
+
+      // required bytes adminSignature = 6;
+      public static final int ADMINSIGNATURE_FIELD_NUMBER = 6;
+      private com.google.protobuf.ByteString adminSignature_;
+      /**
+       * <code>required bytes adminSignature = 6;</code>
+       *
+       * <pre>
+       * @required
+       * </pre>
+       */
+      public boolean hasAdminSignature() {
+        return ((bitField0_ & 0x00000020) == 0x00000020);
+      }
+      /**
+       * <code>required bytes adminSignature = 6;</code>
+       *
+       * <pre>
+       * @required
+       * </pre>
+       */
+      public com.google.protobuf.ByteString getAdminSignature() {
+        return adminSignature_;
+      }
+
+      private void initFields() {
+        groupSessionId_ = "";
+        name_ = "";
+        memberAuthData_ = com.google.protobuf.ByteString.EMPTY;
+        profileKey_ = com.google.protobuf.ByteString.EMPTY;
+        profile_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.getDefaultInstance();
+        adminSignature_ = com.google.protobuf.ByteString.EMPTY;
+      }
+      private byte memoizedIsInitialized = -1;
+      public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized != -1) return isInitialized == 1;
+
+        if (!hasGroupSessionId()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+        if (!hasName()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+        if (!hasMemberAuthData()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+        if (!hasAdminSignature()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+        memoizedIsInitialized = 1;
+        return true;
+      }
+
+      public void writeTo(com.google.protobuf.CodedOutputStream output)
+                          throws java.io.IOException {
+        getSerializedSize();
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          output.writeBytes(1, getGroupSessionIdBytes());
+        }
+        if (((bitField0_ & 0x00000002) == 0x00000002)) {
+          output.writeBytes(2, getNameBytes());
+        }
+        if (((bitField0_ & 0x00000004) == 0x00000004)) {
+          output.writeBytes(3, memberAuthData_);
+        }
+        if (((bitField0_ & 0x00000008) == 0x00000008)) {
+          output.writeBytes(4, profileKey_);
+        }
+        if (((bitField0_ & 0x00000010) == 0x00000010)) {
+          output.writeMessage(5, profile_);
+        }
+        if (((bitField0_ & 0x00000020) == 0x00000020)) {
+          output.writeBytes(6, adminSignature_);
+        }
+        getUnknownFields().writeTo(output);
+      }
+
+      private int memoizedSerializedSize = -1;
+      public int getSerializedSize() {
+        int size = memoizedSerializedSize;
+        if (size != -1) return size;
+
+        size = 0;
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeBytesSize(1, getGroupSessionIdBytes());
+        }
+        if (((bitField0_ & 0x00000002) == 0x00000002)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeBytesSize(2, getNameBytes());
+        }
+        if (((bitField0_ & 0x00000004) == 0x00000004)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeBytesSize(3, memberAuthData_);
+        }
+        if (((bitField0_ & 0x00000008) == 0x00000008)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeBytesSize(4, profileKey_);
+        }
+        if (((bitField0_ & 0x00000010) == 0x00000010)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeMessageSize(5, profile_);
+        }
+        if (((bitField0_ & 0x00000020) == 0x00000020)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeBytesSize(6, adminSignature_);
+        }
+        size += getUnknownFields().getSerializedSize();
+        memoizedSerializedSize = size;
+        return size;
+      }
+
+      private static final long serialVersionUID = 0L;
+      @java.lang.Override
+      protected java.lang.Object writeReplace()
+          throws java.io.ObjectStreamException {
+        return super.writeReplace();
+      }
+
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage parseFrom(
+          com.google.protobuf.ByteString data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage parseFrom(
+          com.google.protobuf.ByteString data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage parseFrom(byte[] data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage parseFrom(
+          byte[] data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage parseFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage parseFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input, extensionRegistry);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage parseDelimitedFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return PARSER.parseDelimitedFrom(input);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage parseDelimitedFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return PARSER.parseDelimitedFrom(input, extensionRegistry);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage parseFrom(
+          com.google.protobuf.CodedInputStream input)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage parseFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input, extensionRegistry);
+      }
+
+      public static Builder newBuilder() { return Builder.create(); }
+      public Builder newBuilderForType() { return newBuilder(); }
+      public static Builder newBuilder(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage prototype) {
+        return newBuilder().mergeFrom(prototype);
+      }
+      public Builder toBuilder() { return newBuilder(this); }
+
+      @java.lang.Override
+      protected Builder newBuilderForType(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        Builder builder = new Builder(parent);
+        return builder;
+      }
+      /**
+       * Protobuf type {@code signalservice.DataMessage.GroupUpdateInviteMessage}
+       *
+       * <pre>
+       * New closed groups
+       * </pre>
+       */
+      public static final class Builder extends
+          com.google.protobuf.GeneratedMessage.Builder<Builder>
+         implements org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessageOrBuilder {
+        public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+          return org.session.libsignal.protos.SignalServiceProtos.internal_static_signalservice_DataMessage_GroupUpdateInviteMessage_descriptor;
+        }
+
+        protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+            internalGetFieldAccessorTable() {
+          return org.session.libsignal.protos.SignalServiceProtos.internal_static_signalservice_DataMessage_GroupUpdateInviteMessage_fieldAccessorTable
+              .ensureFieldAccessorsInitialized(
+                  org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage.class, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage.Builder.class);
+        }
+
+        // Construct using org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage.newBuilder()
+        private Builder() {
+          maybeForceBuilderInitialization();
+        }
+
+        private Builder(
+            com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+          super(parent);
+          maybeForceBuilderInitialization();
+        }
+        private void maybeForceBuilderInitialization() {
+          if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+            getProfileFieldBuilder();
+          }
+        }
+        private static Builder create() {
+          return new Builder();
+        }
+
+        public Builder clear() {
+          super.clear();
+          groupSessionId_ = "";
+          bitField0_ = (bitField0_ & ~0x00000001);
+          name_ = "";
+          bitField0_ = (bitField0_ & ~0x00000002);
+          memberAuthData_ = com.google.protobuf.ByteString.EMPTY;
+          bitField0_ = (bitField0_ & ~0x00000004);
+          profileKey_ = com.google.protobuf.ByteString.EMPTY;
+          bitField0_ = (bitField0_ & ~0x00000008);
+          if (profileBuilder_ == null) {
+            profile_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.getDefaultInstance();
+          } else {
+            profileBuilder_.clear();
+          }
+          bitField0_ = (bitField0_ & ~0x00000010);
+          adminSignature_ = com.google.protobuf.ByteString.EMPTY;
+          bitField0_ = (bitField0_ & ~0x00000020);
+          return this;
+        }
+
+        public Builder clone() {
+          return create().mergeFrom(buildPartial());
+        }
+
+        public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+          return org.session.libsignal.protos.SignalServiceProtos.internal_static_signalservice_DataMessage_GroupUpdateInviteMessage_descriptor;
+        }
+
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage getDefaultInstanceForType() {
+          return org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage.getDefaultInstance();
+        }
+
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage build() {
+          org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage result = buildPartial();
+          if (!result.isInitialized()) {
+            throw newUninitializedMessageException(result);
+          }
+          return result;
+        }
+
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage buildPartial() {
+          org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage result = new org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage(this);
+          int from_bitField0_ = bitField0_;
+          int to_bitField0_ = 0;
+          if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+            to_bitField0_ |= 0x00000001;
+          }
+          result.groupSessionId_ = groupSessionId_;
+          if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+            to_bitField0_ |= 0x00000002;
+          }
+          result.name_ = name_;
+          if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+            to_bitField0_ |= 0x00000004;
+          }
+          result.memberAuthData_ = memberAuthData_;
+          if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+            to_bitField0_ |= 0x00000008;
+          }
+          result.profileKey_ = profileKey_;
+          if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+            to_bitField0_ |= 0x00000010;
+          }
+          if (profileBuilder_ == null) {
+            result.profile_ = profile_;
+          } else {
+            result.profile_ = profileBuilder_.build();
+          }
+          if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
+            to_bitField0_ |= 0x00000020;
+          }
+          result.adminSignature_ = adminSignature_;
+          result.bitField0_ = to_bitField0_;
+          onBuilt();
+          return result;
+        }
+
+        public Builder mergeFrom(com.google.protobuf.Message other) {
+          if (other instanceof org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage) {
+            return mergeFrom((org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage)other);
+          } else {
+            super.mergeFrom(other);
+            return this;
+          }
+        }
+
+        public Builder mergeFrom(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage other) {
+          if (other == org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage.getDefaultInstance()) return this;
+          if (other.hasGroupSessionId()) {
+            bitField0_ |= 0x00000001;
+            groupSessionId_ = other.groupSessionId_;
+            onChanged();
+          }
+          if (other.hasName()) {
+            bitField0_ |= 0x00000002;
+            name_ = other.name_;
+            onChanged();
+          }
+          if (other.hasMemberAuthData()) {
+            setMemberAuthData(other.getMemberAuthData());
+          }
+          if (other.hasProfileKey()) {
+            setProfileKey(other.getProfileKey());
+          }
+          if (other.hasProfile()) {
+            mergeProfile(other.getProfile());
+          }
+          if (other.hasAdminSignature()) {
+            setAdminSignature(other.getAdminSignature());
+          }
+          this.mergeUnknownFields(other.getUnknownFields());
+          return this;
+        }
+
+        public final boolean isInitialized() {
+          if (!hasGroupSessionId()) {
+            
+            return false;
+          }
+          if (!hasName()) {
+            
+            return false;
+          }
+          if (!hasMemberAuthData()) {
+            
+            return false;
+          }
+          if (!hasAdminSignature()) {
+            
+            return false;
+          }
+          return true;
+        }
+
+        public Builder mergeFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+          org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage parsedMessage = null;
+          try {
+            parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            parsedMessage = (org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage) e.getUnfinishedMessage();
+            throw e;
+          } finally {
+            if (parsedMessage != null) {
+              mergeFrom(parsedMessage);
+            }
+          }
+          return this;
+        }
+        private int bitField0_;
+
+        // required string groupSessionId = 1;
+        private java.lang.Object groupSessionId_ = "";
+        /**
+         * <code>required string groupSessionId = 1;</code>
+         *
+         * <pre>
+         * @required
+         * </pre>
+         */
+        public boolean hasGroupSessionId() {
+          return ((bitField0_ & 0x00000001) == 0x00000001);
+        }
+        /**
+         * <code>required string groupSessionId = 1;</code>
+         *
+         * <pre>
+         * @required
+         * </pre>
+         */
+        public java.lang.String getGroupSessionId() {
+          java.lang.Object ref = groupSessionId_;
+          if (!(ref instanceof java.lang.String)) {
+            java.lang.String s = ((com.google.protobuf.ByteString) ref)
+                .toStringUtf8();
+            groupSessionId_ = s;
+            return s;
+          } else {
+            return (java.lang.String) ref;
+          }
+        }
+        /**
+         * <code>required string groupSessionId = 1;</code>
+         *
+         * <pre>
+         * @required
+         * </pre>
+         */
+        public com.google.protobuf.ByteString
+            getGroupSessionIdBytes() {
+          java.lang.Object ref = groupSessionId_;
+          if (ref instanceof String) {
+            com.google.protobuf.ByteString b = 
+                com.google.protobuf.ByteString.copyFromUtf8(
+                    (java.lang.String) ref);
+            groupSessionId_ = b;
+            return b;
+          } else {
+            return (com.google.protobuf.ByteString) ref;
+          }
+        }
+        /**
+         * <code>required string groupSessionId = 1;</code>
+         *
+         * <pre>
+         * @required
+         * </pre>
+         */
+        public Builder setGroupSessionId(
+            java.lang.String value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+          groupSessionId_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>required string groupSessionId = 1;</code>
+         *
+         * <pre>
+         * @required
+         * </pre>
+         */
+        public Builder clearGroupSessionId() {
+          bitField0_ = (bitField0_ & ~0x00000001);
+          groupSessionId_ = getDefaultInstance().getGroupSessionId();
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>required string groupSessionId = 1;</code>
+         *
+         * <pre>
+         * @required
+         * </pre>
+         */
+        public Builder setGroupSessionIdBytes(
+            com.google.protobuf.ByteString value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+          groupSessionId_ = value;
+          onChanged();
+          return this;
+        }
+
+        // required string name = 2;
+        private java.lang.Object name_ = "";
+        /**
+         * <code>required string name = 2;</code>
+         *
+         * <pre>
+         * @required
+         * </pre>
+         */
+        public boolean hasName() {
+          return ((bitField0_ & 0x00000002) == 0x00000002);
+        }
+        /**
+         * <code>required string name = 2;</code>
+         *
+         * <pre>
+         * @required
+         * </pre>
+         */
+        public java.lang.String getName() {
+          java.lang.Object ref = name_;
+          if (!(ref instanceof java.lang.String)) {
+            java.lang.String s = ((com.google.protobuf.ByteString) ref)
+                .toStringUtf8();
+            name_ = s;
+            return s;
+          } else {
+            return (java.lang.String) ref;
+          }
+        }
+        /**
+         * <code>required string name = 2;</code>
+         *
+         * <pre>
+         * @required
+         * </pre>
+         */
+        public com.google.protobuf.ByteString
+            getNameBytes() {
+          java.lang.Object ref = name_;
+          if (ref instanceof String) {
+            com.google.protobuf.ByteString b = 
+                com.google.protobuf.ByteString.copyFromUtf8(
+                    (java.lang.String) ref);
+            name_ = b;
+            return b;
+          } else {
+            return (com.google.protobuf.ByteString) ref;
+          }
+        }
+        /**
+         * <code>required string name = 2;</code>
+         *
+         * <pre>
+         * @required
+         * </pre>
+         */
+        public Builder setName(
+            java.lang.String value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+          name_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>required string name = 2;</code>
+         *
+         * <pre>
+         * @required
+         * </pre>
+         */
+        public Builder clearName() {
+          bitField0_ = (bitField0_ & ~0x00000002);
+          name_ = getDefaultInstance().getName();
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>required string name = 2;</code>
+         *
+         * <pre>
+         * @required
+         * </pre>
+         */
+        public Builder setNameBytes(
+            com.google.protobuf.ByteString value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+          name_ = value;
+          onChanged();
+          return this;
+        }
+
+        // required bytes memberAuthData = 3;
+        private com.google.protobuf.ByteString memberAuthData_ = com.google.protobuf.ByteString.EMPTY;
+        /**
+         * <code>required bytes memberAuthData = 3;</code>
+         *
+         * <pre>
+         * @required
+         * </pre>
+         */
+        public boolean hasMemberAuthData() {
+          return ((bitField0_ & 0x00000004) == 0x00000004);
+        }
+        /**
+         * <code>required bytes memberAuthData = 3;</code>
+         *
+         * <pre>
+         * @required
+         * </pre>
+         */
+        public com.google.protobuf.ByteString getMemberAuthData() {
+          return memberAuthData_;
+        }
+        /**
+         * <code>required bytes memberAuthData = 3;</code>
+         *
+         * <pre>
+         * @required
+         * </pre>
+         */
+        public Builder setMemberAuthData(com.google.protobuf.ByteString value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+          memberAuthData_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>required bytes memberAuthData = 3;</code>
+         *
+         * <pre>
+         * @required
+         * </pre>
+         */
+        public Builder clearMemberAuthData() {
+          bitField0_ = (bitField0_ & ~0x00000004);
+          memberAuthData_ = getDefaultInstance().getMemberAuthData();
+          onChanged();
+          return this;
+        }
+
+        // optional bytes profileKey = 4;
+        private com.google.protobuf.ByteString profileKey_ = com.google.protobuf.ByteString.EMPTY;
+        /**
+         * <code>optional bytes profileKey = 4;</code>
+         */
+        public boolean hasProfileKey() {
+          return ((bitField0_ & 0x00000008) == 0x00000008);
+        }
+        /**
+         * <code>optional bytes profileKey = 4;</code>
+         */
+        public com.google.protobuf.ByteString getProfileKey() {
+          return profileKey_;
+        }
+        /**
+         * <code>optional bytes profileKey = 4;</code>
+         */
+        public Builder setProfileKey(com.google.protobuf.ByteString value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000008;
+          profileKey_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>optional bytes profileKey = 4;</code>
+         */
+        public Builder clearProfileKey() {
+          bitField0_ = (bitField0_ & ~0x00000008);
+          profileKey_ = getDefaultInstance().getProfileKey();
+          onChanged();
+          return this;
+        }
+
+        // optional .signalservice.DataMessage.LokiProfile profile = 5;
+        private org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile profile_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.getDefaultInstance();
+        private com.google.protobuf.SingleFieldBuilder<
+            org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile, org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfileOrBuilder> profileBuilder_;
+        /**
+         * <code>optional .signalservice.DataMessage.LokiProfile profile = 5;</code>
+         */
+        public boolean hasProfile() {
+          return ((bitField0_ & 0x00000010) == 0x00000010);
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.LokiProfile profile = 5;</code>
+         */
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile getProfile() {
+          if (profileBuilder_ == null) {
+            return profile_;
+          } else {
+            return profileBuilder_.getMessage();
+          }
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.LokiProfile profile = 5;</code>
+         */
+        public Builder setProfile(org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile value) {
+          if (profileBuilder_ == null) {
+            if (value == null) {
+              throw new NullPointerException();
+            }
+            profile_ = value;
+            onChanged();
+          } else {
+            profileBuilder_.setMessage(value);
+          }
+          bitField0_ |= 0x00000010;
+          return this;
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.LokiProfile profile = 5;</code>
+         */
+        public Builder setProfile(
+            org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.Builder builderForValue) {
+          if (profileBuilder_ == null) {
+            profile_ = builderForValue.build();
+            onChanged();
+          } else {
+            profileBuilder_.setMessage(builderForValue.build());
+          }
+          bitField0_ |= 0x00000010;
+          return this;
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.LokiProfile profile = 5;</code>
+         */
+        public Builder mergeProfile(org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile value) {
+          if (profileBuilder_ == null) {
+            if (((bitField0_ & 0x00000010) == 0x00000010) &&
+                profile_ != org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.getDefaultInstance()) {
+              profile_ =
+                org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.newBuilder(profile_).mergeFrom(value).buildPartial();
+            } else {
+              profile_ = value;
+            }
+            onChanged();
+          } else {
+            profileBuilder_.mergeFrom(value);
+          }
+          bitField0_ |= 0x00000010;
+          return this;
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.LokiProfile profile = 5;</code>
+         */
+        public Builder clearProfile() {
+          if (profileBuilder_ == null) {
+            profile_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.getDefaultInstance();
+            onChanged();
+          } else {
+            profileBuilder_.clear();
+          }
+          bitField0_ = (bitField0_ & ~0x00000010);
+          return this;
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.LokiProfile profile = 5;</code>
+         */
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.Builder getProfileBuilder() {
+          bitField0_ |= 0x00000010;
+          onChanged();
+          return getProfileFieldBuilder().getBuilder();
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.LokiProfile profile = 5;</code>
+         */
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfileOrBuilder getProfileOrBuilder() {
+          if (profileBuilder_ != null) {
+            return profileBuilder_.getMessageOrBuilder();
+          } else {
+            return profile_;
+          }
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.LokiProfile profile = 5;</code>
+         */
+        private com.google.protobuf.SingleFieldBuilder<
+            org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile, org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfileOrBuilder> 
+            getProfileFieldBuilder() {
+          if (profileBuilder_ == null) {
+            profileBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+                org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile, org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfileOrBuilder>(
+                    profile_,
+                    getParentForChildren(),
+                    isClean());
+            profile_ = null;
+          }
+          return profileBuilder_;
+        }
+
+        // required bytes adminSignature = 6;
+        private com.google.protobuf.ByteString adminSignature_ = com.google.protobuf.ByteString.EMPTY;
+        /**
+         * <code>required bytes adminSignature = 6;</code>
+         *
+         * <pre>
+         * @required
+         * </pre>
+         */
+        public boolean hasAdminSignature() {
+          return ((bitField0_ & 0x00000020) == 0x00000020);
+        }
+        /**
+         * <code>required bytes adminSignature = 6;</code>
+         *
+         * <pre>
+         * @required
+         * </pre>
+         */
+        public com.google.protobuf.ByteString getAdminSignature() {
+          return adminSignature_;
+        }
+        /**
+         * <code>required bytes adminSignature = 6;</code>
+         *
+         * <pre>
+         * @required
+         * </pre>
+         */
+        public Builder setAdminSignature(com.google.protobuf.ByteString value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000020;
+          adminSignature_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>required bytes adminSignature = 6;</code>
+         *
+         * <pre>
+         * @required
+         * </pre>
+         */
+        public Builder clearAdminSignature() {
+          bitField0_ = (bitField0_ & ~0x00000020);
+          adminSignature_ = getDefaultInstance().getAdminSignature();
+          onChanged();
+          return this;
+        }
+
+        // @@protoc_insertion_point(builder_scope:signalservice.DataMessage.GroupUpdateInviteMessage)
+      }
+
+      static {
+        defaultInstance = new GroupUpdateInviteMessage(true);
+        defaultInstance.initFields();
+      }
+
+      // @@protoc_insertion_point(class_scope:signalservice.DataMessage.GroupUpdateInviteMessage)
+    }
+
+    public interface GroupUpdateDeleteMessageOrBuilder
+        extends com.google.protobuf.MessageOrBuilder {
+
+      // required string groupSessionId = 1;
+      /**
+       * <code>required string groupSessionId = 1;</code>
+       *
+       * <pre>
+       * @required
+       * </pre>
+       */
+      boolean hasGroupSessionId();
+      /**
+       * <code>required string groupSessionId = 1;</code>
+       *
+       * <pre>
+       * @required
+       * </pre>
+       */
+      java.lang.String getGroupSessionId();
+      /**
+       * <code>required string groupSessionId = 1;</code>
+       *
+       * <pre>
+       * @required
+       * </pre>
+       */
+      com.google.protobuf.ByteString
+          getGroupSessionIdBytes();
+
+      // required bytes adminSignature = 2;
+      /**
+       * <code>required bytes adminSignature = 2;</code>
+       *
+       * <pre>
+       * @required
+       * signature of "DELETE" || sessionId || timestamp
+       * sessionId is the sessionId of the person being removed
+       * </pre>
+       */
+      boolean hasAdminSignature();
+      /**
+       * <code>required bytes adminSignature = 2;</code>
+       *
+       * <pre>
+       * @required
+       * signature of "DELETE" || sessionId || timestamp
+       * sessionId is the sessionId of the person being removed
+       * </pre>
+       */
+      com.google.protobuf.ByteString getAdminSignature();
+    }
+    /**
+     * Protobuf type {@code signalservice.DataMessage.GroupUpdateDeleteMessage}
+     */
+    public static final class GroupUpdateDeleteMessage extends
+        com.google.protobuf.GeneratedMessage
+        implements GroupUpdateDeleteMessageOrBuilder {
+      // Use GroupUpdateDeleteMessage.newBuilder() to construct.
+      private GroupUpdateDeleteMessage(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+        super(builder);
+        this.unknownFields = builder.getUnknownFields();
+      }
+      private GroupUpdateDeleteMessage(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+      private static final GroupUpdateDeleteMessage defaultInstance;
+      public static GroupUpdateDeleteMessage getDefaultInstance() {
+        return defaultInstance;
+      }
+
+      public GroupUpdateDeleteMessage getDefaultInstanceForType() {
+        return defaultInstance;
+      }
+
+      private final com.google.protobuf.UnknownFieldSet unknownFields;
+      @java.lang.Override
+      public final com.google.protobuf.UnknownFieldSet
+          getUnknownFields() {
+        return this.unknownFields;
+      }
+      private GroupUpdateDeleteMessage(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        initFields();
+        int mutable_bitField0_ = 0;
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+            com.google.protobuf.UnknownFieldSet.newBuilder();
+        try {
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              default: {
+                if (!parseUnknownField(input, unknownFields,
+                                       extensionRegistry, tag)) {
+                  done = true;
+                }
+                break;
+              }
+              case 10: {
+                bitField0_ |= 0x00000001;
+                groupSessionId_ = input.readBytes();
+                break;
+              }
+              case 18: {
+                bitField0_ |= 0x00000002;
+                adminSignature_ = input.readBytes();
+                break;
+              }
+            }
+          }
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(this);
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(
+              e.getMessage()).setUnfinishedMessage(this);
+        } finally {
+          this.unknownFields = unknownFields.build();
+          makeExtensionsImmutable();
+        }
+      }
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return org.session.libsignal.protos.SignalServiceProtos.internal_static_signalservice_DataMessage_GroupUpdateDeleteMessage_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return org.session.libsignal.protos.SignalServiceProtos.internal_static_signalservice_DataMessage_GroupUpdateDeleteMessage_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage.class, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage.Builder.class);
+      }
+
+      public static com.google.protobuf.Parser<GroupUpdateDeleteMessage> PARSER =
+          new com.google.protobuf.AbstractParser<GroupUpdateDeleteMessage>() {
+        public GroupUpdateDeleteMessage parsePartialFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          return new GroupUpdateDeleteMessage(input, extensionRegistry);
+        }
+      };
+
+      @java.lang.Override
+      public com.google.protobuf.Parser<GroupUpdateDeleteMessage> getParserForType() {
+        return PARSER;
+      }
+
+      private int bitField0_;
+      // required string groupSessionId = 1;
+      public static final int GROUPSESSIONID_FIELD_NUMBER = 1;
+      private java.lang.Object groupSessionId_;
+      /**
+       * <code>required string groupSessionId = 1;</code>
+       *
+       * <pre>
+       * @required
+       * </pre>
+       */
+      public boolean hasGroupSessionId() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required string groupSessionId = 1;</code>
+       *
+       * <pre>
+       * @required
+       * </pre>
+       */
+      public java.lang.String getGroupSessionId() {
+        java.lang.Object ref = groupSessionId_;
+        if (ref instanceof java.lang.String) {
+          return (java.lang.String) ref;
+        } else {
+          com.google.protobuf.ByteString bs = 
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            groupSessionId_ = s;
+          }
+          return s;
+        }
+      }
+      /**
+       * <code>required string groupSessionId = 1;</code>
+       *
+       * <pre>
+       * @required
+       * </pre>
+       */
+      public com.google.protobuf.ByteString
+          getGroupSessionIdBytes() {
+        java.lang.Object ref = groupSessionId_;
+        if (ref instanceof java.lang.String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          groupSessionId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+
+      // required bytes adminSignature = 2;
+      public static final int ADMINSIGNATURE_FIELD_NUMBER = 2;
+      private com.google.protobuf.ByteString adminSignature_;
+      /**
+       * <code>required bytes adminSignature = 2;</code>
+       *
+       * <pre>
+       * @required
+       * signature of "DELETE" || sessionId || timestamp
+       * sessionId is the sessionId of the person being removed
+       * </pre>
+       */
+      public boolean hasAdminSignature() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>required bytes adminSignature = 2;</code>
+       *
+       * <pre>
+       * @required
+       * signature of "DELETE" || sessionId || timestamp
+       * sessionId is the sessionId of the person being removed
+       * </pre>
+       */
+      public com.google.protobuf.ByteString getAdminSignature() {
+        return adminSignature_;
+      }
+
+      private void initFields() {
+        groupSessionId_ = "";
+        adminSignature_ = com.google.protobuf.ByteString.EMPTY;
+      }
+      private byte memoizedIsInitialized = -1;
+      public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized != -1) return isInitialized == 1;
+
+        if (!hasGroupSessionId()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+        if (!hasAdminSignature()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+        memoizedIsInitialized = 1;
+        return true;
+      }
+
+      public void writeTo(com.google.protobuf.CodedOutputStream output)
+                          throws java.io.IOException {
+        getSerializedSize();
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          output.writeBytes(1, getGroupSessionIdBytes());
+        }
+        if (((bitField0_ & 0x00000002) == 0x00000002)) {
+          output.writeBytes(2, adminSignature_);
+        }
+        getUnknownFields().writeTo(output);
+      }
+
+      private int memoizedSerializedSize = -1;
+      public int getSerializedSize() {
+        int size = memoizedSerializedSize;
+        if (size != -1) return size;
+
+        size = 0;
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeBytesSize(1, getGroupSessionIdBytes());
+        }
+        if (((bitField0_ & 0x00000002) == 0x00000002)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeBytesSize(2, adminSignature_);
+        }
+        size += getUnknownFields().getSerializedSize();
+        memoizedSerializedSize = size;
+        return size;
+      }
+
+      private static final long serialVersionUID = 0L;
+      @java.lang.Override
+      protected java.lang.Object writeReplace()
+          throws java.io.ObjectStreamException {
+        return super.writeReplace();
+      }
+
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage parseFrom(
+          com.google.protobuf.ByteString data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage parseFrom(
+          com.google.protobuf.ByteString data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage parseFrom(byte[] data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage parseFrom(
+          byte[] data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage parseFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage parseFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input, extensionRegistry);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage parseDelimitedFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return PARSER.parseDelimitedFrom(input);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage parseDelimitedFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return PARSER.parseDelimitedFrom(input, extensionRegistry);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage parseFrom(
+          com.google.protobuf.CodedInputStream input)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage parseFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input, extensionRegistry);
+      }
+
+      public static Builder newBuilder() { return Builder.create(); }
+      public Builder newBuilderForType() { return newBuilder(); }
+      public static Builder newBuilder(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage prototype) {
+        return newBuilder().mergeFrom(prototype);
+      }
+      public Builder toBuilder() { return newBuilder(this); }
+
+      @java.lang.Override
+      protected Builder newBuilderForType(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        Builder builder = new Builder(parent);
+        return builder;
+      }
+      /**
+       * Protobuf type {@code signalservice.DataMessage.GroupUpdateDeleteMessage}
+       */
+      public static final class Builder extends
+          com.google.protobuf.GeneratedMessage.Builder<Builder>
+         implements org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessageOrBuilder {
+        public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+          return org.session.libsignal.protos.SignalServiceProtos.internal_static_signalservice_DataMessage_GroupUpdateDeleteMessage_descriptor;
+        }
+
+        protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+            internalGetFieldAccessorTable() {
+          return org.session.libsignal.protos.SignalServiceProtos.internal_static_signalservice_DataMessage_GroupUpdateDeleteMessage_fieldAccessorTable
+              .ensureFieldAccessorsInitialized(
+                  org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage.class, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage.Builder.class);
+        }
+
+        // Construct using org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage.newBuilder()
+        private Builder() {
+          maybeForceBuilderInitialization();
+        }
+
+        private Builder(
+            com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+          super(parent);
+          maybeForceBuilderInitialization();
+        }
+        private void maybeForceBuilderInitialization() {
+          if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          }
+        }
+        private static Builder create() {
+          return new Builder();
+        }
+
+        public Builder clear() {
+          super.clear();
+          groupSessionId_ = "";
+          bitField0_ = (bitField0_ & ~0x00000001);
+          adminSignature_ = com.google.protobuf.ByteString.EMPTY;
+          bitField0_ = (bitField0_ & ~0x00000002);
+          return this;
+        }
+
+        public Builder clone() {
+          return create().mergeFrom(buildPartial());
+        }
+
+        public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+          return org.session.libsignal.protos.SignalServiceProtos.internal_static_signalservice_DataMessage_GroupUpdateDeleteMessage_descriptor;
+        }
+
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage getDefaultInstanceForType() {
+          return org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage.getDefaultInstance();
+        }
+
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage build() {
+          org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage result = buildPartial();
+          if (!result.isInitialized()) {
+            throw newUninitializedMessageException(result);
+          }
+          return result;
+        }
+
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage buildPartial() {
+          org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage result = new org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage(this);
+          int from_bitField0_ = bitField0_;
+          int to_bitField0_ = 0;
+          if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+            to_bitField0_ |= 0x00000001;
+          }
+          result.groupSessionId_ = groupSessionId_;
+          if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+            to_bitField0_ |= 0x00000002;
+          }
+          result.adminSignature_ = adminSignature_;
+          result.bitField0_ = to_bitField0_;
+          onBuilt();
+          return result;
+        }
+
+        public Builder mergeFrom(com.google.protobuf.Message other) {
+          if (other instanceof org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage) {
+            return mergeFrom((org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage)other);
+          } else {
+            super.mergeFrom(other);
+            return this;
+          }
+        }
+
+        public Builder mergeFrom(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage other) {
+          if (other == org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage.getDefaultInstance()) return this;
+          if (other.hasGroupSessionId()) {
+            bitField0_ |= 0x00000001;
+            groupSessionId_ = other.groupSessionId_;
+            onChanged();
+          }
+          if (other.hasAdminSignature()) {
+            setAdminSignature(other.getAdminSignature());
+          }
+          this.mergeUnknownFields(other.getUnknownFields());
+          return this;
+        }
+
+        public final boolean isInitialized() {
+          if (!hasGroupSessionId()) {
+            
+            return false;
+          }
+          if (!hasAdminSignature()) {
+            
+            return false;
+          }
+          return true;
+        }
+
+        public Builder mergeFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+          org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage parsedMessage = null;
+          try {
+            parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            parsedMessage = (org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage) e.getUnfinishedMessage();
+            throw e;
+          } finally {
+            if (parsedMessage != null) {
+              mergeFrom(parsedMessage);
+            }
+          }
+          return this;
+        }
+        private int bitField0_;
+
+        // required string groupSessionId = 1;
+        private java.lang.Object groupSessionId_ = "";
+        /**
+         * <code>required string groupSessionId = 1;</code>
+         *
+         * <pre>
+         * @required
+         * </pre>
+         */
+        public boolean hasGroupSessionId() {
+          return ((bitField0_ & 0x00000001) == 0x00000001);
+        }
+        /**
+         * <code>required string groupSessionId = 1;</code>
+         *
+         * <pre>
+         * @required
+         * </pre>
+         */
+        public java.lang.String getGroupSessionId() {
+          java.lang.Object ref = groupSessionId_;
+          if (!(ref instanceof java.lang.String)) {
+            java.lang.String s = ((com.google.protobuf.ByteString) ref)
+                .toStringUtf8();
+            groupSessionId_ = s;
+            return s;
+          } else {
+            return (java.lang.String) ref;
+          }
+        }
+        /**
+         * <code>required string groupSessionId = 1;</code>
+         *
+         * <pre>
+         * @required
+         * </pre>
+         */
+        public com.google.protobuf.ByteString
+            getGroupSessionIdBytes() {
+          java.lang.Object ref = groupSessionId_;
+          if (ref instanceof String) {
+            com.google.protobuf.ByteString b = 
+                com.google.protobuf.ByteString.copyFromUtf8(
+                    (java.lang.String) ref);
+            groupSessionId_ = b;
+            return b;
+          } else {
+            return (com.google.protobuf.ByteString) ref;
+          }
+        }
+        /**
+         * <code>required string groupSessionId = 1;</code>
+         *
+         * <pre>
+         * @required
+         * </pre>
+         */
+        public Builder setGroupSessionId(
+            java.lang.String value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+          groupSessionId_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>required string groupSessionId = 1;</code>
+         *
+         * <pre>
+         * @required
+         * </pre>
+         */
+        public Builder clearGroupSessionId() {
+          bitField0_ = (bitField0_ & ~0x00000001);
+          groupSessionId_ = getDefaultInstance().getGroupSessionId();
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>required string groupSessionId = 1;</code>
+         *
+         * <pre>
+         * @required
+         * </pre>
+         */
+        public Builder setGroupSessionIdBytes(
+            com.google.protobuf.ByteString value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+          groupSessionId_ = value;
+          onChanged();
+          return this;
+        }
+
+        // required bytes adminSignature = 2;
+        private com.google.protobuf.ByteString adminSignature_ = com.google.protobuf.ByteString.EMPTY;
+        /**
+         * <code>required bytes adminSignature = 2;</code>
+         *
+         * <pre>
+         * @required
+         * signature of "DELETE" || sessionId || timestamp
+         * sessionId is the sessionId of the person being removed
+         * </pre>
+         */
+        public boolean hasAdminSignature() {
+          return ((bitField0_ & 0x00000002) == 0x00000002);
+        }
+        /**
+         * <code>required bytes adminSignature = 2;</code>
+         *
+         * <pre>
+         * @required
+         * signature of "DELETE" || sessionId || timestamp
+         * sessionId is the sessionId of the person being removed
+         * </pre>
+         */
+        public com.google.protobuf.ByteString getAdminSignature() {
+          return adminSignature_;
+        }
+        /**
+         * <code>required bytes adminSignature = 2;</code>
+         *
+         * <pre>
+         * @required
+         * signature of "DELETE" || sessionId || timestamp
+         * sessionId is the sessionId of the person being removed
+         * </pre>
+         */
+        public Builder setAdminSignature(com.google.protobuf.ByteString value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+          adminSignature_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>required bytes adminSignature = 2;</code>
+         *
+         * <pre>
+         * @required
+         * signature of "DELETE" || sessionId || timestamp
+         * sessionId is the sessionId of the person being removed
+         * </pre>
+         */
+        public Builder clearAdminSignature() {
+          bitField0_ = (bitField0_ & ~0x00000002);
+          adminSignature_ = getDefaultInstance().getAdminSignature();
+          onChanged();
+          return this;
+        }
+
+        // @@protoc_insertion_point(builder_scope:signalservice.DataMessage.GroupUpdateDeleteMessage)
+      }
+
+      static {
+        defaultInstance = new GroupUpdateDeleteMessage(true);
+        defaultInstance.initFields();
+      }
+
+      // @@protoc_insertion_point(class_scope:signalservice.DataMessage.GroupUpdateDeleteMessage)
+    }
+
+    public interface GroupUpdatePromoteMessageOrBuilder
+        extends com.google.protobuf.MessageOrBuilder {
+
+      // required bytes groupIdentitySeed = 1;
+      /**
+       * <code>required bytes groupIdentitySeed = 1;</code>
+       *
+       * <pre>
+       * @required
+       * </pre>
+       */
+      boolean hasGroupIdentitySeed();
+      /**
+       * <code>required bytes groupIdentitySeed = 1;</code>
+       *
+       * <pre>
+       * @required
+       * </pre>
+       */
+      com.google.protobuf.ByteString getGroupIdentitySeed();
+    }
+    /**
+     * Protobuf type {@code signalservice.DataMessage.GroupUpdatePromoteMessage}
+     */
+    public static final class GroupUpdatePromoteMessage extends
+        com.google.protobuf.GeneratedMessage
+        implements GroupUpdatePromoteMessageOrBuilder {
+      // Use GroupUpdatePromoteMessage.newBuilder() to construct.
+      private GroupUpdatePromoteMessage(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+        super(builder);
+        this.unknownFields = builder.getUnknownFields();
+      }
+      private GroupUpdatePromoteMessage(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+      private static final GroupUpdatePromoteMessage defaultInstance;
+      public static GroupUpdatePromoteMessage getDefaultInstance() {
+        return defaultInstance;
+      }
+
+      public GroupUpdatePromoteMessage getDefaultInstanceForType() {
+        return defaultInstance;
+      }
+
+      private final com.google.protobuf.UnknownFieldSet unknownFields;
+      @java.lang.Override
+      public final com.google.protobuf.UnknownFieldSet
+          getUnknownFields() {
+        return this.unknownFields;
+      }
+      private GroupUpdatePromoteMessage(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        initFields();
+        int mutable_bitField0_ = 0;
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+            com.google.protobuf.UnknownFieldSet.newBuilder();
+        try {
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              default: {
+                if (!parseUnknownField(input, unknownFields,
+                                       extensionRegistry, tag)) {
+                  done = true;
+                }
+                break;
+              }
+              case 10: {
+                bitField0_ |= 0x00000001;
+                groupIdentitySeed_ = input.readBytes();
+                break;
+              }
+            }
+          }
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(this);
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(
+              e.getMessage()).setUnfinishedMessage(this);
+        } finally {
+          this.unknownFields = unknownFields.build();
+          makeExtensionsImmutable();
+        }
+      }
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return org.session.libsignal.protos.SignalServiceProtos.internal_static_signalservice_DataMessage_GroupUpdatePromoteMessage_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return org.session.libsignal.protos.SignalServiceProtos.internal_static_signalservice_DataMessage_GroupUpdatePromoteMessage_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage.class, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage.Builder.class);
+      }
+
+      public static com.google.protobuf.Parser<GroupUpdatePromoteMessage> PARSER =
+          new com.google.protobuf.AbstractParser<GroupUpdatePromoteMessage>() {
+        public GroupUpdatePromoteMessage parsePartialFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          return new GroupUpdatePromoteMessage(input, extensionRegistry);
+        }
+      };
+
+      @java.lang.Override
+      public com.google.protobuf.Parser<GroupUpdatePromoteMessage> getParserForType() {
+        return PARSER;
+      }
+
+      private int bitField0_;
+      // required bytes groupIdentitySeed = 1;
+      public static final int GROUPIDENTITYSEED_FIELD_NUMBER = 1;
+      private com.google.protobuf.ByteString groupIdentitySeed_;
+      /**
+       * <code>required bytes groupIdentitySeed = 1;</code>
+       *
+       * <pre>
+       * @required
+       * </pre>
+       */
+      public boolean hasGroupIdentitySeed() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required bytes groupIdentitySeed = 1;</code>
+       *
+       * <pre>
+       * @required
+       * </pre>
+       */
+      public com.google.protobuf.ByteString getGroupIdentitySeed() {
+        return groupIdentitySeed_;
+      }
+
+      private void initFields() {
+        groupIdentitySeed_ = com.google.protobuf.ByteString.EMPTY;
+      }
+      private byte memoizedIsInitialized = -1;
+      public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized != -1) return isInitialized == 1;
+
+        if (!hasGroupIdentitySeed()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+        memoizedIsInitialized = 1;
+        return true;
+      }
+
+      public void writeTo(com.google.protobuf.CodedOutputStream output)
+                          throws java.io.IOException {
+        getSerializedSize();
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          output.writeBytes(1, groupIdentitySeed_);
+        }
+        getUnknownFields().writeTo(output);
+      }
+
+      private int memoizedSerializedSize = -1;
+      public int getSerializedSize() {
+        int size = memoizedSerializedSize;
+        if (size != -1) return size;
+
+        size = 0;
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeBytesSize(1, groupIdentitySeed_);
+        }
+        size += getUnknownFields().getSerializedSize();
+        memoizedSerializedSize = size;
+        return size;
+      }
+
+      private static final long serialVersionUID = 0L;
+      @java.lang.Override
+      protected java.lang.Object writeReplace()
+          throws java.io.ObjectStreamException {
+        return super.writeReplace();
+      }
+
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage parseFrom(
+          com.google.protobuf.ByteString data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage parseFrom(
+          com.google.protobuf.ByteString data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage parseFrom(byte[] data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage parseFrom(
+          byte[] data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage parseFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage parseFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input, extensionRegistry);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage parseDelimitedFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return PARSER.parseDelimitedFrom(input);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage parseDelimitedFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return PARSER.parseDelimitedFrom(input, extensionRegistry);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage parseFrom(
+          com.google.protobuf.CodedInputStream input)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage parseFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input, extensionRegistry);
+      }
+
+      public static Builder newBuilder() { return Builder.create(); }
+      public Builder newBuilderForType() { return newBuilder(); }
+      public static Builder newBuilder(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage prototype) {
+        return newBuilder().mergeFrom(prototype);
+      }
+      public Builder toBuilder() { return newBuilder(this); }
+
+      @java.lang.Override
+      protected Builder newBuilderForType(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        Builder builder = new Builder(parent);
+        return builder;
+      }
+      /**
+       * Protobuf type {@code signalservice.DataMessage.GroupUpdatePromoteMessage}
+       */
+      public static final class Builder extends
+          com.google.protobuf.GeneratedMessage.Builder<Builder>
+         implements org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessageOrBuilder {
+        public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+          return org.session.libsignal.protos.SignalServiceProtos.internal_static_signalservice_DataMessage_GroupUpdatePromoteMessage_descriptor;
+        }
+
+        protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+            internalGetFieldAccessorTable() {
+          return org.session.libsignal.protos.SignalServiceProtos.internal_static_signalservice_DataMessage_GroupUpdatePromoteMessage_fieldAccessorTable
+              .ensureFieldAccessorsInitialized(
+                  org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage.class, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage.Builder.class);
+        }
+
+        // Construct using org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage.newBuilder()
+        private Builder() {
+          maybeForceBuilderInitialization();
+        }
+
+        private Builder(
+            com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+          super(parent);
+          maybeForceBuilderInitialization();
+        }
+        private void maybeForceBuilderInitialization() {
+          if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          }
+        }
+        private static Builder create() {
+          return new Builder();
+        }
+
+        public Builder clear() {
+          super.clear();
+          groupIdentitySeed_ = com.google.protobuf.ByteString.EMPTY;
+          bitField0_ = (bitField0_ & ~0x00000001);
+          return this;
+        }
+
+        public Builder clone() {
+          return create().mergeFrom(buildPartial());
+        }
+
+        public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+          return org.session.libsignal.protos.SignalServiceProtos.internal_static_signalservice_DataMessage_GroupUpdatePromoteMessage_descriptor;
+        }
+
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage getDefaultInstanceForType() {
+          return org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage.getDefaultInstance();
+        }
+
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage build() {
+          org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage result = buildPartial();
+          if (!result.isInitialized()) {
+            throw newUninitializedMessageException(result);
+          }
+          return result;
+        }
+
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage buildPartial() {
+          org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage result = new org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage(this);
+          int from_bitField0_ = bitField0_;
+          int to_bitField0_ = 0;
+          if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+            to_bitField0_ |= 0x00000001;
+          }
+          result.groupIdentitySeed_ = groupIdentitySeed_;
+          result.bitField0_ = to_bitField0_;
+          onBuilt();
+          return result;
+        }
+
+        public Builder mergeFrom(com.google.protobuf.Message other) {
+          if (other instanceof org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage) {
+            return mergeFrom((org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage)other);
+          } else {
+            super.mergeFrom(other);
+            return this;
+          }
+        }
+
+        public Builder mergeFrom(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage other) {
+          if (other == org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage.getDefaultInstance()) return this;
+          if (other.hasGroupIdentitySeed()) {
+            setGroupIdentitySeed(other.getGroupIdentitySeed());
+          }
+          this.mergeUnknownFields(other.getUnknownFields());
+          return this;
+        }
+
+        public final boolean isInitialized() {
+          if (!hasGroupIdentitySeed()) {
+            
+            return false;
+          }
+          return true;
+        }
+
+        public Builder mergeFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+          org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage parsedMessage = null;
+          try {
+            parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            parsedMessage = (org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage) e.getUnfinishedMessage();
+            throw e;
+          } finally {
+            if (parsedMessage != null) {
+              mergeFrom(parsedMessage);
+            }
+          }
+          return this;
+        }
+        private int bitField0_;
+
+        // required bytes groupIdentitySeed = 1;
+        private com.google.protobuf.ByteString groupIdentitySeed_ = com.google.protobuf.ByteString.EMPTY;
+        /**
+         * <code>required bytes groupIdentitySeed = 1;</code>
+         *
+         * <pre>
+         * @required
+         * </pre>
+         */
+        public boolean hasGroupIdentitySeed() {
+          return ((bitField0_ & 0x00000001) == 0x00000001);
+        }
+        /**
+         * <code>required bytes groupIdentitySeed = 1;</code>
+         *
+         * <pre>
+         * @required
+         * </pre>
+         */
+        public com.google.protobuf.ByteString getGroupIdentitySeed() {
+          return groupIdentitySeed_;
+        }
+        /**
+         * <code>required bytes groupIdentitySeed = 1;</code>
+         *
+         * <pre>
+         * @required
+         * </pre>
+         */
+        public Builder setGroupIdentitySeed(com.google.protobuf.ByteString value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+          groupIdentitySeed_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>required bytes groupIdentitySeed = 1;</code>
+         *
+         * <pre>
+         * @required
+         * </pre>
+         */
+        public Builder clearGroupIdentitySeed() {
+          bitField0_ = (bitField0_ & ~0x00000001);
+          groupIdentitySeed_ = getDefaultInstance().getGroupIdentitySeed();
+          onChanged();
+          return this;
+        }
+
+        // @@protoc_insertion_point(builder_scope:signalservice.DataMessage.GroupUpdatePromoteMessage)
+      }
+
+      static {
+        defaultInstance = new GroupUpdatePromoteMessage(true);
+        defaultInstance.initFields();
+      }
+
+      // @@protoc_insertion_point(class_scope:signalservice.DataMessage.GroupUpdatePromoteMessage)
+    }
+
+    public interface GroupUpdateInfoChangeMessageOrBuilder
+        extends com.google.protobuf.MessageOrBuilder {
+
+      // required .signalservice.DataMessage.GroupUpdateInfoChangeMessage.Type type = 1;
+      /**
+       * <code>required .signalservice.DataMessage.GroupUpdateInfoChangeMessage.Type type = 1;</code>
+       *
+       * <pre>
+       * @required
+       * </pre>
+       */
+      boolean hasType();
+      /**
+       * <code>required .signalservice.DataMessage.GroupUpdateInfoChangeMessage.Type type = 1;</code>
+       *
+       * <pre>
+       * @required
+       * </pre>
+       */
+      org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage.Type getType();
+
+      // optional string updatedName = 2;
+      /**
+       * <code>optional string updatedName = 2;</code>
+       */
+      boolean hasUpdatedName();
+      /**
+       * <code>optional string updatedName = 2;</code>
+       */
+      java.lang.String getUpdatedName();
+      /**
+       * <code>optional string updatedName = 2;</code>
+       */
+      com.google.protobuf.ByteString
+          getUpdatedNameBytes();
+
+      // optional uint32 updatedExpiration = 3;
+      /**
+       * <code>optional uint32 updatedExpiration = 3;</code>
+       */
+      boolean hasUpdatedExpiration();
+      /**
+       * <code>optional uint32 updatedExpiration = 3;</code>
+       */
+      int getUpdatedExpiration();
+    }
+    /**
+     * Protobuf type {@code signalservice.DataMessage.GroupUpdateInfoChangeMessage}
+     */
+    public static final class GroupUpdateInfoChangeMessage extends
+        com.google.protobuf.GeneratedMessage
+        implements GroupUpdateInfoChangeMessageOrBuilder {
+      // Use GroupUpdateInfoChangeMessage.newBuilder() to construct.
+      private GroupUpdateInfoChangeMessage(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+        super(builder);
+        this.unknownFields = builder.getUnknownFields();
+      }
+      private GroupUpdateInfoChangeMessage(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+      private static final GroupUpdateInfoChangeMessage defaultInstance;
+      public static GroupUpdateInfoChangeMessage getDefaultInstance() {
+        return defaultInstance;
+      }
+
+      public GroupUpdateInfoChangeMessage getDefaultInstanceForType() {
+        return defaultInstance;
+      }
+
+      private final com.google.protobuf.UnknownFieldSet unknownFields;
+      @java.lang.Override
+      public final com.google.protobuf.UnknownFieldSet
+          getUnknownFields() {
+        return this.unknownFields;
+      }
+      private GroupUpdateInfoChangeMessage(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        initFields();
+        int mutable_bitField0_ = 0;
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+            com.google.protobuf.UnknownFieldSet.newBuilder();
+        try {
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              default: {
+                if (!parseUnknownField(input, unknownFields,
+                                       extensionRegistry, tag)) {
+                  done = true;
+                }
+                break;
+              }
+              case 8: {
+                int rawValue = input.readEnum();
+                org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage.Type value = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage.Type.valueOf(rawValue);
+                if (value == null) {
+                  unknownFields.mergeVarintField(1, rawValue);
+                } else {
+                  bitField0_ |= 0x00000001;
+                  type_ = value;
+                }
+                break;
+              }
+              case 18: {
+                bitField0_ |= 0x00000002;
+                updatedName_ = input.readBytes();
+                break;
+              }
+              case 24: {
+                bitField0_ |= 0x00000004;
+                updatedExpiration_ = input.readUInt32();
+                break;
+              }
+            }
+          }
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(this);
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(
+              e.getMessage()).setUnfinishedMessage(this);
+        } finally {
+          this.unknownFields = unknownFields.build();
+          makeExtensionsImmutable();
+        }
+      }
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return org.session.libsignal.protos.SignalServiceProtos.internal_static_signalservice_DataMessage_GroupUpdateInfoChangeMessage_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return org.session.libsignal.protos.SignalServiceProtos.internal_static_signalservice_DataMessage_GroupUpdateInfoChangeMessage_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage.class, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage.Builder.class);
+      }
+
+      public static com.google.protobuf.Parser<GroupUpdateInfoChangeMessage> PARSER =
+          new com.google.protobuf.AbstractParser<GroupUpdateInfoChangeMessage>() {
+        public GroupUpdateInfoChangeMessage parsePartialFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          return new GroupUpdateInfoChangeMessage(input, extensionRegistry);
+        }
+      };
+
+      @java.lang.Override
+      public com.google.protobuf.Parser<GroupUpdateInfoChangeMessage> getParserForType() {
+        return PARSER;
+      }
+
+      /**
+       * Protobuf enum {@code signalservice.DataMessage.GroupUpdateInfoChangeMessage.Type}
+       */
+      public enum Type
+          implements com.google.protobuf.ProtocolMessageEnum {
+        /**
+         * <code>NAME = 1;</code>
+         */
+        NAME(0, 1),
+        /**
+         * <code>AVATAR = 2;</code>
+         */
+        AVATAR(1, 2),
+        /**
+         * <code>DISAPPEARING_MESSAGES = 3;</code>
+         */
+        DISAPPEARING_MESSAGES(2, 3),
+        ;
+
+        /**
+         * <code>NAME = 1;</code>
+         */
+        public static final int NAME_VALUE = 1;
+        /**
+         * <code>AVATAR = 2;</code>
+         */
+        public static final int AVATAR_VALUE = 2;
+        /**
+         * <code>DISAPPEARING_MESSAGES = 3;</code>
+         */
+        public static final int DISAPPEARING_MESSAGES_VALUE = 3;
+
+
+        public final int getNumber() { return value; }
+
+        public static Type valueOf(int value) {
+          switch (value) {
+            case 1: return NAME;
+            case 2: return AVATAR;
+            case 3: return DISAPPEARING_MESSAGES;
+            default: return null;
+          }
+        }
+
+        public static com.google.protobuf.Internal.EnumLiteMap<Type>
+            internalGetValueMap() {
+          return internalValueMap;
+        }
+        private static com.google.protobuf.Internal.EnumLiteMap<Type>
+            internalValueMap =
+              new com.google.protobuf.Internal.EnumLiteMap<Type>() {
+                public Type findValueByNumber(int number) {
+                  return Type.valueOf(number);
+                }
+              };
+
+        public final com.google.protobuf.Descriptors.EnumValueDescriptor
+            getValueDescriptor() {
+          return getDescriptor().getValues().get(index);
+        }
+        public final com.google.protobuf.Descriptors.EnumDescriptor
+            getDescriptorForType() {
+          return getDescriptor();
+        }
+        public static final com.google.protobuf.Descriptors.EnumDescriptor
+            getDescriptor() {
+          return org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage.getDescriptor().getEnumTypes().get(0);
+        }
+
+        private static final Type[] VALUES = values();
+
+        public static Type valueOf(
+            com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+          if (desc.getType() != getDescriptor()) {
+            throw new java.lang.IllegalArgumentException(
+              "EnumValueDescriptor is not for this type.");
+          }
+          return VALUES[desc.getIndex()];
+        }
+
+        private final int index;
+        private final int value;
+
+        private Type(int index, int value) {
+          this.index = index;
+          this.value = value;
+        }
+
+        // @@protoc_insertion_point(enum_scope:signalservice.DataMessage.GroupUpdateInfoChangeMessage.Type)
+      }
+
+      private int bitField0_;
+      // required .signalservice.DataMessage.GroupUpdateInfoChangeMessage.Type type = 1;
+      public static final int TYPE_FIELD_NUMBER = 1;
+      private org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage.Type type_;
+      /**
+       * <code>required .signalservice.DataMessage.GroupUpdateInfoChangeMessage.Type type = 1;</code>
+       *
+       * <pre>
+       * @required
+       * </pre>
+       */
+      public boolean hasType() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required .signalservice.DataMessage.GroupUpdateInfoChangeMessage.Type type = 1;</code>
+       *
+       * <pre>
+       * @required
+       * </pre>
+       */
+      public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage.Type getType() {
+        return type_;
+      }
+
+      // optional string updatedName = 2;
+      public static final int UPDATEDNAME_FIELD_NUMBER = 2;
+      private java.lang.Object updatedName_;
+      /**
+       * <code>optional string updatedName = 2;</code>
+       */
+      public boolean hasUpdatedName() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>optional string updatedName = 2;</code>
+       */
+      public java.lang.String getUpdatedName() {
+        java.lang.Object ref = updatedName_;
+        if (ref instanceof java.lang.String) {
+          return (java.lang.String) ref;
+        } else {
+          com.google.protobuf.ByteString bs = 
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            updatedName_ = s;
+          }
+          return s;
+        }
+      }
+      /**
+       * <code>optional string updatedName = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getUpdatedNameBytes() {
+        java.lang.Object ref = updatedName_;
+        if (ref instanceof java.lang.String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          updatedName_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+
+      // optional uint32 updatedExpiration = 3;
+      public static final int UPDATEDEXPIRATION_FIELD_NUMBER = 3;
+      private int updatedExpiration_;
+      /**
+       * <code>optional uint32 updatedExpiration = 3;</code>
+       */
+      public boolean hasUpdatedExpiration() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      /**
+       * <code>optional uint32 updatedExpiration = 3;</code>
+       */
+      public int getUpdatedExpiration() {
+        return updatedExpiration_;
+      }
+
+      private void initFields() {
+        type_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage.Type.NAME;
+        updatedName_ = "";
+        updatedExpiration_ = 0;
+      }
+      private byte memoizedIsInitialized = -1;
+      public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized != -1) return isInitialized == 1;
+
+        if (!hasType()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+        memoizedIsInitialized = 1;
+        return true;
+      }
+
+      public void writeTo(com.google.protobuf.CodedOutputStream output)
+                          throws java.io.IOException {
+        getSerializedSize();
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          output.writeEnum(1, type_.getNumber());
+        }
+        if (((bitField0_ & 0x00000002) == 0x00000002)) {
+          output.writeBytes(2, getUpdatedNameBytes());
+        }
+        if (((bitField0_ & 0x00000004) == 0x00000004)) {
+          output.writeUInt32(3, updatedExpiration_);
+        }
+        getUnknownFields().writeTo(output);
+      }
+
+      private int memoizedSerializedSize = -1;
+      public int getSerializedSize() {
+        int size = memoizedSerializedSize;
+        if (size != -1) return size;
+
+        size = 0;
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeEnumSize(1, type_.getNumber());
+        }
+        if (((bitField0_ & 0x00000002) == 0x00000002)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeBytesSize(2, getUpdatedNameBytes());
+        }
+        if (((bitField0_ & 0x00000004) == 0x00000004)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeUInt32Size(3, updatedExpiration_);
+        }
+        size += getUnknownFields().getSerializedSize();
+        memoizedSerializedSize = size;
+        return size;
+      }
+
+      private static final long serialVersionUID = 0L;
+      @java.lang.Override
+      protected java.lang.Object writeReplace()
+          throws java.io.ObjectStreamException {
+        return super.writeReplace();
+      }
+
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage parseFrom(
+          com.google.protobuf.ByteString data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage parseFrom(
+          com.google.protobuf.ByteString data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage parseFrom(byte[] data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage parseFrom(
+          byte[] data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage parseFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage parseFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input, extensionRegistry);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage parseDelimitedFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return PARSER.parseDelimitedFrom(input);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage parseDelimitedFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return PARSER.parseDelimitedFrom(input, extensionRegistry);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage parseFrom(
+          com.google.protobuf.CodedInputStream input)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage parseFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input, extensionRegistry);
+      }
+
+      public static Builder newBuilder() { return Builder.create(); }
+      public Builder newBuilderForType() { return newBuilder(); }
+      public static Builder newBuilder(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage prototype) {
+        return newBuilder().mergeFrom(prototype);
+      }
+      public Builder toBuilder() { return newBuilder(this); }
+
+      @java.lang.Override
+      protected Builder newBuilderForType(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        Builder builder = new Builder(parent);
+        return builder;
+      }
+      /**
+       * Protobuf type {@code signalservice.DataMessage.GroupUpdateInfoChangeMessage}
+       */
+      public static final class Builder extends
+          com.google.protobuf.GeneratedMessage.Builder<Builder>
+         implements org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessageOrBuilder {
+        public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+          return org.session.libsignal.protos.SignalServiceProtos.internal_static_signalservice_DataMessage_GroupUpdateInfoChangeMessage_descriptor;
+        }
+
+        protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+            internalGetFieldAccessorTable() {
+          return org.session.libsignal.protos.SignalServiceProtos.internal_static_signalservice_DataMessage_GroupUpdateInfoChangeMessage_fieldAccessorTable
+              .ensureFieldAccessorsInitialized(
+                  org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage.class, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage.Builder.class);
+        }
+
+        // Construct using org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage.newBuilder()
+        private Builder() {
+          maybeForceBuilderInitialization();
+        }
+
+        private Builder(
+            com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+          super(parent);
+          maybeForceBuilderInitialization();
+        }
+        private void maybeForceBuilderInitialization() {
+          if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          }
+        }
+        private static Builder create() {
+          return new Builder();
+        }
+
+        public Builder clear() {
+          super.clear();
+          type_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage.Type.NAME;
+          bitField0_ = (bitField0_ & ~0x00000001);
+          updatedName_ = "";
+          bitField0_ = (bitField0_ & ~0x00000002);
+          updatedExpiration_ = 0;
+          bitField0_ = (bitField0_ & ~0x00000004);
+          return this;
+        }
+
+        public Builder clone() {
+          return create().mergeFrom(buildPartial());
+        }
+
+        public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+          return org.session.libsignal.protos.SignalServiceProtos.internal_static_signalservice_DataMessage_GroupUpdateInfoChangeMessage_descriptor;
+        }
+
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage getDefaultInstanceForType() {
+          return org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage.getDefaultInstance();
+        }
+
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage build() {
+          org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage result = buildPartial();
+          if (!result.isInitialized()) {
+            throw newUninitializedMessageException(result);
+          }
+          return result;
+        }
+
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage buildPartial() {
+          org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage result = new org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage(this);
+          int from_bitField0_ = bitField0_;
+          int to_bitField0_ = 0;
+          if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+            to_bitField0_ |= 0x00000001;
+          }
+          result.type_ = type_;
+          if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+            to_bitField0_ |= 0x00000002;
+          }
+          result.updatedName_ = updatedName_;
+          if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+            to_bitField0_ |= 0x00000004;
+          }
+          result.updatedExpiration_ = updatedExpiration_;
+          result.bitField0_ = to_bitField0_;
+          onBuilt();
+          return result;
+        }
+
+        public Builder mergeFrom(com.google.protobuf.Message other) {
+          if (other instanceof org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage) {
+            return mergeFrom((org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage)other);
+          } else {
+            super.mergeFrom(other);
+            return this;
+          }
+        }
+
+        public Builder mergeFrom(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage other) {
+          if (other == org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage.getDefaultInstance()) return this;
+          if (other.hasType()) {
+            setType(other.getType());
+          }
+          if (other.hasUpdatedName()) {
+            bitField0_ |= 0x00000002;
+            updatedName_ = other.updatedName_;
+            onChanged();
+          }
+          if (other.hasUpdatedExpiration()) {
+            setUpdatedExpiration(other.getUpdatedExpiration());
+          }
+          this.mergeUnknownFields(other.getUnknownFields());
+          return this;
+        }
+
+        public final boolean isInitialized() {
+          if (!hasType()) {
+            
+            return false;
+          }
+          return true;
+        }
+
+        public Builder mergeFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+          org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage parsedMessage = null;
+          try {
+            parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            parsedMessage = (org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage) e.getUnfinishedMessage();
+            throw e;
+          } finally {
+            if (parsedMessage != null) {
+              mergeFrom(parsedMessage);
+            }
+          }
+          return this;
+        }
+        private int bitField0_;
+
+        // required .signalservice.DataMessage.GroupUpdateInfoChangeMessage.Type type = 1;
+        private org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage.Type type_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage.Type.NAME;
+        /**
+         * <code>required .signalservice.DataMessage.GroupUpdateInfoChangeMessage.Type type = 1;</code>
+         *
+         * <pre>
+         * @required
+         * </pre>
+         */
+        public boolean hasType() {
+          return ((bitField0_ & 0x00000001) == 0x00000001);
+        }
+        /**
+         * <code>required .signalservice.DataMessage.GroupUpdateInfoChangeMessage.Type type = 1;</code>
+         *
+         * <pre>
+         * @required
+         * </pre>
+         */
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage.Type getType() {
+          return type_;
+        }
+        /**
+         * <code>required .signalservice.DataMessage.GroupUpdateInfoChangeMessage.Type type = 1;</code>
+         *
+         * <pre>
+         * @required
+         * </pre>
+         */
+        public Builder setType(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage.Type value) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          bitField0_ |= 0x00000001;
+          type_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>required .signalservice.DataMessage.GroupUpdateInfoChangeMessage.Type type = 1;</code>
+         *
+         * <pre>
+         * @required
+         * </pre>
+         */
+        public Builder clearType() {
+          bitField0_ = (bitField0_ & ~0x00000001);
+          type_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage.Type.NAME;
+          onChanged();
+          return this;
+        }
+
+        // optional string updatedName = 2;
+        private java.lang.Object updatedName_ = "";
+        /**
+         * <code>optional string updatedName = 2;</code>
+         */
+        public boolean hasUpdatedName() {
+          return ((bitField0_ & 0x00000002) == 0x00000002);
+        }
+        /**
+         * <code>optional string updatedName = 2;</code>
+         */
+        public java.lang.String getUpdatedName() {
+          java.lang.Object ref = updatedName_;
+          if (!(ref instanceof java.lang.String)) {
+            java.lang.String s = ((com.google.protobuf.ByteString) ref)
+                .toStringUtf8();
+            updatedName_ = s;
+            return s;
+          } else {
+            return (java.lang.String) ref;
+          }
+        }
+        /**
+         * <code>optional string updatedName = 2;</code>
+         */
+        public com.google.protobuf.ByteString
+            getUpdatedNameBytes() {
+          java.lang.Object ref = updatedName_;
+          if (ref instanceof String) {
+            com.google.protobuf.ByteString b = 
+                com.google.protobuf.ByteString.copyFromUtf8(
+                    (java.lang.String) ref);
+            updatedName_ = b;
+            return b;
+          } else {
+            return (com.google.protobuf.ByteString) ref;
+          }
+        }
+        /**
+         * <code>optional string updatedName = 2;</code>
+         */
+        public Builder setUpdatedName(
+            java.lang.String value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+          updatedName_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>optional string updatedName = 2;</code>
+         */
+        public Builder clearUpdatedName() {
+          bitField0_ = (bitField0_ & ~0x00000002);
+          updatedName_ = getDefaultInstance().getUpdatedName();
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>optional string updatedName = 2;</code>
+         */
+        public Builder setUpdatedNameBytes(
+            com.google.protobuf.ByteString value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+          updatedName_ = value;
+          onChanged();
+          return this;
+        }
+
+        // optional uint32 updatedExpiration = 3;
+        private int updatedExpiration_ ;
+        /**
+         * <code>optional uint32 updatedExpiration = 3;</code>
+         */
+        public boolean hasUpdatedExpiration() {
+          return ((bitField0_ & 0x00000004) == 0x00000004);
+        }
+        /**
+         * <code>optional uint32 updatedExpiration = 3;</code>
+         */
+        public int getUpdatedExpiration() {
+          return updatedExpiration_;
+        }
+        /**
+         * <code>optional uint32 updatedExpiration = 3;</code>
+         */
+        public Builder setUpdatedExpiration(int value) {
+          bitField0_ |= 0x00000004;
+          updatedExpiration_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>optional uint32 updatedExpiration = 3;</code>
+         */
+        public Builder clearUpdatedExpiration() {
+          bitField0_ = (bitField0_ & ~0x00000004);
+          updatedExpiration_ = 0;
+          onChanged();
+          return this;
+        }
+
+        // @@protoc_insertion_point(builder_scope:signalservice.DataMessage.GroupUpdateInfoChangeMessage)
+      }
+
+      static {
+        defaultInstance = new GroupUpdateInfoChangeMessage(true);
+        defaultInstance.initFields();
+      }
+
+      // @@protoc_insertion_point(class_scope:signalservice.DataMessage.GroupUpdateInfoChangeMessage)
+    }
+
+    public interface GroupUpdateMemberChangeMessageOrBuilder
+        extends com.google.protobuf.MessageOrBuilder {
+
+      // required .signalservice.DataMessage.GroupUpdateMemberChangeMessage.Type type = 1;
+      /**
+       * <code>required .signalservice.DataMessage.GroupUpdateMemberChangeMessage.Type type = 1;</code>
+       *
+       * <pre>
+       * @required
+       * </pre>
+       */
+      boolean hasType();
+      /**
+       * <code>required .signalservice.DataMessage.GroupUpdateMemberChangeMessage.Type type = 1;</code>
+       *
+       * <pre>
+       * @required
+       * </pre>
+       */
+      org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage.Type getType();
+
+      // repeated bytes memberPublicKeys = 2;
+      /**
+       * <code>repeated bytes memberPublicKeys = 2;</code>
+       */
+      java.util.List<com.google.protobuf.ByteString> getMemberPublicKeysList();
+      /**
+       * <code>repeated bytes memberPublicKeys = 2;</code>
+       */
+      int getMemberPublicKeysCount();
+      /**
+       * <code>repeated bytes memberPublicKeys = 2;</code>
+       */
+      com.google.protobuf.ByteString getMemberPublicKeys(int index);
+    }
+    /**
+     * Protobuf type {@code signalservice.DataMessage.GroupUpdateMemberChangeMessage}
+     */
+    public static final class GroupUpdateMemberChangeMessage extends
+        com.google.protobuf.GeneratedMessage
+        implements GroupUpdateMemberChangeMessageOrBuilder {
+      // Use GroupUpdateMemberChangeMessage.newBuilder() to construct.
+      private GroupUpdateMemberChangeMessage(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+        super(builder);
+        this.unknownFields = builder.getUnknownFields();
+      }
+      private GroupUpdateMemberChangeMessage(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+      private static final GroupUpdateMemberChangeMessage defaultInstance;
+      public static GroupUpdateMemberChangeMessage getDefaultInstance() {
+        return defaultInstance;
+      }
+
+      public GroupUpdateMemberChangeMessage getDefaultInstanceForType() {
+        return defaultInstance;
+      }
+
+      private final com.google.protobuf.UnknownFieldSet unknownFields;
+      @java.lang.Override
+      public final com.google.protobuf.UnknownFieldSet
+          getUnknownFields() {
+        return this.unknownFields;
+      }
+      private GroupUpdateMemberChangeMessage(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        initFields();
+        int mutable_bitField0_ = 0;
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+            com.google.protobuf.UnknownFieldSet.newBuilder();
+        try {
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              default: {
+                if (!parseUnknownField(input, unknownFields,
+                                       extensionRegistry, tag)) {
+                  done = true;
+                }
+                break;
+              }
+              case 8: {
+                int rawValue = input.readEnum();
+                org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage.Type value = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage.Type.valueOf(rawValue);
+                if (value == null) {
+                  unknownFields.mergeVarintField(1, rawValue);
+                } else {
+                  bitField0_ |= 0x00000001;
+                  type_ = value;
+                }
+                break;
+              }
+              case 18: {
+                if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+                  memberPublicKeys_ = new java.util.ArrayList<com.google.protobuf.ByteString>();
+                  mutable_bitField0_ |= 0x00000002;
+                }
+                memberPublicKeys_.add(input.readBytes());
+                break;
+              }
+            }
+          }
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(this);
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(
+              e.getMessage()).setUnfinishedMessage(this);
+        } finally {
+          if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+            memberPublicKeys_ = java.util.Collections.unmodifiableList(memberPublicKeys_);
+          }
+          this.unknownFields = unknownFields.build();
+          makeExtensionsImmutable();
+        }
+      }
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return org.session.libsignal.protos.SignalServiceProtos.internal_static_signalservice_DataMessage_GroupUpdateMemberChangeMessage_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return org.session.libsignal.protos.SignalServiceProtos.internal_static_signalservice_DataMessage_GroupUpdateMemberChangeMessage_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage.class, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage.Builder.class);
+      }
+
+      public static com.google.protobuf.Parser<GroupUpdateMemberChangeMessage> PARSER =
+          new com.google.protobuf.AbstractParser<GroupUpdateMemberChangeMessage>() {
+        public GroupUpdateMemberChangeMessage parsePartialFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          return new GroupUpdateMemberChangeMessage(input, extensionRegistry);
+        }
+      };
+
+      @java.lang.Override
+      public com.google.protobuf.Parser<GroupUpdateMemberChangeMessage> getParserForType() {
+        return PARSER;
+      }
+
+      /**
+       * Protobuf enum {@code signalservice.DataMessage.GroupUpdateMemberChangeMessage.Type}
+       */
+      public enum Type
+          implements com.google.protobuf.ProtocolMessageEnum {
+        /**
+         * <code>ADDED = 1;</code>
+         */
+        ADDED(0, 1),
+        /**
+         * <code>REMOVED = 2;</code>
+         */
+        REMOVED(1, 2),
+        /**
+         * <code>PROMOTED = 3;</code>
+         */
+        PROMOTED(2, 3),
+        ;
+
+        /**
+         * <code>ADDED = 1;</code>
+         */
+        public static final int ADDED_VALUE = 1;
+        /**
+         * <code>REMOVED = 2;</code>
+         */
+        public static final int REMOVED_VALUE = 2;
+        /**
+         * <code>PROMOTED = 3;</code>
+         */
+        public static final int PROMOTED_VALUE = 3;
+
+
+        public final int getNumber() { return value; }
+
+        public static Type valueOf(int value) {
+          switch (value) {
+            case 1: return ADDED;
+            case 2: return REMOVED;
+            case 3: return PROMOTED;
+            default: return null;
+          }
+        }
+
+        public static com.google.protobuf.Internal.EnumLiteMap<Type>
+            internalGetValueMap() {
+          return internalValueMap;
+        }
+        private static com.google.protobuf.Internal.EnumLiteMap<Type>
+            internalValueMap =
+              new com.google.protobuf.Internal.EnumLiteMap<Type>() {
+                public Type findValueByNumber(int number) {
+                  return Type.valueOf(number);
+                }
+              };
+
+        public final com.google.protobuf.Descriptors.EnumValueDescriptor
+            getValueDescriptor() {
+          return getDescriptor().getValues().get(index);
+        }
+        public final com.google.protobuf.Descriptors.EnumDescriptor
+            getDescriptorForType() {
+          return getDescriptor();
+        }
+        public static final com.google.protobuf.Descriptors.EnumDescriptor
+            getDescriptor() {
+          return org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage.getDescriptor().getEnumTypes().get(0);
+        }
+
+        private static final Type[] VALUES = values();
+
+        public static Type valueOf(
+            com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+          if (desc.getType() != getDescriptor()) {
+            throw new java.lang.IllegalArgumentException(
+              "EnumValueDescriptor is not for this type.");
+          }
+          return VALUES[desc.getIndex()];
+        }
+
+        private final int index;
+        private final int value;
+
+        private Type(int index, int value) {
+          this.index = index;
+          this.value = value;
+        }
+
+        // @@protoc_insertion_point(enum_scope:signalservice.DataMessage.GroupUpdateMemberChangeMessage.Type)
+      }
+
+      private int bitField0_;
+      // required .signalservice.DataMessage.GroupUpdateMemberChangeMessage.Type type = 1;
+      public static final int TYPE_FIELD_NUMBER = 1;
+      private org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage.Type type_;
+      /**
+       * <code>required .signalservice.DataMessage.GroupUpdateMemberChangeMessage.Type type = 1;</code>
+       *
+       * <pre>
+       * @required
+       * </pre>
+       */
+      public boolean hasType() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required .signalservice.DataMessage.GroupUpdateMemberChangeMessage.Type type = 1;</code>
+       *
+       * <pre>
+       * @required
+       * </pre>
+       */
+      public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage.Type getType() {
+        return type_;
+      }
+
+      // repeated bytes memberPublicKeys = 2;
+      public static final int MEMBERPUBLICKEYS_FIELD_NUMBER = 2;
+      private java.util.List<com.google.protobuf.ByteString> memberPublicKeys_;
+      /**
+       * <code>repeated bytes memberPublicKeys = 2;</code>
+       */
+      public java.util.List<com.google.protobuf.ByteString>
+          getMemberPublicKeysList() {
+        return memberPublicKeys_;
+      }
+      /**
+       * <code>repeated bytes memberPublicKeys = 2;</code>
+       */
+      public int getMemberPublicKeysCount() {
+        return memberPublicKeys_.size();
+      }
+      /**
+       * <code>repeated bytes memberPublicKeys = 2;</code>
+       */
+      public com.google.protobuf.ByteString getMemberPublicKeys(int index) {
+        return memberPublicKeys_.get(index);
+      }
+
+      private void initFields() {
+        type_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage.Type.ADDED;
+        memberPublicKeys_ = java.util.Collections.emptyList();
+      }
+      private byte memoizedIsInitialized = -1;
+      public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized != -1) return isInitialized == 1;
+
+        if (!hasType()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+        memoizedIsInitialized = 1;
+        return true;
+      }
+
+      public void writeTo(com.google.protobuf.CodedOutputStream output)
+                          throws java.io.IOException {
+        getSerializedSize();
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          output.writeEnum(1, type_.getNumber());
+        }
+        for (int i = 0; i < memberPublicKeys_.size(); i++) {
+          output.writeBytes(2, memberPublicKeys_.get(i));
+        }
+        getUnknownFields().writeTo(output);
+      }
+
+      private int memoizedSerializedSize = -1;
+      public int getSerializedSize() {
+        int size = memoizedSerializedSize;
+        if (size != -1) return size;
+
+        size = 0;
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeEnumSize(1, type_.getNumber());
+        }
+        {
+          int dataSize = 0;
+          for (int i = 0; i < memberPublicKeys_.size(); i++) {
+            dataSize += com.google.protobuf.CodedOutputStream
+              .computeBytesSizeNoTag(memberPublicKeys_.get(i));
+          }
+          size += dataSize;
+          size += 1 * getMemberPublicKeysList().size();
+        }
+        size += getUnknownFields().getSerializedSize();
+        memoizedSerializedSize = size;
+        return size;
+      }
+
+      private static final long serialVersionUID = 0L;
+      @java.lang.Override
+      protected java.lang.Object writeReplace()
+          throws java.io.ObjectStreamException {
+        return super.writeReplace();
+      }
+
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage parseFrom(
+          com.google.protobuf.ByteString data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage parseFrom(
+          com.google.protobuf.ByteString data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage parseFrom(byte[] data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage parseFrom(
+          byte[] data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage parseFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage parseFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input, extensionRegistry);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage parseDelimitedFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return PARSER.parseDelimitedFrom(input);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage parseDelimitedFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return PARSER.parseDelimitedFrom(input, extensionRegistry);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage parseFrom(
+          com.google.protobuf.CodedInputStream input)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage parseFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input, extensionRegistry);
+      }
+
+      public static Builder newBuilder() { return Builder.create(); }
+      public Builder newBuilderForType() { return newBuilder(); }
+      public static Builder newBuilder(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage prototype) {
+        return newBuilder().mergeFrom(prototype);
+      }
+      public Builder toBuilder() { return newBuilder(this); }
+
+      @java.lang.Override
+      protected Builder newBuilderForType(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        Builder builder = new Builder(parent);
+        return builder;
+      }
+      /**
+       * Protobuf type {@code signalservice.DataMessage.GroupUpdateMemberChangeMessage}
+       */
+      public static final class Builder extends
+          com.google.protobuf.GeneratedMessage.Builder<Builder>
+         implements org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessageOrBuilder {
+        public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+          return org.session.libsignal.protos.SignalServiceProtos.internal_static_signalservice_DataMessage_GroupUpdateMemberChangeMessage_descriptor;
+        }
+
+        protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+            internalGetFieldAccessorTable() {
+          return org.session.libsignal.protos.SignalServiceProtos.internal_static_signalservice_DataMessage_GroupUpdateMemberChangeMessage_fieldAccessorTable
+              .ensureFieldAccessorsInitialized(
+                  org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage.class, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage.Builder.class);
+        }
+
+        // Construct using org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage.newBuilder()
+        private Builder() {
+          maybeForceBuilderInitialization();
+        }
+
+        private Builder(
+            com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+          super(parent);
+          maybeForceBuilderInitialization();
+        }
+        private void maybeForceBuilderInitialization() {
+          if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          }
+        }
+        private static Builder create() {
+          return new Builder();
+        }
+
+        public Builder clear() {
+          super.clear();
+          type_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage.Type.ADDED;
+          bitField0_ = (bitField0_ & ~0x00000001);
+          memberPublicKeys_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000002);
+          return this;
+        }
+
+        public Builder clone() {
+          return create().mergeFrom(buildPartial());
+        }
+
+        public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+          return org.session.libsignal.protos.SignalServiceProtos.internal_static_signalservice_DataMessage_GroupUpdateMemberChangeMessage_descriptor;
+        }
+
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage getDefaultInstanceForType() {
+          return org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage.getDefaultInstance();
+        }
+
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage build() {
+          org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage result = buildPartial();
+          if (!result.isInitialized()) {
+            throw newUninitializedMessageException(result);
+          }
+          return result;
+        }
+
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage buildPartial() {
+          org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage result = new org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage(this);
+          int from_bitField0_ = bitField0_;
+          int to_bitField0_ = 0;
+          if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+            to_bitField0_ |= 0x00000001;
+          }
+          result.type_ = type_;
+          if (((bitField0_ & 0x00000002) == 0x00000002)) {
+            memberPublicKeys_ = java.util.Collections.unmodifiableList(memberPublicKeys_);
+            bitField0_ = (bitField0_ & ~0x00000002);
+          }
+          result.memberPublicKeys_ = memberPublicKeys_;
+          result.bitField0_ = to_bitField0_;
+          onBuilt();
+          return result;
+        }
+
+        public Builder mergeFrom(com.google.protobuf.Message other) {
+          if (other instanceof org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage) {
+            return mergeFrom((org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage)other);
+          } else {
+            super.mergeFrom(other);
+            return this;
+          }
+        }
+
+        public Builder mergeFrom(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage other) {
+          if (other == org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage.getDefaultInstance()) return this;
+          if (other.hasType()) {
+            setType(other.getType());
+          }
+          if (!other.memberPublicKeys_.isEmpty()) {
+            if (memberPublicKeys_.isEmpty()) {
+              memberPublicKeys_ = other.memberPublicKeys_;
+              bitField0_ = (bitField0_ & ~0x00000002);
+            } else {
+              ensureMemberPublicKeysIsMutable();
+              memberPublicKeys_.addAll(other.memberPublicKeys_);
+            }
+            onChanged();
+          }
+          this.mergeUnknownFields(other.getUnknownFields());
+          return this;
+        }
+
+        public final boolean isInitialized() {
+          if (!hasType()) {
+            
+            return false;
+          }
+          return true;
+        }
+
+        public Builder mergeFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+          org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage parsedMessage = null;
+          try {
+            parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            parsedMessage = (org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage) e.getUnfinishedMessage();
+            throw e;
+          } finally {
+            if (parsedMessage != null) {
+              mergeFrom(parsedMessage);
+            }
+          }
+          return this;
+        }
+        private int bitField0_;
+
+        // required .signalservice.DataMessage.GroupUpdateMemberChangeMessage.Type type = 1;
+        private org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage.Type type_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage.Type.ADDED;
+        /**
+         * <code>required .signalservice.DataMessage.GroupUpdateMemberChangeMessage.Type type = 1;</code>
+         *
+         * <pre>
+         * @required
+         * </pre>
+         */
+        public boolean hasType() {
+          return ((bitField0_ & 0x00000001) == 0x00000001);
+        }
+        /**
+         * <code>required .signalservice.DataMessage.GroupUpdateMemberChangeMessage.Type type = 1;</code>
+         *
+         * <pre>
+         * @required
+         * </pre>
+         */
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage.Type getType() {
+          return type_;
+        }
+        /**
+         * <code>required .signalservice.DataMessage.GroupUpdateMemberChangeMessage.Type type = 1;</code>
+         *
+         * <pre>
+         * @required
+         * </pre>
+         */
+        public Builder setType(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage.Type value) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          bitField0_ |= 0x00000001;
+          type_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>required .signalservice.DataMessage.GroupUpdateMemberChangeMessage.Type type = 1;</code>
+         *
+         * <pre>
+         * @required
+         * </pre>
+         */
+        public Builder clearType() {
+          bitField0_ = (bitField0_ & ~0x00000001);
+          type_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage.Type.ADDED;
+          onChanged();
+          return this;
+        }
+
+        // repeated bytes memberPublicKeys = 2;
+        private java.util.List<com.google.protobuf.ByteString> memberPublicKeys_ = java.util.Collections.emptyList();
+        private void ensureMemberPublicKeysIsMutable() {
+          if (!((bitField0_ & 0x00000002) == 0x00000002)) {
+            memberPublicKeys_ = new java.util.ArrayList<com.google.protobuf.ByteString>(memberPublicKeys_);
+            bitField0_ |= 0x00000002;
+           }
+        }
+        /**
+         * <code>repeated bytes memberPublicKeys = 2;</code>
+         */
+        public java.util.List<com.google.protobuf.ByteString>
+            getMemberPublicKeysList() {
+          return java.util.Collections.unmodifiableList(memberPublicKeys_);
+        }
+        /**
+         * <code>repeated bytes memberPublicKeys = 2;</code>
+         */
+        public int getMemberPublicKeysCount() {
+          return memberPublicKeys_.size();
+        }
+        /**
+         * <code>repeated bytes memberPublicKeys = 2;</code>
+         */
+        public com.google.protobuf.ByteString getMemberPublicKeys(int index) {
+          return memberPublicKeys_.get(index);
+        }
+        /**
+         * <code>repeated bytes memberPublicKeys = 2;</code>
+         */
+        public Builder setMemberPublicKeys(
+            int index, com.google.protobuf.ByteString value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureMemberPublicKeysIsMutable();
+          memberPublicKeys_.set(index, value);
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>repeated bytes memberPublicKeys = 2;</code>
+         */
+        public Builder addMemberPublicKeys(com.google.protobuf.ByteString value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureMemberPublicKeysIsMutable();
+          memberPublicKeys_.add(value);
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>repeated bytes memberPublicKeys = 2;</code>
+         */
+        public Builder addAllMemberPublicKeys(
+            java.lang.Iterable<? extends com.google.protobuf.ByteString> values) {
+          ensureMemberPublicKeysIsMutable();
+          super.addAll(values, memberPublicKeys_);
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>repeated bytes memberPublicKeys = 2;</code>
+         */
+        public Builder clearMemberPublicKeys() {
+          memberPublicKeys_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000002);
+          onChanged();
+          return this;
+        }
+
+        // @@protoc_insertion_point(builder_scope:signalservice.DataMessage.GroupUpdateMemberChangeMessage)
+      }
+
+      static {
+        defaultInstance = new GroupUpdateMemberChangeMessage(true);
+        defaultInstance.initFields();
+      }
+
+      // @@protoc_insertion_point(class_scope:signalservice.DataMessage.GroupUpdateMemberChangeMessage)
+    }
+
+    public interface GroupUpdateMemberLeftMessageOrBuilder
+        extends com.google.protobuf.MessageOrBuilder {
+    }
+    /**
+     * Protobuf type {@code signalservice.DataMessage.GroupUpdateMemberLeftMessage}
+     *
+     * <pre>
+     * the pubkey of the member left is included as part of the closed group encryption logic (senderIdentity on desktop)
+     * </pre>
+     */
+    public static final class GroupUpdateMemberLeftMessage extends
+        com.google.protobuf.GeneratedMessage
+        implements GroupUpdateMemberLeftMessageOrBuilder {
+      // Use GroupUpdateMemberLeftMessage.newBuilder() to construct.
+      private GroupUpdateMemberLeftMessage(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+        super(builder);
+        this.unknownFields = builder.getUnknownFields();
+      }
+      private GroupUpdateMemberLeftMessage(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+      private static final GroupUpdateMemberLeftMessage defaultInstance;
+      public static GroupUpdateMemberLeftMessage getDefaultInstance() {
+        return defaultInstance;
+      }
+
+      public GroupUpdateMemberLeftMessage getDefaultInstanceForType() {
+        return defaultInstance;
+      }
+
+      private final com.google.protobuf.UnknownFieldSet unknownFields;
+      @java.lang.Override
+      public final com.google.protobuf.UnknownFieldSet
+          getUnknownFields() {
+        return this.unknownFields;
+      }
+      private GroupUpdateMemberLeftMessage(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        initFields();
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+            com.google.protobuf.UnknownFieldSet.newBuilder();
+        try {
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              default: {
+                if (!parseUnknownField(input, unknownFields,
+                                       extensionRegistry, tag)) {
+                  done = true;
+                }
+                break;
+              }
+            }
+          }
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(this);
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(
+              e.getMessage()).setUnfinishedMessage(this);
+        } finally {
+          this.unknownFields = unknownFields.build();
+          makeExtensionsImmutable();
+        }
+      }
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return org.session.libsignal.protos.SignalServiceProtos.internal_static_signalservice_DataMessage_GroupUpdateMemberLeftMessage_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return org.session.libsignal.protos.SignalServiceProtos.internal_static_signalservice_DataMessage_GroupUpdateMemberLeftMessage_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage.class, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage.Builder.class);
+      }
+
+      public static com.google.protobuf.Parser<GroupUpdateMemberLeftMessage> PARSER =
+          new com.google.protobuf.AbstractParser<GroupUpdateMemberLeftMessage>() {
+        public GroupUpdateMemberLeftMessage parsePartialFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          return new GroupUpdateMemberLeftMessage(input, extensionRegistry);
+        }
+      };
+
+      @java.lang.Override
+      public com.google.protobuf.Parser<GroupUpdateMemberLeftMessage> getParserForType() {
+        return PARSER;
+      }
+
+      private void initFields() {
+      }
+      private byte memoizedIsInitialized = -1;
+      public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized != -1) return isInitialized == 1;
+
+        memoizedIsInitialized = 1;
+        return true;
+      }
+
+      public void writeTo(com.google.protobuf.CodedOutputStream output)
+                          throws java.io.IOException {
+        getSerializedSize();
+        getUnknownFields().writeTo(output);
+      }
+
+      private int memoizedSerializedSize = -1;
+      public int getSerializedSize() {
+        int size = memoizedSerializedSize;
+        if (size != -1) return size;
+
+        size = 0;
+        size += getUnknownFields().getSerializedSize();
+        memoizedSerializedSize = size;
+        return size;
+      }
+
+      private static final long serialVersionUID = 0L;
+      @java.lang.Override
+      protected java.lang.Object writeReplace()
+          throws java.io.ObjectStreamException {
+        return super.writeReplace();
+      }
+
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage parseFrom(
+          com.google.protobuf.ByteString data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage parseFrom(
+          com.google.protobuf.ByteString data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage parseFrom(byte[] data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage parseFrom(
+          byte[] data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage parseFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage parseFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input, extensionRegistry);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage parseDelimitedFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return PARSER.parseDelimitedFrom(input);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage parseDelimitedFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return PARSER.parseDelimitedFrom(input, extensionRegistry);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage parseFrom(
+          com.google.protobuf.CodedInputStream input)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage parseFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input, extensionRegistry);
+      }
+
+      public static Builder newBuilder() { return Builder.create(); }
+      public Builder newBuilderForType() { return newBuilder(); }
+      public static Builder newBuilder(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage prototype) {
+        return newBuilder().mergeFrom(prototype);
+      }
+      public Builder toBuilder() { return newBuilder(this); }
+
+      @java.lang.Override
+      protected Builder newBuilderForType(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        Builder builder = new Builder(parent);
+        return builder;
+      }
+      /**
+       * Protobuf type {@code signalservice.DataMessage.GroupUpdateMemberLeftMessage}
+       *
+       * <pre>
+       * the pubkey of the member left is included as part of the closed group encryption logic (senderIdentity on desktop)
+       * </pre>
+       */
+      public static final class Builder extends
+          com.google.protobuf.GeneratedMessage.Builder<Builder>
+         implements org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessageOrBuilder {
+        public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+          return org.session.libsignal.protos.SignalServiceProtos.internal_static_signalservice_DataMessage_GroupUpdateMemberLeftMessage_descriptor;
+        }
+
+        protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+            internalGetFieldAccessorTable() {
+          return org.session.libsignal.protos.SignalServiceProtos.internal_static_signalservice_DataMessage_GroupUpdateMemberLeftMessage_fieldAccessorTable
+              .ensureFieldAccessorsInitialized(
+                  org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage.class, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage.Builder.class);
+        }
+
+        // Construct using org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage.newBuilder()
+        private Builder() {
+          maybeForceBuilderInitialization();
+        }
+
+        private Builder(
+            com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+          super(parent);
+          maybeForceBuilderInitialization();
+        }
+        private void maybeForceBuilderInitialization() {
+          if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          }
+        }
+        private static Builder create() {
+          return new Builder();
+        }
+
+        public Builder clear() {
+          super.clear();
+          return this;
+        }
+
+        public Builder clone() {
+          return create().mergeFrom(buildPartial());
+        }
+
+        public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+          return org.session.libsignal.protos.SignalServiceProtos.internal_static_signalservice_DataMessage_GroupUpdateMemberLeftMessage_descriptor;
+        }
+
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage getDefaultInstanceForType() {
+          return org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage.getDefaultInstance();
+        }
+
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage build() {
+          org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage result = buildPartial();
+          if (!result.isInitialized()) {
+            throw newUninitializedMessageException(result);
+          }
+          return result;
+        }
+
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage buildPartial() {
+          org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage result = new org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage(this);
+          onBuilt();
+          return result;
+        }
+
+        public Builder mergeFrom(com.google.protobuf.Message other) {
+          if (other instanceof org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage) {
+            return mergeFrom((org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage)other);
+          } else {
+            super.mergeFrom(other);
+            return this;
+          }
+        }
+
+        public Builder mergeFrom(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage other) {
+          if (other == org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage.getDefaultInstance()) return this;
+          this.mergeUnknownFields(other.getUnknownFields());
+          return this;
+        }
+
+        public final boolean isInitialized() {
+          return true;
+        }
+
+        public Builder mergeFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+          org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage parsedMessage = null;
+          try {
+            parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            parsedMessage = (org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage) e.getUnfinishedMessage();
+            throw e;
+          } finally {
+            if (parsedMessage != null) {
+              mergeFrom(parsedMessage);
+            }
+          }
+          return this;
+        }
+
+        // @@protoc_insertion_point(builder_scope:signalservice.DataMessage.GroupUpdateMemberLeftMessage)
+      }
+
+      static {
+        defaultInstance = new GroupUpdateMemberLeftMessage(true);
+        defaultInstance.initFields();
+      }
+
+      // @@protoc_insertion_point(class_scope:signalservice.DataMessage.GroupUpdateMemberLeftMessage)
+    }
+
+    public interface GroupUpdateInviteResponseMessageOrBuilder
+        extends com.google.protobuf.MessageOrBuilder {
+
+      // required bool isApproved = 1;
+      /**
+       * <code>required bool isApproved = 1;</code>
+       *
+       * <pre>
+       * @required
+       * </pre>
+       */
+      boolean hasIsApproved();
+      /**
+       * <code>required bool isApproved = 1;</code>
+       *
+       * <pre>
+       * @required
+       * </pre>
+       */
+      boolean getIsApproved();
+
+      // optional bytes profileKey = 2;
+      /**
+       * <code>optional bytes profileKey = 2;</code>
+       */
+      boolean hasProfileKey();
+      /**
+       * <code>optional bytes profileKey = 2;</code>
+       */
+      com.google.protobuf.ByteString getProfileKey();
+
+      // optional .signalservice.DataMessage.LokiProfile profile = 3;
+      /**
+       * <code>optional .signalservice.DataMessage.LokiProfile profile = 3;</code>
+       */
+      boolean hasProfile();
+      /**
+       * <code>optional .signalservice.DataMessage.LokiProfile profile = 3;</code>
+       */
+      org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile getProfile();
+      /**
+       * <code>optional .signalservice.DataMessage.LokiProfile profile = 3;</code>
+       */
+      org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfileOrBuilder getProfileOrBuilder();
+    }
+    /**
+     * Protobuf type {@code signalservice.DataMessage.GroupUpdateInviteResponseMessage}
+     */
+    public static final class GroupUpdateInviteResponseMessage extends
+        com.google.protobuf.GeneratedMessage
+        implements GroupUpdateInviteResponseMessageOrBuilder {
+      // Use GroupUpdateInviteResponseMessage.newBuilder() to construct.
+      private GroupUpdateInviteResponseMessage(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+        super(builder);
+        this.unknownFields = builder.getUnknownFields();
+      }
+      private GroupUpdateInviteResponseMessage(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+      private static final GroupUpdateInviteResponseMessage defaultInstance;
+      public static GroupUpdateInviteResponseMessage getDefaultInstance() {
+        return defaultInstance;
+      }
+
+      public GroupUpdateInviteResponseMessage getDefaultInstanceForType() {
+        return defaultInstance;
+      }
+
+      private final com.google.protobuf.UnknownFieldSet unknownFields;
+      @java.lang.Override
+      public final com.google.protobuf.UnknownFieldSet
+          getUnknownFields() {
+        return this.unknownFields;
+      }
+      private GroupUpdateInviteResponseMessage(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        initFields();
+        int mutable_bitField0_ = 0;
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+            com.google.protobuf.UnknownFieldSet.newBuilder();
+        try {
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              default: {
+                if (!parseUnknownField(input, unknownFields,
+                                       extensionRegistry, tag)) {
+                  done = true;
+                }
+                break;
+              }
+              case 8: {
+                bitField0_ |= 0x00000001;
+                isApproved_ = input.readBool();
+                break;
+              }
+              case 18: {
+                bitField0_ |= 0x00000002;
+                profileKey_ = input.readBytes();
+                break;
+              }
+              case 26: {
+                org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.Builder subBuilder = null;
+                if (((bitField0_ & 0x00000004) == 0x00000004)) {
+                  subBuilder = profile_.toBuilder();
+                }
+                profile_ = input.readMessage(org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.PARSER, extensionRegistry);
+                if (subBuilder != null) {
+                  subBuilder.mergeFrom(profile_);
+                  profile_ = subBuilder.buildPartial();
+                }
+                bitField0_ |= 0x00000004;
+                break;
+              }
+            }
+          }
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(this);
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(
+              e.getMessage()).setUnfinishedMessage(this);
+        } finally {
+          this.unknownFields = unknownFields.build();
+          makeExtensionsImmutable();
+        }
+      }
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return org.session.libsignal.protos.SignalServiceProtos.internal_static_signalservice_DataMessage_GroupUpdateInviteResponseMessage_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return org.session.libsignal.protos.SignalServiceProtos.internal_static_signalservice_DataMessage_GroupUpdateInviteResponseMessage_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage.class, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage.Builder.class);
+      }
+
+      public static com.google.protobuf.Parser<GroupUpdateInviteResponseMessage> PARSER =
+          new com.google.protobuf.AbstractParser<GroupUpdateInviteResponseMessage>() {
+        public GroupUpdateInviteResponseMessage parsePartialFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          return new GroupUpdateInviteResponseMessage(input, extensionRegistry);
+        }
+      };
+
+      @java.lang.Override
+      public com.google.protobuf.Parser<GroupUpdateInviteResponseMessage> getParserForType() {
+        return PARSER;
+      }
+
+      private int bitField0_;
+      // required bool isApproved = 1;
+      public static final int ISAPPROVED_FIELD_NUMBER = 1;
+      private boolean isApproved_;
+      /**
+       * <code>required bool isApproved = 1;</code>
+       *
+       * <pre>
+       * @required
+       * </pre>
+       */
+      public boolean hasIsApproved() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required bool isApproved = 1;</code>
+       *
+       * <pre>
+       * @required
+       * </pre>
+       */
+      public boolean getIsApproved() {
+        return isApproved_;
+      }
+
+      // optional bytes profileKey = 2;
+      public static final int PROFILEKEY_FIELD_NUMBER = 2;
+      private com.google.protobuf.ByteString profileKey_;
+      /**
+       * <code>optional bytes profileKey = 2;</code>
+       */
+      public boolean hasProfileKey() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>optional bytes profileKey = 2;</code>
+       */
+      public com.google.protobuf.ByteString getProfileKey() {
+        return profileKey_;
+      }
+
+      // optional .signalservice.DataMessage.LokiProfile profile = 3;
+      public static final int PROFILE_FIELD_NUMBER = 3;
+      private org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile profile_;
+      /**
+       * <code>optional .signalservice.DataMessage.LokiProfile profile = 3;</code>
+       */
+      public boolean hasProfile() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      /**
+       * <code>optional .signalservice.DataMessage.LokiProfile profile = 3;</code>
+       */
+      public org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile getProfile() {
+        return profile_;
+      }
+      /**
+       * <code>optional .signalservice.DataMessage.LokiProfile profile = 3;</code>
+       */
+      public org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfileOrBuilder getProfileOrBuilder() {
+        return profile_;
+      }
+
+      private void initFields() {
+        isApproved_ = false;
+        profileKey_ = com.google.protobuf.ByteString.EMPTY;
+        profile_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.getDefaultInstance();
+      }
+      private byte memoizedIsInitialized = -1;
+      public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized != -1) return isInitialized == 1;
+
+        if (!hasIsApproved()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+        memoizedIsInitialized = 1;
+        return true;
+      }
+
+      public void writeTo(com.google.protobuf.CodedOutputStream output)
+                          throws java.io.IOException {
+        getSerializedSize();
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          output.writeBool(1, isApproved_);
+        }
+        if (((bitField0_ & 0x00000002) == 0x00000002)) {
+          output.writeBytes(2, profileKey_);
+        }
+        if (((bitField0_ & 0x00000004) == 0x00000004)) {
+          output.writeMessage(3, profile_);
+        }
+        getUnknownFields().writeTo(output);
+      }
+
+      private int memoizedSerializedSize = -1;
+      public int getSerializedSize() {
+        int size = memoizedSerializedSize;
+        if (size != -1) return size;
+
+        size = 0;
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeBoolSize(1, isApproved_);
+        }
+        if (((bitField0_ & 0x00000002) == 0x00000002)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeBytesSize(2, profileKey_);
+        }
+        if (((bitField0_ & 0x00000004) == 0x00000004)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeMessageSize(3, profile_);
+        }
+        size += getUnknownFields().getSerializedSize();
+        memoizedSerializedSize = size;
+        return size;
+      }
+
+      private static final long serialVersionUID = 0L;
+      @java.lang.Override
+      protected java.lang.Object writeReplace()
+          throws java.io.ObjectStreamException {
+        return super.writeReplace();
+      }
+
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage parseFrom(
+          com.google.protobuf.ByteString data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage parseFrom(
+          com.google.protobuf.ByteString data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage parseFrom(byte[] data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage parseFrom(
+          byte[] data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage parseFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage parseFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input, extensionRegistry);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage parseDelimitedFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return PARSER.parseDelimitedFrom(input);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage parseDelimitedFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return PARSER.parseDelimitedFrom(input, extensionRegistry);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage parseFrom(
+          com.google.protobuf.CodedInputStream input)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage parseFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input, extensionRegistry);
+      }
+
+      public static Builder newBuilder() { return Builder.create(); }
+      public Builder newBuilderForType() { return newBuilder(); }
+      public static Builder newBuilder(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage prototype) {
+        return newBuilder().mergeFrom(prototype);
+      }
+      public Builder toBuilder() { return newBuilder(this); }
+
+      @java.lang.Override
+      protected Builder newBuilderForType(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        Builder builder = new Builder(parent);
+        return builder;
+      }
+      /**
+       * Protobuf type {@code signalservice.DataMessage.GroupUpdateInviteResponseMessage}
+       */
+      public static final class Builder extends
+          com.google.protobuf.GeneratedMessage.Builder<Builder>
+         implements org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessageOrBuilder {
+        public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+          return org.session.libsignal.protos.SignalServiceProtos.internal_static_signalservice_DataMessage_GroupUpdateInviteResponseMessage_descriptor;
+        }
+
+        protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+            internalGetFieldAccessorTable() {
+          return org.session.libsignal.protos.SignalServiceProtos.internal_static_signalservice_DataMessage_GroupUpdateInviteResponseMessage_fieldAccessorTable
+              .ensureFieldAccessorsInitialized(
+                  org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage.class, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage.Builder.class);
+        }
+
+        // Construct using org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage.newBuilder()
+        private Builder() {
+          maybeForceBuilderInitialization();
+        }
+
+        private Builder(
+            com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+          super(parent);
+          maybeForceBuilderInitialization();
+        }
+        private void maybeForceBuilderInitialization() {
+          if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+            getProfileFieldBuilder();
+          }
+        }
+        private static Builder create() {
+          return new Builder();
+        }
+
+        public Builder clear() {
+          super.clear();
+          isApproved_ = false;
+          bitField0_ = (bitField0_ & ~0x00000001);
+          profileKey_ = com.google.protobuf.ByteString.EMPTY;
+          bitField0_ = (bitField0_ & ~0x00000002);
+          if (profileBuilder_ == null) {
+            profile_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.getDefaultInstance();
+          } else {
+            profileBuilder_.clear();
+          }
+          bitField0_ = (bitField0_ & ~0x00000004);
+          return this;
+        }
+
+        public Builder clone() {
+          return create().mergeFrom(buildPartial());
+        }
+
+        public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+          return org.session.libsignal.protos.SignalServiceProtos.internal_static_signalservice_DataMessage_GroupUpdateInviteResponseMessage_descriptor;
+        }
+
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage getDefaultInstanceForType() {
+          return org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage.getDefaultInstance();
+        }
+
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage build() {
+          org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage result = buildPartial();
+          if (!result.isInitialized()) {
+            throw newUninitializedMessageException(result);
+          }
+          return result;
+        }
+
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage buildPartial() {
+          org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage result = new org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage(this);
+          int from_bitField0_ = bitField0_;
+          int to_bitField0_ = 0;
+          if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+            to_bitField0_ |= 0x00000001;
+          }
+          result.isApproved_ = isApproved_;
+          if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+            to_bitField0_ |= 0x00000002;
+          }
+          result.profileKey_ = profileKey_;
+          if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+            to_bitField0_ |= 0x00000004;
+          }
+          if (profileBuilder_ == null) {
+            result.profile_ = profile_;
+          } else {
+            result.profile_ = profileBuilder_.build();
+          }
+          result.bitField0_ = to_bitField0_;
+          onBuilt();
+          return result;
+        }
+
+        public Builder mergeFrom(com.google.protobuf.Message other) {
+          if (other instanceof org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage) {
+            return mergeFrom((org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage)other);
+          } else {
+            super.mergeFrom(other);
+            return this;
+          }
+        }
+
+        public Builder mergeFrom(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage other) {
+          if (other == org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage.getDefaultInstance()) return this;
+          if (other.hasIsApproved()) {
+            setIsApproved(other.getIsApproved());
+          }
+          if (other.hasProfileKey()) {
+            setProfileKey(other.getProfileKey());
+          }
+          if (other.hasProfile()) {
+            mergeProfile(other.getProfile());
+          }
+          this.mergeUnknownFields(other.getUnknownFields());
+          return this;
+        }
+
+        public final boolean isInitialized() {
+          if (!hasIsApproved()) {
+            
+            return false;
+          }
+          return true;
+        }
+
+        public Builder mergeFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+          org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage parsedMessage = null;
+          try {
+            parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            parsedMessage = (org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage) e.getUnfinishedMessage();
+            throw e;
+          } finally {
+            if (parsedMessage != null) {
+              mergeFrom(parsedMessage);
+            }
+          }
+          return this;
+        }
+        private int bitField0_;
+
+        // required bool isApproved = 1;
+        private boolean isApproved_ ;
+        /**
+         * <code>required bool isApproved = 1;</code>
+         *
+         * <pre>
+         * @required
+         * </pre>
+         */
+        public boolean hasIsApproved() {
+          return ((bitField0_ & 0x00000001) == 0x00000001);
+        }
+        /**
+         * <code>required bool isApproved = 1;</code>
+         *
+         * <pre>
+         * @required
+         * </pre>
+         */
+        public boolean getIsApproved() {
+          return isApproved_;
+        }
+        /**
+         * <code>required bool isApproved = 1;</code>
+         *
+         * <pre>
+         * @required
+         * </pre>
+         */
+        public Builder setIsApproved(boolean value) {
+          bitField0_ |= 0x00000001;
+          isApproved_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>required bool isApproved = 1;</code>
+         *
+         * <pre>
+         * @required
+         * </pre>
+         */
+        public Builder clearIsApproved() {
+          bitField0_ = (bitField0_ & ~0x00000001);
+          isApproved_ = false;
+          onChanged();
+          return this;
+        }
+
+        // optional bytes profileKey = 2;
+        private com.google.protobuf.ByteString profileKey_ = com.google.protobuf.ByteString.EMPTY;
+        /**
+         * <code>optional bytes profileKey = 2;</code>
+         */
+        public boolean hasProfileKey() {
+          return ((bitField0_ & 0x00000002) == 0x00000002);
+        }
+        /**
+         * <code>optional bytes profileKey = 2;</code>
+         */
+        public com.google.protobuf.ByteString getProfileKey() {
+          return profileKey_;
+        }
+        /**
+         * <code>optional bytes profileKey = 2;</code>
+         */
+        public Builder setProfileKey(com.google.protobuf.ByteString value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+          profileKey_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>optional bytes profileKey = 2;</code>
+         */
+        public Builder clearProfileKey() {
+          bitField0_ = (bitField0_ & ~0x00000002);
+          profileKey_ = getDefaultInstance().getProfileKey();
+          onChanged();
+          return this;
+        }
+
+        // optional .signalservice.DataMessage.LokiProfile profile = 3;
+        private org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile profile_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.getDefaultInstance();
+        private com.google.protobuf.SingleFieldBuilder<
+            org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile, org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfileOrBuilder> profileBuilder_;
+        /**
+         * <code>optional .signalservice.DataMessage.LokiProfile profile = 3;</code>
+         */
+        public boolean hasProfile() {
+          return ((bitField0_ & 0x00000004) == 0x00000004);
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.LokiProfile profile = 3;</code>
+         */
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile getProfile() {
+          if (profileBuilder_ == null) {
+            return profile_;
+          } else {
+            return profileBuilder_.getMessage();
+          }
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.LokiProfile profile = 3;</code>
+         */
+        public Builder setProfile(org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile value) {
+          if (profileBuilder_ == null) {
+            if (value == null) {
+              throw new NullPointerException();
+            }
+            profile_ = value;
+            onChanged();
+          } else {
+            profileBuilder_.setMessage(value);
+          }
+          bitField0_ |= 0x00000004;
+          return this;
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.LokiProfile profile = 3;</code>
+         */
+        public Builder setProfile(
+            org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.Builder builderForValue) {
+          if (profileBuilder_ == null) {
+            profile_ = builderForValue.build();
+            onChanged();
+          } else {
+            profileBuilder_.setMessage(builderForValue.build());
+          }
+          bitField0_ |= 0x00000004;
+          return this;
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.LokiProfile profile = 3;</code>
+         */
+        public Builder mergeProfile(org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile value) {
+          if (profileBuilder_ == null) {
+            if (((bitField0_ & 0x00000004) == 0x00000004) &&
+                profile_ != org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.getDefaultInstance()) {
+              profile_ =
+                org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.newBuilder(profile_).mergeFrom(value).buildPartial();
+            } else {
+              profile_ = value;
+            }
+            onChanged();
+          } else {
+            profileBuilder_.mergeFrom(value);
+          }
+          bitField0_ |= 0x00000004;
+          return this;
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.LokiProfile profile = 3;</code>
+         */
+        public Builder clearProfile() {
+          if (profileBuilder_ == null) {
+            profile_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.getDefaultInstance();
+            onChanged();
+          } else {
+            profileBuilder_.clear();
+          }
+          bitField0_ = (bitField0_ & ~0x00000004);
+          return this;
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.LokiProfile profile = 3;</code>
+         */
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.Builder getProfileBuilder() {
+          bitField0_ |= 0x00000004;
+          onChanged();
+          return getProfileFieldBuilder().getBuilder();
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.LokiProfile profile = 3;</code>
+         */
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfileOrBuilder getProfileOrBuilder() {
+          if (profileBuilder_ != null) {
+            return profileBuilder_.getMessageOrBuilder();
+          } else {
+            return profile_;
+          }
+        }
+        /**
+         * <code>optional .signalservice.DataMessage.LokiProfile profile = 3;</code>
+         */
+        private com.google.protobuf.SingleFieldBuilder<
+            org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile, org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfileOrBuilder> 
+            getProfileFieldBuilder() {
+          if (profileBuilder_ == null) {
+            profileBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+                org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile, org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfileOrBuilder>(
+                    profile_,
+                    getParentForChildren(),
+                    isClean());
+            profile_ = null;
+          }
+          return profileBuilder_;
+        }
+
+        // @@protoc_insertion_point(builder_scope:signalservice.DataMessage.GroupUpdateInviteResponseMessage)
+      }
+
+      static {
+        defaultInstance = new GroupUpdateInviteResponseMessage(true);
+        defaultInstance.initFields();
+      }
+
+      // @@protoc_insertion_point(class_scope:signalservice.DataMessage.GroupUpdateInviteResponseMessage)
+    }
+
+    public interface GroupUpdateDeleteMemberContentMessageOrBuilder
+        extends com.google.protobuf.MessageOrBuilder {
+
+      // repeated bytes memberPublicKeys = 1;
+      /**
+       * <code>repeated bytes memberPublicKeys = 1;</code>
+       */
+      java.util.List<com.google.protobuf.ByteString> getMemberPublicKeysList();
+      /**
+       * <code>repeated bytes memberPublicKeys = 1;</code>
+       */
+      int getMemberPublicKeysCount();
+      /**
+       * <code>repeated bytes memberPublicKeys = 1;</code>
+       */
+      com.google.protobuf.ByteString getMemberPublicKeys(int index);
+
+      // required bytes adminSignature = 2;
+      /**
+       * <code>required bytes adminSignature = 2;</code>
+       *
+       * <pre>
+       * @required
+       * </pre>
+       */
+      boolean hasAdminSignature();
+      /**
+       * <code>required bytes adminSignature = 2;</code>
+       *
+       * <pre>
+       * @required
+       * </pre>
+       */
+      com.google.protobuf.ByteString getAdminSignature();
+    }
+    /**
+     * Protobuf type {@code signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage}
+     */
+    public static final class GroupUpdateDeleteMemberContentMessage extends
+        com.google.protobuf.GeneratedMessage
+        implements GroupUpdateDeleteMemberContentMessageOrBuilder {
+      // Use GroupUpdateDeleteMemberContentMessage.newBuilder() to construct.
+      private GroupUpdateDeleteMemberContentMessage(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+        super(builder);
+        this.unknownFields = builder.getUnknownFields();
+      }
+      private GroupUpdateDeleteMemberContentMessage(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+      private static final GroupUpdateDeleteMemberContentMessage defaultInstance;
+      public static GroupUpdateDeleteMemberContentMessage getDefaultInstance() {
+        return defaultInstance;
+      }
+
+      public GroupUpdateDeleteMemberContentMessage getDefaultInstanceForType() {
+        return defaultInstance;
+      }
+
+      private final com.google.protobuf.UnknownFieldSet unknownFields;
+      @java.lang.Override
+      public final com.google.protobuf.UnknownFieldSet
+          getUnknownFields() {
+        return this.unknownFields;
+      }
+      private GroupUpdateDeleteMemberContentMessage(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        initFields();
+        int mutable_bitField0_ = 0;
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+            com.google.protobuf.UnknownFieldSet.newBuilder();
+        try {
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              default: {
+                if (!parseUnknownField(input, unknownFields,
+                                       extensionRegistry, tag)) {
+                  done = true;
+                }
+                break;
+              }
+              case 10: {
+                if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+                  memberPublicKeys_ = new java.util.ArrayList<com.google.protobuf.ByteString>();
+                  mutable_bitField0_ |= 0x00000001;
+                }
+                memberPublicKeys_.add(input.readBytes());
+                break;
+              }
+              case 18: {
+                bitField0_ |= 0x00000001;
+                adminSignature_ = input.readBytes();
+                break;
+              }
+            }
+          }
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(this);
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(
+              e.getMessage()).setUnfinishedMessage(this);
+        } finally {
+          if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+            memberPublicKeys_ = java.util.Collections.unmodifiableList(memberPublicKeys_);
+          }
+          this.unknownFields = unknownFields.build();
+          makeExtensionsImmutable();
+        }
+      }
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return org.session.libsignal.protos.SignalServiceProtos.internal_static_signalservice_DataMessage_GroupUpdateDeleteMemberContentMessage_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return org.session.libsignal.protos.SignalServiceProtos.internal_static_signalservice_DataMessage_GroupUpdateDeleteMemberContentMessage_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage.class, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage.Builder.class);
+      }
+
+      public static com.google.protobuf.Parser<GroupUpdateDeleteMemberContentMessage> PARSER =
+          new com.google.protobuf.AbstractParser<GroupUpdateDeleteMemberContentMessage>() {
+        public GroupUpdateDeleteMemberContentMessage parsePartialFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          return new GroupUpdateDeleteMemberContentMessage(input, extensionRegistry);
+        }
+      };
+
+      @java.lang.Override
+      public com.google.protobuf.Parser<GroupUpdateDeleteMemberContentMessage> getParserForType() {
+        return PARSER;
+      }
+
+      private int bitField0_;
+      // repeated bytes memberPublicKeys = 1;
+      public static final int MEMBERPUBLICKEYS_FIELD_NUMBER = 1;
+      private java.util.List<com.google.protobuf.ByteString> memberPublicKeys_;
+      /**
+       * <code>repeated bytes memberPublicKeys = 1;</code>
+       */
+      public java.util.List<com.google.protobuf.ByteString>
+          getMemberPublicKeysList() {
+        return memberPublicKeys_;
+      }
+      /**
+       * <code>repeated bytes memberPublicKeys = 1;</code>
+       */
+      public int getMemberPublicKeysCount() {
+        return memberPublicKeys_.size();
+      }
+      /**
+       * <code>repeated bytes memberPublicKeys = 1;</code>
+       */
+      public com.google.protobuf.ByteString getMemberPublicKeys(int index) {
+        return memberPublicKeys_.get(index);
+      }
+
+      // required bytes adminSignature = 2;
+      public static final int ADMINSIGNATURE_FIELD_NUMBER = 2;
+      private com.google.protobuf.ByteString adminSignature_;
+      /**
+       * <code>required bytes adminSignature = 2;</code>
+       *
+       * <pre>
+       * @required
+       * </pre>
+       */
+      public boolean hasAdminSignature() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required bytes adminSignature = 2;</code>
+       *
+       * <pre>
+       * @required
+       * </pre>
+       */
+      public com.google.protobuf.ByteString getAdminSignature() {
+        return adminSignature_;
+      }
+
+      private void initFields() {
+        memberPublicKeys_ = java.util.Collections.emptyList();
+        adminSignature_ = com.google.protobuf.ByteString.EMPTY;
+      }
+      private byte memoizedIsInitialized = -1;
+      public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized != -1) return isInitialized == 1;
+
+        if (!hasAdminSignature()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+        memoizedIsInitialized = 1;
+        return true;
+      }
+
+      public void writeTo(com.google.protobuf.CodedOutputStream output)
+                          throws java.io.IOException {
+        getSerializedSize();
+        for (int i = 0; i < memberPublicKeys_.size(); i++) {
+          output.writeBytes(1, memberPublicKeys_.get(i));
+        }
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          output.writeBytes(2, adminSignature_);
+        }
+        getUnknownFields().writeTo(output);
+      }
+
+      private int memoizedSerializedSize = -1;
+      public int getSerializedSize() {
+        int size = memoizedSerializedSize;
+        if (size != -1) return size;
+
+        size = 0;
+        {
+          int dataSize = 0;
+          for (int i = 0; i < memberPublicKeys_.size(); i++) {
+            dataSize += com.google.protobuf.CodedOutputStream
+              .computeBytesSizeNoTag(memberPublicKeys_.get(i));
+          }
+          size += dataSize;
+          size += 1 * getMemberPublicKeysList().size();
+        }
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeBytesSize(2, adminSignature_);
+        }
+        size += getUnknownFields().getSerializedSize();
+        memoizedSerializedSize = size;
+        return size;
+      }
+
+      private static final long serialVersionUID = 0L;
+      @java.lang.Override
+      protected java.lang.Object writeReplace()
+          throws java.io.ObjectStreamException {
+        return super.writeReplace();
+      }
+
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage parseFrom(
+          com.google.protobuf.ByteString data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage parseFrom(
+          com.google.protobuf.ByteString data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage parseFrom(byte[] data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage parseFrom(
+          byte[] data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage parseFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage parseFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input, extensionRegistry);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage parseDelimitedFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return PARSER.parseDelimitedFrom(input);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage parseDelimitedFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return PARSER.parseDelimitedFrom(input, extensionRegistry);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage parseFrom(
+          com.google.protobuf.CodedInputStream input)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input);
+      }
+      public static org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage parseFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input, extensionRegistry);
+      }
+
+      public static Builder newBuilder() { return Builder.create(); }
+      public Builder newBuilderForType() { return newBuilder(); }
+      public static Builder newBuilder(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage prototype) {
+        return newBuilder().mergeFrom(prototype);
+      }
+      public Builder toBuilder() { return newBuilder(this); }
+
+      @java.lang.Override
+      protected Builder newBuilderForType(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        Builder builder = new Builder(parent);
+        return builder;
+      }
+      /**
+       * Protobuf type {@code signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage}
+       */
+      public static final class Builder extends
+          com.google.protobuf.GeneratedMessage.Builder<Builder>
+         implements org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessageOrBuilder {
+        public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+          return org.session.libsignal.protos.SignalServiceProtos.internal_static_signalservice_DataMessage_GroupUpdateDeleteMemberContentMessage_descriptor;
+        }
+
+        protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+            internalGetFieldAccessorTable() {
+          return org.session.libsignal.protos.SignalServiceProtos.internal_static_signalservice_DataMessage_GroupUpdateDeleteMemberContentMessage_fieldAccessorTable
+              .ensureFieldAccessorsInitialized(
+                  org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage.class, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage.Builder.class);
+        }
+
+        // Construct using org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage.newBuilder()
+        private Builder() {
+          maybeForceBuilderInitialization();
+        }
+
+        private Builder(
+            com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+          super(parent);
+          maybeForceBuilderInitialization();
+        }
+        private void maybeForceBuilderInitialization() {
+          if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          }
+        }
+        private static Builder create() {
+          return new Builder();
+        }
+
+        public Builder clear() {
+          super.clear();
+          memberPublicKeys_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+          adminSignature_ = com.google.protobuf.ByteString.EMPTY;
+          bitField0_ = (bitField0_ & ~0x00000002);
+          return this;
+        }
+
+        public Builder clone() {
+          return create().mergeFrom(buildPartial());
+        }
+
+        public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+          return org.session.libsignal.protos.SignalServiceProtos.internal_static_signalservice_DataMessage_GroupUpdateDeleteMemberContentMessage_descriptor;
+        }
+
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage getDefaultInstanceForType() {
+          return org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage.getDefaultInstance();
+        }
+
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage build() {
+          org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage result = buildPartial();
+          if (!result.isInitialized()) {
+            throw newUninitializedMessageException(result);
+          }
+          return result;
+        }
+
+        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage buildPartial() {
+          org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage result = new org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage(this);
+          int from_bitField0_ = bitField0_;
+          int to_bitField0_ = 0;
+          if (((bitField0_ & 0x00000001) == 0x00000001)) {
+            memberPublicKeys_ = java.util.Collections.unmodifiableList(memberPublicKeys_);
+            bitField0_ = (bitField0_ & ~0x00000001);
+          }
+          result.memberPublicKeys_ = memberPublicKeys_;
+          if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+            to_bitField0_ |= 0x00000001;
+          }
+          result.adminSignature_ = adminSignature_;
+          result.bitField0_ = to_bitField0_;
+          onBuilt();
+          return result;
+        }
+
+        public Builder mergeFrom(com.google.protobuf.Message other) {
+          if (other instanceof org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage) {
+            return mergeFrom((org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage)other);
+          } else {
+            super.mergeFrom(other);
+            return this;
+          }
+        }
+
+        public Builder mergeFrom(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage other) {
+          if (other == org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage.getDefaultInstance()) return this;
+          if (!other.memberPublicKeys_.isEmpty()) {
+            if (memberPublicKeys_.isEmpty()) {
+              memberPublicKeys_ = other.memberPublicKeys_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+            } else {
+              ensureMemberPublicKeysIsMutable();
+              memberPublicKeys_.addAll(other.memberPublicKeys_);
+            }
+            onChanged();
+          }
+          if (other.hasAdminSignature()) {
+            setAdminSignature(other.getAdminSignature());
+          }
+          this.mergeUnknownFields(other.getUnknownFields());
+          return this;
+        }
+
+        public final boolean isInitialized() {
+          if (!hasAdminSignature()) {
+            
+            return false;
+          }
+          return true;
+        }
+
+        public Builder mergeFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+          org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage parsedMessage = null;
+          try {
+            parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            parsedMessage = (org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage) e.getUnfinishedMessage();
+            throw e;
+          } finally {
+            if (parsedMessage != null) {
+              mergeFrom(parsedMessage);
+            }
+          }
+          return this;
+        }
+        private int bitField0_;
+
+        // repeated bytes memberPublicKeys = 1;
+        private java.util.List<com.google.protobuf.ByteString> memberPublicKeys_ = java.util.Collections.emptyList();
+        private void ensureMemberPublicKeysIsMutable() {
+          if (!((bitField0_ & 0x00000001) == 0x00000001)) {
+            memberPublicKeys_ = new java.util.ArrayList<com.google.protobuf.ByteString>(memberPublicKeys_);
+            bitField0_ |= 0x00000001;
+           }
+        }
+        /**
+         * <code>repeated bytes memberPublicKeys = 1;</code>
+         */
+        public java.util.List<com.google.protobuf.ByteString>
+            getMemberPublicKeysList() {
+          return java.util.Collections.unmodifiableList(memberPublicKeys_);
+        }
+        /**
+         * <code>repeated bytes memberPublicKeys = 1;</code>
+         */
+        public int getMemberPublicKeysCount() {
+          return memberPublicKeys_.size();
+        }
+        /**
+         * <code>repeated bytes memberPublicKeys = 1;</code>
+         */
+        public com.google.protobuf.ByteString getMemberPublicKeys(int index) {
+          return memberPublicKeys_.get(index);
+        }
+        /**
+         * <code>repeated bytes memberPublicKeys = 1;</code>
+         */
+        public Builder setMemberPublicKeys(
+            int index, com.google.protobuf.ByteString value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureMemberPublicKeysIsMutable();
+          memberPublicKeys_.set(index, value);
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>repeated bytes memberPublicKeys = 1;</code>
+         */
+        public Builder addMemberPublicKeys(com.google.protobuf.ByteString value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureMemberPublicKeysIsMutable();
+          memberPublicKeys_.add(value);
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>repeated bytes memberPublicKeys = 1;</code>
+         */
+        public Builder addAllMemberPublicKeys(
+            java.lang.Iterable<? extends com.google.protobuf.ByteString> values) {
+          ensureMemberPublicKeysIsMutable();
+          super.addAll(values, memberPublicKeys_);
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>repeated bytes memberPublicKeys = 1;</code>
+         */
+        public Builder clearMemberPublicKeys() {
+          memberPublicKeys_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+          onChanged();
+          return this;
+        }
+
+        // required bytes adminSignature = 2;
+        private com.google.protobuf.ByteString adminSignature_ = com.google.protobuf.ByteString.EMPTY;
+        /**
+         * <code>required bytes adminSignature = 2;</code>
+         *
+         * <pre>
+         * @required
+         * </pre>
+         */
+        public boolean hasAdminSignature() {
+          return ((bitField0_ & 0x00000002) == 0x00000002);
+        }
+        /**
+         * <code>required bytes adminSignature = 2;</code>
+         *
+         * <pre>
+         * @required
+         * </pre>
+         */
+        public com.google.protobuf.ByteString getAdminSignature() {
+          return adminSignature_;
+        }
+        /**
+         * <code>required bytes adminSignature = 2;</code>
+         *
+         * <pre>
+         * @required
+         * </pre>
+         */
+        public Builder setAdminSignature(com.google.protobuf.ByteString value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+          adminSignature_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>required bytes adminSignature = 2;</code>
+         *
+         * <pre>
+         * @required
+         * </pre>
+         */
+        public Builder clearAdminSignature() {
+          bitField0_ = (bitField0_ & ~0x00000002);
+          adminSignature_ = getDefaultInstance().getAdminSignature();
+          onChanged();
+          return this;
+        }
+
+        // @@protoc_insertion_point(builder_scope:signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage)
+      }
+
+      static {
+        defaultInstance = new GroupUpdateDeleteMemberContentMessage(true);
+        defaultInstance.initFields();
+      }
+
+      // @@protoc_insertion_point(class_scope:signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage)
+    }
+
     public interface ClosedGroupControlMessageOrBuilder
         extends com.google.protobuf.MessageOrBuilder {
 
@@ -29347,6 +36744,51 @@ public final class SignalServiceProtos {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_signalservice_DataMessage_GroupMessage_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_signalservice_DataMessage_GroupUpdateMessage_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_signalservice_DataMessage_GroupUpdateMessage_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_signalservice_DataMessage_GroupUpdateInviteMessage_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_signalservice_DataMessage_GroupUpdateInviteMessage_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_signalservice_DataMessage_GroupUpdateDeleteMessage_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_signalservice_DataMessage_GroupUpdateDeleteMessage_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_signalservice_DataMessage_GroupUpdatePromoteMessage_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_signalservice_DataMessage_GroupUpdatePromoteMessage_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_signalservice_DataMessage_GroupUpdateInfoChangeMessage_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_signalservice_DataMessage_GroupUpdateInfoChangeMessage_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_signalservice_DataMessage_GroupUpdateMemberChangeMessage_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_signalservice_DataMessage_GroupUpdateMemberChangeMessage_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_signalservice_DataMessage_GroupUpdateMemberLeftMessage_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_signalservice_DataMessage_GroupUpdateMemberLeftMessage_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_signalservice_DataMessage_GroupUpdateInviteResponseMessage_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_signalservice_DataMessage_GroupUpdateInviteResponseMessage_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_signalservice_DataMessage_GroupUpdateDeleteMemberContentMessage_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_signalservice_DataMessage_GroupUpdateDeleteMemberContentMessage_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
     internal_static_signalservice_DataMessage_ClosedGroupControlMessage_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
@@ -29459,7 +36901,7 @@ public final class SignalServiceProtos {
       "actionNotification\022<\n\004type\030\001 \002(\0162..signa" +
       "lservice.DataExtractionNotification.Type" +
       "\022\021\n\ttimestamp\030\002 \001(\004\"\'\n\004Type\022\016\n\nSCREENSHO" +
-      "T\020\001\022\017\n\013MEDIA_SAVED\020\002\"\266\021\n\013DataMessage\022\014\n\004",
+      "T\020\001\022\017\n\013MEDIA_SAVED\020\002\"\273\036\n\013DataMessage\022\014\n\004",
       "body\030\001 \001(\t\0225\n\013attachments\030\002 \003(\0132 .signal" +
       "service.AttachmentPointer\022\r\n\005flags\030\004 \001(\r" +
       "\022\023\n\013expireTimer\030\005 \001(\r\022\022\n\nprofileKey\030\006 \001(" +
@@ -29494,73 +36936,115 @@ public final class SignalServiceProtos {
       "GroupMemberLeftMessage\0228\n\rinviteMessage\030" +
       "! \001(\0132!.signalservice.GroupInviteMessage" +
       "\022:\n\016promoteMessage\030\" \001(\0132\".signalservice" +
-      ".GroupPromoteMessage\032\203\005\n\031ClosedGroupCont" +
-      "rolMessage\022G\n\004type\030\001 \002(\01629.signalservice" +
-      ".DataMessage.ClosedGroupControlMessage.T" +
-      "ype\022\021\n\tpublicKey\030\002 \001(\014\022\014\n\004name\030\003 \001(\t\0221\n\021" +
-      "encryptionKeyPair\030\004 \001(\0132\026.signalservice." +
-      "KeyPair\022\017\n\007members\030\005 \003(\014\022\016\n\006admins\030\006 \003(\014",
-      "\022U\n\010wrappers\030\007 \003(\0132C.signalservice.DataM" +
-      "essage.ClosedGroupControlMessage.KeyPair" +
-      "Wrapper\022\027\n\017expirationTimer\030\010 \001(\r\022\030\n\020memb" +
-      "erPrivateKey\030\t \001(\014\022\022\n\nprivateKey\030\n \001(\014\032=" +
-      "\n\016KeyPairWrapper\022\021\n\tpublicKey\030\001 \002(\014\022\030\n\020e" +
-      "ncryptedKeyPair\030\002 \002(\014\"\312\001\n\004Type\022\007\n\003NEW\020\001\022" +
-      "\027\n\023ENCRYPTION_KEY_PAIR\020\003\022\017\n\013NAME_CHANGE\020" +
-      "\004\022\021\n\rMEMBERS_ADDED\020\005\022\023\n\017MEMBERS_REMOVED\020" +
-      "\006\022\017\n\013MEMBER_LEFT\020\007\022\n\n\006INVITE\020\t\022\013\n\007PROMOT" +
-      "E\020\n\022\020\n\014DELETE_GROUP\020\013\022\023\n\017DELETE_MESSAGES",
-      "\020\014\022\026\n\022DELETE_ATTACHMENTS\020\r\032\222\001\n\010Reaction\022" +
-      "\n\n\002id\030\001 \002(\004\022\016\n\006author\030\002 \002(\t\022\r\n\005emoji\030\003 \001" +
-      "(\t\022:\n\006action\030\004 \002(\0162*.signalservice.DataM" +
-      "essage.Reaction.Action\"\037\n\006Action\022\t\n\005REAC" +
-      "T\020\000\022\n\n\006REMOVE\020\001\"$\n\005Flags\022\033\n\027EXPIRATION_T" +
-      "IMER_UPDATE\020\002\"B\n\022GroupDeleteMessage\022\021\n\tp" +
-      "ublicKey\030\001 \002(\014\022\031\n\021lastEncryptionKey\030\002 \002(" +
-      "\014\"\030\n\026GroupMemberLeftMessage\"O\n\022GroupInvi" +
-      "teMessage\022\021\n\tpublicKey\030\001 \002(\014\022\014\n\004name\030\002 \002" +
-      "(\t\022\030\n\020memberPrivateKey\030\003 \002(\014\"E\n\023GroupPro",
-      "moteMessage\022\021\n\tpublicKey\030\001 \002(\014\022\033\n\023encryp" +
-      "tedPrivateKey\030\002 \002(\014\"\352\001\n\013CallMessage\022-\n\004t" +
-      "ype\030\001 \002(\0162\037.signalservice.CallMessage.Ty" +
-      "pe\022\014\n\004sdps\030\002 \003(\t\022\027\n\017sdpMLineIndexes\030\003 \003(" +
-      "\r\022\017\n\007sdpMids\030\004 \003(\t\022\014\n\004uuid\030\005 \002(\t\"f\n\004Type" +
-      "\022\r\n\tPRE_OFFER\020\006\022\t\n\005OFFER\020\001\022\n\n\006ANSWER\020\002\022\026" +
-      "\n\022PROVISIONAL_ANSWER\020\003\022\022\n\016ICE_CANDIDATES" +
-      "\020\004\022\014\n\010END_CALL\020\005\"\245\004\n\024ConfigurationMessag" +
-      "e\022E\n\014closedGroups\030\001 \003(\0132/.signalservice." +
-      "ConfigurationMessage.ClosedGroup\022\022\n\nopen",
-      "Groups\030\002 \003(\t\022\023\n\013displayName\030\003 \001(\t\022\026\n\016pro" +
-      "filePicture\030\004 \001(\t\022\022\n\nprofileKey\030\005 \001(\014\022=\n" +
-      "\010contacts\030\006 \003(\0132+.signalservice.Configur" +
-      "ationMessage.Contact\032\233\001\n\013ClosedGroup\022\021\n\t" +
-      "publicKey\030\001 \001(\014\022\014\n\004name\030\002 \001(\t\0221\n\021encrypt" +
-      "ionKeyPair\030\003 \001(\0132\026.signalservice.KeyPair" +
-      "\022\017\n\007members\030\004 \003(\014\022\016\n\006admins\030\005 \003(\014\022\027\n\017exp" +
-      "irationTimer\030\006 \001(\r\032\223\001\n\007Contact\022\021\n\tpublic" +
-      "Key\030\001 \002(\014\022\014\n\004name\030\002 \002(\t\022\026\n\016profilePictur" +
-      "e\030\003 \001(\t\022\022\n\nprofileKey\030\004 \001(\014\022\022\n\nisApprove",
-      "d\030\005 \001(\010\022\021\n\tisBlocked\030\006 \001(\010\022\024\n\014didApprove" +
-      "Me\030\007 \001(\010\"y\n\026MessageRequestResponse\022\022\n\nis" +
-      "Approved\030\001 \002(\010\022\022\n\nprofileKey\030\002 \001(\014\0227\n\007pr" +
-      "ofile\030\003 \001(\0132&.signalservice.DataMessage." +
-      "LokiProfile\"\375\001\n\023SharedConfigMessage\0225\n\004k" +
-      "ind\030\001 \002(\0162\'.signalservice.SharedConfigMe" +
-      "ssage.Kind\022\r\n\005seqno\030\002 \002(\003\022\014\n\004data\030\003 \002(\014\"" +
-      "\221\001\n\004Kind\022\020\n\014USER_PROFILE\020\001\022\014\n\010CONTACTS\020\002" +
-      "\022\027\n\023CONVO_INFO_VOLATILE\020\003\022\n\n\006GROUPS\020\004\022\025\n" +
-      "\021CLOSED_GROUP_INFO\020\005\022\030\n\024CLOSED_GROUP_MEM",
-      "BERS\020\006\022\023\n\017ENCRYPTION_KEYS\020\007\"u\n\016ReceiptMe" +
-      "ssage\0220\n\004type\030\001 \002(\0162\".signalservice.Rece" +
-      "iptMessage.Type\022\021\n\ttimestamp\030\002 \003(\004\"\036\n\004Ty" +
-      "pe\022\014\n\010DELIVERY\020\000\022\010\n\004READ\020\001\"\354\001\n\021Attachmen" +
-      "tPointer\022\n\n\002id\030\001 \002(\006\022\023\n\013contentType\030\002 \001(" +
-      "\t\022\013\n\003key\030\003 \001(\014\022\014\n\004size\030\004 \001(\r\022\021\n\tthumbnai" +
-      "l\030\005 \001(\014\022\016\n\006digest\030\006 \001(\014\022\020\n\010fileName\030\007 \001(" +
-      "\t\022\r\n\005flags\030\010 \001(\r\022\r\n\005width\030\t \001(\r\022\016\n\006heigh" +
-      "t\030\n \001(\r\022\017\n\007caption\030\013 \001(\t\022\013\n\003url\030e \001(\t\"\032\n" +
-      "\005Flags\022\021\n\rVOICE_MESSAGE\020\001B3\n\034org.session",
-      ".libsignal.protosB\023SignalServiceProtos"
+      ".GroupPromoteMessage\032\256\005\n\022GroupUpdateMess" +
+      "age\022J\n\rinviteMessage\030\001 \001(\01323.signalservi" +
+      "ce.DataMessage.GroupUpdateInviteMessage\022" +
+      "J\n\rdeleteMessage\030\002 \001(\01323.signalservice.D" +
+      "ataMessage.GroupUpdateDeleteMessage\022R\n\021i" +
+      "nfoChangeMessage\030\003 \001(\01327.signalservice.D",
+      "ataMessage.GroupUpdateInfoChangeMessage\022" +
+      "V\n\023memberChangeMessage\030\004 \001(\01329.signalser" +
+      "vice.DataMessage.GroupUpdateMemberChange" +
+      "Message\022L\n\016promoteMessage\030\005 \001(\01324.signal" +
+      "service.DataMessage.GroupUpdatePromoteMe" +
+      "ssage\022R\n\021memberLeftMessage\030\006 \001(\01327.signa" +
+      "lservice.DataMessage.GroupUpdateMemberLe" +
+      "ftMessage\022S\n\016inviteResponse\030\007 \001(\0132;.sign" +
+      "alservice.DataMessage.GroupUpdateInviteR" +
+      "esponseMessage\022]\n\023deleteMemberContent\030\010 ",
+      "\001(\0132@.signalservice.DataMessage.GroupUpd" +
+      "ateDeleteMemberContentMessage\032\275\001\n\030GroupU" +
+      "pdateInviteMessage\022\026\n\016groupSessionId\030\001 \002" +
+      "(\t\022\014\n\004name\030\002 \002(\t\022\026\n\016memberAuthData\030\003 \002(\014" +
+      "\022\022\n\nprofileKey\030\004 \001(\014\0227\n\007profile\030\005 \001(\0132&." +
+      "signalservice.DataMessage.LokiProfile\022\026\n" +
+      "\016adminSignature\030\006 \002(\014\032J\n\030GroupUpdateDele" +
+      "teMessage\022\026\n\016groupSessionId\030\001 \002(\t\022\026\n\016adm" +
+      "inSignature\030\002 \002(\014\0326\n\031GroupUpdatePromoteM" +
+      "essage\022\031\n\021groupIdentitySeed\030\001 \002(\014\032\323\001\n\034Gr",
+      "oupUpdateInfoChangeMessage\022J\n\004type\030\001 \002(\016" +
+      "2<.signalservice.DataMessage.GroupUpdate" +
+      "InfoChangeMessage.Type\022\023\n\013updatedName\030\002 " +
+      "\001(\t\022\031\n\021updatedExpiration\030\003 \001(\r\"7\n\004Type\022\010" +
+      "\n\004NAME\020\001\022\n\n\006AVATAR\020\002\022\031\n\025DISAPPEARING_MES" +
+      "SAGES\020\003\032\266\001\n\036GroupUpdateMemberChangeMessa" +
+      "ge\022L\n\004type\030\001 \002(\0162>.signalservice.DataMes" +
+      "sage.GroupUpdateMemberChangeMessage.Type" +
+      "\022\030\n\020memberPublicKeys\030\002 \003(\014\",\n\004Type\022\t\n\005AD" +
+      "DED\020\001\022\013\n\007REMOVED\020\002\022\014\n\010PROMOTED\020\003\032\036\n\034Grou",
+      "pUpdateMemberLeftMessage\032\203\001\n GroupUpdate" +
+      "InviteResponseMessage\022\022\n\nisApproved\030\001 \002(" +
+      "\010\022\022\n\nprofileKey\030\002 \001(\014\0227\n\007profile\030\003 \001(\0132&" +
+      ".signalservice.DataMessage.LokiProfile\032Y" +
+      "\n%GroupUpdateDeleteMemberContentMessage\022" +
+      "\030\n\020memberPublicKeys\030\001 \003(\014\022\026\n\016adminSignat" +
+      "ure\030\002 \002(\014\032\203\005\n\031ClosedGroupControlMessage\022" +
+      "G\n\004type\030\001 \002(\01629.signalservice.DataMessag" +
+      "e.ClosedGroupControlMessage.Type\022\021\n\tpubl" +
+      "icKey\030\002 \001(\014\022\014\n\004name\030\003 \001(\t\0221\n\021encryptionK",
+      "eyPair\030\004 \001(\0132\026.signalservice.KeyPair\022\017\n\007" +
+      "members\030\005 \003(\014\022\016\n\006admins\030\006 \003(\014\022U\n\010wrapper" +
+      "s\030\007 \003(\0132C.signalservice.DataMessage.Clos" +
+      "edGroupControlMessage.KeyPairWrapper\022\027\n\017" +
+      "expirationTimer\030\010 \001(\r\022\030\n\020memberPrivateKe" +
+      "y\030\t \001(\014\022\022\n\nprivateKey\030\n \001(\014\032=\n\016KeyPairWr" +
+      "apper\022\021\n\tpublicKey\030\001 \002(\014\022\030\n\020encryptedKey" +
+      "Pair\030\002 \002(\014\"\312\001\n\004Type\022\007\n\003NEW\020\001\022\027\n\023ENCRYPTI" +
+      "ON_KEY_PAIR\020\003\022\017\n\013NAME_CHANGE\020\004\022\021\n\rMEMBER" +
+      "S_ADDED\020\005\022\023\n\017MEMBERS_REMOVED\020\006\022\017\n\013MEMBER",
+      "_LEFT\020\007\022\n\n\006INVITE\020\t\022\013\n\007PROMOTE\020\n\022\020\n\014DELE" +
+      "TE_GROUP\020\013\022\023\n\017DELETE_MESSAGES\020\014\022\026\n\022DELET" +
+      "E_ATTACHMENTS\020\r\032\222\001\n\010Reaction\022\n\n\002id\030\001 \002(\004" +
+      "\022\016\n\006author\030\002 \002(\t\022\r\n\005emoji\030\003 \001(\t\022:\n\006actio" +
+      "n\030\004 \002(\0162*.signalservice.DataMessage.Reac" +
+      "tion.Action\"\037\n\006Action\022\t\n\005REACT\020\000\022\n\n\006REMO" +
+      "VE\020\001\"$\n\005Flags\022\033\n\027EXPIRATION_TIMER_UPDATE" +
+      "\020\002\"B\n\022GroupDeleteMessage\022\021\n\tpublicKey\030\001 " +
+      "\002(\014\022\031\n\021lastEncryptionKey\030\002 \002(\014\"\030\n\026GroupM" +
+      "emberLeftMessage\"O\n\022GroupInviteMessage\022\021",
+      "\n\tpublicKey\030\001 \002(\014\022\014\n\004name\030\002 \002(\t\022\030\n\020membe" +
+      "rPrivateKey\030\003 \002(\014\"E\n\023GroupPromoteMessage" +
+      "\022\021\n\tpublicKey\030\001 \002(\014\022\033\n\023encryptedPrivateK" +
+      "ey\030\002 \002(\014\"\352\001\n\013CallMessage\022-\n\004type\030\001 \002(\0162\037" +
+      ".signalservice.CallMessage.Type\022\014\n\004sdps\030" +
+      "\002 \003(\t\022\027\n\017sdpMLineIndexes\030\003 \003(\r\022\017\n\007sdpMid" +
+      "s\030\004 \003(\t\022\014\n\004uuid\030\005 \002(\t\"f\n\004Type\022\r\n\tPRE_OFF" +
+      "ER\020\006\022\t\n\005OFFER\020\001\022\n\n\006ANSWER\020\002\022\026\n\022PROVISION" +
+      "AL_ANSWER\020\003\022\022\n\016ICE_CANDIDATES\020\004\022\014\n\010END_C" +
+      "ALL\020\005\"\245\004\n\024ConfigurationMessage\022E\n\014closed",
+      "Groups\030\001 \003(\0132/.signalservice.Configurati" +
+      "onMessage.ClosedGroup\022\022\n\nopenGroups\030\002 \003(" +
+      "\t\022\023\n\013displayName\030\003 \001(\t\022\026\n\016profilePicture" +
+      "\030\004 \001(\t\022\022\n\nprofileKey\030\005 \001(\014\022=\n\010contacts\030\006" +
+      " \003(\0132+.signalservice.ConfigurationMessag" +
+      "e.Contact\032\233\001\n\013ClosedGroup\022\021\n\tpublicKey\030\001" +
+      " \001(\014\022\014\n\004name\030\002 \001(\t\0221\n\021encryptionKeyPair\030" +
+      "\003 \001(\0132\026.signalservice.KeyPair\022\017\n\007members" +
+      "\030\004 \003(\014\022\016\n\006admins\030\005 \003(\014\022\027\n\017expirationTime" +
+      "r\030\006 \001(\r\032\223\001\n\007Contact\022\021\n\tpublicKey\030\001 \002(\014\022\014",
+      "\n\004name\030\002 \002(\t\022\026\n\016profilePicture\030\003 \001(\t\022\022\n\n" +
+      "profileKey\030\004 \001(\014\022\022\n\nisApproved\030\005 \001(\010\022\021\n\t" +
+      "isBlocked\030\006 \001(\010\022\024\n\014didApproveMe\030\007 \001(\010\"y\n" +
+      "\026MessageRequestResponse\022\022\n\nisApproved\030\001 " +
+      "\002(\010\022\022\n\nprofileKey\030\002 \001(\014\0227\n\007profile\030\003 \001(\013" +
+      "2&.signalservice.DataMessage.LokiProfile" +
+      "\"\375\001\n\023SharedConfigMessage\0225\n\004kind\030\001 \002(\0162\'" +
+      ".signalservice.SharedConfigMessage.Kind\022" +
+      "\r\n\005seqno\030\002 \002(\003\022\014\n\004data\030\003 \002(\014\"\221\001\n\004Kind\022\020\n" +
+      "\014USER_PROFILE\020\001\022\014\n\010CONTACTS\020\002\022\027\n\023CONVO_I",
+      "NFO_VOLATILE\020\003\022\n\n\006GROUPS\020\004\022\025\n\021CLOSED_GRO" +
+      "UP_INFO\020\005\022\030\n\024CLOSED_GROUP_MEMBERS\020\006\022\023\n\017E" +
+      "NCRYPTION_KEYS\020\007\"u\n\016ReceiptMessage\0220\n\004ty" +
+      "pe\030\001 \002(\0162\".signalservice.ReceiptMessage." +
+      "Type\022\021\n\ttimestamp\030\002 \003(\004\"\036\n\004Type\022\014\n\010DELIV" +
+      "ERY\020\000\022\010\n\004READ\020\001\"\354\001\n\021AttachmentPointer\022\n\n" +
+      "\002id\030\001 \002(\006\022\023\n\013contentType\030\002 \001(\t\022\013\n\003key\030\003 " +
+      "\001(\014\022\014\n\004size\030\004 \001(\r\022\021\n\tthumbnail\030\005 \001(\014\022\016\n\006" +
+      "digest\030\006 \001(\014\022\020\n\010fileName\030\007 \001(\t\022\r\n\005flags\030" +
+      "\010 \001(\r\022\r\n\005width\030\t \001(\r\022\016\n\006height\030\n \001(\r\022\017\n\007",
+      "caption\030\013 \001(\t\022\013\n\003url\030e \001(\t\"\032\n\005Flags\022\021\n\rV" +
+      "OICE_MESSAGE\020\001B3\n\034org.session.libsignal." +
+      "protosB\023SignalServiceProtos"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -29645,8 +37129,62 @@ public final class SignalServiceProtos {
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_signalservice_DataMessage_GroupMessage_descriptor,
               new java.lang.String[] { "DeleteMessage", "MemberLeftMessage", "InviteMessage", "PromoteMessage", });
-          internal_static_signalservice_DataMessage_ClosedGroupControlMessage_descriptor =
+          internal_static_signalservice_DataMessage_GroupUpdateMessage_descriptor =
             internal_static_signalservice_DataMessage_descriptor.getNestedTypes().get(5);
+          internal_static_signalservice_DataMessage_GroupUpdateMessage_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_signalservice_DataMessage_GroupUpdateMessage_descriptor,
+              new java.lang.String[] { "InviteMessage", "DeleteMessage", "InfoChangeMessage", "MemberChangeMessage", "PromoteMessage", "MemberLeftMessage", "InviteResponse", "DeleteMemberContent", });
+          internal_static_signalservice_DataMessage_GroupUpdateInviteMessage_descriptor =
+            internal_static_signalservice_DataMessage_descriptor.getNestedTypes().get(6);
+          internal_static_signalservice_DataMessage_GroupUpdateInviteMessage_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_signalservice_DataMessage_GroupUpdateInviteMessage_descriptor,
+              new java.lang.String[] { "GroupSessionId", "Name", "MemberAuthData", "ProfileKey", "Profile", "AdminSignature", });
+          internal_static_signalservice_DataMessage_GroupUpdateDeleteMessage_descriptor =
+            internal_static_signalservice_DataMessage_descriptor.getNestedTypes().get(7);
+          internal_static_signalservice_DataMessage_GroupUpdateDeleteMessage_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_signalservice_DataMessage_GroupUpdateDeleteMessage_descriptor,
+              new java.lang.String[] { "GroupSessionId", "AdminSignature", });
+          internal_static_signalservice_DataMessage_GroupUpdatePromoteMessage_descriptor =
+            internal_static_signalservice_DataMessage_descriptor.getNestedTypes().get(8);
+          internal_static_signalservice_DataMessage_GroupUpdatePromoteMessage_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_signalservice_DataMessage_GroupUpdatePromoteMessage_descriptor,
+              new java.lang.String[] { "GroupIdentitySeed", });
+          internal_static_signalservice_DataMessage_GroupUpdateInfoChangeMessage_descriptor =
+            internal_static_signalservice_DataMessage_descriptor.getNestedTypes().get(9);
+          internal_static_signalservice_DataMessage_GroupUpdateInfoChangeMessage_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_signalservice_DataMessage_GroupUpdateInfoChangeMessage_descriptor,
+              new java.lang.String[] { "Type", "UpdatedName", "UpdatedExpiration", });
+          internal_static_signalservice_DataMessage_GroupUpdateMemberChangeMessage_descriptor =
+            internal_static_signalservice_DataMessage_descriptor.getNestedTypes().get(10);
+          internal_static_signalservice_DataMessage_GroupUpdateMemberChangeMessage_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_signalservice_DataMessage_GroupUpdateMemberChangeMessage_descriptor,
+              new java.lang.String[] { "Type", "MemberPublicKeys", });
+          internal_static_signalservice_DataMessage_GroupUpdateMemberLeftMessage_descriptor =
+            internal_static_signalservice_DataMessage_descriptor.getNestedTypes().get(11);
+          internal_static_signalservice_DataMessage_GroupUpdateMemberLeftMessage_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_signalservice_DataMessage_GroupUpdateMemberLeftMessage_descriptor,
+              new java.lang.String[] { });
+          internal_static_signalservice_DataMessage_GroupUpdateInviteResponseMessage_descriptor =
+            internal_static_signalservice_DataMessage_descriptor.getNestedTypes().get(12);
+          internal_static_signalservice_DataMessage_GroupUpdateInviteResponseMessage_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_signalservice_DataMessage_GroupUpdateInviteResponseMessage_descriptor,
+              new java.lang.String[] { "IsApproved", "ProfileKey", "Profile", });
+          internal_static_signalservice_DataMessage_GroupUpdateDeleteMemberContentMessage_descriptor =
+            internal_static_signalservice_DataMessage_descriptor.getNestedTypes().get(13);
+          internal_static_signalservice_DataMessage_GroupUpdateDeleteMemberContentMessage_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_signalservice_DataMessage_GroupUpdateDeleteMemberContentMessage_descriptor,
+              new java.lang.String[] { "MemberPublicKeys", "AdminSignature", });
+          internal_static_signalservice_DataMessage_ClosedGroupControlMessage_descriptor =
+            internal_static_signalservice_DataMessage_descriptor.getNestedTypes().get(14);
           internal_static_signalservice_DataMessage_ClosedGroupControlMessage_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_signalservice_DataMessage_ClosedGroupControlMessage_descriptor,
@@ -29658,7 +37196,7 @@ public final class SignalServiceProtos {
               internal_static_signalservice_DataMessage_ClosedGroupControlMessage_KeyPairWrapper_descriptor,
               new java.lang.String[] { "PublicKey", "EncryptedKeyPair", });
           internal_static_signalservice_DataMessage_Reaction_descriptor =
-            internal_static_signalservice_DataMessage_descriptor.getNestedTypes().get(6);
+            internal_static_signalservice_DataMessage_descriptor.getNestedTypes().get(15);
           internal_static_signalservice_DataMessage_Reaction_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_signalservice_DataMessage_Reaction_descriptor,

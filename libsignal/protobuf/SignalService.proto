@@ -157,6 +157,8 @@ message DataMessage {
     // @required
     required string         groupSessionId          = 1; // The `groupIdentityPublicKey` with a `03` prefix
     // @required
+    // signature of "DELETE" || sessionId || timestamp
+    // sessionId is the sessionId of the person being removed
     required bytes          adminSignature          = 2;
   }
 
