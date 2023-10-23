@@ -293,6 +293,16 @@ class ConfigFactory(
         )
     }
 
+    fun persistGroupConfigDump(forConfigObject: ConfigBase, groupSessionId: SessionId, timestamp: Long) = synchronized(userGroupsLock) {
+        val dumped = forConfigObject.dump()
+        configDatabase.storeConfig(
+            ConfigDatabase.KEYS_VARIANT,
+            groupSessionId.hexString(),
+            dumped,
+            timestamp
+        )
+    }
+
     override fun persist(forConfigObject: Config, timestamp: Long) {
         try {
             listeners.forEach { listener ->

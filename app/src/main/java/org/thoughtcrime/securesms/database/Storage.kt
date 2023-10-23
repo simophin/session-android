@@ -1225,6 +1225,21 @@ open class Storage(
         MessageSender.send(responseMessage, invitingAdminAddress)
     }
 
+    override fun setGroupInviteComplete(approved: Boolean, invitee: String, closedGroup: SessionId) {
+        val groupMembers = configFactory.getGroupMemberConfig(closedGroup) ?: return
+        val member = groupMembers.get(invitee) ?: run {
+            Log.e("ClosedGroup", "User wasn't in the group membership to add!")
+            return
+        }
+        if (approved) {
+            groupMembers.set(member.copy(invitePending = false))
+        } else {
+            groupMembers.erase(member)
+        }
+        configFactory.persistGroupConfigDump(groupMembers, closedGroup, SnodeAPI.nowWithOffset)
+        groupMembers.close()
+    }
+
     override fun setServerCapabilities(server: String, capabilities: List<String>) {
         return DatabaseComponent.get(context).lokiAPIDatabase().setServerCapabilities(server, capabilities)
     }

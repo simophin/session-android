@@ -62,7 +62,7 @@ internal fun MessageReceiver.isBlocked(publicKey: String): Boolean {
     return recipient.isBlocked
 }
 
-fun MessageReceiver.handle(message: Message, proto: SignalServiceProtos.Content, threadId: Long, openGroupID: String?) {
+fun MessageReceiver.handle(message: Message, proto: SignalServiceProtos.Content, threadId: Long, openGroupID: String?, closedGroup: SessionId?) {
     // Do nothing if the message was outdated
     if (MessageReceiver.messageIsOutdated(message, threadId, openGroupID)) { return }
 
@@ -70,7 +70,7 @@ fun MessageReceiver.handle(message: Message, proto: SignalServiceProtos.Content,
         is ReadReceipt -> handleReadReceipt(message)
         is TypingIndicator -> handleTypingIndicator(message)
         is ClosedGroupControlMessage -> handleClosedGroupControlMessage(message)
-        is GroupUpdated -> handleNewLibSessionClosedGroupMessage(message)
+        is GroupUpdated -> handleNewLibSessionClosedGroupMessage(message, closedGroup)
         is ExpirationTimerUpdate -> handleExpirationTimerUpdate(message)
         is DataExtractionNotification -> handleDataExtractionNotification(message)
         is ConfigurationMessage -> handleConfigurationMessage(message)
@@ -519,19 +519,19 @@ private fun ClosedGroupControlMessage.getPublicKey(): String = kind!!.let { when
     is ClosedGroupControlMessage.Kind.NameChange -> groupPublicKey!!
 }}
 
-private fun MessageReceiver.handleGroupUpdated(message: GroupUpdated) {
+private fun MessageReceiver.handleGroupUpdated(message: GroupUpdated, closedGroup: SessionId) {
     when {
         message.inner.hasInviteMessage() -> handleNewLibSessionClosedGroupMessage(message)
-        message.inner.hasInviteResponse() -> handleInviteResponse(message)
+        message.inner.hasInviteResponse() -> handleInviteResponse(message, closedGroup)
     }
 }
 
-private fun MessageReceiver.handleInviteResponse(message: GroupUpdated) {
+private fun MessageReceiver.handleInviteResponse(message: GroupUpdated, closedGroup: SessionId) {
     val sender = message.sender!!
     // val profile = message // maybe we do need data to be the inner so we can access profile
     val storage = MessagingModuleConfiguration.shared.storage
     val approved = message.inner.inviteResponse.isApproved
-
+    storage.setGroupInviteComplete(approved, sender, closedGroup)
 }
 
 private fun MessageReceiver.handleNewLibSessionClosedGroupMessage(message: GroupUpdated) {

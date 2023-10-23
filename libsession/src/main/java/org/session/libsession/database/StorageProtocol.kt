@@ -160,6 +160,7 @@ interface StorageProtocol {
     fun createNewGroup(groupName: String, groupDescription: String, members: Set<SessionId>): Optional<Recipient>
     fun getMembers(groupPublicKey: String): List<LibSessionGroupMember>
     fun acceptClosedGroupInvite(groupId: SessionId, name: String, authData: ByteArray, invitingAdmin: SessionId)
+    fun setGroupInviteComplete(approved: Boolean, invitee: String, closedGroup: SessionId)
 
     // Groups
     fun getAllGroups(includeInactive: Boolean): List<GroupRecord>
