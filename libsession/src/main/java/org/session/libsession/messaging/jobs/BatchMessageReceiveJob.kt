@@ -209,7 +209,12 @@ class BatchMessageReceiveJob(
                                     }
                                 }
 
-                                else -> MessageReceiver.handle(message, proto, threadId, openGroupID, parameters.closedGroup?.publicKey?.let(SessionId::from))
+                                else -> MessageReceiver.handle(message,
+                                    proto,
+                                    threadId,
+                                    openGroupID,
+                                    closedGroup = parameters.closedGroup?.publicKey?.let(SessionId::from)
+                                )
                             }
                         } catch (e: Exception) {
                             Log.e(TAG, "Couldn't process message (id: $id)", e)
