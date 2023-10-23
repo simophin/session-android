@@ -35,6 +35,7 @@ import org.session.libsession.messaging.jobs.RetrieveProfileAvatarJob
 import org.session.libsession.messaging.messages.Destination
 import org.session.libsession.messaging.messages.Message
 import org.session.libsession.messaging.messages.control.ConfigurationMessage
+import org.session.libsession.messaging.messages.control.GroupUpdated
 import org.session.libsession.messaging.messages.control.MessageRequestResponse
 import org.session.libsession.messaging.messages.signal.IncomingEncryptedMessage
 import org.session.libsession.messaging.messages.signal.IncomingGroupMessage
@@ -50,6 +51,7 @@ import org.session.libsession.messaging.messages.visible.VisibleMessage
 import org.session.libsession.messaging.open_groups.GroupMember
 import org.session.libsession.messaging.open_groups.OpenGroup
 import org.session.libsession.messaging.open_groups.OpenGroupApi
+import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.messaging.sending_receiving.attachments.AttachmentId
 import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAttachment
 import org.session.libsession.messaging.sending_receiving.data_extraction.DataExtractionNotificationInfoMessage
@@ -76,6 +78,8 @@ import org.session.libsignal.crypto.ecc.DjbECPublicKey
 import org.session.libsignal.crypto.ecc.ECKeyPair
 import org.session.libsignal.messages.SignalServiceAttachmentPointer
 import org.session.libsignal.messages.SignalServiceGroup
+import org.session.libsignal.protos.SignalServiceProtos.DataMessage
+import org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage
 import org.session.libsignal.utilities.Base64
 import org.session.libsignal.utilities.Hex
 import org.session.libsignal.utilities.IdPrefix
@@ -1198,6 +1202,28 @@ open class Storage(
 
     override fun getMembers(groupPublicKey: String): List<LibSessionGroupMember> =
         configFactory.getGroupMemberConfig(SessionId.from(groupPublicKey))?.use { it.all() }?.toList() ?: emptyList()
+
+    override fun acceptClosedGroupInvite(groupId: SessionId, name: String, authData: ByteArray, invitingAdmin: SessionId) {
+        val recipient = Recipient.from(context, Address.fromSerialized(groupId.hexString()), false)
+        val profileManager = SSKEnvironment.shared.profileManager
+        val groups = configFactory.userGroups ?: return
+        val closedGroupInfo = GroupInfo.ClosedGroupInfo(
+            groupId, byteArrayOf(), authData, PRIORITY_VISIBLE
+        )
+        groups.set(closedGroupInfo)
+        profileManager.setName(context, recipient, name)
+        setRecipientApprovedMe(recipient, true)
+        setRecipientApproved(recipient, true)
+        getOrCreateThreadIdFor(recipient.address)
+        pollerFactory.pollerFor(groupId)?.start()
+        val invitingAdminAddress = Address.fromSerialized(invitingAdmin.hexString())
+        val inviteResponse = GroupUpdateInviteResponseMessage.newBuilder()
+            .setIsApproved(true)
+        val responseData = DataMessage.GroupUpdateMessage.newBuilder()
+            .setInviteResponse(inviteResponse)
+        val responseMessage = GroupUpdated(responseData.build())
+        MessageSender.send(responseMessage, invitingAdminAddress)
+    }
 
     override fun setServerCapabilities(server: String, capabilities: List<String>) {
         return DatabaseComponent.get(context).lokiAPIDatabase().setServerCapabilities(server, capabilities)

@@ -12,6 +12,7 @@ import org.session.libsession.messaging.messages.control.CallMessage
 import org.session.libsession.messaging.messages.control.ClosedGroupControlMessage
 import org.session.libsession.messaging.messages.control.ConfigurationMessage
 import org.session.libsession.messaging.messages.control.ExpirationTimerUpdate
+import org.session.libsession.messaging.messages.control.GroupUpdated
 import org.session.libsession.messaging.messages.control.MessageRequestResponse
 import org.session.libsession.messaging.messages.control.SharedConfigurationMessage
 import org.session.libsession.messaging.messages.control.UnsendRequest
@@ -122,9 +123,15 @@ object MessageSender {
             message.profile = storage.getUserProfile()
         }
         // Convert it to protobuf
-        val proto = message.toProto() ?: throw Error.ProtoConversionFailed
+        val proto = message.toProto()?.toBuilder() ?: throw Error.ProtoConversionFailed
+        if (message is GroupUpdated) {
+            // Add all cases where we have to attach profile
+            if (message.inner.hasInviteResponse()) {
+                proto.mergeDataMessage(storage.getUserProfile().toProto())
+            }
+        }
         // Serialize the protobuf
-        val plaintext = PushTransportDetails.getPaddedMessageBody(proto.toByteArray())
+        val plaintext = PushTransportDetails.getPaddedMessageBody(proto.build().toByteArray())
 
         // Envelope information
         val kind: SignalServiceProtos.Envelope.Type
@@ -157,7 +164,7 @@ object MessageSender {
             }
             is Destination.ClosedGroup -> {
                 val groupKeys = configFactory.getGroupKeysConfig(SessionId.from(destination.publicKey)) ?: throw Error.NoKeyPair
-                val envelope = MessageWrapper.createEnvelope(kind, message.sentTimestamp!!, senderPublicKey, proto.toByteArray())
+                val envelope = MessageWrapper.createEnvelope(kind, message.sentTimestamp!!, senderPublicKey, proto.build().toByteArray())
                 groupKeys.use { keys ->
                     keys.encrypt(envelope.toByteArray())
                 }
@@ -189,6 +196,7 @@ object MessageSender {
         val storage = MessagingModuleConfiguration.shared.storage
         val configFactory = MessagingModuleConfiguration.shared.configFactory
         val userPublicKey = storage.getUserPublicKey()
+        val ourProfile = storage.getUserProfile()
 
         // recipient will be set later, so initialize it as a function here
         val isSelfSend = { message.recipient == userPublicKey }

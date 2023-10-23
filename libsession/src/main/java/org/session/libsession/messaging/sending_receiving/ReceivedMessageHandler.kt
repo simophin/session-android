@@ -13,6 +13,7 @@ import org.session.libsession.messaging.messages.control.ClosedGroupControlMessa
 import org.session.libsession.messaging.messages.control.ConfigurationMessage
 import org.session.libsession.messaging.messages.control.DataExtractionNotification
 import org.session.libsession.messaging.messages.control.ExpirationTimerUpdate
+import org.session.libsession.messaging.messages.control.GroupUpdated
 import org.session.libsession.messaging.messages.control.MessageRequestResponse
 import org.session.libsession.messaging.messages.control.ReadReceipt
 import org.session.libsession.messaging.messages.control.TypingIndicator
@@ -51,6 +52,7 @@ import org.session.libsignal.utilities.guava.Optional
 import org.session.libsignal.utilities.removingIdPrefixIfNeeded
 import org.session.libsignal.utilities.toHexString
 import java.security.MessageDigest
+import java.security.SignatureException
 import java.util.LinkedList
 import kotlin.math.min
 
@@ -68,6 +70,7 @@ fun MessageReceiver.handle(message: Message, proto: SignalServiceProtos.Content,
         is ReadReceipt -> handleReadReceipt(message)
         is TypingIndicator -> handleTypingIndicator(message)
         is ClosedGroupControlMessage -> handleClosedGroupControlMessage(message)
+        is GroupUpdated -> handleNewLibSessionClosedGroupMessage(message)
         is ExpirationTimerUpdate -> handleExpirationTimerUpdate(message)
         is DataExtractionNotification -> handleDataExtractionNotification(message)
         is ConfigurationMessage -> handleConfigurationMessage(message)
@@ -515,6 +518,48 @@ private fun ClosedGroupControlMessage.getPublicKey(): String = kind!!.let { when
     is ClosedGroupControlMessage.Kind.MembersRemoved -> groupPublicKey!!
     is ClosedGroupControlMessage.Kind.NameChange -> groupPublicKey!!
 }}
+
+private fun MessageReceiver.handleGroupUpdated(message: GroupUpdated) {
+    when {
+        message.inner.hasInviteMessage() -> handleNewLibSessionClosedGroupMessage(message)
+        message.inner.hasInviteResponse() -> handleInviteResponse(message)
+    }
+}
+
+private fun MessageReceiver.handleInviteResponse(message: GroupUpdated) {
+    val sender = message.sender!!
+    // val profile = message // maybe we do need data to be the inner so we can access profile
+    val storage = MessagingModuleConfiguration.shared.storage
+    val approved = message.inner.inviteResponse.isApproved
+
+}
+
+private fun MessageReceiver.handleNewLibSessionClosedGroupMessage(message: GroupUpdated) {
+    val storage = MessagingModuleConfiguration.shared.storage
+    val ourUserId = storage.getUserPublicKey()!!
+    val invite = message.inner.inviteMessage
+    val groupId = SessionId.from(invite.groupSessionId)
+    verifyAdminSignature(groupId, invite.adminSignature.toByteArray(), "INVITE"+ourUserId+message.sentTimestamp!!)
+    val adminId = SessionId.from(message.sender!!)
+    // TODO: add the pending invite logic after testing initial group signing / message adding / encryption works for members as well
+    // add the group
+    storage.acceptClosedGroupInvite(groupId, invite.name, invite.memberAuthData.toByteArray(), adminId)
+}
+
+/**
+ * Does nothing on successful signature verification, throws otherwise.
+ * Assumes the signer is using the ed25519 group key signing key
+ * @param groupSessionId the SessionId of the group to check the signature against
+ * @param signatureData the byte array supplied to us through a protobuf message from the admin
+ * @param messageToValidate the expected values used for this signature generation, often something like `INVITE||{inviteeSessionId}||{timestamp}`
+ * @throws SignatureException if signature cannot be verified with given parameters
+ */
+private fun verifyAdminSignature(groupSessionId: SessionId, signatureData: ByteArray, messageToValidate: String) {
+    val groupPubKey = groupSessionId.pubKeyBytes
+    if (!SodiumUtilities.verifySignature(signatureData, groupPubKey, messageToValidate.encodeToByteArray())) {
+        throw SignatureException("Verification failed for signature data")
+    }
+}
 
 private fun MessageReceiver.handleNewClosedGroup(message: ClosedGroupControlMessage) {
     val kind = message.kind!! as? ClosedGroupControlMessage.Kind.New ?: return

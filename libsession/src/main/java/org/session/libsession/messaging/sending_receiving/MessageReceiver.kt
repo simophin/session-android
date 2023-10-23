@@ -153,7 +153,8 @@ object MessageReceiver {
             MessageRequestResponse.fromProto(proto) ?:
             CallMessage.fromProto(proto) ?:
             SharedConfigurationMessage.fromProto(proto) ?:
-            VisibleMessage.fromProto(proto) ?: run {
+            VisibleMessage.fromProto(proto) ?:
+            ClosedGroupMessage.fromProto(proto) ?: run {
             throw Error.UnknownMessage
         }
         val isUserBlindedSender = sender == openGroupPublicKey?.let { SodiumUtilities.blindedKeyPair(it, MessagingModuleConfiguration.shared.getUserED25519KeyPair()!!) }?.let { SessionId(IdPrefix.BLINDED, it.publicKey.asBytes).hexString() }

@@ -35,6 +35,7 @@ import org.session.libsignal.messages.SignalServiceGroup
 import org.session.libsignal.utilities.SessionId
 import org.session.libsignal.utilities.guava.Optional
 import network.loki.messenger.libsession_util.util.Contact as LibSessionContact
+import network.loki.messenger.libsession_util.util.GroupMember as LibSessionGroupMember
 
 interface StorageProtocol {
 
@@ -157,7 +158,8 @@ interface StorageProtocol {
 
     // Closed Groups
     fun createNewGroup(groupName: String, groupDescription: String, members: Set<SessionId>): Optional<Recipient>
-    fun getMembers(groupPublicKey: String): List<network.loki.messenger.libsession_util.util.GroupMember>
+    fun getMembers(groupPublicKey: String): List<LibSessionGroupMember>
+    fun acceptClosedGroupInvite(groupId: SessionId, name: String, authData: ByteArray, invitingAdmin: SessionId)
 
     // Groups
     fun getAllGroups(includeInactive: Boolean): List<GroupRecord>

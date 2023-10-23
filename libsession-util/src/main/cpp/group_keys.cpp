@@ -230,3 +230,17 @@ Java_network_loki_messenger_libsession_1util_GroupKeysConfig_currentHashes(JNIEn
     }
     return our_list;
 }
+extern "C"
+JNIEXPORT jbyteArray JNICALL
+Java_network_loki_messenger_libsession_1util_GroupKeysConfig_makeSubAccount(JNIEnv *env,
+                                                                            jobject thiz,
+                                                                            jobject session_id,
+                                                                            jboolean can_write,
+                                                                            jboolean can_delete) {
+    std::lock_guard lock{util::util_mutex_};
+    auto ptr = ptrToKeys(env, thiz);
+    auto deserialized_id = util::deserialize_session_id(env, session_id);
+    auto new_subaccount_key = ptr->swarm_make_subaccount(deserialized_id.data(), can_write, can_delete);
+    auto jbytes = util::bytes_from_ustring(env, new_subaccount_key);
+    return jbytes;
+}

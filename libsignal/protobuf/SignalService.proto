@@ -120,13 +120,6 @@ message DataMessage {
     required string name = 3;
   }
 
-  message GroupMessage {
-    optional GroupDeleteMessage     deleteMessage     = 31;
-    optional GroupMemberLeftMessage memberLeftMessage = 32;
-    optional GroupInviteMessage     inviteMessage     = 33;
-    optional GroupPromoteMessage    promoteMessage    = 34;
-  }
-
   // New closed group update messages
   message GroupUpdateMessage {
     optional GroupUpdateInviteMessage               inviteMessage          = 1;
@@ -274,7 +267,7 @@ message DataMessage {
   optional ClosedGroupControlMessage closedGroupControlMessage      = 104;
   optional string                    syncTarget                     = 105;
   optional bool                      blocksCommunityMessageRequests = 106;
-  optional GroupMessage              groupMessage              = 120;
+  optional GroupUpdateMessage        groupUpdateMessage             = 120;
 }
 
 message GroupDeleteMessage {

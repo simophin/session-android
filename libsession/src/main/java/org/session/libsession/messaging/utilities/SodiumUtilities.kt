@@ -230,4 +230,11 @@ object SodiumUtilities {
         } else null
     }
 
+    /**
+     * Returns true only if the signature verified successfully
+     */
+    fun verifySignature(signature: ByteArray, publicKey: ByteArray, messageToVerify: ByteArray): Boolean {
+        return sodium.cryptoSignVerifyDetached(signature, messageToVerify, messageToVerify.size, publicKey)
+    }
+
 }

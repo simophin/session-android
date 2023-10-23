@@ -332,4 +332,6 @@ class GroupKeysConfig(pointer: Long): ConfigSig(pointer) {
 
     external fun keys(): Stack<ByteArray>
 
+    external fun makeSubAccount(sessionId: SessionId, canWrite: Boolean = true, canDelete: Boolean = false): ByteArray
+
 }
