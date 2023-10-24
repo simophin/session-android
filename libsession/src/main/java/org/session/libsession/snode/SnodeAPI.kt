@@ -11,6 +11,7 @@ import com.goterl.lazysodium.interfaces.PwHash
 import com.goterl.lazysodium.interfaces.SecretBox
 import com.goterl.lazysodium.interfaces.Sign
 import com.goterl.lazysodium.utils.Key
+import network.loki.messenger.libsession_util.GroupKeysConfig
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.all
 import nl.komponents.kovenant.deferred
@@ -692,28 +693,45 @@ object SnodeAPI {
         }
     }
 
-    fun sendAuthenticatedMessage(message: SnodeMessage, signingKey: ByteArray, namespace: Int): RawResponsePromise {
+    fun signingKeyCallback(signingKey: ByteArray): SignCallback = { message, timestamp, namespace ->
+        val signature = ByteArray(Sign.BYTES)
+        try {
+            val verificationData = message.toByteArray()
+            sodium.cryptoSignDetached(signature, verificationData, verificationData.size.toLong(), signingKey)
+        } catch (exception: Exception) {
+            throw Error.SigningFailed
+        }
+        mapOf(
+            "timestamp" to timestamp,
+            "signature" to Base64.encodeBytes(signature),
+            "namespace" to namespace
+        )
+    }
+
+    fun subkeyCallback(authData: ByteArray, groupKeysConfig: GroupKeysConfig): SignCallback = { message, timestamp, namespace ->
+        val (subaccount, subaccountSig, sig) = groupKeysConfig.subAccountSign(message.toByteArray(),authData)
+        val params = mapOf(
+            "subaccount" to subaccount,
+            "subaccount_sig" to subaccountSig,
+            "signature" to sig,
+            "timestamp" to timestamp,
+            "namespace" to namespace
+        )
+        groupKeysConfig.free()
+        params
+    }
+
+    fun sendAuthenticatedMessage(message: SnodeMessage, signCallback: SignCallback, namespace: Int): RawResponsePromise {
         val pubKey = message.recipient
 
         return retryIfNeeded(maxRetryCount) {
-
-            val signature = ByteArray(Sign.BYTES)
             // assume namespace here is non-zero, as zero namespace doesn't require auth
             val sigTimestamp = nowWithOffset
-            val verificationData = "store$namespace$sigTimestamp".toByteArray()
-            try {
-                sodium.cryptoSignDetached(signature, verificationData, verificationData.size.toLong(), signingKey)
-            } catch (exception: Exception) {
-                return@retryIfNeeded Promise.ofFail(Error.SigningFailed)
-            }
+            val messageToSign = "store$namespace$sigTimestamp"
 
             val parameters = message.toJSON().toMutableMap<String,Any>()
 
-            parameters += mapOf(
-                "timestamp" to sigTimestamp,
-                "signature" to Base64.encodeBytes(signature),
-                "namespace" to namespace
-            )
+            parameters += signCallback(messageToSign, sigTimestamp, namespace)
 
             getSingleTargetSnode(pubKey).bind { targetSnode ->
                 invoke(Snode.Method.SendMessage, targetSnode, parameters, pubKey)
@@ -1013,6 +1031,8 @@ object SnodeAPI {
         return null
     }
 }
+
+typealias SignCallback = (String, Long, Int)->Map<String,Any>
 
 // Type Aliases
 typealias RawResponse = Map<*, *>

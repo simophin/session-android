@@ -30,6 +30,7 @@ namespace util {
     jobject serialize_session_id(JNIEnv* env, std::string_view session_id);
     std::string deserialize_session_id(JNIEnv* env, jobject session_id);
     jobject build_string_stack(JNIEnv* env, std::vector<std::string> to_add);
+    jobject deserialize_swarm_auth(JNIEnv *env, session::config::groups::Keys::swarm_auth auth);
 }
 
 #endif

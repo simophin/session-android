@@ -45,7 +45,7 @@ class CreateGroupViewModel @Inject constructor(
 
         val name = createGroupState.groupName
         val description = createGroupState.groupDescription
-        val members = createGroupState.members
+        val members = createGroupState.members.toMutableSet()
 
         // do some validation
         // need a name
@@ -55,7 +55,11 @@ class CreateGroupViewModel @Inject constructor(
             )
             return null
         }
-        // TODO: need at least two members
+
+        storage.getAllContacts().forEach { contact ->
+            members.add(contact)
+        }
+
         if (members.size <= 1) {
             _viewState.postValue(
                 CreateGroupFragment.ViewState(false, R.string.activity_create_closed_group_not_enough_group_members_error)

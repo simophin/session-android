@@ -12,6 +12,12 @@ sealed class GroupInfo {
         val authData: ByteArray,
         val priority: Long,
     ): GroupInfo() {
+
+        companion object {
+            private const val AUTH_DATA_LENGTH = 100
+            fun isAuthData(byteArray: ByteArray) = byteArray.size == AUTH_DATA_LENGTH
+        }
+
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
             if (javaClass != other?.javaClass) return false

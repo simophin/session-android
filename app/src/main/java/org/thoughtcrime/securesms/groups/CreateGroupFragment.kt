@@ -49,9 +49,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import network.loki.messenger.R
 import network.loki.messenger.databinding.FragmentCreateGroupBinding
+import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.utilities.Device
 import org.session.libsession.utilities.recipients.Recipient
-import org.session.libsignal.utilities.SessionId
 import org.thoughtcrime.securesms.conversation.start.NewConversationDelegate
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.ui.AppTheme
@@ -136,7 +136,7 @@ class CreateGroupFragment : Fragment() {
 data class CreateGroupState (
     val groupName: String,
     val groupDescription: String,
-    val members: Set<SessionId>
+    val members: Set<Contact>
 )
 
 @Composable
@@ -237,7 +237,7 @@ fun CreateGroup(
 
 
 @Composable
-fun MemberList(contacts: Collection<SessionId>, modifier: Modifier = Modifier) {
+fun MemberList(contacts: Collection<Contact>, modifier: Modifier = Modifier) {
     Column(modifier = modifier
         .fillMaxWidth()
         .defaultMinSize(minHeight = 240.dp)) {

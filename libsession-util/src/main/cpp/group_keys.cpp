@@ -244,3 +244,17 @@ Java_network_loki_messenger_libsession_1util_GroupKeysConfig_makeSubAccount(JNIE
     auto jbytes = util::bytes_from_ustring(env, new_subaccount_key);
     return jbytes;
 }
+
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_network_loki_messenger_libsession_1util_GroupKeysConfig_subAccountSign(JNIEnv *env,
+                                                                            jobject thiz,
+                                                                            jbyteArray message,
+                                                                            jbyteArray signing_value) {
+    std::lock_guard lock{util::util_mutex_};
+    auto ptr = ptrToKeys(env, thiz);
+    auto message_ustring = util::ustring_from_bytes(env, message);
+    auto signing_value_ustring = util::ustring_from_bytes(env, signing_value);
+    auto swarm_auth = ptr->swarm_subaccount_sign(message_ustring, signing_value_ustring, false);
+    return util::deserialize_swarm_auth(env, swarm_auth);
+}

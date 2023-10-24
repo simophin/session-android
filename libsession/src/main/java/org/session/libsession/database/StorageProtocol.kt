@@ -157,7 +157,7 @@ interface StorageProtocol {
     fun setExpirationTimer(address: String, duration: Int)
 
     // Closed Groups
-    fun createNewGroup(groupName: String, groupDescription: String, members: Set<SessionId>): Optional<Recipient>
+    fun createNewGroup(groupName: String, groupDescription: String, members: Set<Contact>): Optional<Recipient>
     fun getMembers(groupPublicKey: String): List<LibSessionGroupMember>
     fun acceptClosedGroupInvite(groupId: SessionId, name: String, authData: ByteArray, invitingAdmin: SessionId)
     fun setGroupInviteComplete(approved: Boolean, invitee: String, closedGroup: SessionId)

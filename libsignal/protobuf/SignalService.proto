@@ -192,8 +192,6 @@ message DataMessage {
   message GroupUpdateInviteResponseMessage {
     // @required
     required bool                      isApproved                = 1; // Whether the request was approved
-    optional bytes                     profileKey                = 2;
-    optional LokiProfile               profile                   = 3;
   }
 
   message GroupUpdateDeleteMemberContentMessage {

@@ -7,6 +7,7 @@ import org.session.libsession.messaging.messages.control.ClosedGroupControlMessa
 import org.session.libsession.messaging.messages.control.ConfigurationMessage
 import org.session.libsession.messaging.messages.control.DataExtractionNotification
 import org.session.libsession.messaging.messages.control.ExpirationTimerUpdate
+import org.session.libsession.messaging.messages.control.GroupUpdated
 import org.session.libsession.messaging.messages.control.MessageRequestResponse
 import org.session.libsession.messaging.messages.control.ReadReceipt
 import org.session.libsession.messaging.messages.control.SharedConfigurationMessage
@@ -154,7 +155,7 @@ object MessageReceiver {
             CallMessage.fromProto(proto) ?:
             SharedConfigurationMessage.fromProto(proto) ?:
             VisibleMessage.fromProto(proto) ?:
-            ClosedGroupMessage.fromProto(proto) ?: run {
+            GroupUpdated.fromProto(proto) ?: run {
             throw Error.UnknownMessage
         }
         val isUserBlindedSender = sender == openGroupPublicKey?.let { SodiumUtilities.blindedKeyPair(it, MessagingModuleConfiguration.shared.getUserED25519KeyPair()!!) }?.let { SessionId(IdPrefix.BLINDED, it.publicKey.asBytes).hexString() }

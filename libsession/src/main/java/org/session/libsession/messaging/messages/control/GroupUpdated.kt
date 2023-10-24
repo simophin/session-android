@@ -7,7 +7,10 @@ import org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateM
 class GroupUpdated(val inner: GroupUpdateMessage): ControlMessage() {
 
     companion object {
-        fun fromProto(message: GroupUpdateMessage): GroupUpdated = GroupUpdated(message)
+        fun fromProto(message: Content): GroupUpdated? =
+            if (message.hasDataMessage() && message.dataMessage.hasGroupUpdateMessage())
+                GroupUpdated(message.dataMessage.groupUpdateMessage)
+            else null
     }
 
     override fun toProto(): Content {

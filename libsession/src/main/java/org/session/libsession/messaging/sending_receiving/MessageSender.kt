@@ -1,5 +1,6 @@
 package org.session.libsession.messaging.sending_receiving
 
+import network.loki.messenger.libsession_util.util.GroupInfo.ClosedGroupInfo.Companion.isAuthData
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.deferred
 import org.session.libsession.messaging.MessagingModuleConfiguration
@@ -26,6 +27,8 @@ import org.session.libsession.messaging.utilities.MessageWrapper
 import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.snode.RawResponsePromise
 import org.session.libsession.snode.SnodeAPI
+import org.session.libsession.snode.SnodeAPI.signingKeyCallback
+import org.session.libsession.snode.SnodeAPI.subkeyCallback
 import org.session.libsession.snode.SnodeMessage
 import org.session.libsession.snode.SnodeModule
 import org.session.libsession.utilities.Address
@@ -225,7 +228,12 @@ object MessageSender {
                 if (destination is Destination.ClosedGroup) {
                     // possibly handle a failure for no user groups or no closed group signing key?
                     val signingKey = configFactory.userGroups!!.getClosedGroup(destination.publicKey)!!.signingKey()
-                    SnodeAPI.sendAuthenticatedMessage(snodeMessage, signingKey, namespace = namespace)
+                    val callback = if (isAuthData(signingKey)) {
+                        val keys = configFactory.getGroupKeysConfig(SessionId.from(destination.publicKey))!!
+                        val params = subkeyCallback(signingKey, keys)
+                        params
+                    } else signingKeyCallback(signingKey)
+                    SnodeAPI.sendAuthenticatedMessage(snodeMessage, callback, namespace = namespace)
                 } else {
                     SnodeAPI.sendMessage(snodeMessage, requiresAuth = false, namespace = namespace)
                 }

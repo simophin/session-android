@@ -206,7 +206,7 @@ class ConfigFactory(
         ) ?: byteArrayOf()
 
         // Put it all together
-        GroupKeysConfig.newInstance(
+        val keys = GroupKeysConfig.newInstance(
             userSk,
             Hex.fromStringCondensed(groupSessionId.publicKey),
             sk,
@@ -214,6 +214,9 @@ class ConfigFactory(
             info,
             members
         )
+        info.free()
+        members.free()
+        keys
     }
 
     override fun getGroupMemberConfig(groupSessionId: SessionId): GroupMembersConfig? = getGroupAuthInfo(groupSessionId)?.let { (sk, auth) ->

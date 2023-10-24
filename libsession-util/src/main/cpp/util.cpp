@@ -197,6 +197,16 @@ namespace util {
         return our_stack;
     }
 
+    jobject deserialize_swarm_auth(JNIEnv *env, session::config::groups::Keys::swarm_auth auth) {
+        jclass swarm_auth_class = env->FindClass("network/loki/messenger/libsession_util/GroupKeysConfig$SwarmAuth");
+        jmethodID constructor = env->GetMethodID(swarm_auth_class, "<init>", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
+        jstring sub_account = env->NewStringUTF(auth.subaccount.data());
+        jstring sub_account_sig = env->NewStringUTF(auth.subaccount_sig.data());
+        jstring signature = env->NewStringUTF(auth.signature.data());
+
+        return env->NewObject(swarm_auth_class, constructor, sub_account, sub_account_sig, signature);
+    }
+
     jobject jlongFromOptional(JNIEnv* env, std::optional<long long> optional) {
         if (!optional) {
             return nullptr;

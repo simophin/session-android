@@ -919,7 +919,7 @@ open class Storage(
         DatabaseComponent.get(context).groupDatabase().create(groupId, title, members, avatar, relay, admins, formationTimestamp)
     }
 
-    override fun createNewGroup(groupName: String, groupDescription: String, members: Set<SessionId>): Optional<Recipient> {
+    override fun createNewGroup(groupName: String, groupDescription: String, members: Set<Contact>): Optional<Recipient> {
         val userGroups = configFactory.userGroups ?: return Optional.absent()
         val convoVolatile = configFactory.convoVolatile ?: return Optional.absent()
         val ourSessionId = getUserPublicKey() ?: return Optional.absent()
@@ -938,10 +938,10 @@ open class Storage(
         }
 
         groupMembers.set(
-            LibSessionGroupMember(ourSessionId, "admin", admin = true)
+            LibSessionGroupMember(ourSessionId, getUserProfile().displayName, admin = true)
         )
 
-        members.forEach { groupMembers.set(LibSessionGroupMember(it.hexString(), "member", invitePending = true)) }
+        members.forEach { groupMembers.set(LibSessionGroupMember(it.sessionID, it.name, invitePending = true)) }
 
         val groupKeys = configFactory.constructGroupKeysConfig(group.groupSessionId,
             info = groupInfo,

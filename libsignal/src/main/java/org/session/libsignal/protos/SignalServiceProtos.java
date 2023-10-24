@@ -16731,30 +16731,6 @@ public final class SignalServiceProtos {
        * </pre>
        */
       boolean getIsApproved();
-
-      // optional bytes profileKey = 2;
-      /**
-       * <code>optional bytes profileKey = 2;</code>
-       */
-      boolean hasProfileKey();
-      /**
-       * <code>optional bytes profileKey = 2;</code>
-       */
-      com.google.protobuf.ByteString getProfileKey();
-
-      // optional .signalservice.DataMessage.LokiProfile profile = 3;
-      /**
-       * <code>optional .signalservice.DataMessage.LokiProfile profile = 3;</code>
-       */
-      boolean hasProfile();
-      /**
-       * <code>optional .signalservice.DataMessage.LokiProfile profile = 3;</code>
-       */
-      org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile getProfile();
-      /**
-       * <code>optional .signalservice.DataMessage.LokiProfile profile = 3;</code>
-       */
-      org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfileOrBuilder getProfileOrBuilder();
     }
     /**
      * Protobuf type {@code signalservice.DataMessage.GroupUpdateInviteResponseMessage}
@@ -16810,24 +16786,6 @@ public final class SignalServiceProtos {
               case 8: {
                 bitField0_ |= 0x00000001;
                 isApproved_ = input.readBool();
-                break;
-              }
-              case 18: {
-                bitField0_ |= 0x00000002;
-                profileKey_ = input.readBytes();
-                break;
-              }
-              case 26: {
-                org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.Builder subBuilder = null;
-                if (((bitField0_ & 0x00000004) == 0x00000004)) {
-                  subBuilder = profile_.toBuilder();
-                }
-                profile_ = input.readMessage(org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.PARSER, extensionRegistry);
-                if (subBuilder != null) {
-                  subBuilder.mergeFrom(profile_);
-                  profile_ = subBuilder.buildPartial();
-                }
-                bitField0_ |= 0x00000004;
                 break;
               }
             }
@@ -16894,48 +16852,8 @@ public final class SignalServiceProtos {
         return isApproved_;
       }
 
-      // optional bytes profileKey = 2;
-      public static final int PROFILEKEY_FIELD_NUMBER = 2;
-      private com.google.protobuf.ByteString profileKey_;
-      /**
-       * <code>optional bytes profileKey = 2;</code>
-       */
-      public boolean hasProfileKey() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
-      }
-      /**
-       * <code>optional bytes profileKey = 2;</code>
-       */
-      public com.google.protobuf.ByteString getProfileKey() {
-        return profileKey_;
-      }
-
-      // optional .signalservice.DataMessage.LokiProfile profile = 3;
-      public static final int PROFILE_FIELD_NUMBER = 3;
-      private org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile profile_;
-      /**
-       * <code>optional .signalservice.DataMessage.LokiProfile profile = 3;</code>
-       */
-      public boolean hasProfile() {
-        return ((bitField0_ & 0x00000004) == 0x00000004);
-      }
-      /**
-       * <code>optional .signalservice.DataMessage.LokiProfile profile = 3;</code>
-       */
-      public org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile getProfile() {
-        return profile_;
-      }
-      /**
-       * <code>optional .signalservice.DataMessage.LokiProfile profile = 3;</code>
-       */
-      public org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfileOrBuilder getProfileOrBuilder() {
-        return profile_;
-      }
-
       private void initFields() {
         isApproved_ = false;
-        profileKey_ = com.google.protobuf.ByteString.EMPTY;
-        profile_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.getDefaultInstance();
       }
       private byte memoizedIsInitialized = -1;
       public final boolean isInitialized() {
@@ -16956,12 +16874,6 @@ public final class SignalServiceProtos {
         if (((bitField0_ & 0x00000001) == 0x00000001)) {
           output.writeBool(1, isApproved_);
         }
-        if (((bitField0_ & 0x00000002) == 0x00000002)) {
-          output.writeBytes(2, profileKey_);
-        }
-        if (((bitField0_ & 0x00000004) == 0x00000004)) {
-          output.writeMessage(3, profile_);
-        }
         getUnknownFields().writeTo(output);
       }
 
@@ -16974,14 +16886,6 @@ public final class SignalServiceProtos {
         if (((bitField0_ & 0x00000001) == 0x00000001)) {
           size += com.google.protobuf.CodedOutputStream
             .computeBoolSize(1, isApproved_);
-        }
-        if (((bitField0_ & 0x00000002) == 0x00000002)) {
-          size += com.google.protobuf.CodedOutputStream
-            .computeBytesSize(2, profileKey_);
-        }
-        if (((bitField0_ & 0x00000004) == 0x00000004)) {
-          size += com.google.protobuf.CodedOutputStream
-            .computeMessageSize(3, profile_);
         }
         size += getUnknownFields().getSerializedSize();
         memoizedSerializedSize = size;
@@ -17091,7 +16995,6 @@ public final class SignalServiceProtos {
         }
         private void maybeForceBuilderInitialization() {
           if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-            getProfileFieldBuilder();
           }
         }
         private static Builder create() {
@@ -17102,14 +17005,6 @@ public final class SignalServiceProtos {
           super.clear();
           isApproved_ = false;
           bitField0_ = (bitField0_ & ~0x00000001);
-          profileKey_ = com.google.protobuf.ByteString.EMPTY;
-          bitField0_ = (bitField0_ & ~0x00000002);
-          if (profileBuilder_ == null) {
-            profile_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.getDefaultInstance();
-          } else {
-            profileBuilder_.clear();
-          }
-          bitField0_ = (bitField0_ & ~0x00000004);
           return this;
         }
 
@@ -17142,18 +17037,6 @@ public final class SignalServiceProtos {
             to_bitField0_ |= 0x00000001;
           }
           result.isApproved_ = isApproved_;
-          if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
-            to_bitField0_ |= 0x00000002;
-          }
-          result.profileKey_ = profileKey_;
-          if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
-            to_bitField0_ |= 0x00000004;
-          }
-          if (profileBuilder_ == null) {
-            result.profile_ = profile_;
-          } else {
-            result.profile_ = profileBuilder_.build();
-          }
           result.bitField0_ = to_bitField0_;
           onBuilt();
           return result;
@@ -17172,12 +17055,6 @@ public final class SignalServiceProtos {
           if (other == org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage.getDefaultInstance()) return this;
           if (other.hasIsApproved()) {
             setIsApproved(other.getIsApproved());
-          }
-          if (other.hasProfileKey()) {
-            setProfileKey(other.getProfileKey());
-          }
-          if (other.hasProfile()) {
-            mergeProfile(other.getProfile());
           }
           this.mergeUnknownFields(other.getUnknownFields());
           return this;
@@ -17257,159 +17134,6 @@ public final class SignalServiceProtos {
           isApproved_ = false;
           onChanged();
           return this;
-        }
-
-        // optional bytes profileKey = 2;
-        private com.google.protobuf.ByteString profileKey_ = com.google.protobuf.ByteString.EMPTY;
-        /**
-         * <code>optional bytes profileKey = 2;</code>
-         */
-        public boolean hasProfileKey() {
-          return ((bitField0_ & 0x00000002) == 0x00000002);
-        }
-        /**
-         * <code>optional bytes profileKey = 2;</code>
-         */
-        public com.google.protobuf.ByteString getProfileKey() {
-          return profileKey_;
-        }
-        /**
-         * <code>optional bytes profileKey = 2;</code>
-         */
-        public Builder setProfileKey(com.google.protobuf.ByteString value) {
-          if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
-          profileKey_ = value;
-          onChanged();
-          return this;
-        }
-        /**
-         * <code>optional bytes profileKey = 2;</code>
-         */
-        public Builder clearProfileKey() {
-          bitField0_ = (bitField0_ & ~0x00000002);
-          profileKey_ = getDefaultInstance().getProfileKey();
-          onChanged();
-          return this;
-        }
-
-        // optional .signalservice.DataMessage.LokiProfile profile = 3;
-        private org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile profile_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.getDefaultInstance();
-        private com.google.protobuf.SingleFieldBuilder<
-            org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile, org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfileOrBuilder> profileBuilder_;
-        /**
-         * <code>optional .signalservice.DataMessage.LokiProfile profile = 3;</code>
-         */
-        public boolean hasProfile() {
-          return ((bitField0_ & 0x00000004) == 0x00000004);
-        }
-        /**
-         * <code>optional .signalservice.DataMessage.LokiProfile profile = 3;</code>
-         */
-        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile getProfile() {
-          if (profileBuilder_ == null) {
-            return profile_;
-          } else {
-            return profileBuilder_.getMessage();
-          }
-        }
-        /**
-         * <code>optional .signalservice.DataMessage.LokiProfile profile = 3;</code>
-         */
-        public Builder setProfile(org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile value) {
-          if (profileBuilder_ == null) {
-            if (value == null) {
-              throw new NullPointerException();
-            }
-            profile_ = value;
-            onChanged();
-          } else {
-            profileBuilder_.setMessage(value);
-          }
-          bitField0_ |= 0x00000004;
-          return this;
-        }
-        /**
-         * <code>optional .signalservice.DataMessage.LokiProfile profile = 3;</code>
-         */
-        public Builder setProfile(
-            org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.Builder builderForValue) {
-          if (profileBuilder_ == null) {
-            profile_ = builderForValue.build();
-            onChanged();
-          } else {
-            profileBuilder_.setMessage(builderForValue.build());
-          }
-          bitField0_ |= 0x00000004;
-          return this;
-        }
-        /**
-         * <code>optional .signalservice.DataMessage.LokiProfile profile = 3;</code>
-         */
-        public Builder mergeProfile(org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile value) {
-          if (profileBuilder_ == null) {
-            if (((bitField0_ & 0x00000004) == 0x00000004) &&
-                profile_ != org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.getDefaultInstance()) {
-              profile_ =
-                org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.newBuilder(profile_).mergeFrom(value).buildPartial();
-            } else {
-              profile_ = value;
-            }
-            onChanged();
-          } else {
-            profileBuilder_.mergeFrom(value);
-          }
-          bitField0_ |= 0x00000004;
-          return this;
-        }
-        /**
-         * <code>optional .signalservice.DataMessage.LokiProfile profile = 3;</code>
-         */
-        public Builder clearProfile() {
-          if (profileBuilder_ == null) {
-            profile_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.getDefaultInstance();
-            onChanged();
-          } else {
-            profileBuilder_.clear();
-          }
-          bitField0_ = (bitField0_ & ~0x00000004);
-          return this;
-        }
-        /**
-         * <code>optional .signalservice.DataMessage.LokiProfile profile = 3;</code>
-         */
-        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.Builder getProfileBuilder() {
-          bitField0_ |= 0x00000004;
-          onChanged();
-          return getProfileFieldBuilder().getBuilder();
-        }
-        /**
-         * <code>optional .signalservice.DataMessage.LokiProfile profile = 3;</code>
-         */
-        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfileOrBuilder getProfileOrBuilder() {
-          if (profileBuilder_ != null) {
-            return profileBuilder_.getMessageOrBuilder();
-          } else {
-            return profile_;
-          }
-        }
-        /**
-         * <code>optional .signalservice.DataMessage.LokiProfile profile = 3;</code>
-         */
-        private com.google.protobuf.SingleFieldBuilder<
-            org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile, org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfileOrBuilder> 
-            getProfileFieldBuilder() {
-          if (profileBuilder_ == null) {
-            profileBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-                org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile, org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfileOrBuilder>(
-                    profile_,
-                    getParentForChildren(),
-                    isClean());
-            profile_ = null;
-          }
-          return profileBuilder_;
         }
 
         // @@protoc_insertion_point(builder_scope:signalservice.DataMessage.GroupUpdateInviteResponseMessage)
@@ -35777,7 +35501,7 @@ public final class SignalServiceProtos {
       "actionNotification\022<\n\004type\030\001 \002(\0162..signa" +
       "lservice.DataExtractionNotification.Type" +
       "\022\021\n\ttimestamp\030\002 \001(\004\"\'\n\004Type\022\016\n\nSCREENSHO" +
-      "T\020\001\022\017\n\013MEDIA_SAVED\020\002\"\304\034\n\013DataMessage\022\014\n\004",
+      "T\020\001\022\017\n\013MEDIA_SAVED\020\002\"\366\033\n\013DataMessage\022\014\n\004",
       "body\030\001 \001(\t\0225\n\013attachments\030\002 \003(\0132 .signal" +
       "service.AttachmentPointer\022\r\n\005flags\030\004 \001(\r" +
       "\022\023\n\013expireTimer\030\005 \001(\r\022\022\n\nprofileKey\030\006 \001(" +
@@ -35842,79 +35566,77 @@ public final class SignalServiceProtos {
       "oupUpdateMemberChangeMessage.Type\022\030\n\020mem" +
       "berPublicKeys\030\002 \003(\014\",\n\004Type\022\t\n\005ADDED\020\001\022\013" +
       "\n\007REMOVED\020\002\022\014\n\010PROMOTED\020\003\032\036\n\034GroupUpdate" +
-      "MemberLeftMessage\032\203\001\n GroupUpdateInviteR" +
-      "esponseMessage\022\022\n\nisApproved\030\001 \002(\010\022\022\n\npr" +
-      "ofileKey\030\002 \001(\014\0227\n\007profile\030\003 \001(\0132&.signal" +
-      "service.DataMessage.LokiProfile\032Y\n%Group" +
-      "UpdateDeleteMemberContentMessage\022\030\n\020memb" +
-      "erPublicKeys\030\001 \003(\014\022\026\n\016adminSignature\030\002 \002",
-      "(\014\032\203\005\n\031ClosedGroupControlMessage\022G\n\004type" +
-      "\030\001 \002(\01629.signalservice.DataMessage.Close" +
-      "dGroupControlMessage.Type\022\021\n\tpublicKey\030\002" +
-      " \001(\014\022\014\n\004name\030\003 \001(\t\0221\n\021encryptionKeyPair\030" +
-      "\004 \001(\0132\026.signalservice.KeyPair\022\017\n\007members" +
-      "\030\005 \003(\014\022\016\n\006admins\030\006 \003(\014\022U\n\010wrappers\030\007 \003(\013" +
-      "2C.signalservice.DataMessage.ClosedGroup" +
-      "ControlMessage.KeyPairWrapper\022\027\n\017expirat" +
-      "ionTimer\030\010 \001(\r\022\030\n\020memberPrivateKey\030\t \001(\014" +
-      "\022\022\n\nprivateKey\030\n \001(\014\032=\n\016KeyPairWrapper\022\021",
-      "\n\tpublicKey\030\001 \002(\014\022\030\n\020encryptedKeyPair\030\002 " +
-      "\002(\014\"\312\001\n\004Type\022\007\n\003NEW\020\001\022\027\n\023ENCRYPTION_KEY_" +
-      "PAIR\020\003\022\017\n\013NAME_CHANGE\020\004\022\021\n\rMEMBERS_ADDED" +
-      "\020\005\022\023\n\017MEMBERS_REMOVED\020\006\022\017\n\013MEMBER_LEFT\020\007" +
-      "\022\n\n\006INVITE\020\t\022\013\n\007PROMOTE\020\n\022\020\n\014DELETE_GROU" +
-      "P\020\013\022\023\n\017DELETE_MESSAGES\020\014\022\026\n\022DELETE_ATTAC" +
-      "HMENTS\020\r\032\222\001\n\010Reaction\022\n\n\002id\030\001 \002(\004\022\016\n\006aut" +
-      "hor\030\002 \002(\t\022\r\n\005emoji\030\003 \001(\t\022:\n\006action\030\004 \002(\016" +
-      "2*.signalservice.DataMessage.Reaction.Ac" +
-      "tion\"\037\n\006Action\022\t\n\005REACT\020\000\022\n\n\006REMOVE\020\001\"$\n",
-      "\005Flags\022\033\n\027EXPIRATION_TIMER_UPDATE\020\002\"B\n\022G" +
-      "roupDeleteMessage\022\021\n\tpublicKey\030\001 \002(\014\022\031\n\021" +
-      "lastEncryptionKey\030\002 \002(\014\"\030\n\026GroupMemberLe" +
-      "ftMessage\"O\n\022GroupInviteMessage\022\021\n\tpubli" +
-      "cKey\030\001 \002(\014\022\014\n\004name\030\002 \002(\t\022\030\n\020memberPrivat" +
-      "eKey\030\003 \002(\014\"E\n\023GroupPromoteMessage\022\021\n\tpub" +
-      "licKey\030\001 \002(\014\022\033\n\023encryptedPrivateKey\030\002 \002(" +
-      "\014\"\352\001\n\013CallMessage\022-\n\004type\030\001 \002(\0162\037.signal" +
-      "service.CallMessage.Type\022\014\n\004sdps\030\002 \003(\t\022\027" +
-      "\n\017sdpMLineIndexes\030\003 \003(\r\022\017\n\007sdpMids\030\004 \003(\t",
-      "\022\014\n\004uuid\030\005 \002(\t\"f\n\004Type\022\r\n\tPRE_OFFER\020\006\022\t\n" +
-      "\005OFFER\020\001\022\n\n\006ANSWER\020\002\022\026\n\022PROVISIONAL_ANSW" +
-      "ER\020\003\022\022\n\016ICE_CANDIDATES\020\004\022\014\n\010END_CALL\020\005\"\245" +
-      "\004\n\024ConfigurationMessage\022E\n\014closedGroups\030" +
-      "\001 \003(\0132/.signalservice.ConfigurationMessa" +
-      "ge.ClosedGroup\022\022\n\nopenGroups\030\002 \003(\t\022\023\n\013di" +
-      "splayName\030\003 \001(\t\022\026\n\016profilePicture\030\004 \001(\t\022" +
-      "\022\n\nprofileKey\030\005 \001(\014\022=\n\010contacts\030\006 \003(\0132+." +
-      "signalservice.ConfigurationMessage.Conta" +
-      "ct\032\233\001\n\013ClosedGroup\022\021\n\tpublicKey\030\001 \001(\014\022\014\n",
-      "\004name\030\002 \001(\t\0221\n\021encryptionKeyPair\030\003 \001(\0132\026" +
-      ".signalservice.KeyPair\022\017\n\007members\030\004 \003(\014\022" +
-      "\016\n\006admins\030\005 \003(\014\022\027\n\017expirationTimer\030\006 \001(\r" +
-      "\032\223\001\n\007Contact\022\021\n\tpublicKey\030\001 \002(\014\022\014\n\004name\030" +
-      "\002 \002(\t\022\026\n\016profilePicture\030\003 \001(\t\022\022\n\nprofile" +
-      "Key\030\004 \001(\014\022\022\n\nisApproved\030\005 \001(\010\022\021\n\tisBlock" +
-      "ed\030\006 \001(\010\022\024\n\014didApproveMe\030\007 \001(\010\"y\n\026Messag" +
-      "eRequestResponse\022\022\n\nisApproved\030\001 \002(\010\022\022\n\n" +
-      "profileKey\030\002 \001(\014\0227\n\007profile\030\003 \001(\0132&.sign" +
-      "alservice.DataMessage.LokiProfile\"\375\001\n\023Sh",
-      "aredConfigMessage\0225\n\004kind\030\001 \002(\0162\'.signal" +
-      "service.SharedConfigMessage.Kind\022\r\n\005seqn" +
-      "o\030\002 \002(\003\022\014\n\004data\030\003 \002(\014\"\221\001\n\004Kind\022\020\n\014USER_P" +
-      "ROFILE\020\001\022\014\n\010CONTACTS\020\002\022\027\n\023CONVO_INFO_VOL" +
-      "ATILE\020\003\022\n\n\006GROUPS\020\004\022\025\n\021CLOSED_GROUP_INFO" +
-      "\020\005\022\030\n\024CLOSED_GROUP_MEMBERS\020\006\022\023\n\017ENCRYPTI" +
-      "ON_KEYS\020\007\"u\n\016ReceiptMessage\0220\n\004type\030\001 \002(" +
-      "\0162\".signalservice.ReceiptMessage.Type\022\021\n" +
-      "\ttimestamp\030\002 \003(\004\"\036\n\004Type\022\014\n\010DELIVERY\020\000\022\010" +
-      "\n\004READ\020\001\"\354\001\n\021AttachmentPointer\022\n\n\002id\030\001 \002",
-      "(\006\022\023\n\013contentType\030\002 \001(\t\022\013\n\003key\030\003 \001(\014\022\014\n\004" +
-      "size\030\004 \001(\r\022\021\n\tthumbnail\030\005 \001(\014\022\016\n\006digest\030" +
-      "\006 \001(\014\022\020\n\010fileName\030\007 \001(\t\022\r\n\005flags\030\010 \001(\r\022\r" +
-      "\n\005width\030\t \001(\r\022\016\n\006height\030\n \001(\r\022\017\n\007caption" +
-      "\030\013 \001(\t\022\013\n\003url\030e \001(\t\"\032\n\005Flags\022\021\n\rVOICE_ME" +
-      "SSAGE\020\001B3\n\034org.session.libsignal.protosB" +
-      "\023SignalServiceProtos"
+      "MemberLeftMessage\0326\n GroupUpdateInviteRe" +
+      "sponseMessage\022\022\n\nisApproved\030\001 \002(\010\032Y\n%Gro" +
+      "upUpdateDeleteMemberContentMessage\022\030\n\020me" +
+      "mberPublicKeys\030\001 \003(\014\022\026\n\016adminSignature\030\002" +
+      " \002(\014\032\203\005\n\031ClosedGroupControlMessage\022G\n\004ty" +
+      "pe\030\001 \002(\01629.signalservice.DataMessage.Clo",
+      "sedGroupControlMessage.Type\022\021\n\tpublicKey" +
+      "\030\002 \001(\014\022\014\n\004name\030\003 \001(\t\0221\n\021encryptionKeyPai" +
+      "r\030\004 \001(\0132\026.signalservice.KeyPair\022\017\n\007membe" +
+      "rs\030\005 \003(\014\022\016\n\006admins\030\006 \003(\014\022U\n\010wrappers\030\007 \003" +
+      "(\0132C.signalservice.DataMessage.ClosedGro" +
+      "upControlMessage.KeyPairWrapper\022\027\n\017expir" +
+      "ationTimer\030\010 \001(\r\022\030\n\020memberPrivateKey\030\t \001" +
+      "(\014\022\022\n\nprivateKey\030\n \001(\014\032=\n\016KeyPairWrapper" +
+      "\022\021\n\tpublicKey\030\001 \002(\014\022\030\n\020encryptedKeyPair\030" +
+      "\002 \002(\014\"\312\001\n\004Type\022\007\n\003NEW\020\001\022\027\n\023ENCRYPTION_KE",
+      "Y_PAIR\020\003\022\017\n\013NAME_CHANGE\020\004\022\021\n\rMEMBERS_ADD" +
+      "ED\020\005\022\023\n\017MEMBERS_REMOVED\020\006\022\017\n\013MEMBER_LEFT" +
+      "\020\007\022\n\n\006INVITE\020\t\022\013\n\007PROMOTE\020\n\022\020\n\014DELETE_GR" +
+      "OUP\020\013\022\023\n\017DELETE_MESSAGES\020\014\022\026\n\022DELETE_ATT" +
+      "ACHMENTS\020\r\032\222\001\n\010Reaction\022\n\n\002id\030\001 \002(\004\022\016\n\006a" +
+      "uthor\030\002 \002(\t\022\r\n\005emoji\030\003 \001(\t\022:\n\006action\030\004 \002" +
+      "(\0162*.signalservice.DataMessage.Reaction." +
+      "Action\"\037\n\006Action\022\t\n\005REACT\020\000\022\n\n\006REMOVE\020\001\"" +
+      "$\n\005Flags\022\033\n\027EXPIRATION_TIMER_UPDATE\020\002\"B\n" +
+      "\022GroupDeleteMessage\022\021\n\tpublicKey\030\001 \002(\014\022\031",
+      "\n\021lastEncryptionKey\030\002 \002(\014\"\030\n\026GroupMember" +
+      "LeftMessage\"O\n\022GroupInviteMessage\022\021\n\tpub" +
+      "licKey\030\001 \002(\014\022\014\n\004name\030\002 \002(\t\022\030\n\020memberPriv" +
+      "ateKey\030\003 \002(\014\"E\n\023GroupPromoteMessage\022\021\n\tp" +
+      "ublicKey\030\001 \002(\014\022\033\n\023encryptedPrivateKey\030\002 " +
+      "\002(\014\"\352\001\n\013CallMessage\022-\n\004type\030\001 \002(\0162\037.sign" +
+      "alservice.CallMessage.Type\022\014\n\004sdps\030\002 \003(\t" +
+      "\022\027\n\017sdpMLineIndexes\030\003 \003(\r\022\017\n\007sdpMids\030\004 \003" +
+      "(\t\022\014\n\004uuid\030\005 \002(\t\"f\n\004Type\022\r\n\tPRE_OFFER\020\006\022" +
+      "\t\n\005OFFER\020\001\022\n\n\006ANSWER\020\002\022\026\n\022PROVISIONAL_AN",
+      "SWER\020\003\022\022\n\016ICE_CANDIDATES\020\004\022\014\n\010END_CALL\020\005" +
+      "\"\245\004\n\024ConfigurationMessage\022E\n\014closedGroup" +
+      "s\030\001 \003(\0132/.signalservice.ConfigurationMes" +
+      "sage.ClosedGroup\022\022\n\nopenGroups\030\002 \003(\t\022\023\n\013" +
+      "displayName\030\003 \001(\t\022\026\n\016profilePicture\030\004 \001(" +
+      "\t\022\022\n\nprofileKey\030\005 \001(\014\022=\n\010contacts\030\006 \003(\0132" +
+      "+.signalservice.ConfigurationMessage.Con" +
+      "tact\032\233\001\n\013ClosedGroup\022\021\n\tpublicKey\030\001 \001(\014\022" +
+      "\014\n\004name\030\002 \001(\t\0221\n\021encryptionKeyPair\030\003 \001(\013" +
+      "2\026.signalservice.KeyPair\022\017\n\007members\030\004 \003(",
+      "\014\022\016\n\006admins\030\005 \003(\014\022\027\n\017expirationTimer\030\006 \001" +
+      "(\r\032\223\001\n\007Contact\022\021\n\tpublicKey\030\001 \002(\014\022\014\n\004nam" +
+      "e\030\002 \002(\t\022\026\n\016profilePicture\030\003 \001(\t\022\022\n\nprofi" +
+      "leKey\030\004 \001(\014\022\022\n\nisApproved\030\005 \001(\010\022\021\n\tisBlo" +
+      "cked\030\006 \001(\010\022\024\n\014didApproveMe\030\007 \001(\010\"y\n\026Mess" +
+      "ageRequestResponse\022\022\n\nisApproved\030\001 \002(\010\022\022" +
+      "\n\nprofileKey\030\002 \001(\014\0227\n\007profile\030\003 \001(\0132&.si" +
+      "gnalservice.DataMessage.LokiProfile\"\375\001\n\023" +
+      "SharedConfigMessage\0225\n\004kind\030\001 \002(\0162\'.sign" +
+      "alservice.SharedConfigMessage.Kind\022\r\n\005se",
+      "qno\030\002 \002(\003\022\014\n\004data\030\003 \002(\014\"\221\001\n\004Kind\022\020\n\014USER" +
+      "_PROFILE\020\001\022\014\n\010CONTACTS\020\002\022\027\n\023CONVO_INFO_V" +
+      "OLATILE\020\003\022\n\n\006GROUPS\020\004\022\025\n\021CLOSED_GROUP_IN" +
+      "FO\020\005\022\030\n\024CLOSED_GROUP_MEMBERS\020\006\022\023\n\017ENCRYP" +
+      "TION_KEYS\020\007\"u\n\016ReceiptMessage\0220\n\004type\030\001 " +
+      "\002(\0162\".signalservice.ReceiptMessage.Type\022" +
+      "\021\n\ttimestamp\030\002 \003(\004\"\036\n\004Type\022\014\n\010DELIVERY\020\000" +
+      "\022\010\n\004READ\020\001\"\354\001\n\021AttachmentPointer\022\n\n\002id\030\001" +
+      " \002(\006\022\023\n\013contentType\030\002 \001(\t\022\013\n\003key\030\003 \001(\014\022\014" +
+      "\n\004size\030\004 \001(\r\022\021\n\tthumbnail\030\005 \001(\014\022\016\n\006diges",
+      "t\030\006 \001(\014\022\020\n\010fileName\030\007 \001(\t\022\r\n\005flags\030\010 \001(\r" +
+      "\022\r\n\005width\030\t \001(\r\022\016\n\006height\030\n \001(\r\022\017\n\007capti" +
+      "on\030\013 \001(\t\022\013\n\003url\030e \001(\t\"\032\n\005Flags\022\021\n\rVOICE_" +
+      "MESSAGE\020\001B3\n\034org.session.libsignal.proto" +
+      "sB\023SignalServiceProtos"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -36040,7 +35762,7 @@ public final class SignalServiceProtos {
           internal_static_signalservice_DataMessage_GroupUpdateInviteResponseMessage_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_signalservice_DataMessage_GroupUpdateInviteResponseMessage_descriptor,
-              new java.lang.String[] { "IsApproved", "ProfileKey", "Profile", });
+              new java.lang.String[] { "IsApproved", });
           internal_static_signalservice_DataMessage_GroupUpdateDeleteMemberContentMessage_descriptor =
             internal_static_signalservice_DataMessage_descriptor.getNestedTypes().get(12);
           internal_static_signalservice_DataMessage_GroupUpdateDeleteMemberContentMessage_fieldAccessorTable = new
