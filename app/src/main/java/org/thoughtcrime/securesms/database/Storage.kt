@@ -27,6 +27,7 @@ import org.session.libsession.messaging.jobs.AttachmentUploadJob
 import org.session.libsession.messaging.jobs.BackgroundGroupAddJob
 import org.session.libsession.messaging.jobs.ConfigurationSyncJob
 import org.session.libsession.messaging.jobs.GroupAvatarDownloadJob
+import org.session.libsession.messaging.jobs.InviteContactJob
 import org.session.libsession.messaging.jobs.Job
 import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.messaging.jobs.MessageReceiveJob
@@ -1025,6 +1026,10 @@ open class Storage(
             setRecipientApprovedMe(groupRecipient, true)
             setRecipientApproved(groupRecipient, true)
             pollerFactory.updatePollers()
+            members.forEach { contact ->
+                val job = InviteContactJob(group.groupSessionId.hexString(), contact.sessionID)
+                JobQueue.shared.add(job)
+            }
             return Optional.of(groupRecipient)
         } catch (e: Exception) {
             Log.e("Group Config", e)
@@ -1237,6 +1242,7 @@ open class Storage(
             groupMembers.erase(member)
         }
         configFactory.persistGroupConfigDump(groupMembers, closedGroup, SnodeAPI.nowWithOffset)
+        ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(Destination.ClosedGroup(closedGroup.hexString()))
         groupMembers.close()
     }
 
