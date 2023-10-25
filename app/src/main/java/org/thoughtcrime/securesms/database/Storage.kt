@@ -1209,25 +1209,26 @@ open class Storage(
         configFactory.getGroupMemberConfig(SessionId.from(groupPublicKey))?.use { it.all() }?.toList() ?: emptyList()
 
     override fun acceptClosedGroupInvite(groupId: SessionId, name: String, authData: ByteArray, invitingAdmin: SessionId) {
-        val recipient = Recipient.from(context, Address.fromSerialized(groupId.hexString()), false)
+        val recipient = Recipient.from(context, fromSerialized(groupId.hexString()), false)
         val profileManager = SSKEnvironment.shared.profileManager
         val groups = configFactory.userGroups ?: return
         val closedGroupInfo = GroupInfo.ClosedGroupInfo(
             groupId, byteArrayOf(), authData, PRIORITY_VISIBLE
         )
         groups.set(closedGroupInfo)
+        configFactory.persist(groups, SnodeAPI.nowWithOffset)
         profileManager.setName(context, recipient, name)
         setRecipientApprovedMe(recipient, true)
         setRecipientApproved(recipient, true)
         getOrCreateThreadIdFor(recipient.address)
         pollerFactory.pollerFor(groupId)?.start()
-        val invitingAdminAddress = Address.fromSerialized(invitingAdmin.hexString())
         val inviteResponse = GroupUpdateInviteResponseMessage.newBuilder()
             .setIsApproved(true)
         val responseData = DataMessage.GroupUpdateMessage.newBuilder()
             .setInviteResponse(inviteResponse)
         val responseMessage = GroupUpdated(responseData.build())
-        MessageSender.send(responseMessage, invitingAdminAddress)
+        // this will fail the first couple of times :)
+        MessageSender.send(responseMessage, fromSerialized(groupId.hexString()))
     }
 
     override fun setGroupInviteComplete(approved: Boolean, invitee: String, closedGroup: SessionId) {

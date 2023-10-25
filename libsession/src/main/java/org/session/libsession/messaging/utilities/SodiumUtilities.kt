@@ -5,6 +5,7 @@ import com.goterl.lazysodium.SodiumAndroid
 import com.goterl.lazysodium.interfaces.AEAD
 import com.goterl.lazysodium.interfaces.GenericHash
 import com.goterl.lazysodium.interfaces.Hash
+import com.goterl.lazysodium.interfaces.Sign
 import com.goterl.lazysodium.utils.Key
 import com.goterl.lazysodium.utils.KeyPair
 import org.session.libsignal.utilities.Hex
@@ -237,4 +238,15 @@ object SodiumUtilities {
         return sodium.cryptoSignVerifyDetached(signature, messageToVerify, messageToVerify.size, publicKey)
     }
 
+    /**
+     * For signing
+     */
+    fun sign(message: ByteArray, signingKey: ByteArray): ByteArray {
+        val signature = ByteArray(Sign.BYTES)
+
+        if (!sodium.cryptoSignDetached(signature, message, message.size.toLong(), signingKey)) {
+            throw SecurityException("Couldn't sign the message with the signing key")
+        }
+        return signature
+    }
 }

@@ -169,6 +169,9 @@ object MessageSender {
                 val groupKeys = configFactory.getGroupKeysConfig(SessionId.from(destination.publicKey)) ?: throw Error.NoKeyPair
                 val envelope = MessageWrapper.createEnvelope(kind, message.sentTimestamp!!, senderPublicKey, proto.build().toByteArray())
                 groupKeys.use { keys ->
+                    if (keys.keys().isEmpty()) {
+                        throw Error.EncryptionFailed
+                    }
                     keys.encrypt(envelope.toByteArray())
                 }
             }
@@ -199,7 +202,6 @@ object MessageSender {
         val storage = MessagingModuleConfiguration.shared.storage
         val configFactory = MessagingModuleConfiguration.shared.configFactory
         val userPublicKey = storage.getUserPublicKey()
-        val ourProfile = storage.getUserProfile()
 
         // recipient will be set later, so initialize it as a function here
         val isSelfSend = { message.recipient == userPublicKey }

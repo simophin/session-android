@@ -10,6 +10,7 @@ import network.loki.messenger.libsession_util.GroupInfoConfig
 import network.loki.messenger.libsession_util.GroupKeysConfig
 import network.loki.messenger.libsession_util.GroupMembersConfig
 import network.loki.messenger.libsession_util.util.GroupInfo
+import network.loki.messenger.libsession_util.util.GroupInfo.ClosedGroupInfo.Companion.isAuthData
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.jobs.BatchMessageReceiveJob
 import org.session.libsession.messaging.jobs.JobQueue
@@ -30,9 +31,9 @@ class ClosedGroupPoller(private val executor: CoroutineScope,
                         private val configFactoryProtocol: ConfigFactoryProtocol) {
 
     data class ParsedRawMessage(
-        val data: ByteArray,
-        val hash: String,
-        val timestamp: Long
+            val data: ByteArray,
+            val hash: String,
+            val timestamp: Long
     ) {
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
@@ -69,7 +70,7 @@ class ClosedGroupPoller(private val executor: CoroutineScope,
         if (ENABLE_LOGGING) Log.d("ClosedGroupPoller", "Starting closed group poller for ${closedGroupSessionId.hexString().take(4)}")
         job?.cancel()
         job = executor.launch(Dispatchers.IO) {
-            val closedGroups = configFactoryProtocol.userGroups?: return@launch
+            val closedGroups = configFactoryProtocol.userGroups ?: return@launch
             isRunning = true
             while (isActive && isRunning) {
                 val group = closedGroups.getClosedGroup(closedGroupSessionId.hexString()) ?: break
@@ -95,7 +96,8 @@ class ClosedGroupPoller(private val executor: CoroutineScope,
         try {
             val snode = SnodeAPI.getSingleTargetSnode(closedGroupSessionId.hexString()).get()
             val info = configFactoryProtocol.getGroupInfoConfig(closedGroupSessionId) ?: return null
-            val members = configFactoryProtocol.getGroupMemberConfig(closedGroupSessionId) ?: return null
+            val members = configFactoryProtocol.getGroupMemberConfig(closedGroupSessionId)
+                    ?: return null
             val keys = configFactoryProtocol.getGroupKeysConfig(closedGroupSessionId) ?: return null
 
             val hashesToExtend = mutableSetOf<String>()
@@ -109,53 +111,58 @@ class ClosedGroupPoller(private val executor: CoroutineScope,
             val membersIndex = 2
             val messageIndex = 3
 
+            val authData = group.signingKey()
+            val signCallback = if (isAuthData(authData)) {
+                SnodeAPI.subkeyCallback(authData, keys, false)
+            } else SnodeAPI.signingKeyCallback(authData)
+
             val messagePoll = SnodeAPI.buildAuthenticatedRetrieveBatchRequest(
-                snode,
-                closedGroupSessionId.hexString(),
-                Namespace.CLOSED_GROUP_MESSAGES(),
-                maxSize = null,
-                group.signingKey()
+                    snode,
+                    closedGroupSessionId.hexString(),
+                    Namespace.CLOSED_GROUP_MESSAGES(),
+                    maxSize = null,
+                    signCallback
             ) ?: return null
             val infoPoll = SnodeAPI.buildAuthenticatedRetrieveBatchRequest(
-                snode,
-                closedGroupSessionId.hexString(),
-                info.namespace(),
-                maxSize = null,
-                group.signingKey()
+                    snode,
+                    closedGroupSessionId.hexString(),
+                    info.namespace(),
+                    maxSize = null,
+                    signCallback
             ) ?: return null
             val membersPoll = SnodeAPI.buildAuthenticatedRetrieveBatchRequest(
-                snode,
-                closedGroupSessionId.hexString(),
-                members.namespace(),
-                maxSize = null,
-                group.signingKey()
+                    snode,
+                    closedGroupSessionId.hexString(),
+                    members.namespace(),
+                    maxSize = null,
+                    signCallback
             ) ?: return null
             val keysPoll = SnodeAPI.buildAuthenticatedRetrieveBatchRequest(
-                snode,
-                closedGroupSessionId.hexString(),
-                keys.namespace(),
-                maxSize = null,
-                group.signingKey()
+                    snode,
+                    closedGroupSessionId.hexString(),
+                    keys.namespace(),
+                    maxSize = null,
+                    signCallback
             ) ?: return null
 
             val requests = mutableListOf(keysPoll, infoPoll, membersPoll, messagePoll)
 
             if (hashesToExtend.isNotEmpty()) {
                 SnodeAPI.buildAuthenticatedAlterTtlBatchRequest(
-                    messageHashes = hashesToExtend.toList(),
-                    publicKey = closedGroupSessionId.hexString(),
-                    signingKey = group.signingKey(),
-                    newExpiry = SnodeAPI.nowWithOffset + 14.days.inWholeMilliseconds,
-                    extend = true
+                        messageHashes = hashesToExtend.toList(),
+                        publicKey = closedGroupSessionId.hexString(),
+                        signingKey = group.signingKey(),
+                        newExpiry = SnodeAPI.nowWithOffset + 14.days.inWholeMilliseconds,
+                        extend = true
                 )?.let { extensionRequest ->
                     requests += extensionRequest
                 }
             }
 
             val pollResult = SnodeAPI.getRawBatchResponse(
-                snode,
-                closedGroupSessionId.hexString(),
-                requests
+                    snode,
+                    closedGroupSessionId.hexString(),
+                    requests
             ).get()
 
             // if poll result body is null here we don't have any things ig

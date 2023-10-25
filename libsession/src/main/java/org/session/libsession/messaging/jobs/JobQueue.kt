@@ -122,7 +122,11 @@ class JobQueue : JobDelegate {
 
             while (isActive) {
                 when (val job = queue.receive()) {
-                    is NotifyPNServerJob, is AttachmentUploadJob, is MessageSendJob, is ConfigurationSyncJob -> {
+                    is NotifyPNServerJob,
+                    is AttachmentUploadJob,
+                    is MessageSendJob,
+                    is ConfigurationSyncJob,
+                    is InviteContactJob -> {
                         txQueue.send(job)
                     }
                     is RetrieveProfileAvatarJob,

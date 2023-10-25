@@ -90,7 +90,7 @@ object SnodeAPI {
     private const val snodeFailureThreshold = 3
     private const val useOnionRequests = true
 
-    const val useTestnet = false
+    const val useTestnet = true
 
     // Error
     internal sealed class Error(val description: String) : Exception(description) {
@@ -465,7 +465,7 @@ object SnodeAPI {
                                                publicKey: String,
                                                namespace: Int,
                                                maxSize: Int? = null,
-                                               signingKey: ByteArray,
+                                               signCallback: SignCallback,
                                                ed25519PublicKey: Key? = null): SnodeBatchRequestInfo? {
         val lastHashValue = database.getLastMessageHashValue(snode, publicKey, namespace) ?: ""
         val params = mutableMapOf<String, Any>(
@@ -476,25 +476,10 @@ object SnodeAPI {
             params["pubkey_ed25519"] = ed25519PublicKey.asHexString
         }
         val timestamp = nowWithOffset
-        val signature = ByteArray(Sign.BYTES)
-        val verificationData = if (namespace == 0) "retrieve$timestamp".toByteArray()
-        else "retrieve$namespace$timestamp".toByteArray()
-        try {
-            sodium.cryptoSignDetached(
-                signature,
-                verificationData,
-                verificationData.size.toLong(),
-                signingKey
-            )
-        } catch (e: Exception) {
-            Log.e("BatchRetrieve", "Signing data failed with provided signing key", e)
-            return null
-        }
-        params["timestamp"] = timestamp
-        params["signature"] = Base64.encodeBytes(signature)
-        if (namespace != 0) {
-            params["namespace"] = namespace
-        }
+        val verificationData = if (namespace == 0) "retrieve$timestamp"
+            else "retrieve$namespace$timestamp"
+        val signParameters = signCallback(verificationData, timestamp, namespace)
+        params += signParameters
         if (maxSize != null) {
             params["max_size"] = maxSize
         }
@@ -518,7 +503,7 @@ object SnodeAPI {
             publicKey,
             namespace,
             maxSize,
-            secretKey,
+            signingKeyCallback(secretKey),
             ed25519PublicKey
         )
     }
@@ -701,23 +686,30 @@ object SnodeAPI {
         } catch (exception: Exception) {
             throw Error.SigningFailed
         }
-        mapOf(
-            "timestamp" to timestamp,
-            "signature" to Base64.encodeBytes(signature),
-            "namespace" to namespace
+        val params = mutableMapOf<String,Any>(
+                "timestamp" to timestamp,
+                "signature" to Base64.encodeBytes(signature),
         )
+        if (namespace != Namespace.DEFAULT()) {
+            params += "namespace" to namespace
+        }
+        params
     }
 
-    fun subkeyCallback(authData: ByteArray, groupKeysConfig: GroupKeysConfig): SignCallback = { message, timestamp, namespace ->
+    fun subkeyCallback(authData: ByteArray, groupKeysConfig: GroupKeysConfig, freeAfter: Boolean = true): SignCallback = { message, timestamp, namespace ->
         val (subaccount, subaccountSig, sig) = groupKeysConfig.subAccountSign(message.toByteArray(),authData)
-        val params = mapOf(
+        val params = mutableMapOf(
             "subaccount" to subaccount,
             "subaccount_sig" to subaccountSig,
             "signature" to sig,
             "timestamp" to timestamp,
-            "namespace" to namespace
         )
-        groupKeysConfig.free()
+        if (namespace != Namespace.DEFAULT()) {
+            params += "namespace" to namespace
+        }
+        if (freeAfter) {
+            groupKeysConfig.free()
+        }
         params
     }
 

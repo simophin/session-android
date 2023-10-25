@@ -70,7 +70,7 @@ fun MessageReceiver.handle(message: Message, proto: SignalServiceProtos.Content,
         is ReadReceipt -> handleReadReceipt(message)
         is TypingIndicator -> handleTypingIndicator(message)
         is ClosedGroupControlMessage -> handleClosedGroupControlMessage(message)
-        is GroupUpdated -> handleGroupUpdated(message, closedGroup!!)
+        is GroupUpdated -> handleGroupUpdated(message, closedGroup)
         is ExpirationTimerUpdate -> handleExpirationTimerUpdate(message)
         is DataExtractionNotification -> handleDataExtractionNotification(message)
         is ConfigurationMessage -> handleConfigurationMessage(message)
@@ -519,10 +519,13 @@ private fun ClosedGroupControlMessage.getPublicKey(): String = kind!!.let { when
     is ClosedGroupControlMessage.Kind.NameChange -> groupPublicKey!!
 }}
 
-private fun MessageReceiver.handleGroupUpdated(message: GroupUpdated, closedGroup: SessionId) {
+private fun MessageReceiver.handleGroupUpdated(message: GroupUpdated, closedGroup: SessionId?) {
+    if (closedGroup == null && !message.inner.hasInviteMessage()) { // TODO: add all the cases for this
+        throw NullPointerException("Message wasn't polled from a closed group!")
+    }
     when {
         message.inner.hasInviteMessage() -> handleNewLibSessionClosedGroupMessage(message)
-        message.inner.hasInviteResponse() -> handleInviteResponse(message, closedGroup)
+        message.inner.hasInviteResponse() -> handleInviteResponse(message, closedGroup!!)
     }
 }
 

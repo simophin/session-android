@@ -86,6 +86,10 @@ public class SignalServiceGroup {
     return groupId;
   }
 
+  public boolean isNewClosedGroup() {
+    return groupId.length == 33 && groupId[0] == 0x03;
+  }
+
   public GroupType getGroupType() { return  groupType; }
 
   public Type getType() {

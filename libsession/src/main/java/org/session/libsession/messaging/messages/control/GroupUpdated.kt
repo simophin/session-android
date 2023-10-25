@@ -6,6 +6,10 @@ import org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateM
 
 class GroupUpdated(val inner: GroupUpdateMessage): ControlMessage() {
 
+    override fun isValid(): Boolean {
+        return true // TODO: add the validation here
+    }
+
     companion object {
         fun fromProto(message: Content): GroupUpdated? =
             if (message.hasDataMessage() && message.dataMessage.hasGroupUpdateMessage())
