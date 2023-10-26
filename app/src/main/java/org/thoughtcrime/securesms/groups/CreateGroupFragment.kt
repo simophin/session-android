@@ -8,15 +8,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
@@ -150,55 +151,64 @@ fun CreateGroup(
 
     var name by remember { mutableStateOf(createGroupState.groupName) }
     var description by remember { mutableStateOf(createGroupState.groupDescription) }
-    val members by remember { mutableStateOf(createGroupState.members) }
+    var members by remember { mutableStateOf(createGroupState.members) }
 
     val scrollState = rememberScrollState()
+    val lazyState = rememberLazyListState()
+
+    val onDeleteMember = { contact: Contact ->
+        members -= contact
+    }
 
     Box {
         Column(
             modifier
                 .fillMaxWidth()) {
-            Column(modifier.scrollable(scrollState, orientation = Orientation.Vertical)) {
+            LazyColumn(state = lazyState) {
                 // Top bar
-                NavigationBar(
-                    title = stringResource(id = R.string.activity_create_group_title),
-                    onBack = onBack,
-                    onClose = onClose
-                )
-                // Editable avatar (future chunk)
-                EditableAvatar(
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .padding(top = 16.dp)
-                )
-                // Title
-                val nameDescription = stringResource(id = R.string.AccessibilityId_closed_group_edit_group_name)
-                OutlinedTextField(
-                    value = name,
-                    onValueChange = { name = it },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.CenterHorizontally)
-                        .padding(vertical = 8.dp, horizontal = 24.dp)
-                        .semantics {
-                            contentDescription = nameDescription
-                        },
-                )
-                // Description
-                val descriptionDescription = stringResource(id = R.string.AccessibilityId_closed_group_edit_group_description)
-                OutlinedTextField(
-                    value = description,
-                    onValueChange = { description = it },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.CenterHorizontally)
-                        .padding(vertical = 8.dp, horizontal = 24.dp)
-                        .semantics {
-                            contentDescription = descriptionDescription
-                        },
-                )
+                item {
+                    Column(modifier.fillMaxWidth()) {
+                        NavigationBar(
+                            title = stringResource(id = R.string.activity_create_group_title),
+                            onBack = onBack,
+                            onClose = onClose
+                        )
+                        // Editable avatar (future chunk)
+                        EditableAvatar(
+                            modifier = Modifier
+                                .align(Alignment.CenterHorizontally)
+                                .padding(top = 16.dp)
+                        )
+                        // Title
+                        val nameDescription = stringResource(id = R.string.AccessibilityId_closed_group_edit_group_name)
+                        OutlinedTextField(
+                            value = name,
+                            onValueChange = { name = it },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .align(Alignment.CenterHorizontally)
+                                .padding(vertical = 8.dp, horizontal = 24.dp)
+                                .semantics {
+                                    contentDescription = nameDescription
+                                },
+                        )
+                        // Description
+                        val descriptionDescription = stringResource(id = R.string.AccessibilityId_closed_group_edit_group_description)
+                        OutlinedTextField(
+                            value = description,
+                            onValueChange = { description = it },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .align(Alignment.CenterHorizontally)
+                                .padding(vertical = 8.dp, horizontal = 24.dp)
+                                .semantics {
+                                    contentDescription = descriptionDescription
+                                },
+                        )
+                    }
+                }
                 // Group list
-                MemberList(contacts = members, modifier = Modifier.padding(vertical = 8.dp, horizontal = 24.dp))
+                memberList(contacts = members.toList(), modifier = Modifier.padding(vertical = 8.dp, horizontal = 24.dp), onDeleteMember)
             }
             // Create button
             val createDescription = stringResource(id = R.string.AccessibilityId_create_closed_group_create_button)
@@ -236,11 +246,22 @@ fun CreateGroup(
 }
 
 
+fun LazyListScope.memberList(contacts: List<Contact>, modifier: Modifier = Modifier, onDelete: (Contact)->Unit) {
+    if (contacts.isEmpty()) {
+        item {
+            EmptyPlaceholder(modifier.fillParentMaxWidth())
+        }
+    } else {
+        items(contacts) {
+            // TODO
+
+        }
+    }
+}
+
 @Composable
-fun MemberList(contacts: Collection<Contact>, modifier: Modifier = Modifier) {
-    Column(modifier = modifier
-        .fillMaxWidth()
-        .defaultMinSize(minHeight = 240.dp)) {
+fun EmptyPlaceholder(modifier: Modifier = Modifier) {
+    Column {
         Text(text = stringResource(id = R.string.conversation_settings_group_members),
             modifier = Modifier
                 .align(Alignment.Start)
@@ -261,10 +282,17 @@ fun MemberList(contacts: Collection<Contact>, modifier: Modifier = Modifier) {
 fun ClosedGroupPreview(
     @PreviewParameter(ThemeResPreviewParameterProvider::class) themeResId: Int
 ) {
+    val random = "05abcd1234"
+    val previewMembers = setOf(
+        Contact(random).apply {
+            name = "Person"
+
+        }
+    )
     PreviewTheme(themeResId) {
         CreateGroup(
             viewState = CreateGroupFragment.ViewState(false, null),
-            createGroupState = CreateGroupState("Group Name", "Test Group Description", emptySet()),
+            createGroupState = CreateGroupState("Group Name", "Test Group Description", previewMembers),
             onCreate = {},
             onClose = {},
             onBack = {},
