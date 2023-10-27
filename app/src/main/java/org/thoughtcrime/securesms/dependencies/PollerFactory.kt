@@ -1,5 +1,6 @@
 package org.thoughtcrime.securesms.dependencies
 
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.plus
@@ -8,6 +9,7 @@ import org.session.libsignal.utilities.SessionId
 import java.util.concurrent.ConcurrentHashMap
 
 class PollerFactory(private val scope: CoroutineScope,
+                    private val executor: CoroutineDispatcher,
                     private val configFactory: ConfigFactory) {
 
     private val pollers = ConcurrentHashMap<SessionId, ClosedGroupPoller>()
@@ -17,7 +19,7 @@ class PollerFactory(private val scope: CoroutineScope,
         configFactory.userGroups?.getClosedGroup(sessionId.hexString()) ?: return null
 
         return pollers.getOrPut(sessionId) {
-            ClosedGroupPoller(scope + SupervisorJob(), sessionId, configFactory)
+            ClosedGroupPoller(scope + SupervisorJob(), executor, sessionId, configFactory)
         }
     }
 

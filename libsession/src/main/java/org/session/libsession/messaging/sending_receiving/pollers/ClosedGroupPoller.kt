@@ -1,7 +1,7 @@
 package org.session.libsession.messaging.sending_receiving.pollers
 
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
@@ -26,7 +26,8 @@ import org.session.libsignal.utilities.SessionId
 import org.session.libsignal.utilities.Snode
 import kotlin.time.Duration.Companion.days
 
-class ClosedGroupPoller(private val executor: CoroutineScope,
+class ClosedGroupPoller(private val scope: CoroutineScope,
+                        private val execute: CoroutineDispatcher,
                         private val closedGroupSessionId: SessionId,
                         private val configFactoryProtocol: ConfigFactoryProtocol) {
 
@@ -69,7 +70,7 @@ class ClosedGroupPoller(private val executor: CoroutineScope,
 
         if (ENABLE_LOGGING) Log.d("ClosedGroupPoller", "Starting closed group poller for ${closedGroupSessionId.hexString().take(4)}")
         job?.cancel()
-        job = executor.launch(Dispatchers.IO) {
+        job = scope.launch {
             val closedGroups = configFactoryProtocol.userGroups ?: return@launch
             isRunning = true
             while (isActive && isRunning) {
@@ -104,6 +105,8 @@ class ClosedGroupPoller(private val executor: CoroutineScope,
                 members,
                 free = false
             ) ?: return null
+
+            val isAdmin = group.hasAdminKey()
 
             val hashesToExtend = mutableSetOf<String>()
 
@@ -152,7 +155,7 @@ class ClosedGroupPoller(private val executor: CoroutineScope,
 
             val requests = mutableListOf(keysPoll, infoPoll, membersPoll, messagePoll)
 
-            if (hashesToExtend.isNotEmpty()) {
+            if (isAdmin && hashesToExtend.isNotEmpty()) {
                 SnodeAPI.buildAuthenticatedAlterTtlBatchRequest(
                         messageHashes = hashesToExtend.toList(),
                         publicKey = closedGroupSessionId.hexString(),

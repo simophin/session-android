@@ -6,7 +6,10 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import org.session.libsession.utilities.ConfigFactoryUpdateListener
 import org.session.libsession.utilities.TextSecurePreferences
@@ -42,9 +45,15 @@ object SessionUtilModule {
     @Named(POLLER_SCOPE)
     fun providePollerScope(@ApplicationContext applicationContext: Context): CoroutineScope = GlobalScope
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Provides
+    @Named(POLLER_SCOPE)
+    fun provideExecutor(): CoroutineDispatcher = Dispatchers.IO.limitedParallelism(1)
+
     @Provides
     @Singleton
     fun providePollerFactory(@Named(POLLER_SCOPE) coroutineScope: CoroutineScope,
-                             configFactory: ConfigFactory) = PollerFactory(coroutineScope, configFactory)
+                             @Named(POLLER_SCOPE) dispatcher: CoroutineDispatcher,
+                             configFactory: ConfigFactory) = PollerFactory(coroutineScope, dispatcher, configFactory)
 
 }

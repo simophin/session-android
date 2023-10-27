@@ -84,7 +84,7 @@ data class ConfigurationSyncJob(val destination: Destination) : Job {
                             if (config is GroupKeysConfig) {
                                 config.messageInformation(destination.publicKey, signingKey)
                             } else if (config is ConfigBase) {
-                                config.messageInformation(toDelete, destination.publicKey, signingKey, groupId.publicKey)
+                                config.messageInformation(toDelete, destination.publicKey, signingKey)
                             } else {
                                 Log.e("ConfigurationSyncJob", "Tried to create a message from an unknown config")
                                 null

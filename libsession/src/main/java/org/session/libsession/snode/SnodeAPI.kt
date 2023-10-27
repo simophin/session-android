@@ -439,26 +439,20 @@ object SnodeAPI {
             return null
         }
         val ed25519PublicKey = userEd25519KeyPair.publicKey.asHexString
-        val signature = ByteArray(Sign.BYTES)
-        val verificationData = "delete${messageHashes.joinToString("")}".toByteArray()
-        try {
-            sodium.cryptoSignDetached(
-                signature,
-                verificationData,
-                verificationData.size.toLong(),
-                userEd25519KeyPair.secretKey.asBytes
-            )
-        } catch (e: Exception) {
-            Log.e("Loki", "Signing data failed with user secret key", e)
-            return null
-        }
-        params["pubkey_ed25519"] = ed25519PublicKey
-        params["signature"] = Base64.encodeBytes(signature)
+        val signCallback = signingKeyCallback(userEd25519KeyPair.secretKey.asBytes)
         return SnodeBatchRequestInfo(
             Snode.Method.DeleteMessage.rawValue,
             params,
             null
         )
+    }
+
+    fun buildAuthenticatedDeleteBatchInfo(
+        publicKey: String,
+        messageHashes: List<String>,
+        signCallback: SignCallback,
+        required: Boolean = false): SnodeBatchRequestInfo? {
+        val verificationData = "delete${messageHashes.joinToString("")}".toByteArray()
     }
 
     fun buildAuthenticatedRetrieveBatchRequest(snode: Snode,
