@@ -313,6 +313,14 @@ fun MessageReceiver.handleVisibleMessage(
             storage.setBlocksCommunityMessageRequests(recipient, message.blocksMessageRequests)
         }
     }
+    // Handle group invite response if new closed group
+    if (threadRecipient?.isClosedGroupRecipient == true) {
+        storage.setGroupInviteCompleteIfNeeded(
+            approved = true,
+            recipient.address.serialize(),
+            SessionId.from(threadRecipient.address.serialize())
+        )
+    }
     // Parse quote if needed
     var quoteModel: QuoteModel? = null
     var quoteMessageBody: String? = null
@@ -534,7 +542,7 @@ private fun MessageReceiver.handleInviteResponse(message: GroupUpdated, closedGr
     // val profile = message // maybe we do need data to be the inner so we can access profile
     val storage = MessagingModuleConfiguration.shared.storage
     val approved = message.inner.inviteResponse.isApproved
-    storage.setGroupInviteComplete(approved, sender, closedGroup)
+    storage.setGroupInviteCompleteIfNeeded(approved, sender, closedGroup)
 }
 
 private fun MessageReceiver.handleNewLibSessionClosedGroupMessage(message: GroupUpdated) {

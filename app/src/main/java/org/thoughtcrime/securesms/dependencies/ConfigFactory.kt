@@ -182,26 +182,29 @@ class ConfigFactory(
     override fun getGroupInfoConfig(groupSessionId: SessionId): GroupInfoConfig? = getGroupAuthInfo(groupSessionId)?.let { (sk, _) ->
         // get any potential initial dumps
         val dump = configDatabase.retrieveConfigAndHashes(
-            SharedConfigMessage.Kind.CLOSED_GROUP_INFO.name,
+            ConfigDatabase.INFO_VARIANT,
             groupSessionId.hexString()
         ) ?: byteArrayOf()
 
         GroupInfoConfig.newInstance(Hex.fromStringCondensed(groupSessionId.publicKey), sk, dump)
     }
 
-    override fun getGroupKeysConfig(groupSessionId: SessionId): GroupKeysConfig? = getGroupAuthInfo(groupSessionId)?.let { (sk, _) ->
+    override fun getGroupKeysConfig(groupSessionId: SessionId,
+                                    info: GroupInfoConfig?,
+                                    members: GroupMembersConfig?,
+                                    free: Boolean): GroupKeysConfig? = getGroupAuthInfo(groupSessionId)?.let { (sk, _) ->
         // Get the user info or return early
         val (userSk, _) = maybeGetUserInfo() ?: return@let null
 
         // Get the group info or return early
-        val info = getGroupInfoConfig(groupSessionId) ?: return@let null
+        val usedInfo = info ?: getGroupInfoConfig(groupSessionId) ?: return@let null
 
         // Get the group members or return early
-        val members = getGroupMemberConfig(groupSessionId) ?: return@let null
+        val usedMembers = members ?: getGroupMemberConfig(groupSessionId) ?: return@let null
 
         // Get the dump or empty
         val dump = configDatabase.retrieveConfigAndHashes(
-            SharedConfigMessage.Kind.ENCRYPTION_KEYS.name,
+            ConfigDatabase.KEYS_VARIANT,
             groupSessionId.hexString()
         ) ?: byteArrayOf()
 
@@ -211,18 +214,20 @@ class ConfigFactory(
             Hex.fromStringCondensed(groupSessionId.publicKey),
             sk,
             dump,
-            info,
-            members
+            usedInfo,
+            usedMembers
         )
-        info.free()
-        members.free()
+        if (free) {
+            info?.free()
+            members?.free()
+        }
         keys
     }
 
     override fun getGroupMemberConfig(groupSessionId: SessionId): GroupMembersConfig? = getGroupAuthInfo(groupSessionId)?.let { (sk, auth) ->
         // Get initial dump if we have one
         val dump = configDatabase.retrieveConfigAndHashes(
-            SharedConfigMessage.Kind.CLOSED_GROUP_MEMBERS.name,
+            ConfigDatabase.MEMBER_VARIANT,
             groupSessionId.hexString()
         ) ?: byteArrayOf()
 
@@ -298,8 +303,13 @@ class ConfigFactory(
 
     fun persistGroupConfigDump(forConfigObject: ConfigBase, groupSessionId: SessionId, timestamp: Long) = synchronized(userGroupsLock) {
         val dumped = forConfigObject.dump()
+        val variant = when (forConfigObject) {
+            is GroupMembersConfig -> ConfigDatabase.MEMBER_VARIANT
+            is GroupInfoConfig -> ConfigDatabase.INFO_VARIANT
+            else -> throw Exception("Shouldn't be called")
+        }
         configDatabase.storeConfig(
-            ConfigDatabase.KEYS_VARIANT,
+            variant,
             groupSessionId.hexString(),
             dumped,
             timestamp
@@ -375,7 +385,7 @@ class ConfigFactory(
             configDatabase.retrieveConfigLastUpdateTimestamp(variant, publicKey)
 
         // Ensure the change occurred after the last config message was handled (minus the buffer period)
-        return (changeTimestampMs >= (lastUpdateTimestampMs - ConfigFactory.configChangeBufferPeriod))
+        return (changeTimestampMs >= (lastUpdateTimestampMs - configChangeBufferPeriod))
     }
 
     override fun saveGroupConfigs(

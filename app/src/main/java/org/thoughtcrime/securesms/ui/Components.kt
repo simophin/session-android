@@ -256,7 +256,10 @@ fun NavigationBar(
             }
         }
         //Main title
-        Box(modifier = Modifier.fillMaxHeight().weight(1f).padding(8.dp)) {
+        Box(modifier = Modifier
+            .fillMaxHeight()
+            .weight(1f)
+            .padding(8.dp)) {
             Text(
                 text = title,
                 Modifier.align(titleAlignment),

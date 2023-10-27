@@ -20,7 +20,10 @@ interface ConfigFactoryProtocol {
 
     fun getGroupInfoConfig(groupSessionId: SessionId): GroupInfoConfig?
     fun getGroupMemberConfig(groupSessionId: SessionId): GroupMembersConfig?
-    fun getGroupKeysConfig(groupSessionId: SessionId): GroupKeysConfig?
+    fun getGroupKeysConfig(groupSessionId: SessionId,
+                           info: GroupInfoConfig? = null,
+                           members: GroupMembersConfig? = null,
+                           free: Boolean = true): GroupKeysConfig?
 
     fun getUserConfigs(): List<ConfigBase>
     fun persist(forConfigObject: Config, timestamp: Long)

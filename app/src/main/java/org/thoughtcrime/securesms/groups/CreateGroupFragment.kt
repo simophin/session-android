@@ -10,6 +10,7 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -35,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -50,13 +52,17 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import network.loki.messenger.R
 import network.loki.messenger.databinding.FragmentCreateGroupBinding
+import org.session.libsession.avatars.ContactPhoto
 import org.session.libsession.messaging.contacts.Contact
+import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.Device
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.conversation.start.NewConversationDelegate
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.ui.AppTheme
+import org.thoughtcrime.securesms.ui.Avatar
 import org.thoughtcrime.securesms.ui.EditableAvatar
+import org.thoughtcrime.securesms.ui.LocalPreviewMode
 import org.thoughtcrime.securesms.ui.NavigationBar
 import org.thoughtcrime.securesms.ui.PreviewTheme
 import org.thoughtcrime.securesms.ui.ThemeResPreviewParameterProvider
@@ -252,9 +258,11 @@ fun LazyListScope.memberList(contacts: List<Contact>, modifier: Modifier = Modif
             EmptyPlaceholder(modifier.fillParentMaxWidth())
         }
     } else {
-        items(contacts) {
-            // TODO
-
+        items(contacts) { contact ->
+            Row(modifier) {
+                val context = LocalContext.current
+                Avatar(Recipient.from(context, Address.fromSerialized(contact.sessionID), false))
+            }
         }
     }
 }
@@ -282,11 +290,10 @@ fun EmptyPlaceholder(modifier: Modifier = Modifier) {
 fun ClosedGroupPreview(
     @PreviewParameter(ThemeResPreviewParameterProvider::class) themeResId: Int
 ) {
-    val random = "05abcd1234"
+    val random = "05abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234"
     val previewMembers = setOf(
         Contact(random).apply {
             name = "Person"
-
         }
     )
     PreviewTheme(themeResId) {
@@ -298,4 +305,12 @@ fun ClosedGroupPreview(
             onBack = {},
         )
     }
+}
+
+@Composable
+fun Contact.contactPhoto(): ContactPhoto {
+    if (LocalPreviewMode.current) {
+        //
+    }
+    TODO()
 }

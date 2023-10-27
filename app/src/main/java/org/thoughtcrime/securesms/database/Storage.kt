@@ -1231,20 +1231,24 @@ open class Storage(
         MessageSender.send(responseMessage, fromSerialized(groupId.hexString()))
     }
 
-    override fun setGroupInviteComplete(approved: Boolean, invitee: String, closedGroup: SessionId) {
-        val groupMembers = configFactory.getGroupMemberConfig(closedGroup) ?: return
-        val member = groupMembers.get(invitee) ?: run {
-            Log.e("ClosedGroup", "User wasn't in the group membership to add!")
-            return
+    override fun setGroupInviteCompleteIfNeeded(approved: Boolean, invitee: String, closedGroup: SessionId) {
+        // don't try to process invitee acceptance if we aren't admin
+        if (configFactory.userGroups?.getClosedGroup(closedGroup.hexString())?.hasAdminKey() != true) return
+
+        configFactory.getGroupMemberConfig(closedGroup)?.use { groupMembers ->
+            val member = groupMembers.get(invitee) ?: run {
+                Log.e("ClosedGroup", "User wasn't in the group membership to add!")
+                return
+            }
+            if (!member.invitePending) return groupMembers.close()
+            if (approved) {
+                groupMembers.set(member.copy(invitePending = false))
+            } else {
+                groupMembers.erase(member)
+            }
+            configFactory.persistGroupConfigDump(groupMembers, closedGroup, SnodeAPI.nowWithOffset)
+            ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(Destination.ClosedGroup(closedGroup.hexString()))
         }
-        if (approved) {
-            groupMembers.set(member.copy(invitePending = false))
-        } else {
-            groupMembers.erase(member)
-        }
-        configFactory.persistGroupConfigDump(groupMembers, closedGroup, SnodeAPI.nowWithOffset)
-        ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(Destination.ClosedGroup(closedGroup.hexString()))
-        groupMembers.close()
     }
 
     override fun setServerCapabilities(server: String, capabilities: List<String>) {

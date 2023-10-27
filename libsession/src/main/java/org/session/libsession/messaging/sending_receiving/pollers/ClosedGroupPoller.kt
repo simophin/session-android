@@ -98,7 +98,12 @@ class ClosedGroupPoller(private val executor: CoroutineScope,
             val info = configFactoryProtocol.getGroupInfoConfig(closedGroupSessionId) ?: return null
             val members = configFactoryProtocol.getGroupMemberConfig(closedGroupSessionId)
                     ?: return null
-            val keys = configFactoryProtocol.getGroupKeysConfig(closedGroupSessionId) ?: return null
+            val keys = configFactoryProtocol.getGroupKeysConfig(
+                closedGroupSessionId,
+                info,
+                members,
+                free = false
+            ) ?: return null
 
             val hashesToExtend = mutableSetOf<String>()
 

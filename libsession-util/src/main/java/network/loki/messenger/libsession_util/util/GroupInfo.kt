@@ -42,6 +42,8 @@ sealed class GroupInfo {
             return if (adminKey.isNotEmpty()) adminKey else authData
         }
 
+        fun hasAdminKey() = adminKey.isNotEmpty()
+
     }
 
     data class LegacyGroupInfo(

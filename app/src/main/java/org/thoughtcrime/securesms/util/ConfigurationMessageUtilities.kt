@@ -47,12 +47,18 @@ object ConfigurationMessageUtilities {
         debouncer.publish {
             // don't schedule job if we already have one
             val storage = MessagingModuleConfiguration.shared.storage
+            val configFactory = MessagingModuleConfiguration.shared.configFactory
             val destinations = synchronized(destinationUpdater) {
                 val objects = pendingDestinations.toList()
                 pendingDestinations.clear()
                 objects
             }
             destinations.forEach {  destination ->
+                if (destination is Destination.ClosedGroup) {
+                    // ensure we have the appropriate admin keys, skip this destination otherwise
+                    val group = configFactory.userGroups?.getClosedGroup(destination.publicKey) ?: return@forEach
+                    if (group.adminKey.isEmpty()) return@forEach Log.w("ConfigurationSync", "Trying to schedule config sync for group we aren't an admin of")
+                }
                 val currentStorageJob = storage.getConfigSyncJob(destination)
                 if (currentStorageJob != null) {
                     (currentStorageJob as ConfigurationSyncJob).shouldRunAgain.set(true)

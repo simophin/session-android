@@ -18,6 +18,7 @@ import com.google.android.material.color.MaterialColors
 import network.loki.messenger.R
 
 val LocalExtraColors = staticCompositionLocalOf<ExtraColors> { error("No Custom Attribute value provided") }
+val LocalPreviewMode = staticCompositionLocalOf { false }
 
 
 data class ExtraColors(
@@ -56,7 +57,8 @@ fun PreviewTheme(
     content: @Composable () -> Unit
 ) {
     CompositionLocalProvider(
-        LocalContext provides ContextThemeWrapper(LocalContext.current, themeResId)
+        LocalContext provides ContextThemeWrapper(LocalContext.current, themeResId),
+        LocalPreviewMode provides true
     ) {
         AppTheme {
             Box(modifier = Modifier.background(color = MaterialTheme.colors.background)) {

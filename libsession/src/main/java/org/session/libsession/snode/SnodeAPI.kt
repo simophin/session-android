@@ -1014,6 +1014,10 @@ object SnodeAPI {
                 Log.d("Loki", "404, probably no file found")
                 return Error.Generic
             }
+            401 -> {
+                Log.d("Loki", "401, check you're doing a sign properly")
+                return Error.SigningFailed
+            }
             else -> {
                 handleBadSnode()
                 Log.d("Loki", "Unhandled response code: ${statusCode}.")

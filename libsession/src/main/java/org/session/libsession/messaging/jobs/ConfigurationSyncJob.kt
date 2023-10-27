@@ -55,18 +55,19 @@ data class ConfigurationSyncJob(val destination: Destination) : Job {
                     val groupId = SessionId.from(destination.publicKey)
 
                     // Get the signing key for pushing configs
-                    // TODO: do nothing if we don't have the keys / aren't admin
-                    val signingKey =
-                            configFactoryProtocol.userGroups!!.getClosedGroup(
-                                            destination.publicKey
-                                    )!!
-                                    .signingKey()
+                    val signingKey = configFactoryProtocol
+                                .userGroups?.getClosedGroup(destination.publicKey)?.adminKey
+                    if (signingKey?.isNotEmpty() == true) {
+                        val info = configFactoryProtocol.getGroupInfoConfig(groupId)!!
+                        val members = configFactoryProtocol.getGroupMemberConfig(groupId)!!
+                        val keys = configFactoryProtocol.getGroupKeysConfig(
+                            groupId,
+                            info,
+                            members,
+                            false
+                        )!!
 
-                    val keys = configFactoryProtocol.getGroupKeysConfig(groupId)!!
-                    val info = configFactoryProtocol.getGroupInfoConfig(groupId)!!
-                    val members = configFactoryProtocol.getGroupMemberConfig(groupId)!!
-
-                    val requiringPush =
+                        val requiringPush =
                             listOf(keys, info, members).filter {
                                 when (it) {
                                     is GroupKeysConfig -> it.pendingConfig()?.isNotEmpty() == true
@@ -75,20 +76,21 @@ data class ConfigurationSyncJob(val destination: Destination) : Job {
                                 }
                             }
 
-                    // free the objects that were created but won't be used after this point
-                    // in case any of the configs don't need pushing, they won't be freed later
-                    (listOf(keys, info, members) subtract requiringPush).forEach(Config::free)
+                        // free the objects that were created but won't be used after this point
+                        // in case any of the configs don't need pushing, they won't be freed later
+                        (listOf(keys, info, members) subtract requiringPush).forEach(Config::free)
 
-                    requiringPush.mapNotNull { config ->
-                        if (config is GroupKeysConfig) {
-                            config.messageInformation(destination.publicKey, signingKey)
-                        } else if (config is ConfigBase) {
-                            config.messageInformation(toDelete, destination.publicKey, signingKey, groupId.publicKey)
-                        } else {
-                            Log.e("ConfigurationSyncJob", "Tried to create a message from an unknown config")
-                            null
+                        requiringPush.mapNotNull { config ->
+                            if (config is GroupKeysConfig) {
+                                config.messageInformation(destination.publicKey, signingKey)
+                            } else if (config is ConfigBase) {
+                                config.messageInformation(toDelete, destination.publicKey, signingKey, groupId.publicKey)
+                            } else {
+                                Log.e("ConfigurationSyncJob", "Tried to create a message from an unknown config")
+                                null
+                            }
                         }
-                    }
+                    } else emptyList()
                 } else if (destination is Destination.Contact) {
                     // assume our own user as check already takes place in `execute` for our own key
                     // if contact
