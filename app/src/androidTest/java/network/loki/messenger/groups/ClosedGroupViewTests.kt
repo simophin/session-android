@@ -11,18 +11,16 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.spy
 import org.mockito.kotlin.whenever
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsignal.utilities.Hex
 import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.SessionId
-import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.database.ConfigDatabase
 import org.thoughtcrime.securesms.database.Storage
 import org.thoughtcrime.securesms.dependencies.ConfigFactory
-import org.thoughtcrime.securesms.groups.CreateGroupState
 import org.thoughtcrime.securesms.groups.CreateGroupViewModel
+import org.thoughtcrime.securesms.groups.compose.CreateGroupState
 
 @RunWith(MockitoJUnitRunner::class)
 class ClosedGroupViewTests {

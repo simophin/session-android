@@ -428,22 +428,19 @@ object SnodeAPI {
      * @param required indicates that *at least one* message in the list is deleted from the server, otherwise it will return 404
      */
     fun buildAuthenticatedDeleteBatchInfo(publicKey: String, messageHashes: List<String>, required: Boolean = false): SnodeBatchRequestInfo? {
-        val params = mutableMapOf(
-            "pubkey" to publicKey,
-            "required" to required, // could be omitted technically but explicit here
-            "messages" to messageHashes
-        )
         val userEd25519KeyPair = try {
             MessagingModuleConfiguration.shared.getUserED25519KeyPair() ?: return null
         } catch (e: Exception) {
             return null
         }
-        val ed25519PublicKey = userEd25519KeyPair.publicKey.asHexString
+        val ed25519PublicKey = userEd25519KeyPair.publicKey
         val signCallback = signingKeyCallback(userEd25519KeyPair.secretKey.asBytes)
-        return SnodeBatchRequestInfo(
-            Snode.Method.DeleteMessage.rawValue,
-            params,
-            null
+        return buildAuthenticatedDeleteBatchInfo(
+            publicKey,
+            messageHashes,
+            signCallback,
+            required,
+            ed25519PublicKey
         )
     }
 
@@ -451,8 +448,26 @@ object SnodeAPI {
         publicKey: String,
         messageHashes: List<String>,
         signCallback: SignCallback,
-        required: Boolean = false): SnodeBatchRequestInfo? {
-        val verificationData = "delete${messageHashes.joinToString("")}".toByteArray()
+        required: Boolean = false,
+        ed25519PubKey: Key? = null): SnodeBatchRequestInfo {
+        val verificationData = "delete${messageHashes.joinToString("")}"
+        val params = mutableMapOf(
+            "pubkey" to publicKey,
+            "required" to required, // could be omitted technically but explicit here
+            "messages" to messageHashes
+        )
+
+        if (ed25519PubKey != null) {
+            params += "pubkey_ed25519" to ed25519PubKey.asHexString
+        }
+
+        params += signCallback(verificationData, null, null)
+
+        return SnodeBatchRequestInfo(
+            Snode.Method.DeleteMessage.rawValue,
+            params,
+            null
+        )
     }
 
     fun buildAuthenticatedRetrieveBatchRequest(snode: Snode,
@@ -681,10 +696,13 @@ object SnodeAPI {
             throw Error.SigningFailed
         }
         val params = mutableMapOf<String,Any>(
-                "timestamp" to timestamp,
-                "signature" to Base64.encodeBytes(signature),
+            "signature" to Base64.encodeBytes(signature),
         )
-        if (namespace != Namespace.DEFAULT()) {
+        if (timestamp != null) {
+            params += "timestamp" to timestamp
+        }
+
+        if (namespace != null && namespace != Namespace.DEFAULT()) {
             params += "namespace" to namespace
         }
         params
@@ -692,13 +710,15 @@ object SnodeAPI {
 
     fun subkeyCallback(authData: ByteArray, groupKeysConfig: GroupKeysConfig, freeAfter: Boolean = true): SignCallback = { message, timestamp, namespace ->
         val (subaccount, subaccountSig, sig) = groupKeysConfig.subAccountSign(message.toByteArray(),authData)
-        val params = mutableMapOf(
+        val params = mutableMapOf<String, Any>(
             "subaccount" to subaccount,
             "subaccount_sig" to subaccountSig,
             "signature" to sig,
-            "timestamp" to timestamp,
         )
-        if (namespace != Namespace.DEFAULT()) {
+        if (timestamp != null) {
+            params += "timestamp" to timestamp
+        }
+        if (namespace != null && namespace != Namespace.DEFAULT()) {
             params += "namespace" to namespace
         }
         if (freeAfter) {
@@ -1022,7 +1042,7 @@ object SnodeAPI {
     }
 }
 
-typealias SignCallback = (String, Long, Int)->Map<String,Any>
+typealias SignCallback = (String, Long?, Int?)->Map<String,Any>
 
 // Type Aliases
 typealias RawResponse = Map<*, *>

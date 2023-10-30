@@ -10,6 +10,7 @@ import org.session.libsession.messaging.utilities.Data
 import org.session.libsession.snode.RawResponse
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.snode.SnodeAPI.SnodeBatchRequestInfo
+import org.session.libsession.snode.SnodeAPI.signingKeyCallback
 import org.session.libsession.snode.SnodeMessage
 import org.session.libsession.utilities.ConfigFactoryProtocol
 import org.session.libsignal.utilities.Base64
@@ -179,11 +180,28 @@ data class ConfigurationSyncJob(val destination: Destination) : Job {
         val toDeleteRequest =
                 toDeleteHashes.let { toDeleteFromAllNamespaces ->
                     if (toDeleteFromAllNamespaces.isEmpty()) null
-                    else
-                            SnodeAPI.buildAuthenticatedDeleteBatchInfo(
-                                    destination.destinationPublicKey(),
-                                    toDeleteFromAllNamespaces
-                            )
+                    else if (destination is Destination.ClosedGroup) {
+                        // Build sign callback for group's admin key
+                        val signingKey =
+                            configFactory.userGroups
+                                ?.getClosedGroup(destination.publicKey)
+                                ?.adminKey ?: return@let null
+
+                        val signCallback = signingKeyCallback(signingKey)
+
+                        // Destination is a closed group swarm, build with signCallback
+                        SnodeAPI.buildAuthenticatedDeleteBatchInfo(
+                            destination.destinationPublicKey(),
+                            toDeleteFromAllNamespaces,
+                            signCallback
+                        )
+                    } else {
+                        // Destination is our own swarm
+                        SnodeAPI.buildAuthenticatedDeleteBatchInfo(
+                            destination.destinationPublicKey(),
+                            toDeleteFromAllNamespaces
+                        )
+                    }
                 }
 
         val allRequests = mutableListOf<SnodeBatchRequestInfo>()

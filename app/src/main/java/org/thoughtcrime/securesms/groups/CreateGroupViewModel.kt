@@ -10,6 +10,8 @@ import network.loki.messenger.R
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.database.Storage
+import org.thoughtcrime.securesms.groups.compose.CreateGroupState
+import org.thoughtcrime.securesms.groups.compose.ViewState
 import javax.inject.Inject
 
 @HiltViewModel
@@ -18,11 +20,8 @@ class CreateGroupViewModel @Inject constructor(
     private val storage: Storage,
 ) : ViewModel() {
 
-    private val _recipients = MutableLiveData<List<Recipient>>()
-    val recipients: LiveData<List<Recipient>> = _recipients
-
-    private val _viewState = MutableLiveData(CreateGroupFragment.ViewState.DEFAULT)
-    val viewState: LiveData<CreateGroupFragment.ViewState>  = _viewState
+    private val _viewState = MutableLiveData(ViewState.DEFAULT)
+    val viewState: LiveData<ViewState>  = _viewState
 
     init {
         viewModelScope.launch {
@@ -41,7 +40,7 @@ class CreateGroupViewModel @Inject constructor(
     }
 
     fun tryCreateGroup(createGroupState: CreateGroupState): Recipient? {
-        _viewState.postValue(CreateGroupFragment.ViewState(true, null))
+        _viewState.postValue(ViewState(true, null))
 
         val name = createGroupState.groupName
         val description = createGroupState.groupDescription
@@ -51,7 +50,7 @@ class CreateGroupViewModel @Inject constructor(
         // need a name
         if (name.isEmpty()) {
             _viewState.postValue(
-                CreateGroupFragment.ViewState(false, R.string.error)
+                ViewState(false, R.string.error)
             )
             return null
         }
@@ -62,21 +61,15 @@ class CreateGroupViewModel @Inject constructor(
 
         if (members.size <= 1) {
             _viewState.postValue(
-                CreateGroupFragment.ViewState(false, R.string.activity_create_closed_group_not_enough_group_members_error)
+                ViewState(false, R.string.activity_create_closed_group_not_enough_group_members_error)
             )
         }
 
         // make a group
         val newGroup = storage.createNewGroup(name, description, members)
         if (!newGroup.isPresent) {
-            _viewState.postValue(CreateGroupFragment.ViewState(isLoading = false, null))
+            _viewState.postValue(ViewState(isLoading = false, null))
         }
         return newGroup.orNull()
-    }
-
-    fun filter(query: String): List<Recipient> {
-        return _recipients.value?.filter {
-            it.address.serialize().contains(query, ignoreCase = true) || it.name?.contains(query, ignoreCase = true) == true
-        } ?: emptyList()
     }
 }

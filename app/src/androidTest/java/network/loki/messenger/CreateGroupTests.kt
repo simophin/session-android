@@ -13,9 +13,9 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.thoughtcrime.securesms.ApplicationContext
-import org.thoughtcrime.securesms.groups.CreateGroup
-import org.thoughtcrime.securesms.groups.CreateGroupFragment
-import org.thoughtcrime.securesms.groups.CreateGroupState
+import org.thoughtcrime.securesms.groups.compose.CreateGroup
+import org.thoughtcrime.securesms.groups.compose.CreateGroupState
+import org.thoughtcrime.securesms.groups.compose.ViewState
 import org.thoughtcrime.securesms.ui.AppTheme
 
 @RunWith(AndroidJUnit4::class)
@@ -39,7 +39,7 @@ class CreateGroupTests {
         composeTest.setContent {
             AppTheme {
                 CreateGroup(
-                    viewState = CreateGroupFragment.ViewState.DEFAULT,
+                    viewState = ViewState.DEFAULT,
                     createGroupState = CreateGroupState("", "", emptySet()),
                     onCreate = { submitted ->
                         postedGroup = submitted
@@ -74,7 +74,7 @@ class CreateGroupTests {
         composeTest.setContent {
             AppTheme {
                 CreateGroup(
-                    viewState = CreateGroupFragment.ViewState.DEFAULT,
+                    viewState = ViewState.DEFAULT,
                     createGroupState = CreateGroupState("", "", emptySet()),
                     onCreate = { submitted ->
                         postedGroup = submitted
@@ -98,22 +98,20 @@ class CreateGroupTests {
         val application = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as ApplicationContext
         // Accessibility IDs
         val backDesc = application.getString(R.string.new_conversation_dialog_back_button_content_description)
-        val closeDesc = application.getString(R.string.new_conversation_dialog_close_button_content_description)
 
         var postedGroup: CreateGroupState? = null
         var backPressed = false
-        var closePressed = false
 
         composeTest.setContent {
             AppTheme {
                 CreateGroup(
-                    viewState = CreateGroupFragment.ViewState.DEFAULT,
+                    viewState = ViewState.DEFAULT,
                     createGroupState = CreateGroupState("", "", emptySet()),
                     onCreate = { submitted ->
                         postedGroup = submitted
                     },
                     onBack = { backPressed = true },
-                    onClose = { closePressed = true })
+                    onClose = { })
             }
         }
 
@@ -129,22 +127,20 @@ class CreateGroupTests {
     fun testCloseButton() {
         val application = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as ApplicationContext
         // Accessibility IDs
-        val backDesc = application.getString(R.string.new_conversation_dialog_back_button_content_description)
         val closeDesc = application.getString(R.string.new_conversation_dialog_close_button_content_description)
 
         var postedGroup: CreateGroupState? = null
-        var backPressed = false
         var closePressed = false
 
         composeTest.setContent {
             AppTheme {
                 CreateGroup(
-                    viewState = CreateGroupFragment.ViewState.DEFAULT,
+                    viewState = ViewState.DEFAULT,
                     createGroupState = CreateGroupState("", "", emptySet()),
                     onCreate = { submitted ->
                         postedGroup = submitted
                     },
-                    onBack = { backPressed = true },
+                    onBack = { },
                     onClose = { closePressed = true })
             }
         }
