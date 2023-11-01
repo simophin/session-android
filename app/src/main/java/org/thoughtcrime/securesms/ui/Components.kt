@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.ButtonColors
 import androidx.compose.material.Card
 import androidx.compose.material.Colors
@@ -34,6 +35,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -226,6 +228,41 @@ fun EditableAvatar(
 }
 
 @Composable
+fun SearchBar(
+    query: String,
+    onValueChanged: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 24.dp)
+            .background(MaterialTheme.colors.primaryVariant, RoundedCornerShape(100))
+    ) {
+        Image(
+            painterResource(id = R.drawable.ic_search_24),
+            contentDescription = null,
+            colorFilter = ColorFilter.tint(
+                MaterialTheme.colors.onPrimary
+            ),
+            modifier = Modifier.size(20.dp)
+        )
+
+        BasicTextField(
+            singleLine = true,
+//            label = { Text(text = stringResource(id = R.string.search_contacts_hint),modifier=Modifier.padding(0.dp)) },
+            value = query,
+            onValueChange = onValueChanged,
+            modifier = Modifier
+                .padding(start = 8.dp)
+                .padding(4.dp)
+                .weight(1f),
+        )
+    }
+}
+
+@Composable
 fun NavigationBar(
     //
     title: String,
@@ -294,5 +331,13 @@ fun NavigationBar(
 fun PreviewNavigationBar(@PreviewParameter(provider = ThemeResPreviewParameterProvider::class) themeResId: Int) {
     PreviewTheme(themeResId = themeResId) {
         NavigationBar(title = "Create Group", onBack = {}, onClose = {})
+    }
+}
+
+@Composable
+@Preview
+fun PreviewSearchBar(@PreviewParameter(provider = ThemeResPreviewParameterProvider::class) themeResId: Int) {
+    PreviewTheme(themeResId = themeResId) {
+        SearchBar("", {})
     }
 }

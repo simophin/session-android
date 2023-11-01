@@ -3,9 +3,8 @@ package org.thoughtcrime.securesms.groups
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.liveData
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import network.loki.messenger.R
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.recipients.Recipient
@@ -23,8 +22,14 @@ class CreateGroupViewModel @Inject constructor(
     private val _viewState = MutableLiveData(ViewState.DEFAULT)
     val viewState: LiveData<ViewState>  = _viewState
 
+    val createGroupState: MutableLiveData<CreateGroupState> = MutableLiveData(CreateGroupState("","", emptySet()))
+
+    val contacts = liveData {
+        emit(storage.getAllContacts().toList())
+    }
+
     init {
-        viewModelScope.launch {
+//        viewModelScope.launch {
 //            threadDb.approvedConversationList.use { openCursor ->
 //                val reader = threadDb.readerFor(openCursor)
 //                val recipients = mutableListOf<Recipient>()
@@ -36,7 +41,7 @@ class CreateGroupViewModel @Inject constructor(
 //                        .filter { !it.isGroupRecipient && it.hasApprovedMe() && it.address.serialize() != textSecurePreferences.getLocalNumber() }
 //                }
 //            }
-        }
+//        }
     }
 
     fun tryCreateGroup(createGroupState: CreateGroupState): Recipient? {

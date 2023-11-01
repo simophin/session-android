@@ -778,6 +778,7 @@
     <string name="activity_create_closed_group_group_name_missing_error">Please enter a group name</string>
     <string name="activity_create_closed_group_group_name_too_long_error">Please enter a shorter group name</string>
     <string name="activity_create_closed_group_not_enough_group_members_error">Please pick at least 1 group member</string>
+    <string name="activity_create_closed_group_empty_placeholer">You haven\'t added any members</string>
     <string name="activity_create_closed_group_too_many_group_members_error">A closed group cannot have more than 100 members</string>
     <string name="activity_join_public_chat_title">Join Open Group</string>
     <string name="activity_join_public_chat_error">Couldn\'t join group</string>
@@ -1073,4 +1074,6 @@
     <string name="dialog_clear_all_messages_clear">Clear</string>
     <string name="dialog_clear_all_messages_cancel">Cancel</string>
     <string name="media_overview_activity__clear_media">Clear All</string>
+    <string name="activity_create_closed_group_select_contacts">Select Contacts</string>
+    <string name="activity_create_closed_group_add_account_or_ons">Add Account ID or ONS</string>
 </resources>
