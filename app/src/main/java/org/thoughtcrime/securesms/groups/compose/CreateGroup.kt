@@ -202,6 +202,7 @@ fun ClosedGroupPreview(
         CreateGroup(
             viewState = ViewState.DEFAULT.copy(
                 // override any preview parameters
+                members = previewMembers.toList()
             ),
             updateState = {},
             onSelectContact = {},
@@ -233,5 +234,5 @@ sealed class StateUpdate {
     data class Name(val value: String): StateUpdate()
     data class Description(val value: String): StateUpdate()
     data class RemoveContact(val value: Contact): StateUpdate()
-    data class AddContact(val value: Contact): StateUpdate()
+    data class AddContacts(val value: List<Contact>): StateUpdate()
 }

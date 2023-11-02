@@ -1,6 +1,7 @@
 package org.thoughtcrime.securesms.groups
 
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +19,7 @@ import com.ramcosta.composedestinations.result.NavResult
 import com.ramcosta.composedestinations.result.ResultBackNavigator
 import com.ramcosta.composedestinations.result.ResultRecipient
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.parcelize.Parcelize
 import network.loki.messenger.databinding.FragmentCreateGroupBinding
 import org.session.libsession.messaging.contacts.Contact
 import org.thoughtcrime.securesms.conversation.start.NewConversationDelegate
@@ -26,7 +28,7 @@ import org.thoughtcrime.securesms.groups.compose.CreateGroupNavGraph
 import org.thoughtcrime.securesms.groups.compose.SelectContacts
 import org.thoughtcrime.securesms.groups.compose.StateUpdate
 import org.thoughtcrime.securesms.groups.compose.ViewState
-import org.thoughtcrime.securesms.groups.destinations.SelectContactScreenDestination
+import org.thoughtcrime.securesms.groups.destinations.SelectContactsScreenDestination
 import org.thoughtcrime.securesms.ui.AppTheme
 
 @AndroidEntryPoint
@@ -44,9 +46,11 @@ class CreateGroupFragment : Fragment() {
             val getDelegate = { delegate }
             setContent {
                 AppTheme {
-                    DestinationsNavHost(navGraph = NavGraphs.createGroup, dependenciesContainerBuilder = {
-                        dependency(getDelegate)
-                    })
+                    DestinationsNavHost(
+                        navGraph = NavGraphs.createGroup,
+                        dependenciesContainerBuilder = {
+                            dependency(getDelegate)
+                        })
                 }
             }
         }
@@ -54,12 +58,15 @@ class CreateGroupFragment : Fragment() {
 
 }
 
+@Parcelize
+data class ContactList(val contacts: List<Contact>) : Parcelable
+
 @CreateGroupNavGraph(start = true)
 @Composable
 @Destination
 fun CreateGroupScreen(
     navigator: DestinationsNavigator,
-    resultSelectContact: ResultRecipient<SelectContactScreenDestination, Contact>,
+    resultSelectContact: ResultRecipient<SelectContactsScreenDestination, ContactList>,
     viewModel: CreateGroupViewModel = hiltViewModel(),
     getDelegate: () -> NewConversationDelegate
 ) {
@@ -68,9 +75,11 @@ fun CreateGroupScreen(
     resultSelectContact.onNavResult { navResult ->
         when (navResult) {
             is NavResult.Value -> {
-                viewModel.updateState(StateUpdate.AddContact(navResult.value))
+                viewModel.updateState(StateUpdate.AddContacts(navResult.value.contacts))
             }
-            is NavResult.Canceled -> { /* do nothing */ }
+
+            is NavResult.Canceled -> { /* do nothing */
+            }
         }
     }
 
@@ -80,7 +89,7 @@ fun CreateGroupScreen(
         onClose = {
             getDelegate().onDialogClosePressed()
         },
-        onSelectContact = { navigator.navigate(SelectContactScreenDestination) },
+        onSelectContact = { navigator.navigate(SelectContactsScreenDestination) },
         onBack = {
             getDelegate().onDialogBackPressed()
         }
@@ -90,8 +99,8 @@ fun CreateGroupScreen(
 @CreateGroupNavGraph
 @Composable
 @Destination
-fun SelectContactScreen(
-    resultNavigator: ResultBackNavigator<Contact>,
+fun SelectContactsScreen(
+    resultNavigator: ResultBackNavigator<ContactList>,
     viewModel: CreateGroupViewModel = hiltViewModel(),
     getDelegate: () -> NewConversationDelegate
 ) {
@@ -104,6 +113,8 @@ fun SelectContactScreen(
         contacts - currentMembers,
         onBack = { resultNavigator.navigateBack() },
         onClose = { getDelegate().onDialogClosePressed() },
-        onContactsSelected = {}
+        onContactsSelected = {
+            resultNavigator.navigateBack(ContactList(it))
+        }
     )
 }

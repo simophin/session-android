@@ -31,7 +31,7 @@ class CreateGroupViewModel @Inject constructor(
 
     fun updateState(stateUpdate: StateUpdate) {
         when (stateUpdate) {
-            is StateUpdate.AddContact -> _viewState.update { copy(members = members + stateUpdate.value) }
+            is StateUpdate.AddContacts -> _viewState.update { copy(members = members + stateUpdate.value) }
             is StateUpdate.Description -> _viewState.update { copy(description = stateUpdate.value) }
             is StateUpdate.Name -> _viewState.update { copy(name = stateUpdate.value) }
             is StateUpdate.RemoveContact -> _viewState.update { copy(members = members - stateUpdate.value) }
