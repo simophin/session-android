@@ -8,6 +8,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import network.loki.messenger.R
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.database.Storage
+import org.thoughtcrime.securesms.groups.compose.StateUpdate
 import org.thoughtcrime.securesms.groups.compose.ViewState
 import javax.inject.Inject
 
@@ -16,10 +17,30 @@ class CreateGroupViewModel @Inject constructor(
     private val storage: Storage,
 ) : ViewModel() {
 
-    private val _viewState = MutableLiveData(ViewState.DEFAULT)
-    val viewState: LiveData<ViewState>  = _viewState
+    private fun create() {
+        tryCreateGroup()
+    }
 
-    val contacts = liveData { emit(storage.getAllContacts()) }
+    private inline fun <reified T> MutableLiveData<T>.update(body: T.() -> T) {
+        this.postValue(body(this.value!!))
+    }
+
+    private val _viewState = MutableLiveData(ViewState.DEFAULT.copy())
+
+    val viewState: LiveData<ViewState> = _viewState
+
+    fun updateState(stateUpdate: StateUpdate) {
+        when (stateUpdate) {
+            is StateUpdate.AddContact -> _viewState.update { copy(members = members + stateUpdate.value) }
+            is StateUpdate.Description -> _viewState.update { copy(description = stateUpdate.value) }
+            is StateUpdate.Name -> _viewState.update { copy(name = stateUpdate.value) }
+            is StateUpdate.RemoveContact -> _viewState.update { copy(members = members - stateUpdate.value) }
+            StateUpdate.Create -> { tryCreateGroup() }
+        }
+    }
+
+    val contacts
+        get() = liveData { emit(storage.getAllContacts()) }
 
     fun tryCreateGroup(): Recipient? {
 
@@ -46,7 +67,10 @@ class CreateGroupViewModel @Inject constructor(
 
         if (members.size <= 1) {
             _viewState.postValue(
-                currentState.copy(isLoading = false, error = R.string.activity_create_closed_group_not_enough_group_members_error)
+                currentState.copy(
+                    isLoading = false,
+                    error = R.string.activity_create_closed_group_not_enough_group_members_error
+                )
             )
         }
 

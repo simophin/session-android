@@ -32,6 +32,9 @@ class Contact(
      */
     var nickname: String? = null,
 ): Parcelable {
+
+    constructor(id: String): this(sessionID = id)
+
     /**
      * The name to display in the UI. For local use only.
      */

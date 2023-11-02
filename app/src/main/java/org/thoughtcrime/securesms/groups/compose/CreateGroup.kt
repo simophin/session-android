@@ -32,7 +32,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import network.loki.messenger.R
 import org.session.libsession.messaging.contacts.Contact
-import org.thoughtcrime.securesms.groups.compose.ViewState.StateUpdate
 import org.thoughtcrime.securesms.ui.CellWithPaddingAndMargin
 import org.thoughtcrime.securesms.ui.Divider
 import org.thoughtcrime.securesms.ui.EditableAvatar
@@ -49,6 +48,7 @@ data class CreateGroupState (
 @Composable
 fun CreateGroup(
     viewState: ViewState,
+    updateState: (StateUpdate) -> Unit,
     onSelectContact: () -> Unit,
     onBack: () -> Unit,
     onClose: () -> Unit,
@@ -80,7 +80,7 @@ fun CreateGroup(
                         val nameDescription = stringResource(id = R.string.AccessibilityId_closed_group_edit_group_name)
                         OutlinedTextField(
                             value = viewState.name,
-                            onValueChange = { viewState.updateState(StateUpdate.Name(it)) },
+                            onValueChange = { updateState(StateUpdate.Name(it)) },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .align(Alignment.CenterHorizontally)
@@ -93,7 +93,7 @@ fun CreateGroup(
                         val descriptionDescription = stringResource(id = R.string.AccessibilityId_closed_group_edit_group_description)
                         OutlinedTextField(
                             value = viewState.description,
-                            onValueChange = { viewState.updateState(StateUpdate.Description(it)) },
+                            onValueChange = { updateState(StateUpdate.Description(it)) },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .align(Alignment.CenterHorizontally)
@@ -150,13 +150,13 @@ fun CreateGroup(
                 }
                 // Group list
                 memberList(contacts = viewState.members, modifier = Modifier.padding(vertical = 8.dp, horizontal = 24.dp)) { deletedContact ->
-                    viewState.updateState(StateUpdate.RemoveContact(deletedContact))
+                    updateState(StateUpdate.RemoveContact(deletedContact))
                 }
             }
             // Create button
             val createDescription = stringResource(id = R.string.AccessibilityId_create_closed_group_create_button)
             OutlinedButton(
-                onClick = { viewState.create() },
+                onClick = { updateState(StateUpdate.Create) },
                 enabled = viewState.canCreate,
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
@@ -203,6 +203,7 @@ fun ClosedGroupPreview(
             viewState = ViewState.DEFAULT.copy(
                 // override any preview parameters
             ),
+            updateState = {},
             onSelectContact = {},
             onBack = {},
             onClose = {},
@@ -216,22 +217,21 @@ data class ViewState(
     val name: String = "",
     val description: String = "",
     val members: List<Contact> = emptyList(),
-    val updateState: (StateUpdate)->Unit,
-    val create: ()->Unit,
     ) {
 
     val canCreate
         get() = name.isNotEmpty() && members.isNotEmpty()
 
     companion object {
-        val DEFAULT = ViewState(false, null, updateState = {}, create = {})
+        val DEFAULT = ViewState(false, null)
     }
 
-    sealed class StateUpdate {
-        data class Name(val value: String): StateUpdate()
-        data class Description(val value: String): StateUpdate()
-        data class RemoveContact(val value: Contact): StateUpdate()
-        data class AddContact(val value: Contact): StateUpdate()
-    }
+}
 
+sealed class StateUpdate {
+    data object Create: StateUpdate()
+    data class Name(val value: String): StateUpdate()
+    data class Description(val value: String): StateUpdate()
+    data class RemoveContact(val value: Contact): StateUpdate()
+    data class AddContact(val value: Contact): StateUpdate()
 }
