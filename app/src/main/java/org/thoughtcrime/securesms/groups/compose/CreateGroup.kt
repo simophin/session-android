@@ -20,10 +20,6 @@ import androidx.compose.material.OutlinedButton
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,9 +30,9 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.MutableLiveData
 import network.loki.messenger.R
 import org.session.libsession.messaging.contacts.Contact
+import org.thoughtcrime.securesms.groups.compose.ViewState.StateUpdate
 import org.thoughtcrime.securesms.ui.CellWithPaddingAndMargin
 import org.thoughtcrime.securesms.ui.Divider
 import org.thoughtcrime.securesms.ui.EditableAvatar
@@ -53,23 +49,13 @@ data class CreateGroupState (
 @Composable
 fun CreateGroup(
     viewState: ViewState,
-    createGroupState: MutableLiveData<CreateGroupState>,
-    onCreate: (CreateGroupState) -> Unit,
     onSelectContact: () -> Unit,
     onBack: () -> Unit,
     onClose: () -> Unit,
     modifier: Modifier = Modifier
 ) {
 
-    var name by createGroupState
-    var description by remember { mutableStateOf(createGroupState.groupDescription) }
-    var members by remember { mutableStateOf(createGroupState.members) }
-
     val lazyState = rememberLazyListState()
-
-    val onDeleteMember = { contact: Contact ->
-        members -= contact
-    }
 
     Box {
         Column(
@@ -93,8 +79,8 @@ fun CreateGroup(
                         // Title
                         val nameDescription = stringResource(id = R.string.AccessibilityId_closed_group_edit_group_name)
                         OutlinedTextField(
-                            value = name,
-                            onValueChange = { name = it },
+                            value = viewState.name,
+                            onValueChange = { viewState.updateState(StateUpdate.Name(it)) },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .align(Alignment.CenterHorizontally)
@@ -106,8 +92,8 @@ fun CreateGroup(
                         // Description
                         val descriptionDescription = stringResource(id = R.string.AccessibilityId_closed_group_edit_group_description)
                         OutlinedTextField(
-                            value = description,
-                            onValueChange = { description = it },
+                            value = viewState.description,
+                            onValueChange = { viewState.updateState(StateUpdate.Description(it)) },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .align(Alignment.CenterHorizontally)
@@ -163,13 +149,15 @@ fun CreateGroup(
                     }
                 }
                 // Group list
-                memberList(contacts = members.toList(), modifier = Modifier.padding(vertical = 8.dp, horizontal = 24.dp), onDeleteMember)
+                memberList(contacts = viewState.members, modifier = Modifier.padding(vertical = 8.dp, horizontal = 24.dp)) { deletedContact ->
+                    viewState.updateState(StateUpdate.RemoveContact(deletedContact))
+                }
             }
             // Create button
             val createDescription = stringResource(id = R.string.AccessibilityId_create_closed_group_create_button)
             OutlinedButton(
-                onClick = { onCreate(CreateGroupState(name, description, members)) },
-                enabled = name.isNotBlank() && !viewState.isLoading,
+                onClick = { viewState.create() },
+                enabled = viewState.canCreate,
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .padding(16.dp)
@@ -212,21 +200,38 @@ fun ClosedGroupPreview(
     )
     PreviewTheme(R.style.Theme_Session_DayNight_NoActionBar_Test) {
         CreateGroup(
-            viewState = ViewState(false, null),
-            createGroupState = CreateGroupState("Group Name", "Test Group Description", previewMembers),
-            onCreate = {},
-            onClose = {},
+            viewState = ViewState.DEFAULT.copy(
+                // override any preview parameters
+            ),
             onSelectContact = {},
             onBack = {},
+            onClose = {},
         )
     }
 }
 
 data class ViewState(
     val isLoading: Boolean,
-    @StringRes val error: Int?
-) {
+    @StringRes val error: Int?,
+    val name: String = "",
+    val description: String = "",
+    val members: List<Contact> = emptyList(),
+    val updateState: (StateUpdate)->Unit,
+    val create: ()->Unit,
+    ) {
+
+    val canCreate
+        get() = name.isNotEmpty() && members.isNotEmpty()
+
     companion object {
-        val DEFAULT = ViewState(false, null)
+        val DEFAULT = ViewState(false, null, updateState = {}, create = {})
     }
+
+    sealed class StateUpdate {
+        data class Name(val value: String): StateUpdate()
+        data class Description(val value: String): StateUpdate()
+        data class RemoveContact(val value: Contact): StateUpdate()
+        data class AddContact(val value: Contact): StateUpdate()
+    }
+
 }

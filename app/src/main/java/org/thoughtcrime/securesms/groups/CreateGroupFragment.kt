@@ -1,6 +1,5 @@
 package org.thoughtcrime.securesms.groups
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -20,12 +19,9 @@ import com.ramcosta.composedestinations.navigation.dependency
 import com.ramcosta.composedestinations.result.ResultBackNavigator
 import com.ramcosta.composedestinations.result.ResultRecipient
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import network.loki.messenger.databinding.FragmentCreateGroupBinding
 import org.session.libsession.messaging.contacts.Contact
 import org.thoughtcrime.securesms.conversation.start.NewConversationDelegate
-import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.groups.compose.CreateGroup
 import org.thoughtcrime.securesms.groups.compose.CreateGroupNavGraph
 import org.thoughtcrime.securesms.groups.compose.SelectContacts
@@ -63,38 +59,20 @@ class CreateGroupFragment : Fragment() {
 @Destination
 fun CreateGroupScreen(
     navigator: DestinationsNavigator,
-    resultSelectContact: ResultRecipient<SelectContactScreenDestination, Contact?>,
+    resultSelectContact: ResultRecipient<SelectContactScreenDestination, Contact>,
     viewModel: CreateGroupViewModel = hiltViewModel(),
     getDelegate: () -> NewConversationDelegate
 ) {
     val viewState by viewModel.viewState.observeAsState(ViewState.DEFAULT)
     val lifecycleScope = rememberCoroutineScope()
     val context = LocalContext.current
-    val currentGroupState = viewModel.createGroupState
 
     CreateGroup(
         viewState,
-        currentGroupState,
-        onCreate = { newGroup ->
-            // launch something to create here
-            // dunno if we want to key this here as a launched effect on some property :thinking:
-            lifecycleScope.launch(Dispatchers.IO) {
-                val groupRecipient = viewModel.tryCreateGroup(newGroup)
-                groupRecipient?.let { recipient ->
-                    // launch conversation with this new group
-                    val intent = Intent(context, ConversationActivityV2::class.java)
-                    intent.putExtra(ConversationActivityV2.ADDRESS, recipient.address)
-                    context.startActivity(intent)
-                    getDelegate().onDialogClosePressed()
-                }
-            }
-        },
-        onSelectContact = {
-            navigator.navigate(SelectContactScreenDestination)
-        },
         onClose = {
             getDelegate().onDialogClosePressed()
         },
+        onSelectContact = { navigator.navigate(SelectContactScreenDestination) },
         onBack = {
             getDelegate().onDialogBackPressed()
         }
@@ -105,17 +83,18 @@ fun CreateGroupScreen(
 @Composable
 @Destination
 fun SelectContactScreen(
-    resultNavigator: ResultBackNavigator<Contact?>,
+    resultNavigator: ResultBackNavigator<Contact>,
     viewModel: CreateGroupViewModel = hiltViewModel(),
     getDelegate: () -> NewConversationDelegate
 ) {
 
+    val viewState by viewModel.viewState.observeAsState(ViewState.DEFAULT)
+    val currentMembers = viewState.members
     val contacts by viewModel.contacts.observeAsState(initial = emptyList())
-    val currentMembers by viewModel.createGroupState.observeAsState()
 
     SelectContacts(
-        contacts - currentMembers?.members.orEmpty(),
-        onBack = { resultNavigator.navigateBack(null) },
+        contacts - currentMembers,
+        onBack = { resultNavigator.navigateBack() },
         onClose = { getDelegate().onDialogClosePressed() }
     )
 }
