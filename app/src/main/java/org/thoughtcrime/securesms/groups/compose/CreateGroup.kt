@@ -32,6 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import network.loki.messenger.R
 import org.session.libsession.messaging.contacts.Contact
+import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.ui.CellWithPaddingAndMargin
 import org.thoughtcrime.securesms.ui.Divider
 import org.thoughtcrime.securesms.ui.EditableAvatar
@@ -149,7 +150,7 @@ fun CreateGroup(
                     }
                 }
                 // Group list
-                memberList(contacts = viewState.members, modifier = Modifier.padding(vertical = 8.dp, horizontal = 24.dp)) { deletedContact ->
+                deleteMemberList(contacts = viewState.members, modifier = Modifier.padding(vertical = 8.dp, horizontal = 24.dp)) { deletedContact ->
                     updateState(StateUpdate.RemoveContact(deletedContact))
                 }
             }
@@ -218,6 +219,7 @@ data class ViewState(
     val name: String = "",
     val description: String = "",
     val members: List<Contact> = emptyList(),
+    val createdGroup: Recipient? = null,
     ) {
 
     val canCreate
@@ -234,5 +236,5 @@ sealed class StateUpdate {
     data class Name(val value: String): StateUpdate()
     data class Description(val value: String): StateUpdate()
     data class RemoveContact(val value: Contact): StateUpdate()
-    data class AddContacts(val value: List<Contact>): StateUpdate()
+    data class AddContacts(val value: Set<Contact>): StateUpdate()
 }

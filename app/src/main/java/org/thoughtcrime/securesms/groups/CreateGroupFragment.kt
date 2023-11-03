@@ -1,14 +1,17 @@
 package org.thoughtcrime.securesms.groups
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalContext
 import androidx.fragment.app.Fragment
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.DestinationsNavHost
@@ -23,6 +26,7 @@ import kotlinx.parcelize.Parcelize
 import network.loki.messenger.databinding.FragmentCreateGroupBinding
 import org.session.libsession.messaging.contacts.Contact
 import org.thoughtcrime.securesms.conversation.start.NewConversationDelegate
+import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.groups.compose.CreateGroup
 import org.thoughtcrime.securesms.groups.compose.CreateGroupNavGraph
 import org.thoughtcrime.securesms.groups.compose.SelectContacts
@@ -59,7 +63,7 @@ class CreateGroupFragment : Fragment() {
 }
 
 @Parcelize
-data class ContactList(val contacts: List<Contact>) : Parcelable
+data class ContactList(val contacts: Set<Contact>) : Parcelable
 
 @CreateGroupNavGraph(start = true)
 @Composable
@@ -80,6 +84,18 @@ fun CreateGroupScreen(
 
             is NavResult.Canceled -> { /* do nothing */
             }
+        }
+    }
+
+    val context = LocalContext.current
+
+    viewState.createdGroup?.let { group ->
+        SideEffect {
+            getDelegate().onDialogClosePressed()
+            val intent = Intent(context, ConversationActivityV2::class.java).apply {
+                putExtra(ConversationActivityV2.ADDRESS, group.address)
+            }
+            context.startActivity(intent)
         }
     }
 

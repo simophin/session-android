@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.RadioButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -54,10 +55,54 @@ fun EmptyPlaceholder(modifier: Modifier = Modifier) {
     }
 }
 
-fun LazyListScope.memberList(
+fun LazyListScope.multiSelectMemberList(
     contacts: List<Contact>,
     modifier: Modifier = Modifier,
-    onDelete: (Contact) -> Unit
+    selectedContacts: Set<Contact> = emptySet(),
+    onListUpdated: (Set<Contact>)->Unit = {},
+) {
+    items(contacts) { contact ->
+        val isSelected = selectedContacts.contains(contact)
+
+        val update = {
+            val newList =
+                if (isSelected) selectedContacts - contact
+                else selectedContacts + contact
+            onListUpdated(newList)
+        }
+
+        Row(modifier = modifier.fillMaxWidth()
+            .clickable(onClick = update)
+            .padding(vertical = 8.dp, horizontal = 24.dp),
+            verticalAlignment = CenterVertically
+        ) {
+            ContactPhoto(
+                contact = contact,
+                modifier = Modifier
+                    .size(48.dp)
+            )
+            MemberName(name = contact.getSearchName())
+            RadioButton(selected = isSelected, onClick = update)
+        }
+    }
+}
+
+@Composable
+fun RowScope.MemberName(
+    name: String
+) = Text(
+    text = name,
+    fontWeight = FontWeight.Bold,
+    modifier = Modifier
+        .weight(1f)
+        .padding(16.dp)
+        .align(CenterVertically)
+)
+
+fun LazyListScope.deleteMemberList(
+    contacts: List<Contact>,
+    modifier: Modifier = Modifier,
+    onDelete: (Contact) -> Unit,
 ) {
     item {
         Text(
@@ -80,23 +125,16 @@ fun LazyListScope.memberList(
                         .size(48.dp)
                         .align(CenterVertically)
                 )
-                Text(
-                    text = contact.getSearchName(),
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(16.dp)
-                        .align(CenterVertically)
-                )
+                MemberName(name = contact.getSearchName())
                 Image(
                     painterResource(id = R.drawable.ic_baseline_close_24),
                     null,
-                    Modifier
+                    modifier = Modifier
                         .size(32.dp)
                         .align(CenterVertically)
                         .clickable {
                             onDelete(contact)
-                        }
+                        },
                 )
             }
         }
@@ -141,12 +179,9 @@ fun PreviewMemberList(
     )
     PreviewTheme(themeResId = themeResId) {
         LazyColumn {
-            memberList(
-                previewMembers.toList(),
-                Modifier.padding(vertical = 8.dp, horizontal = 24.dp)
-            ) { deleted ->
-
-            }
+            multiSelectMemberList(
+                contacts = previewMembers.toList(),
+            )
         }
     }
 }

@@ -118,7 +118,7 @@ data class ConfigurationSyncJob(val destination: Destination) : Job {
             )
 
         return ConfigMessageInformation(
-            if (signingKey != null && ed25519PubKey != null) {
+            if (signingKey != null && ed25519PubKey == null) {
                SnodeAPI.buildAuthenticatedStoreBatchInfo(
                    namespace(),
                    message,
