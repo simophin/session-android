@@ -241,7 +241,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     private val viewModel: ConversationViewModel by viewModels {
         var threadId = intent.getLongExtra(THREAD_ID, -1L)
         if (threadId == -1L) {
-            intent.getParcelableExtra(ADDRESS, Address::class.java)?.let { it ->
+            intent.getParcelableExtra<Address>(ADDRESS)?.let { it ->
                 threadId = threadDb.getThreadIdIfExistsFor(it.serialize())
                 if (threadId == -1L) {
                     val sessionId = SessionId(it.serialize())
@@ -423,6 +423,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         updatePlaceholder()
         setUpBlockedBanner()
         binding!!.searchBottomBar.setEventListener(this)
+        binding!!.toolbarContent.profilePictureView.setOnClickListener(this)
         updateSendAfterApprovalText()
         showOrHideInputIfNeeded()
         setUpMessageRequestsBar()

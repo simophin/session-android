@@ -126,7 +126,7 @@ class JobQueue : JobDelegate {
                     is AttachmentUploadJob,
                     is MessageSendJob,
                     is ConfigurationSyncJob,
-                    is InviteContactJob -> {
+                    is InviteContactsJob -> {
                         txQueue.send(job)
                     }
                     is RetrieveProfileAvatarJob,
@@ -231,7 +231,7 @@ class JobQueue : JobDelegate {
             OpenGroupDeleteJob.KEY,
             RetrieveProfileAvatarJob.KEY,
             ConfigurationSyncJob.KEY,
-            InviteContactJob.KEY
+            InviteContactsJob.KEY
         )
         allJobTypes.forEach { type ->
             resumePendingJobs(type)

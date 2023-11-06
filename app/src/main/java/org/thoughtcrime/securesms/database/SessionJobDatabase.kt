@@ -7,7 +7,7 @@ import org.session.libsession.messaging.jobs.AttachmentDownloadJob
 import org.session.libsession.messaging.jobs.AttachmentUploadJob
 import org.session.libsession.messaging.jobs.BackgroundGroupAddJob
 import org.session.libsession.messaging.jobs.GroupAvatarDownloadJob
-import org.session.libsession.messaging.jobs.InviteContactJob
+import org.session.libsession.messaging.jobs.InviteContactsJob
 import org.session.libsession.messaging.jobs.Job
 import org.session.libsession.messaging.jobs.MessageReceiveJob
 import org.session.libsession.messaging.jobs.MessageSendJob
@@ -74,11 +74,11 @@ class SessionJobDatabase(context: Context, helper: SQLCipherOpenHelper) : Databa
         return result.firstOrNull { job -> job.attachmentID == attachmentID }
     }
 
-    fun getGroupInviteJob(groupSessionId: String, memberSessionId: String): InviteContactJob? {
+    fun getGroupInviteJob(groupSessionId: String, memberSessionId: String): InviteContactsJob? {
         val database = databaseHelper.readableDatabase
-        return database.getAll(sessionJobTable, "$jobType = ?", arrayOf(InviteContactJob.KEY)) { cursor ->
-            jobFromCursor(cursor) as? InviteContactJob
-        }.firstOrNull { it != null && it.groupSessionId == groupSessionId && it.memberSessionId == memberSessionId }
+        return database.getAll(sessionJobTable, "$jobType = ?", arrayOf(InviteContactsJob.KEY)) { cursor ->
+            jobFromCursor(cursor) as? InviteContactsJob
+        }.firstOrNull { it != null && it.groupSessionId == groupSessionId && it.memberSessionIds.contains(memberSessionId) }
     }
 
     fun getMessageSendJob(messageSendJobID: String): MessageSendJob? {
