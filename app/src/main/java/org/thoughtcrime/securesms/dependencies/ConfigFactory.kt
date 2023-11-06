@@ -316,7 +316,7 @@ class ConfigFactory(
         )
     }
 
-    override fun persist(forConfigObject: Config, timestamp: Long) {
+    override fun persist(forConfigObject: Config, timestamp: Long, forPublicKey: String?) {
         try {
             listeners.forEach { listener ->
                 listener.notifyUpdates(forConfigObject)
@@ -326,6 +326,8 @@ class ConfigFactory(
                 is Contacts -> persistContactsConfigDump(timestamp)
                 is ConversationVolatileConfig -> persistConvoVolatileConfigDump(timestamp)
                 is UserGroupsConfig -> persistUserGroupsConfigDump(timestamp)
+                is GroupMembersConfig -> persistGroupConfigDump(forConfigObject, SessionId.from(forPublicKey!!), timestamp)
+                is GroupInfoConfig -> persistGroupConfigDump(forConfigObject, SessionId.from(forPublicKey!!), timestamp)
                 else -> throw UnsupportedOperationException("Can't support type of ${forConfigObject::class.simpleName} yet")
             }
         } catch (e: Exception) {

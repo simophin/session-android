@@ -252,8 +252,9 @@ data class ConfigurationSyncJob(val destination: Destination) : Job {
                         "Successfully removed the deleted hashes from ${config.javaClass.simpleName}"
                 )
                 // dump and write config after successful
-                if (config is ConfigBase && config.needsDump()) { // usually this will be true?
-                    configFactory.persist(config, (message.params["timestamp"] as String).toLong())
+                if (config is ConfigBase && config.needsDump()) { // usually this will be true? ))
+                    val groupPubKey = if (destination is Destination.ClosedGroup) destination.publicKey else null
+                    configFactory.persist(config, (message.params["timestamp"] as String).toLong(), groupPubKey)
                 } else if (config is GroupKeysConfig && config.needsDump()) {
                     Log.d("Loki", "Should persist the GroupKeysConfig")
                 }

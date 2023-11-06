@@ -146,7 +146,6 @@ fun CreateGroup(
                                 }
                             }
                         }
-
                     }
                 }
                 // Group list
@@ -182,7 +181,8 @@ fun CreateGroup(
                 .fillMaxSize()
                 .background(Color.Gray.copy(alpha = 0.5f))) {
                 CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.Center)
+                    modifier = Modifier.align(Alignment.Center),
+                    color = MaterialTheme.colors.secondary
                 )
             }
         }

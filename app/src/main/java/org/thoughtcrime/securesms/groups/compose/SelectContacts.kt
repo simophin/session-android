@@ -41,7 +41,7 @@ fun SelectContacts(
             contactListState
             .filter { contact ->
                 contact.getSearchName().lowercase()
-                    .contains(queryFilter)
+                    .contains(queryFilter.lowercase())
             }
                 .toList()
         }

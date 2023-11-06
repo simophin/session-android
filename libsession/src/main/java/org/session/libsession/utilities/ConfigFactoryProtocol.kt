@@ -26,7 +26,7 @@ interface ConfigFactoryProtocol {
                            free: Boolean = true): GroupKeysConfig?
 
     fun getUserConfigs(): List<ConfigBase>
-    fun persist(forConfigObject: Config, timestamp: Long)
+    fun persist(forConfigObject: Config, timestamp: Long, forPublicKey: String? = null)
 
     fun conversationInConfig(publicKey: String?, groupPublicKey: String?, openGroupId: String?, visibleOnly: Boolean): Boolean
     fun canPerformChange(variant: String, publicKey: String, changeTimestampMs: Long): Boolean
