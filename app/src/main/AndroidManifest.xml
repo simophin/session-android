@@ -153,6 +153,10 @@
             android:label="@string/blocked_contacts_title"
             />
         <activity
+            android:name="org.thoughtcrime.securesms.groups.EditLegacyClosedGroupActivity"
+            android:label="@string/activity_edit_closed_group_title"
+            android:screenOrientation="portrait" />
+        <activity
             android:name="org.thoughtcrime.securesms.groups.EditClosedGroupActivity"
             android:label="@string/activity_edit_closed_group_title"
             android:screenOrientation="portrait" />

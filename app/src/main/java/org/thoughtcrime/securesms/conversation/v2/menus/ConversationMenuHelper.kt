@@ -38,8 +38,8 @@ import org.thoughtcrime.securesms.contacts.SelectContactsActivity
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.conversation.v2.utilities.NotificationUtils
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
-import org.thoughtcrime.securesms.groups.EditClosedGroupActivity
-import org.thoughtcrime.securesms.groups.EditClosedGroupActivity.Companion.groupIDKey
+import org.thoughtcrime.securesms.groups.EditLegacyClosedGroupActivity
+import org.thoughtcrime.securesms.groups.EditLegacyClosedGroupActivity.Companion.groupIDKey
 import org.thoughtcrime.securesms.preferences.PrivacySettingsActivity
 import org.thoughtcrime.securesms.service.WebRtcCallService
 import org.thoughtcrime.securesms.showSessionDialog
@@ -281,7 +281,7 @@ object ConversationMenuHelper {
 
     private fun editClosedGroup(context: Context, thread: Recipient) {
         if (!thread.isLegacyClosedGroupRecipient) { return }
-        val intent = Intent(context, EditClosedGroupActivity::class.java)
+        val intent = Intent(context, EditLegacyClosedGroupActivity::class.java)
         val groupID: String = thread.address.toGroupString()
         intent.putExtra(groupIDKey, groupID)
         context.startActivity(intent)

@@ -1251,6 +1251,9 @@ open class Storage(
         }
     }
 
+    override fun getLibSessionClosedGroup(groupSessionId: String) =
+        configFactory.userGroups?.getClosedGroup(groupSessionId)
+
     override fun setServerCapabilities(server: String, capabilities: List<String>) {
         return DatabaseComponent.get(context).lokiAPIDatabase().setServerCapabilities(server, capabilities)
     }
