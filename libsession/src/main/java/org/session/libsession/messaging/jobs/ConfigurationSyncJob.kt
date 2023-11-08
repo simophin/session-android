@@ -123,7 +123,6 @@ data class ConfigurationSyncJob(val destination: Destination) : Job {
                    namespace(),
                    message,
                    signingKey,
-                   ed25519PubKey
                )
             } else SnodeAPI.buildAuthenticatedStoreBatchInfo(
                 namespace(),

@@ -110,7 +110,6 @@ import javax.inject.Inject;
 import dagger.hilt.EntryPoints;
 import dagger.hilt.android.HiltAndroidApp;
 import kotlin.Unit;
-import kotlinx.coroutines.Job;
 import network.loki.messenger.BuildConfig;
 import network.loki.messenger.libsession_util.Config;
 import network.loki.messenger.libsession_util.UserProfile;
@@ -138,7 +137,6 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
     public MessageNotifier messageNotifier = null;
     public Poller poller = null;
     public Broadcaster broadcaster = null;
-    private Job firebaseInstanceIdJob;
     private WindowDebouncer conversationListDebouncer;
     private HandlerThread conversationListHandlerThread;
     private Handler conversationListHandler;
@@ -506,9 +504,6 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
     }
 
     public void clearAllData(boolean isMigratingToV2KeyPair) {
-        if (firebaseInstanceIdJob != null && firebaseInstanceIdJob.isActive()) {
-            firebaseInstanceIdJob.cancel(null);
-        }
         String displayName = TextSecurePreferences.getProfileName(this);
         boolean isUsingFCM = TextSecurePreferences.isPushEnabled(this);
         TextSecurePreferences.clearAll(this);
