@@ -5,11 +5,13 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -30,7 +32,9 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -264,12 +268,10 @@ fun SearchBar(
 
 @Composable
 fun NavigationBar(
-    //
     title: String,
     titleAlignment: Alignment = Alignment.Center,
-    // if
     onBack: (() -> Unit)? = null,
-    onClose: (()->Unit)? = null,
+    actionElement: (@Composable BoxScope.() -> Unit)? = null
 ) {
     Row(
         Modifier
@@ -278,6 +280,8 @@ fun NavigationBar(
         // Optional back button, layout should still take up space
         Box(modifier = Modifier
             .fillMaxHeight()
+            .aspectRatio(1.0f, true)
+            .padding(16.dp)
         ) {
             if (onBack != null) {
                 Icon(
@@ -286,8 +290,10 @@ fun NavigationBar(
                         id = R.string.new_conversation_dialog_back_button_content_description
                     ),
                     Modifier
-                        .clickable { onBack() }
-                        .padding(16.dp)
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = rememberRipple(bounded = false, radius = 16.dp),
+                        ) { onBack() }
                         .align(Alignment.Center)
                 )
             }
@@ -305,32 +311,41 @@ fun NavigationBar(
                 fontWeight = FontWeight.Bold
             )
         }
-        // Optional close button
-        Box(modifier = Modifier
-            .fillMaxHeight()
-            .align(Alignment.CenterVertically)
-        ) {
-            if (onClose != null) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_baseline_close_24),
-                    contentDescription = stringResource(
-                        id = R.string.new_conversation_dialog_close_button_content_description
-                    ),
-                    Modifier
-                        .clickable { onClose() }
-                        .padding(16.dp)
-                        .align(Alignment.Center)
-                )
+        // Optional action
+        if (actionElement != null) {
+            Box(modifier = Modifier
+                .fillMaxHeight()
+                .align(Alignment.CenterVertically)
+                .aspectRatio(1.0f, true),
+                contentAlignment = Alignment.Center
+            ) {
+                actionElement(this)
             }
         }
     }
 }
 
 @Composable
+fun BoxScope.CloseIcon(onClose: ()->Unit) {
+    Icon(
+        painter = painterResource(id = R.drawable.ic_baseline_close_24),
+        contentDescription = stringResource(
+            id = R.string.new_conversation_dialog_close_button_content_description
+        ),
+        Modifier
+            .clickable { onClose() }
+            .align(Alignment.Center)
+            .padding(16.dp)
+    )
+}
+
+@Composable
 @Preview
 fun PreviewNavigationBar(@PreviewParameter(provider = ThemeResPreviewParameterProvider::class) themeResId: Int) {
     PreviewTheme(themeResId = themeResId) {
-        NavigationBar(title = "Create Group", onBack = {}, onClose = {})
+        NavigationBar(title = "Create Group", onBack = {}, actionElement = {
+            CloseIcon {}
+        })
     }
 }
 

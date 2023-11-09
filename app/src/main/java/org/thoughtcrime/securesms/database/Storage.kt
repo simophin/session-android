@@ -16,6 +16,7 @@ import network.loki.messenger.libsession_util.UserProfile
 import network.loki.messenger.libsession_util.util.BaseCommunityInfo
 import network.loki.messenger.libsession_util.util.Conversation
 import network.loki.messenger.libsession_util.util.ExpiryMode
+import network.loki.messenger.libsession_util.util.GroupDisplayInfo
 import network.loki.messenger.libsession_util.util.GroupInfo
 import network.loki.messenger.libsession_util.util.UserPic
 import org.session.libsession.avatars.AvatarHelper
@@ -1251,8 +1252,13 @@ open class Storage(
         }
     }
 
-    override fun getLibSessionClosedGroup(groupSessionId: String) =
-        configFactory.userGroups?.getClosedGroup(groupSessionId)
+    override fun getLibSessionClosedGroup(groupSessionId: String): GroupInfo.ClosedGroupInfo? {
+        return configFactory.userGroups?.getClosedGroup(groupSessionId)
+    }
+
+    override fun getClosedGroupDisplayInfo(groupSessionId: String): GroupDisplayInfo? {
+        return configFactory.getGroupInfoConfig(SessionId.from(groupSessionId))?.use(GroupInfoConfig::displayInfo)
+    }
 
     override fun setServerCapabilities(server: String, capabilities: List<String>) {
         return DatabaseComponent.get(context).lokiAPIDatabase().setServerCapabilities(server, capabilities)

@@ -4,6 +4,7 @@ import network.loki.messenger.libsession_util.util.BaseCommunityInfo
 import network.loki.messenger.libsession_util.util.ConfigPush
 import network.loki.messenger.libsession_util.util.Contact
 import network.loki.messenger.libsession_util.util.Conversation
+import network.loki.messenger.libsession_util.util.GroupDisplayInfo
 import network.loki.messenger.libsession_util.util.GroupInfo
 import network.loki.messenger.libsession_util.util.GroupMember
 import network.loki.messenger.libsession_util.util.UserPic
@@ -262,6 +263,17 @@ class GroupInfoConfig(pointer: Long): ConfigBase(pointer), Closeable {
     external fun setDescription(newDescription: String)
     external fun setProfilePic(newProfilePic: UserPic)
     external fun storageNamespace(): Long
+
+    fun displayInfo() = GroupDisplayInfo(
+        id = id(),
+        name = getName(),
+        description = null,
+        created = getCreated(),
+        destroyed = isDestroyed(),
+        expiryTimer = getExpiryTimer(),
+        profilePic = getProfilePic()
+    )
+
     override fun close() {
         free()
     }

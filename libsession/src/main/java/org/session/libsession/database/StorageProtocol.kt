@@ -3,7 +3,7 @@ package org.session.libsession.database
 import android.content.Context
 import android.net.Uri
 import network.loki.messenger.libsession_util.Config
-import network.loki.messenger.libsession_util.util.Conversation
+import network.loki.messenger.libsession_util.util.GroupDisplayInfo
 import network.loki.messenger.libsession_util.util.GroupInfo
 import org.session.libsession.messaging.BlindedIdMapping
 import org.session.libsession.messaging.calls.CallMessageType
@@ -34,7 +34,6 @@ import org.session.libsession.utilities.recipients.Recipient.RecipientSettings
 import org.session.libsignal.crypto.ecc.ECKeyPair
 import org.session.libsignal.messages.SignalServiceAttachmentPointer
 import org.session.libsignal.messages.SignalServiceGroup
-import org.session.libsignal.protos.SignalServiceProtos.ConfigurationMessage.ClosedGroup
 import org.session.libsignal.utilities.SessionId
 import org.session.libsignal.utilities.guava.Optional
 import network.loki.messenger.libsession_util.util.Contact as LibSessionContact
@@ -165,6 +164,7 @@ interface StorageProtocol {
     fun acceptClosedGroupInvite(groupId: SessionId, name: String, authData: ByteArray, invitingAdmin: SessionId)
     fun setGroupInviteCompleteIfNeeded(approved: Boolean, invitee: String, closedGroup: SessionId)
     fun getLibSessionClosedGroup(groupSessionId: String): GroupInfo.ClosedGroupInfo?
+    fun getClosedGroupDisplayInfo(groupSessionId: String): GroupDisplayInfo?
 
     // Groups
     fun getAllGroups(includeInactive: Boolean): List<GroupRecord>

@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import network.loki.messenger.R
 import org.session.libsession.messaging.contacts.Contact
 import org.thoughtcrime.securesms.home.search.getSearchName
+import org.thoughtcrime.securesms.ui.CloseIcon
 import org.thoughtcrime.securesms.ui.NavigationBar
 import org.thoughtcrime.securesms.ui.SearchBar
 
@@ -54,7 +55,7 @@ fun SelectContacts(
         NavigationBar(
             title = stringResource(id = R.string.activity_create_closed_group_select_contacts),
             onBack = onBack,
-            onClose = onClose
+            actionElement = { CloseIcon(onClose) }
         )
 
         LazyColumn(modifier = Modifier.weight(1f)) {

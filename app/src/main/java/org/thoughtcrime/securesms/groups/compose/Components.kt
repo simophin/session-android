@@ -77,11 +77,11 @@ fun LazyListScope.multiSelectMemberList(
             verticalAlignment = CenterVertically
         ) {
             ContactPhoto(
-                contact = contact,
+                contact.sessionID,
                 modifier = Modifier
                     .size(48.dp)
             )
-            MemberName(name = contact.getSearchName())
+            MemberName(name = contact.getSearchName(), modifier = Modifier.padding(16.dp))
             RadioButton(selected = isSelected, onClick = update)
         }
     }
@@ -89,13 +89,13 @@ fun LazyListScope.multiSelectMemberList(
 
 @Composable
 fun RowScope.MemberName(
-    name: String
+    name: String,
+    modifier: Modifier = Modifier
 ) = Text(
     text = name,
     fontWeight = FontWeight.Bold,
-    modifier = Modifier
+    modifier = modifier
         .weight(1f)
-        .padding(16.dp)
         .align(CenterVertically)
 )
 
@@ -120,12 +120,12 @@ fun LazyListScope.deleteMemberList(
         items(contacts) { contact ->
             Row(modifier.fillMaxWidth()) {
                 ContactPhoto(
-                    contact,
+                    contact.sessionID,
                     modifier = Modifier
                         .size(48.dp)
                         .align(CenterVertically)
                 )
-                MemberName(name = contact.getSearchName())
+                MemberName(name = contact.getSearchName(), modifier = Modifier.padding(16.dp))
                 Image(
                     painterResource(id = R.drawable.ic_baseline_close_24),
                     null,
@@ -143,7 +143,7 @@ fun LazyListScope.deleteMemberList(
 
 
 @Composable
-fun RowScope.ContactPhoto(contact: Contact, modifier: Modifier = Modifier) {
+fun RowScope.ContactPhoto(sessionId: String, modifier: Modifier = Modifier) {
     return if (LocalPreviewMode.current) {
         Image(
             painterResource(id = R.drawable.ic_profile_default),
@@ -158,8 +158,8 @@ fun RowScope.ContactPhoto(contact: Contact, modifier: Modifier = Modifier) {
     } else {
         val context = LocalContext.current
         // Ideally we migrate to something that doesn't require recipient, or get contact photo another way
-        val recipient = remember(contact) {
-            Recipient.from(context, Address.fromSerialized(contact.sessionID), false)
+        val recipient = remember(sessionId) {
+            Recipient.from(context, Address.fromSerialized(sessionId), false)
         }
         Avatar(recipient)
     }

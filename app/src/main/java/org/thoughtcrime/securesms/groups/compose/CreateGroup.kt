@@ -34,6 +34,7 @@ import network.loki.messenger.R
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.ui.CellWithPaddingAndMargin
+import org.thoughtcrime.securesms.ui.CloseIcon
 import org.thoughtcrime.securesms.ui.Divider
 import org.thoughtcrime.securesms.ui.EditableAvatar
 import org.thoughtcrime.securesms.ui.NavigationBar
@@ -69,7 +70,7 @@ fun CreateGroup(
                         NavigationBar(
                             title = stringResource(id = R.string.activity_create_group_title),
                             onBack = onBack,
-                            onClose = onClose
+                            actionElement = { CloseIcon(onClose) }
                         )
                         // Editable avatar (future chunk)
                         EditableAvatar(
