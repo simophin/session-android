@@ -32,10 +32,18 @@ class ConversationSettingsViewModel(
     }
 
     fun isUserGroupAdmin(): Boolean = recipient?.let { recipient ->
-        if (!recipient.isLegacyClosedGroupRecipient || !recipient.isClosedGroupRecipient) return@let false
-        val localUserAddress = prefs.getLocalNumber() ?: return@let false
-        val group = storage.getGroup(recipient.address.toGroupString())
-        group?.admins?.contains(Address.fromSerialized(localUserAddress)) ?: false // this will have to be replaced for new closed groups
+        when {
+            recipient.isLegacyClosedGroupRecipient -> {
+                val localUserAddress = prefs.getLocalNumber() ?: return@let false
+                val group = storage.getGroup(recipient.address.toGroupString())
+                group?.admins?.contains(Address.fromSerialized(localUserAddress)) ?: false // this will have to be replaced for new closed groups
+            }
+            recipient.isClosedGroupRecipient -> {
+                val group = storage.getLibSessionClosedGroup(recipient.address.serialize()) ?: return@let false
+                group.hasAdminKey()
+            }
+            else -> false
+        }
     } ?: false
 
     fun clearMessages(forAll: Boolean) {
