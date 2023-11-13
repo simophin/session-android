@@ -40,12 +40,11 @@ class CreateGroupTests {
             AppTheme {
                 CreateGroup(
                     viewState = ViewState.DEFAULT,
-                    createGroupState = CreateGroupState("", "", emptySet()),
-                    onCreate = { submitted ->
-                        postedGroup = submitted
-                    },
                     onBack = { backPressed = true },
-                    onClose = { closePressed = true })
+                    onClose = { closePressed = true },
+                    onSelectContact = {},
+                    updateState = {}
+                )
             }
         }
 
@@ -67,7 +66,6 @@ class CreateGroupTests {
         val nameDesc = application.getString(R.string.AccessibilityId_closed_group_edit_group_name)
         val buttonDesc = application.getString(R.string.AccessibilityId_create_closed_group_create_button)
 
-        var postedGroup: CreateGroupState? = null
         var backPressed = false
         var closePressed = false
 
@@ -75,12 +73,11 @@ class CreateGroupTests {
             AppTheme {
                 CreateGroup(
                     viewState = ViewState.DEFAULT,
-                    createGroupState = CreateGroupState("", "", emptySet()),
-                    onCreate = { submitted ->
-                        postedGroup = submitted
-                    },
                     onBack = { backPressed = true },
-                    onClose = { closePressed = true })
+                    onClose = { closePressed = true },
+                    updateState = {},
+                    onSelectContact = {}
+                )
             }
         }
         with(composeTest) {
@@ -88,7 +85,6 @@ class CreateGroupTests {
             onNode(hasContentDescriptionExactly(buttonDesc)).performClick()
         }
 
-        assertThat(postedGroup, nullValue())
         assertThat(backPressed, equalTo(false))
         assertThat(closePressed, equalTo(false))
     }
@@ -106,12 +102,11 @@ class CreateGroupTests {
             AppTheme {
                 CreateGroup(
                     viewState = ViewState.DEFAULT,
-                    createGroupState = CreateGroupState("", "", emptySet()),
-                    onCreate = { submitted ->
-                        postedGroup = submitted
-                    },
                     onBack = { backPressed = true },
-                    onClose = { })
+                    onClose = {},
+                    onSelectContact = {},
+                    updateState = {}
+                )
             }
         }
 
@@ -136,12 +131,11 @@ class CreateGroupTests {
             AppTheme {
                 CreateGroup(
                     viewState = ViewState.DEFAULT,
-                    createGroupState = CreateGroupState("", "", emptySet()),
-                    onCreate = { submitted ->
-                        postedGroup = submitted
-                    },
                     onBack = { },
-                    onClose = { closePressed = true })
+                    onClose = { closePressed = true },
+                    onSelectContact = {},
+                    updateState = {}
+                )
             }
         }
 
