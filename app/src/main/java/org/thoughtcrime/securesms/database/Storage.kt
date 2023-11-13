@@ -950,7 +950,7 @@ open class Storage(
             members = groupMembers) ?: return Optional.absent()
 
         val newGroupRecipient = group.groupSessionId.hexString()
-        val configTtl = 1 * 24 * 60 * 60 * 1000L // TODO: just testing here, 1 day so we don't fill large space on network
+        val configTtl = 14 * 24 * 60 * 60 * 1000L
         // Test the sending
         val keyPush = groupKeys.pendingConfig() ?: return Optional.absent()
 
@@ -1023,7 +1023,7 @@ open class Storage(
             groupKeys.free()
             groupInfo.free()
             groupMembers.free()
-            val groupRecipient = Recipient.from(context, Address.fromSerialized(newGroupRecipient), false)
+            val groupRecipient = Recipient.from(context, fromSerialized(newGroupRecipient), false)
             setRecipientApprovedMe(groupRecipient, true)
             setRecipientApproved(groupRecipient, true)
             pollerFactory.updatePollers()

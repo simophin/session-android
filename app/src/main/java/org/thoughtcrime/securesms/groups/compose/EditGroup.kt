@@ -188,14 +188,18 @@ fun EditGroupView(
                         Column(modifier = Modifier
                             .weight(1f)
                             .align(CenterVertically)) {
-                            Row(modifier = Modifier.fillMaxSize()) {
+                            Row(modifier = Modifier.fillMaxWidth().weight(1f)) {
                                 // Needs
-                                MemberName(name = member.memberName ?: member.memberSessionId, modifier = Modifier.align(CenterVertically))
+                                MemberName(
+                                    name = member.memberName ?: member.memberSessionId,
+                                    modifier = Modifier.align(CenterVertically).fillMaxSize()
+                                )
                             }
                             if (member.memberState !in listOf(MemberState.Member, MemberState.Admin)) {
                                 Text(
                                     text = member.memberState.toString(),
-                                    modifier = Modifier.fillMaxWidth(),
+                                    modifier = Modifier.fillMaxWidth()
+                                        .weight(1f),
                                 )
                             }
                         }
