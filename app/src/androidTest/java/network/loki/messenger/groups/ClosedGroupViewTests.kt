@@ -20,7 +20,6 @@ import org.thoughtcrime.securesms.database.ConfigDatabase
 import org.thoughtcrime.securesms.database.Storage
 import org.thoughtcrime.securesms.dependencies.ConfigFactory
 import org.thoughtcrime.securesms.groups.CreateGroupViewModel
-import org.thoughtcrime.securesms.groups.compose.CreateGroupState
 
 @RunWith(MockitoJUnitRunner::class)
 class ClosedGroupViewTests {
@@ -54,38 +53,23 @@ class ClosedGroupViewTests {
     @Test
     fun tryCreateGroup_shouldErrorOnEmptyName() {
         val viewModel = createViewModel()
-        val state = CreateGroupState(
-            groupName = "",
-            groupDescription = "",
-            members = emptySet()
-        )
-        viewModel.tryCreateGroup(state)
+        viewModel.tryCreateGroup()
         assertNotNull(viewModel.viewState.value?.error)
     }
 
     @Test
     fun tryCreateGroup_shouldErrorOnEmptyMembers() {
         val viewModel = createViewModel()
-        val state = CreateGroupState(
-            groupName = "group",
-            groupDescription = "anything",
-            members = emptySet()
-        )
-        viewModel.tryCreateGroup(state)
+        viewModel.tryCreateGroup()
         assertNotNull(viewModel.viewState.value?.error)
     }
 
     @Test
     fun tryCreateGroup_shouldSucceedWithCorrectParameters() {
         val viewModel = createViewModel()
-        val state = CreateGroupState(
-            groupName = "group",
-            groupDescription = "",
-            members = emptySet()
-        )
-        assertNotNull(viewModel.tryCreateGroup(state))
+        assertNotNull(viewModel.tryCreateGroup())
     }
 
-    private fun createViewModel() = CreateGroupViewModel(textSecurePreferences, storage)
+    private fun createViewModel() = CreateGroupViewModel(storage)
 
 }

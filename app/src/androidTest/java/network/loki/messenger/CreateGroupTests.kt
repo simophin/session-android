@@ -14,7 +14,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.groups.compose.CreateGroup
-import org.thoughtcrime.securesms.groups.compose.CreateGroupState
 import org.thoughtcrime.securesms.groups.compose.ViewState
 import org.thoughtcrime.securesms.ui.AppTheme
 
@@ -32,7 +31,6 @@ class CreateGroupTests {
         val nameDesc = application.getString(R.string.AccessibilityId_closed_group_edit_group_name)
         val buttonDesc = application.getString(R.string.AccessibilityId_create_closed_group_create_button)
 
-        var postedGroup: CreateGroupState? = null
         var backPressed = false
         var closePressed = false
 
@@ -53,7 +51,6 @@ class CreateGroupTests {
             onNode(hasContentDescriptionExactly(buttonDesc)).performClick()
         }
 
-        assertThat(postedGroup!!.groupName, equalTo("Name"))
         assertThat(backPressed, equalTo(false))
         assertThat(closePressed, equalTo(false))
 
@@ -95,7 +92,6 @@ class CreateGroupTests {
         // Accessibility IDs
         val backDesc = application.getString(R.string.new_conversation_dialog_back_button_content_description)
 
-        var postedGroup: CreateGroupState? = null
         var backPressed = false
 
         composeTest.setContent {
@@ -114,7 +110,6 @@ class CreateGroupTests {
             onNode(hasContentDescriptionExactly(backDesc)).performClick()
         }
 
-        assertThat(postedGroup, nullValue())
         assertThat(backPressed, equalTo(true))
     }
 
@@ -123,8 +118,6 @@ class CreateGroupTests {
         val application = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as ApplicationContext
         // Accessibility IDs
         val closeDesc = application.getString(R.string.new_conversation_dialog_close_button_content_description)
-
-        var postedGroup: CreateGroupState? = null
         var closePressed = false
 
         composeTest.setContent {
@@ -143,7 +136,6 @@ class CreateGroupTests {
             onNode(hasContentDescriptionExactly(closeDesc)).performClick()
         }
 
-        assertThat(postedGroup, nullValue())
         assertThat(closePressed, equalTo(true))
     }
 

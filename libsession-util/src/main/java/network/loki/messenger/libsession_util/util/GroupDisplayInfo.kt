@@ -9,5 +9,6 @@ data class GroupDisplayInfo(
     val name: String,
     val description: String?,
     val destroyed: Boolean,
-    val profilePic: UserPic
+    val profilePic: UserPic,
+    val isUserAdmin: Boolean,
 )

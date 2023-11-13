@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.rememberScaffoldState
@@ -58,6 +59,58 @@ fun EditClosedGroupScreen(
         },
         viewState = viewState as EditGroupViewState.Group
     )
+
+}
+
+
+class EditGroupViewModel @AssistedInject constructor(
+    @Assisted private val groupSessionId: String,
+    private val storage: StorageProtocol): ViewModel() {
+
+    val viewState = viewModelScope.launchMolecule(Immediate) {
+
+        val currentUserId = rememberSaveable {
+            storage.getUserPublicKey()!!
+        }
+
+        val closedGroupInfo = remember {
+            storage.getLibSessionClosedGroup(groupSessionId)!!
+        }
+
+        val closedGroup = remember(closedGroupInfo) {
+            storage.getClosedGroupDisplayInfo(groupSessionId)!!
+        }
+
+        val closedGroupMembers = remember(closedGroupInfo) {
+            storage.getMembers(groupSessionId).map { member ->
+                MemberViewModel(
+                    memberName = member.name,
+                    memberSessionId = member.sessionId,
+                    currentUser = member.sessionId == currentUserId,
+                    memberState = memberStateOf(member)
+                )
+            }
+        }
+
+        val name = closedGroup.name
+        val description = closedGroup.description
+
+        EditGroupState(
+            EditGroupViewState.Group(
+                groupName = name,
+                groupDescription = description,
+                memberStateList = closedGroupMembers,
+                admin = closedGroup.isUserAdmin
+            )
+        ) { event ->
+
+        }
+    }
+
+    @AssistedFactory
+    interface Factory {
+        fun create(groupSessionId: String): EditGroupViewModel
+    }
 
 }
 
@@ -114,6 +167,14 @@ fun EditGroupView(
                         .align(CenterVertically),
                 )
                 // if admin add member outline button TODO
+                if (viewState.admin) {
+                    OutlinedButton(onClick = { /*TODO*/ }) {
+                        Text(
+                            text = stringResource(id = R.string.activity_edit_closed_group_add_members),
+                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                        )
+                    }
+                }
             }
             Divider()
             LazyColumn(modifier = Modifier) {
@@ -124,9 +185,18 @@ fun EditGroupView(
                             .fillMaxWidth()
                             .padding(vertical = 8.dp, horizontal = 16.dp)) {
                         ContactPhoto(member.memberSessionId)
-                        Column(modifier = Modifier.weight(1f)) {
+                        Column(modifier = Modifier
+                            .weight(1f)
+                            .align(CenterVertically)) {
                             Row(modifier = Modifier.fillMaxSize()) {
+                                // Needs
                                 MemberName(name = member.memberName ?: member.memberSessionId, modifier = Modifier.align(CenterVertically))
+                            }
+                            if (member.memberState !in listOf(MemberState.Member, MemberState.Admin)) {
+                                Text(
+                                    text = member.memberState.toString(),
+                                    modifier = Modifier.fillMaxWidth(),
+                                )
                             }
                         }
                     }
@@ -135,58 +205,6 @@ fun EditGroupView(
             }
         }
     }
-}
-
-
-
-class EditGroupViewModel @AssistedInject constructor(
-    @Assisted private val groupSessionId: String,
-    private val storage: StorageProtocol): ViewModel() {
-
-    val viewState = viewModelScope.launchMolecule(Immediate) {
-
-        val currentUserId = rememberSaveable {
-            storage.getUserPublicKey()!!
-        }
-
-        val closedGroupInfo = remember {
-            storage.getLibSessionClosedGroup(groupSessionId)!!
-        }
-
-        val closedGroup = remember(closedGroupInfo) {
-            storage.getClosedGroupDisplayInfo(groupSessionId)!!
-        }
-
-        val closedGroupMembers = remember(closedGroupInfo) {
-            storage.getMembers(groupSessionId).map { member ->
-                MemberViewModel(
-                    memberName = member.name,
-                    memberSessionId = member.sessionId,
-                    currentUser = member.sessionId == currentUserId,
-                    memberState = memberStateOf(member)
-                )
-            }
-        }
-
-        val name = closedGroup.name
-        val description = closedGroup.description
-
-        EditGroupState(
-            EditGroupViewState.Group(
-                groupName = name,
-                groupDescription = description,
-                memberStateList = closedGroupMembers,
-            )
-        ) { event ->
-
-        }
-    }
-
-    @AssistedFactory
-    interface Factory {
-        fun create(groupSessionId: String): EditGroupViewModel
-    }
-
 }
 
 data class EditGroupState(
@@ -226,5 +244,6 @@ sealed class EditGroupViewState {
         val groupName: String,
         val groupDescription: String?,
         val memberStateList: List<MemberViewModel>,
+        val admin: Boolean
     ): EditGroupViewState()
 }

@@ -1257,7 +1257,21 @@ open class Storage(
     }
 
     override fun getClosedGroupDisplayInfo(groupSessionId: String): GroupDisplayInfo? {
-        return configFactory.getGroupInfoConfig(SessionId.from(groupSessionId))?.use(GroupInfoConfig::displayInfo)
+        val infoConfig = configFactory.getGroupInfoConfig(SessionId.from(groupSessionId)) ?: return null
+        val isAdmin = configFactory.userGroups?.getClosedGroup(groupSessionId)?.hasAdminKey() ?: return null
+
+        return infoConfig.use { info ->
+            GroupDisplayInfo(
+                id = info.id(),
+                name = info.getName(),
+                profilePic = info.getProfilePic(),
+                expiryTimer = info.getExpiryTimer(),
+                destroyed = false,
+                created = info.getCreated(),
+                description = info.getDescription(),
+                isUserAdmin = isAdmin
+            )
+        }
     }
 
     override fun setServerCapabilities(server: String, capabilities: List<String>) {
