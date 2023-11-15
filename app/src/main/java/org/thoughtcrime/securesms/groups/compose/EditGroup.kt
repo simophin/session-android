@@ -2,7 +2,7 @@ package org.thoughtcrime.securesms.groups.compose
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
@@ -39,6 +40,7 @@ import network.loki.messenger.libsession_util.util.GroupMember
 import org.session.libsession.database.StorageProtocol
 import org.thoughtcrime.securesms.ui.Divider
 import org.thoughtcrime.securesms.ui.NavigationBar
+import org.thoughtcrime.securesms.ui.PreviewTheme
 
 @EditGroupNavGraph(start = true)
 @Composable
@@ -187,19 +189,23 @@ fun EditGroupView(
                         ContactPhoto(member.memberSessionId)
                         Column(modifier = Modifier
                             .weight(1f)
+                            .fillMaxHeight()
+                            .padding(horizontal = 8.dp)
                             .align(CenterVertically)) {
-                            Row(modifier = Modifier.fillMaxWidth().weight(1f)) {
-                                // Needs
-                                MemberName(
-                                    name = member.memberName ?: member.memberSessionId,
-                                    modifier = Modifier.align(CenterVertically).fillMaxSize()
-                                )
-                            }
+                            // Member's name
+                            Text(
+                                text = member.memberName ?: member.memberSessionId,
+                                style = MemberNameStyle,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(1.dp)
+                            )
                             if (member.memberState !in listOf(MemberState.Member, MemberState.Admin)) {
                                 Text(
                                     text = member.memberState.toString(),
-                                    modifier = Modifier.fillMaxWidth()
-                                        .weight(1f),
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(1.dp)
                                 )
                             }
                         }
@@ -250,4 +256,27 @@ sealed class EditGroupViewState {
         val memberStateList: List<MemberViewModel>,
         val admin: Boolean
     ): EditGroupViewState()
+}
+
+@Preview
+@Composable
+fun PreviewList() {
+
+    val oneMember = MemberViewModel(
+        "Test User",
+        "05abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234",
+        MemberState.InviteSent,
+        false
+    )
+
+    val viewState = EditGroupViewState.Group(
+        "Preview",
+        "This is a preview description",
+        listOf(oneMember),
+        false
+    )
+
+    PreviewTheme(themeResId = R.style.Ocean_Dark) {
+        EditGroupView(onBack = { /*TODO*/ }, viewState =viewState)
+    }
 }
