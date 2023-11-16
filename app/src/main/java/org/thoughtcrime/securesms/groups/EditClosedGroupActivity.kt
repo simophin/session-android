@@ -6,6 +6,7 @@ import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.navigation.dependency
 import dagger.hilt.android.AndroidEntryPoint
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
+import org.thoughtcrime.securesms.groups.compose.EditGroupInviteViewModel
 import org.thoughtcrime.securesms.groups.compose.EditGroupViewModel
 import org.thoughtcrime.securesms.groups.destinations.EditClosedGroupScreenDestination
 import org.thoughtcrime.securesms.ui.AppTheme
@@ -18,7 +19,8 @@ class EditClosedGroupActivity: PassphraseRequiredActionBarActivity() {
         const val groupIDKey = "EditClosedGroupActivity_groupID"
     }
 
-    @Inject lateinit var factory: EditGroupViewModel.Factory
+    @Inject lateinit var editFactory: EditGroupViewModel.Factory
+    @Inject lateinit var inviteFactory: EditGroupInviteViewModel.Factory
 
     private fun onFinish() {
         finish()
@@ -32,7 +34,10 @@ class EditClosedGroupActivity: PassphraseRequiredActionBarActivity() {
                     navGraph = NavGraphs.editGroup,
                     dependenciesContainerBuilder = {
                         dependency(NavGraphs.editGroup) {
-                            factory.create(intent.getStringExtra(groupIDKey)!!)
+                            editFactory.create(intent.getStringExtra(groupIDKey)!!)
+                        }
+                        dependency(NavGraphs.editGroup) {
+                            inviteFactory.create(intent.getStringExtra(groupIDKey)!!)
                         }
                         dependency(EditClosedGroupScreenDestination) {
                             ::onFinish
