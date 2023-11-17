@@ -1274,6 +1274,12 @@ open class Storage(
         }
     }
 
+    override fun inviteClosedGroupMembers(groupSessionId: String, invitees: List<String>) {
+        // don't try to process invitee acceptance if we aren't admin
+        if (configFactory.userGroups?.getClosedGroup(groupSessionId)?.hasAdminKey() != true) return
+        val infoConfig = configFactory
+    }
+
     override fun setServerCapabilities(server: String, capabilities: List<String>) {
         return DatabaseComponent.get(context).lokiAPIDatabase().setServerCapabilities(server, capabilities)
     }

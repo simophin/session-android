@@ -57,10 +57,6 @@ class CreateGroupViewModel @Inject constructor(
             )
         }
 
-        storage.getAllContacts().forEach { contact ->
-            members.add(contact)
-        }
-
         if (members.size <= 1) {
             _viewState.postValue(
                 currentState.copy(

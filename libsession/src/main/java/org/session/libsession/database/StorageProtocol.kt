@@ -165,6 +165,7 @@ interface StorageProtocol {
     fun setGroupInviteCompleteIfNeeded(approved: Boolean, invitee: String, closedGroup: SessionId)
     fun getLibSessionClosedGroup(groupSessionId: String): GroupInfo.ClosedGroupInfo?
     fun getClosedGroupDisplayInfo(groupSessionId: String): GroupDisplayInfo?
+    fun inviteClosedGroupMembers(groupSessionId: String, invitees: List<String>)
 
     // Groups
     fun getAllGroups(includeInactive: Boolean): List<GroupRecord>

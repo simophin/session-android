@@ -1,5 +1,7 @@
 package org.thoughtcrime.securesms.groups.compose
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -35,12 +38,19 @@ import app.cash.molecule.RecompositionMode.Immediate
 import app.cash.molecule.launchMolecule
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.result.NavResult
+import com.ramcosta.composedestinations.result.ResultBackNavigator
+import com.ramcosta.composedestinations.result.ResultRecipient
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import network.loki.messenger.R
 import network.loki.messenger.libsession_util.util.GroupMember
 import org.session.libsession.database.StorageProtocol
+import org.session.libsession.messaging.contacts.Contact
+import org.session.libsession.messaging.jobs.InviteContactsJob
+import org.session.libsession.messaging.jobs.JobQueue
+import org.thoughtcrime.securesms.groups.ContactList
 import org.thoughtcrime.securesms.groups.destinations.EditClosedGroupInviteScreenDestination
 import org.thoughtcrime.securesms.ui.CellWithPaddingAndMargin
 import org.thoughtcrime.securesms.ui.NavigationBar
@@ -51,12 +61,20 @@ import org.thoughtcrime.securesms.ui.PreviewTheme
 @Destination
 fun EditClosedGroupScreen(
     navigator: DestinationsNavigator,
+    resultSelectContact: ResultRecipient<EditClosedGroupInviteScreenDestination, ContactList>,
     viewModel: EditGroupViewModel,
     onFinish: () -> Unit
 ) {
     val group by viewModel.viewState.collectAsState()
+    val context = LocalContext.current
     val viewState = group.viewState
     val eventSink = group.eventSink
+
+    resultSelectContact.onNavResult { navResult ->
+        if (navResult is NavResult.Value) {
+            eventSink(EditGroupEvent.InviteContacts(context, navResult.value))
+        }
+    }
 
     EditGroupView(
         onBack = {
@@ -65,7 +83,7 @@ fun EditClosedGroupScreen(
         onInvite = {
             navigator.navigate(EditClosedGroupInviteScreenDestination)
         },
-        viewState = viewState as EditGroupViewState.Group
+        viewState = viewState
     )
 }
 
@@ -73,16 +91,31 @@ fun EditClosedGroupScreen(
 @Composable
 @Destination
 fun EditClosedGroupInviteScreen(
-    navigator: DestinationsNavigator,
+    resultNavigator: ResultBackNavigator<ContactList>,
     viewModel: EditGroupInviteViewModel,
 ) {
 
+    val state by viewModel.viewState.collectAsState()
+    val viewState = state.viewState
+    val currentMemberSessionIds = viewState.currentMembers.map { it.memberSessionId }
+    val eventSink = state.eventSink
+
+    SelectContacts(
+        viewState.allContacts
+            .filterNot { it.sessionID in currentMemberSessionIds }
+            .toSet(),
+        onBack = { resultNavigator.navigateBack() },
+        onContactsSelected = {
+            resultNavigator.navigateBack(ContactList(it))
+        },
+    )
 }
 
 
 class EditGroupViewModel @AssistedInject constructor(
     @Assisted private val groupSessionId: String,
-    private val storage: StorageProtocol): ViewModel() {
+    private val storage: StorageProtocol,
+): ViewModel() {
 
     val viewState = viewModelScope.launchMolecule(Immediate) {
 
@@ -113,14 +146,32 @@ class EditGroupViewModel @AssistedInject constructor(
         val description = closedGroup.description
 
         EditGroupState(
-            EditGroupViewState.Group(
+            EditGroupViewState(
                 groupName = name,
                 groupDescription = description,
                 memberStateList = closedGroupMembers,
                 admin = closedGroup.isUserAdmin
             )
         ) { event ->
-
+            when (event) {
+                is EditGroupEvent.InviteContacts -> {
+                    val sessionIds = event.contacts
+                    val invite = InviteContactsJob(
+                        groupSessionId,
+                        sessionIds.contacts.map(Contact::sessionID).toTypedArray()
+                    )
+                    storage.inviteClosedGroupMembers(
+                        groupSessionId,
+                        sessionIds.contacts.map(Contact::sessionID)
+                    )
+                    JobQueue.shared.add(invite)
+                    Toast.makeText(
+                        event.context,
+                        "Inviting ${event.contacts.contacts.size}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
         }
     }
 
@@ -136,6 +187,33 @@ class EditGroupInviteViewModel @AssistedInject constructor(
     private val storage: StorageProtocol
 ): ViewModel() {
 
+    val viewState = viewModelScope.launchMolecule(Immediate) {
+
+        val currentUserId = rememberSaveable {
+            storage.getUserPublicKey()!!
+        }
+
+        val contacts = remember {
+            storage.getAllContacts()
+        }
+
+        val closedGroupMembers = remember {
+            storage.getMembers(groupSessionId).map { member ->
+                MemberViewModel(
+                    memberName = member.name,
+                    memberSessionId = member.sessionId,
+                    currentUser = member.sessionId == currentUserId,
+                    memberState = memberStateOf(member)
+                )
+            }
+        }
+
+        EditGroupInviteState(
+            EditGroupInviteViewState(closedGroupMembers, contacts)
+        ) { event ->
+
+        }
+    }
 
     @AssistedFactory
     interface Factory {
@@ -148,7 +226,7 @@ class EditGroupInviteViewModel @AssistedInject constructor(
 fun EditGroupView(
     onBack: ()->Unit,
     onInvite: ()->Unit,
-    viewState: EditGroupViewState.Group,
+    viewState: EditGroupViewState,
 ) {
     val scaffoldState = rememberScaffoldState()
 
@@ -238,7 +316,12 @@ fun EditGroupView(
 
 data class EditGroupState(
     val viewState: EditGroupViewState,
-    val eventSink: (Unit)->Unit
+    val eventSink: (EditGroupEvent) -> Unit
+)
+
+data class EditGroupInviteState(
+    val viewState: EditGroupInviteViewState,
+    val eventSink: (Unit) -> Unit
 )
 
 data class MemberViewModel(
@@ -268,14 +351,22 @@ fun memberStateOf(member: GroupMember): MemberState = when {
     else -> MemberState.Member
 }
 
-sealed class EditGroupViewState {
-    data class Group(
-        val groupName: String,
-        val groupDescription: String?,
-        val memberStateList: List<MemberViewModel>,
-        val admin: Boolean
-    ): EditGroupViewState()
+data class EditGroupViewState(
+    val groupName: String,
+    val groupDescription: String?,
+    val memberStateList: List<MemberViewModel>,
+    val admin: Boolean
+)
+
+sealed class EditGroupEvent {
+    data class InviteContacts(val context: Context,
+                              val contacts: ContactList): EditGroupEvent()
 }
+
+data class EditGroupInviteViewState(
+    val currentMembers: List<MemberViewModel>,
+    val allContacts: Set<Contact>
+)
 
 @Preview
 @Composable
@@ -288,7 +379,7 @@ fun PreviewList() {
         false
     )
 
-    val viewState = EditGroupViewState.Group(
+    val viewState = EditGroupViewState(
         "Preview",
         "This is a preview description",
         listOf(oneMember),

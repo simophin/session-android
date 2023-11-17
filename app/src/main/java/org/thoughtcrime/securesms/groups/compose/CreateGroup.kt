@@ -41,12 +41,6 @@ import org.thoughtcrime.securesms.ui.NavigationBar
 import org.thoughtcrime.securesms.ui.PreviewTheme
 
 
-data class CreateGroupState (
-    var groupName: String,
-    var groupDescription: String,
-    val members: MutableSet<Contact>
-)
-
 @Composable
 fun CreateGroup(
     viewState: ViewState,
