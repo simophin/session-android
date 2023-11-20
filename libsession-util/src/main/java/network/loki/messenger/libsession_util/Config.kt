@@ -321,6 +321,7 @@ class GroupKeysConfig(pointer: Long): ConfigSig(pointer) {
                          members: GroupMembersConfig)
     external fun needsRekey(): Boolean
     external fun pendingKey(): ByteArray?
+    external fun supplementFor(userSessionId: String): ByteArray
     external fun pendingConfig(): ByteArray?
     external fun currentHashes(): List<String>
     external fun rekey(info: GroupInfoConfig, members: GroupMembersConfig): ByteArray

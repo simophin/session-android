@@ -234,8 +234,8 @@ data class ConfigurationSyncJob(val destination: Destination) : Job {
                         responseBody?.get("hash") as? String
                                 ?: run {
                                     Log.w(
-                                            TAG,
-                                            "No hash returned for the configuration in namespace ${config.namespace()}"
+                                        TAG,
+                                        "No hash returned for the configuration in namespace ${config.namespace()}"
                                     )
                                     return@forEachIndexed
                                 }
@@ -247,8 +247,8 @@ data class ConfigurationSyncJob(val destination: Destination) : Job {
                 }
 
                 Log.d(
-                        TAG,
-                        "Successfully removed the deleted hashes from ${config.javaClass.simpleName}"
+                    TAG,
+                    "Successfully removed the deleted hashes from ${config.javaClass.simpleName}"
                 )
                 // dump and write config after successful
                 if (config is ConfigBase && config.needsDump()) { // usually this will be true? ))

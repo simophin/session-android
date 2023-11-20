@@ -48,8 +48,6 @@ import network.loki.messenger.R
 import network.loki.messenger.libsession_util.util.GroupMember
 import org.session.libsession.database.StorageProtocol
 import org.session.libsession.messaging.contacts.Contact
-import org.session.libsession.messaging.jobs.InviteContactsJob
-import org.session.libsession.messaging.jobs.JobQueue
 import org.thoughtcrime.securesms.groups.ContactList
 import org.thoughtcrime.securesms.groups.destinations.EditClosedGroupInviteScreenDestination
 import org.thoughtcrime.securesms.ui.CellWithPaddingAndMargin
@@ -98,7 +96,6 @@ fun EditClosedGroupInviteScreen(
     val state by viewModel.viewState.collectAsState()
     val viewState = state.viewState
     val currentMemberSessionIds = viewState.currentMembers.map { it.memberSessionId }
-    val eventSink = state.eventSink
 
     SelectContacts(
         viewState.allContacts
@@ -156,15 +153,10 @@ class EditGroupViewModel @AssistedInject constructor(
             when (event) {
                 is EditGroupEvent.InviteContacts -> {
                     val sessionIds = event.contacts
-                    val invite = InviteContactsJob(
-                        groupSessionId,
-                        sessionIds.contacts.map(Contact::sessionID).toTypedArray()
-                    )
                     storage.inviteClosedGroupMembers(
                         groupSessionId,
                         sessionIds.contacts.map(Contact::sessionID)
                     )
-                    JobQueue.shared.add(invite)
                     Toast.makeText(
                         event.context,
                         "Inviting ${event.contacts.contacts.size}",
@@ -210,9 +202,7 @@ class EditGroupInviteViewModel @AssistedInject constructor(
 
         EditGroupInviteState(
             EditGroupInviteViewState(closedGroupMembers, contacts)
-        ) { event ->
-
-        }
+        )
     }
 
     @AssistedFactory
@@ -321,7 +311,6 @@ data class EditGroupState(
 
 data class EditGroupInviteState(
     val viewState: EditGroupInviteViewState,
-    val eventSink: (Unit) -> Unit
 )
 
 data class MemberViewModel(

@@ -221,6 +221,8 @@ class ConfigFactory(
             info?.free()
             members?.free()
         }
+        if (usedInfo !== info) usedInfo.free()
+        if (usedMembers !== members) usedMembers.free()
         keys
     }
 

@@ -19,6 +19,7 @@ import network.loki.messenger.libsession_util.util.ExpiryMode
 import network.loki.messenger.libsession_util.util.GroupDisplayInfo
 import network.loki.messenger.libsession_util.util.GroupInfo
 import network.loki.messenger.libsession_util.util.UserPic
+import nl.komponents.kovenant.functional.bind
 import org.session.libsession.avatars.AvatarHelper
 import org.session.libsession.database.StorageProtocol
 import org.session.libsession.messaging.BlindedIdMapping
@@ -1277,7 +1278,78 @@ open class Storage(
     override fun inviteClosedGroupMembers(groupSessionId: String, invitees: List<String>) {
         // don't try to process invitee acceptance if we aren't admin
         if (configFactory.userGroups?.getClosedGroup(groupSessionId)?.hasAdminKey() != true) return
-        val infoConfig = configFactory
+        val adminKey = configFactory.userGroups?.getClosedGroup(groupSessionId)?.adminKey ?: return
+        val sessionId = SessionId.from(groupSessionId)
+        val membersConfig = configFactory.getGroupMemberConfig(sessionId) ?: return
+        val infoConfig = configFactory.getGroupInfoConfig(sessionId) ?: return
+
+        val filteredMembers = invitees.filter {
+            membersConfig.get(it) == null
+        }
+        filteredMembers.forEach { memberSessionId ->
+            val member = membersConfig.getOrConstruct(memberSessionId).copy(
+                invitePending = true,
+            )
+            membersConfig.set(member)
+        }
+
+        val keysConfig = configFactory.getGroupKeysConfig(
+            sessionId,
+            info = infoConfig,
+            members = membersConfig,
+            free = false
+        ) ?: return
+
+        keysConfig.rekey(infoConfig, membersConfig)
+
+        val sentTimestamp = SnodeAPI.nowWithOffset
+
+        val message = SnodeMessage(
+                groupSessionId,
+                Base64.encodeBytes(keysConfig.pendingConfig()!!), // should not be null from checking has pending
+                SnodeMessage.CONFIG_TTL,
+                sentTimestamp
+        )
+        val authenticatedBatch = SnodeAPI.buildAuthenticatedStoreBatchInfo(
+            keysConfig.namespace(),
+            message,
+            adminKey
+        )
+
+        val response = SnodeAPI.getSingleTargetSnode(groupSessionId).bind { snode ->
+            SnodeAPI.getRawBatchResponse(
+                snode,
+                groupSessionId,
+                listOf(authenticatedBatch),
+            )
+        }
+
+        val destination = Destination.ClosedGroup(groupSessionId)
+
+        ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(destination)
+
+        try {
+            response.get()
+        } catch (e: Exception) {
+            Log.e("ClosedGroup", "Failed to store new key", e)
+            infoConfig.free()
+            membersConfig.free()
+            keysConfig.free()
+            // toaster toast here
+            return
+        }
+
+        configFactory.saveGroupConfigs(keysConfig, infoConfig, membersConfig)
+
+        infoConfig.free()
+        membersConfig.free()
+        keysConfig.free()
+
+        val newConfigSync = ConfigurationSyncJob(destination)
+        JobQueue.shared.add(newConfigSync)
+
+        val job = InviteContactsJob(groupSessionId, filteredMembers.toTypedArray())
+        JobQueue.shared.add(job)
     }
 
     override fun setServerCapabilities(server: String, capabilities: List<String>) {

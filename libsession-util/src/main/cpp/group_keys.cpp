@@ -104,6 +104,8 @@ Java_network_loki_messenger_libsession_1util_GroupKeysConfig_needsDump(JNIEnv *e
     return keys->needs_dump();
 }
 
+
+
 extern "C"
 JNIEXPORT jbyteArray JNICALL
 Java_network_loki_messenger_libsession_1util_GroupKeysConfig_pendingKey(JNIEnv *env, jobject thiz) {
@@ -257,4 +259,18 @@ Java_network_loki_messenger_libsession_1util_GroupKeysConfig_subAccountSign(JNIE
     auto signing_value_ustring = util::ustring_from_bytes(env, signing_value);
     auto swarm_auth = ptr->swarm_subaccount_sign(message_ustring, signing_value_ustring, false);
     return util::deserialize_swarm_auth(env, swarm_auth);
+}
+
+extern "C"
+JNIEXPORT jbyteArray JNICALL
+Java_network_loki_messenger_libsession_1util_GroupKeysConfig_supplementFor(JNIEnv *env,
+                                                                           jobject thiz,
+                                                                           jstring user_session_id) {
+    std::lock_guard lock{util::util_mutex_};
+    auto ptr = ptrToKeys(env, thiz);
+    auto string = env->GetStringUTFChars(user_session_id, nullptr);
+    auto supplement = ptr->key_supplement(string);
+    auto supplement_jbytearray = util::bytes_from_ustring(env, supplement);
+    env->ReleaseStringUTFChars(user_session_id, string);
+    return supplement_jbytearray;
 }
