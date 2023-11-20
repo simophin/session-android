@@ -2,6 +2,7 @@ package org.thoughtcrime.securesms.database
 
 import android.content.Context
 import android.net.Uri
+import kotlinx.coroutines.runBlocking
 import network.loki.messenger.libsession_util.Config
 import network.loki.messenger.libsession_util.ConfigBase.Companion.PRIORITY_HIDDEN
 import network.loki.messenger.libsession_util.ConfigBase.Companion.PRIORITY_PINNED
@@ -1326,10 +1327,22 @@ open class Storage(
 
         val destination = Destination.ClosedGroup(groupSessionId)
 
-        ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(destination)
-
         try {
             response.get()
+
+            val newConfigSync = ConfigurationSyncJob(destination)
+            runBlocking {
+                newConfigSync.execute("updating-members")
+            }
+
+            configFactory.saveGroupConfigs(keysConfig, infoConfig, membersConfig)
+
+            val job = InviteContactsJob(groupSessionId, filteredMembers.toTypedArray())
+            JobQueue.shared.add(job)
+
+            infoConfig.free()
+            membersConfig.free()
+            keysConfig.free()
         } catch (e: Exception) {
             Log.e("ClosedGroup", "Failed to store new key", e)
             infoConfig.free()
@@ -1339,17 +1352,6 @@ open class Storage(
             return
         }
 
-        configFactory.saveGroupConfigs(keysConfig, infoConfig, membersConfig)
-
-        infoConfig.free()
-        membersConfig.free()
-        keysConfig.free()
-
-        val newConfigSync = ConfigurationSyncJob(destination)
-        JobQueue.shared.add(newConfigSync)
-
-        val job = InviteContactsJob(groupSessionId, filteredMembers.toTypedArray())
-        JobQueue.shared.add(job)
     }
 
     override fun setServerCapabilities(server: String, capabilities: List<String>) {
