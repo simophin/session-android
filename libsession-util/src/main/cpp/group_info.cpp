@@ -192,7 +192,12 @@ Java_network_loki_messenger_libsession_1util_GroupInfoConfig_getDescription(JNIE
                                                                             jobject thiz) {
     std::lock_guard guard{util::util_mutex_};
     auto group_info = ptrToInfo(env, thiz);
-    return nullptr;
+    auto description = group_info->get_description();
+    if (!description) {
+        return nullptr;
+    }
+    auto jstring = env->NewStringUTF(description->data());
+    return jstring;
 }
 
 extern "C"
@@ -202,4 +207,7 @@ Java_network_loki_messenger_libsession_1util_GroupInfoConfig_setDescription(JNIE
                                                                             jstring new_description) {
     std::lock_guard guard{util::util_mutex_};
     auto group_info = ptrToInfo(env, thiz);
+    auto description = env->GetStringUTFChars(new_description, nullptr);
+    group_info->set_description(description);
+    env->ReleaseStringUTFChars(new_description, description);
 }
