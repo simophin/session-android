@@ -140,18 +140,14 @@ message DataMessage {
     required string         name                   = 2;
     // @required
     required bytes          memberAuthData         = 3;
-    optional bytes          profileKey             = 4;
-    optional LokiProfile    profile                = 5;
     // @required
-    required bytes          adminSignature         = 6;
+    required bytes          adminSignature         = 4;
   }
 
   message GroupUpdateDeleteMessage {
+    repeated string memberSessionIds = 1;
     // @required
-    required string         groupSessionId          = 1; // The `groupIdentityPublicKey` with a `03` prefix
-    // @required
-    // signature of "DELETE" || sessionId || timestamp
-    // sessionId is the sessionId of the person being removed
+    // signature of "DELETE" || timestamp || sessionId[0] || ... || sessionId[n]
     required bytes          adminSignature          = 2;
   }
 
@@ -171,6 +167,9 @@ message DataMessage {
     required Type     type              = 1;
     optional string   updatedName       = 2;
     optional uint32   updatedExpiration = 3;
+    // @required
+    // "INFO_CHANGE" || type || timestamp
+    required bytes adminSignature = 4;
   }
 
   message GroupUpdateMemberChangeMessage {
@@ -182,7 +181,10 @@ message DataMessage {
 
     // @required
     required Type   type               = 1;
-    repeated bytes  memberPublicKeys   = 2;
+    repeated string memberSessionIds   = 2;
+    // @required
+    // "MEMBER_CHANGE" || type || timestamp
+    required bytes adminSignature = 3;
   }
 
   message GroupUpdateMemberLeftMessage {
@@ -195,9 +197,10 @@ message DataMessage {
   }
 
   message GroupUpdateDeleteMemberContentMessage {
-    repeated bytes  memberPublicKeys   = 1;
+    repeated string memberSessionIds   = 1;
+    repeated string messageHashes = 2;
     // @required
-    required bytes  adminSignature     = 2;
+    optional bytes  adminSignature = 3;
   }
 
 

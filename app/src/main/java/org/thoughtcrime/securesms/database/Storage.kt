@@ -98,6 +98,7 @@ import org.thoughtcrime.securesms.database.model.ReactionRecord
 import org.thoughtcrime.securesms.dependencies.ConfigFactory
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.dependencies.PollerFactory
+import org.thoughtcrime.securesms.dependencies.Toaster
 import org.thoughtcrime.securesms.groups.ClosedGroupManager
 import org.thoughtcrime.securesms.groups.GroupManager
 import org.thoughtcrime.securesms.groups.OpenGroupManager
@@ -112,7 +113,8 @@ open class Storage(
     context: Context,
     helper: SQLCipherOpenHelper,
     private val configFactory: ConfigFactory,
-    private val pollerFactory: PollerFactory
+    private val pollerFactory: PollerFactory,
+    private val toaster: Toaster,
 ) : Database(context, helper), StorageProtocol,
     ThreadDatabase.ConversationThreadUpdateListener {
 

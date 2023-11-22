@@ -1,5 +1,6 @@
 package org.thoughtcrime.securesms.groups.compose
 
+import android.content.ContentResolver
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.clickable
@@ -14,6 +15,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.rememberScaffoldState
@@ -48,6 +50,8 @@ import network.loki.messenger.R
 import network.loki.messenger.libsession_util.util.GroupMember
 import org.session.libsession.database.StorageProtocol
 import org.session.libsession.messaging.contacts.Contact
+import org.session.libsession.messaging.jobs.InviteContactsJob
+import org.session.libsession.messaging.jobs.JobQueue
 import org.thoughtcrime.securesms.groups.ContactList
 import org.thoughtcrime.securesms.groups.destinations.EditClosedGroupInviteScreenDestination
 import org.thoughtcrime.securesms.ui.CellWithPaddingAndMargin
@@ -81,6 +85,9 @@ fun EditClosedGroupScreen(
         onInvite = {
             navigator.navigate(EditClosedGroupInviteScreenDestination)
         },
+        onReinvite = { contact ->
+            eventSink(EditGroupEvent.ReInviteContact(contact))
+        },
         viewState = viewState
     )
 }
@@ -111,6 +118,7 @@ fun EditClosedGroupInviteScreen(
 
 class EditGroupViewModel @AssistedInject constructor(
     @Assisted private val groupSessionId: String,
+    @Assisted private val contentResolver: ContentResolver,
     private val storage: StorageProtocol,
 ): ViewModel() {
 
@@ -119,6 +127,10 @@ class EditGroupViewModel @AssistedInject constructor(
         val currentUserId = rememberSaveable {
             storage.getUserPublicKey()!!
         }
+
+//        val closedGroupRecipient by contentResolver
+//            .observeQuery(DatabaseContentProviders.ConversationList.CONTENT_URI)
+//            .collectAsState(initial = null)
 
         val closedGroupInfo = remember {
             storage.getLibSessionClosedGroup(groupSessionId)!!
@@ -163,13 +175,16 @@ class EditGroupViewModel @AssistedInject constructor(
                         Toast.LENGTH_LONG
                     ).show()
                 }
+                is EditGroupEvent.ReInviteContact -> {
+                    JobQueue.shared.add(InviteContactsJob(groupSessionId, arrayOf(event.contactSessionId)))
+                }
             }
         }
     }
 
     @AssistedFactory
     interface Factory {
-        fun create(groupSessionId: String): EditGroupViewModel
+        fun create(groupSessionId: String, contentResolver: ContentResolver): EditGroupViewModel
     }
 
 }
@@ -216,6 +231,7 @@ class EditGroupInviteViewModel @AssistedInject constructor(
 fun EditGroupView(
     onBack: ()->Unit,
     onInvite: ()->Unit,
+    onReinvite: (String)->Unit,
     viewState: EditGroupViewState,
 ) {
     val scaffoldState = rememberScaffoldState()
@@ -296,6 +312,14 @@ fun EditGroupView(
                                 )
                             }
                         }
+                        // Resend button
+                        if (viewState.admin && member.memberState == MemberState.InviteFailed) {
+                            OutlinedButton(onClick = {
+                                onReinvite(member.memberSessionId)
+                            },) {
+                                Text("Re-send")
+                            }
+                        }
                     }
                 }
 
@@ -332,10 +356,10 @@ enum class MemberState {
 }
 
 fun memberStateOf(member: GroupMember): MemberState = when {
-    member.invitePending -> MemberState.InviteSent
     member.inviteFailed -> MemberState.InviteFailed
-    member.promotionPending -> MemberState.PromotionSent
+    member.invitePending -> MemberState.InviteSent
     member.promotionFailed -> MemberState.PromotionFailed
+    member.promotionPending -> MemberState.PromotionSent
     member.admin -> MemberState.Admin
     else -> MemberState.Member
 }
@@ -350,6 +374,7 @@ data class EditGroupViewState(
 sealed class EditGroupEvent {
     data class InviteContacts(val context: Context,
                               val contacts: ContactList): EditGroupEvent()
+    data class ReInviteContact(val contactSessionId: String): EditGroupEvent()
 }
 
 data class EditGroupInviteViewState(
@@ -367,11 +392,17 @@ fun PreviewList() {
         MemberState.InviteSent,
         false
     )
+    val twoMember = MemberViewModel(
+        "Test User",
+        "05abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1235",
+        MemberState.InviteFailed,
+        false
+    )
 
     val viewState = EditGroupViewState(
         "Preview",
         "This is a preview description",
-        listOf(oneMember),
+        listOf(oneMember, twoMember),
         true
     )
 
@@ -379,6 +410,7 @@ fun PreviewList() {
         EditGroupView(
             onBack = {},
             onInvite = {},
+            onReinvite = {},
             viewState = viewState
         )
     }

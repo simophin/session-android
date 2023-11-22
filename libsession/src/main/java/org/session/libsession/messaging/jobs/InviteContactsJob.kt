@@ -66,6 +66,8 @@ class InviteContactsJob(val groupSessionId: String, val memberSessionIds: Array<
                         )
                     }
                     members.set(member.copy(invitePending = true, inviteFailed = false))
+                    configs.saveGroupConfigs(keys, info, members)
+
                     val subAccount = keys.makeSubAccount(SessionId.from(memberSessionId))
 
                     val timestamp = SnodeAPI.nowWithOffset
@@ -93,6 +95,7 @@ class InviteContactsJob(val groupSessionId: String, val memberSessionIds: Array<
                         sentTimestamp = timestamp
                     }
                     try {
+                        //throw Exception("Just for testing")
                         MessageSender.send(update, Destination.Contact(memberSessionId), false)
                             .get()
                         InviteResult.success(memberSessionId)
@@ -119,6 +122,10 @@ class InviteContactsJob(val groupSessionId: String, val memberSessionIds: Array<
                     members.set(toSet)
                 }
             }
+            configs.saveGroupConfigs(keys, info, members)
+            keys.free()
+            info.free()
+            members.free()
         }
     }
 

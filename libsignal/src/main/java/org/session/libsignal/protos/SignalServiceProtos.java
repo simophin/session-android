@@ -11156,12 +11156,6 @@ public final class SignalServiceProtos {
             return false;
           }
         }
-        if (hasDeleteMemberContent()) {
-          if (!getDeleteMemberContent().isInitialized()) {
-            memoizedIsInitialized = 0;
-            return false;
-          }
-        }
         memoizedIsInitialized = 1;
         return true;
       }
@@ -11579,12 +11573,6 @@ public final class SignalServiceProtos {
           }
           if (hasInviteResponse()) {
             if (!getInviteResponse().isInitialized()) {
-              
-              return false;
-            }
-          }
-          if (hasDeleteMemberContent()) {
-            if (!getDeleteMemberContent().isInitialized()) {
               
               return false;
             }
@@ -12633,33 +12621,9 @@ public final class SignalServiceProtos {
        */
       com.google.protobuf.ByteString getMemberAuthData();
 
-      // optional bytes profileKey = 4;
+      // required bytes adminSignature = 4;
       /**
-       * <code>optional bytes profileKey = 4;</code>
-       */
-      boolean hasProfileKey();
-      /**
-       * <code>optional bytes profileKey = 4;</code>
-       */
-      com.google.protobuf.ByteString getProfileKey();
-
-      // optional .signalservice.DataMessage.LokiProfile profile = 5;
-      /**
-       * <code>optional .signalservice.DataMessage.LokiProfile profile = 5;</code>
-       */
-      boolean hasProfile();
-      /**
-       * <code>optional .signalservice.DataMessage.LokiProfile profile = 5;</code>
-       */
-      org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile getProfile();
-      /**
-       * <code>optional .signalservice.DataMessage.LokiProfile profile = 5;</code>
-       */
-      org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfileOrBuilder getProfileOrBuilder();
-
-      // required bytes adminSignature = 6;
-      /**
-       * <code>required bytes adminSignature = 6;</code>
+       * <code>required bytes adminSignature = 4;</code>
        *
        * <pre>
        * @required
@@ -12667,7 +12631,7 @@ public final class SignalServiceProtos {
        */
       boolean hasAdminSignature();
       /**
-       * <code>required bytes adminSignature = 6;</code>
+       * <code>required bytes adminSignature = 4;</code>
        *
        * <pre>
        * @required
@@ -12747,24 +12711,6 @@ public final class SignalServiceProtos {
               }
               case 34: {
                 bitField0_ |= 0x00000008;
-                profileKey_ = input.readBytes();
-                break;
-              }
-              case 42: {
-                org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.Builder subBuilder = null;
-                if (((bitField0_ & 0x00000010) == 0x00000010)) {
-                  subBuilder = profile_.toBuilder();
-                }
-                profile_ = input.readMessage(org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.PARSER, extensionRegistry);
-                if (subBuilder != null) {
-                  subBuilder.mergeFrom(profile_);
-                  profile_ = subBuilder.buildPartial();
-                }
-                bitField0_ |= 0x00000010;
-                break;
-              }
-              case 50: {
-                bitField0_ |= 0x00000020;
                 adminSignature_ = input.readBytes();
                 break;
               }
@@ -12942,59 +12888,21 @@ public final class SignalServiceProtos {
         return memberAuthData_;
       }
 
-      // optional bytes profileKey = 4;
-      public static final int PROFILEKEY_FIELD_NUMBER = 4;
-      private com.google.protobuf.ByteString profileKey_;
-      /**
-       * <code>optional bytes profileKey = 4;</code>
-       */
-      public boolean hasProfileKey() {
-        return ((bitField0_ & 0x00000008) == 0x00000008);
-      }
-      /**
-       * <code>optional bytes profileKey = 4;</code>
-       */
-      public com.google.protobuf.ByteString getProfileKey() {
-        return profileKey_;
-      }
-
-      // optional .signalservice.DataMessage.LokiProfile profile = 5;
-      public static final int PROFILE_FIELD_NUMBER = 5;
-      private org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile profile_;
-      /**
-       * <code>optional .signalservice.DataMessage.LokiProfile profile = 5;</code>
-       */
-      public boolean hasProfile() {
-        return ((bitField0_ & 0x00000010) == 0x00000010);
-      }
-      /**
-       * <code>optional .signalservice.DataMessage.LokiProfile profile = 5;</code>
-       */
-      public org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile getProfile() {
-        return profile_;
-      }
-      /**
-       * <code>optional .signalservice.DataMessage.LokiProfile profile = 5;</code>
-       */
-      public org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfileOrBuilder getProfileOrBuilder() {
-        return profile_;
-      }
-
-      // required bytes adminSignature = 6;
-      public static final int ADMINSIGNATURE_FIELD_NUMBER = 6;
+      // required bytes adminSignature = 4;
+      public static final int ADMINSIGNATURE_FIELD_NUMBER = 4;
       private com.google.protobuf.ByteString adminSignature_;
       /**
-       * <code>required bytes adminSignature = 6;</code>
+       * <code>required bytes adminSignature = 4;</code>
        *
        * <pre>
        * @required
        * </pre>
        */
       public boolean hasAdminSignature() {
-        return ((bitField0_ & 0x00000020) == 0x00000020);
+        return ((bitField0_ & 0x00000008) == 0x00000008);
       }
       /**
-       * <code>required bytes adminSignature = 6;</code>
+       * <code>required bytes adminSignature = 4;</code>
        *
        * <pre>
        * @required
@@ -13008,8 +12916,6 @@ public final class SignalServiceProtos {
         groupSessionId_ = "";
         name_ = "";
         memberAuthData_ = com.google.protobuf.ByteString.EMPTY;
-        profileKey_ = com.google.protobuf.ByteString.EMPTY;
-        profile_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.getDefaultInstance();
         adminSignature_ = com.google.protobuf.ByteString.EMPTY;
       }
       private byte memoizedIsInitialized = -1;
@@ -13050,13 +12956,7 @@ public final class SignalServiceProtos {
           output.writeBytes(3, memberAuthData_);
         }
         if (((bitField0_ & 0x00000008) == 0x00000008)) {
-          output.writeBytes(4, profileKey_);
-        }
-        if (((bitField0_ & 0x00000010) == 0x00000010)) {
-          output.writeMessage(5, profile_);
-        }
-        if (((bitField0_ & 0x00000020) == 0x00000020)) {
-          output.writeBytes(6, adminSignature_);
+          output.writeBytes(4, adminSignature_);
         }
         getUnknownFields().writeTo(output);
       }
@@ -13081,15 +12981,7 @@ public final class SignalServiceProtos {
         }
         if (((bitField0_ & 0x00000008) == 0x00000008)) {
           size += com.google.protobuf.CodedOutputStream
-            .computeBytesSize(4, profileKey_);
-        }
-        if (((bitField0_ & 0x00000010) == 0x00000010)) {
-          size += com.google.protobuf.CodedOutputStream
-            .computeMessageSize(5, profile_);
-        }
-        if (((bitField0_ & 0x00000020) == 0x00000020)) {
-          size += com.google.protobuf.CodedOutputStream
-            .computeBytesSize(6, adminSignature_);
+            .computeBytesSize(4, adminSignature_);
         }
         size += getUnknownFields().getSerializedSize();
         memoizedSerializedSize = size;
@@ -13203,7 +13095,6 @@ public final class SignalServiceProtos {
         }
         private void maybeForceBuilderInitialization() {
           if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-            getProfileFieldBuilder();
           }
         }
         private static Builder create() {
@@ -13218,16 +13109,8 @@ public final class SignalServiceProtos {
           bitField0_ = (bitField0_ & ~0x00000002);
           memberAuthData_ = com.google.protobuf.ByteString.EMPTY;
           bitField0_ = (bitField0_ & ~0x00000004);
-          profileKey_ = com.google.protobuf.ByteString.EMPTY;
-          bitField0_ = (bitField0_ & ~0x00000008);
-          if (profileBuilder_ == null) {
-            profile_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.getDefaultInstance();
-          } else {
-            profileBuilder_.clear();
-          }
-          bitField0_ = (bitField0_ & ~0x00000010);
           adminSignature_ = com.google.protobuf.ByteString.EMPTY;
-          bitField0_ = (bitField0_ & ~0x00000020);
+          bitField0_ = (bitField0_ & ~0x00000008);
           return this;
         }
 
@@ -13271,18 +13154,6 @@ public final class SignalServiceProtos {
           if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
             to_bitField0_ |= 0x00000008;
           }
-          result.profileKey_ = profileKey_;
-          if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
-            to_bitField0_ |= 0x00000010;
-          }
-          if (profileBuilder_ == null) {
-            result.profile_ = profile_;
-          } else {
-            result.profile_ = profileBuilder_.build();
-          }
-          if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
-            to_bitField0_ |= 0x00000020;
-          }
           result.adminSignature_ = adminSignature_;
           result.bitField0_ = to_bitField0_;
           onBuilt();
@@ -13312,12 +13183,6 @@ public final class SignalServiceProtos {
           }
           if (other.hasMemberAuthData()) {
             setMemberAuthData(other.getMemberAuthData());
-          }
-          if (other.hasProfileKey()) {
-            setProfileKey(other.getProfileKey());
-          }
-          if (other.hasProfile()) {
-            mergeProfile(other.getProfile());
           }
           if (other.hasAdminSignature()) {
             setAdminSignature(other.getAdminSignature());
@@ -13613,173 +13478,20 @@ public final class SignalServiceProtos {
           return this;
         }
 
-        // optional bytes profileKey = 4;
-        private com.google.protobuf.ByteString profileKey_ = com.google.protobuf.ByteString.EMPTY;
-        /**
-         * <code>optional bytes profileKey = 4;</code>
-         */
-        public boolean hasProfileKey() {
-          return ((bitField0_ & 0x00000008) == 0x00000008);
-        }
-        /**
-         * <code>optional bytes profileKey = 4;</code>
-         */
-        public com.google.protobuf.ByteString getProfileKey() {
-          return profileKey_;
-        }
-        /**
-         * <code>optional bytes profileKey = 4;</code>
-         */
-        public Builder setProfileKey(com.google.protobuf.ByteString value) {
-          if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000008;
-          profileKey_ = value;
-          onChanged();
-          return this;
-        }
-        /**
-         * <code>optional bytes profileKey = 4;</code>
-         */
-        public Builder clearProfileKey() {
-          bitField0_ = (bitField0_ & ~0x00000008);
-          profileKey_ = getDefaultInstance().getProfileKey();
-          onChanged();
-          return this;
-        }
-
-        // optional .signalservice.DataMessage.LokiProfile profile = 5;
-        private org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile profile_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.getDefaultInstance();
-        private com.google.protobuf.SingleFieldBuilder<
-            org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile, org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfileOrBuilder> profileBuilder_;
-        /**
-         * <code>optional .signalservice.DataMessage.LokiProfile profile = 5;</code>
-         */
-        public boolean hasProfile() {
-          return ((bitField0_ & 0x00000010) == 0x00000010);
-        }
-        /**
-         * <code>optional .signalservice.DataMessage.LokiProfile profile = 5;</code>
-         */
-        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile getProfile() {
-          if (profileBuilder_ == null) {
-            return profile_;
-          } else {
-            return profileBuilder_.getMessage();
-          }
-        }
-        /**
-         * <code>optional .signalservice.DataMessage.LokiProfile profile = 5;</code>
-         */
-        public Builder setProfile(org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile value) {
-          if (profileBuilder_ == null) {
-            if (value == null) {
-              throw new NullPointerException();
-            }
-            profile_ = value;
-            onChanged();
-          } else {
-            profileBuilder_.setMessage(value);
-          }
-          bitField0_ |= 0x00000010;
-          return this;
-        }
-        /**
-         * <code>optional .signalservice.DataMessage.LokiProfile profile = 5;</code>
-         */
-        public Builder setProfile(
-            org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.Builder builderForValue) {
-          if (profileBuilder_ == null) {
-            profile_ = builderForValue.build();
-            onChanged();
-          } else {
-            profileBuilder_.setMessage(builderForValue.build());
-          }
-          bitField0_ |= 0x00000010;
-          return this;
-        }
-        /**
-         * <code>optional .signalservice.DataMessage.LokiProfile profile = 5;</code>
-         */
-        public Builder mergeProfile(org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile value) {
-          if (profileBuilder_ == null) {
-            if (((bitField0_ & 0x00000010) == 0x00000010) &&
-                profile_ != org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.getDefaultInstance()) {
-              profile_ =
-                org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.newBuilder(profile_).mergeFrom(value).buildPartial();
-            } else {
-              profile_ = value;
-            }
-            onChanged();
-          } else {
-            profileBuilder_.mergeFrom(value);
-          }
-          bitField0_ |= 0x00000010;
-          return this;
-        }
-        /**
-         * <code>optional .signalservice.DataMessage.LokiProfile profile = 5;</code>
-         */
-        public Builder clearProfile() {
-          if (profileBuilder_ == null) {
-            profile_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.getDefaultInstance();
-            onChanged();
-          } else {
-            profileBuilder_.clear();
-          }
-          bitField0_ = (bitField0_ & ~0x00000010);
-          return this;
-        }
-        /**
-         * <code>optional .signalservice.DataMessage.LokiProfile profile = 5;</code>
-         */
-        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.Builder getProfileBuilder() {
-          bitField0_ |= 0x00000010;
-          onChanged();
-          return getProfileFieldBuilder().getBuilder();
-        }
-        /**
-         * <code>optional .signalservice.DataMessage.LokiProfile profile = 5;</code>
-         */
-        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfileOrBuilder getProfileOrBuilder() {
-          if (profileBuilder_ != null) {
-            return profileBuilder_.getMessageOrBuilder();
-          } else {
-            return profile_;
-          }
-        }
-        /**
-         * <code>optional .signalservice.DataMessage.LokiProfile profile = 5;</code>
-         */
-        private com.google.protobuf.SingleFieldBuilder<
-            org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile, org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfileOrBuilder> 
-            getProfileFieldBuilder() {
-          if (profileBuilder_ == null) {
-            profileBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-                org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile, org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfileOrBuilder>(
-                    profile_,
-                    getParentForChildren(),
-                    isClean());
-            profile_ = null;
-          }
-          return profileBuilder_;
-        }
-
-        // required bytes adminSignature = 6;
+        // required bytes adminSignature = 4;
         private com.google.protobuf.ByteString adminSignature_ = com.google.protobuf.ByteString.EMPTY;
         /**
-         * <code>required bytes adminSignature = 6;</code>
+         * <code>required bytes adminSignature = 4;</code>
          *
          * <pre>
          * @required
          * </pre>
          */
         public boolean hasAdminSignature() {
-          return ((bitField0_ & 0x00000020) == 0x00000020);
+          return ((bitField0_ & 0x00000008) == 0x00000008);
         }
         /**
-         * <code>required bytes adminSignature = 6;</code>
+         * <code>required bytes adminSignature = 4;</code>
          *
          * <pre>
          * @required
@@ -13789,7 +13501,7 @@ public final class SignalServiceProtos {
           return adminSignature_;
         }
         /**
-         * <code>required bytes adminSignature = 6;</code>
+         * <code>required bytes adminSignature = 4;</code>
          *
          * <pre>
          * @required
@@ -13799,20 +13511,20 @@ public final class SignalServiceProtos {
           if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000020;
+  bitField0_ |= 0x00000008;
           adminSignature_ = value;
           onChanged();
           return this;
         }
         /**
-         * <code>required bytes adminSignature = 6;</code>
+         * <code>required bytes adminSignature = 4;</code>
          *
          * <pre>
          * @required
          * </pre>
          */
         public Builder clearAdminSignature() {
-          bitField0_ = (bitField0_ & ~0x00000020);
+          bitField0_ = (bitField0_ & ~0x00000008);
           adminSignature_ = getDefaultInstance().getAdminSignature();
           onChanged();
           return this;
@@ -13832,32 +13544,25 @@ public final class SignalServiceProtos {
     public interface GroupUpdateDeleteMessageOrBuilder
         extends com.google.protobuf.MessageOrBuilder {
 
-      // required string groupSessionId = 1;
+      // repeated string memberSessionIds = 1;
       /**
-       * <code>required string groupSessionId = 1;</code>
-       *
-       * <pre>
-       * @required
-       * </pre>
+       * <code>repeated string memberSessionIds = 1;</code>
        */
-      boolean hasGroupSessionId();
+      java.util.List<java.lang.String>
+      getMemberSessionIdsList();
       /**
-       * <code>required string groupSessionId = 1;</code>
-       *
-       * <pre>
-       * @required
-       * </pre>
+       * <code>repeated string memberSessionIds = 1;</code>
        */
-      java.lang.String getGroupSessionId();
+      int getMemberSessionIdsCount();
       /**
-       * <code>required string groupSessionId = 1;</code>
-       *
-       * <pre>
-       * @required
-       * </pre>
+       * <code>repeated string memberSessionIds = 1;</code>
+       */
+      java.lang.String getMemberSessionIds(int index);
+      /**
+       * <code>repeated string memberSessionIds = 1;</code>
        */
       com.google.protobuf.ByteString
-          getGroupSessionIdBytes();
+          getMemberSessionIdsBytes(int index);
 
       // required bytes adminSignature = 2;
       /**
@@ -13865,8 +13570,7 @@ public final class SignalServiceProtos {
        *
        * <pre>
        * @required
-       * signature of "DELETE" || sessionId || timestamp
-       * sessionId is the sessionId of the person being removed
+       * signature of "DELETE" || timestamp || sessionId[0] || ... || sessionId[n]
        * </pre>
        */
       boolean hasAdminSignature();
@@ -13875,8 +13579,7 @@ public final class SignalServiceProtos {
        *
        * <pre>
        * @required
-       * signature of "DELETE" || sessionId || timestamp
-       * sessionId is the sessionId of the person being removed
+       * signature of "DELETE" || timestamp || sessionId[0] || ... || sessionId[n]
        * </pre>
        */
       com.google.protobuf.ByteString getAdminSignature();
@@ -13933,12 +13636,15 @@ public final class SignalServiceProtos {
                 break;
               }
               case 10: {
-                bitField0_ |= 0x00000001;
-                groupSessionId_ = input.readBytes();
+                if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+                  memberSessionIds_ = new com.google.protobuf.LazyStringArrayList();
+                  mutable_bitField0_ |= 0x00000001;
+                }
+                memberSessionIds_.add(input.readBytes());
                 break;
               }
               case 18: {
-                bitField0_ |= 0x00000002;
+                bitField0_ |= 0x00000001;
                 adminSignature_ = input.readBytes();
                 break;
               }
@@ -13950,6 +13656,9 @@ public final class SignalServiceProtos {
           throw new com.google.protobuf.InvalidProtocolBufferException(
               e.getMessage()).setUnfinishedMessage(this);
         } finally {
+          if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+            memberSessionIds_ = new com.google.protobuf.UnmodifiableLazyStringList(memberSessionIds_);
+          }
           this.unknownFields = unknownFields.build();
           makeExtensionsImmutable();
         }
@@ -13982,59 +13691,34 @@ public final class SignalServiceProtos {
       }
 
       private int bitField0_;
-      // required string groupSessionId = 1;
-      public static final int GROUPSESSIONID_FIELD_NUMBER = 1;
-      private java.lang.Object groupSessionId_;
+      // repeated string memberSessionIds = 1;
+      public static final int MEMBERSESSIONIDS_FIELD_NUMBER = 1;
+      private com.google.protobuf.LazyStringList memberSessionIds_;
       /**
-       * <code>required string groupSessionId = 1;</code>
-       *
-       * <pre>
-       * @required
-       * </pre>
+       * <code>repeated string memberSessionIds = 1;</code>
        */
-      public boolean hasGroupSessionId() {
-        return ((bitField0_ & 0x00000001) == 0x00000001);
+      public java.util.List<java.lang.String>
+          getMemberSessionIdsList() {
+        return memberSessionIds_;
       }
       /**
-       * <code>required string groupSessionId = 1;</code>
-       *
-       * <pre>
-       * @required
-       * </pre>
+       * <code>repeated string memberSessionIds = 1;</code>
        */
-      public java.lang.String getGroupSessionId() {
-        java.lang.Object ref = groupSessionId_;
-        if (ref instanceof java.lang.String) {
-          return (java.lang.String) ref;
-        } else {
-          com.google.protobuf.ByteString bs = 
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          if (bs.isValidUtf8()) {
-            groupSessionId_ = s;
-          }
-          return s;
-        }
+      public int getMemberSessionIdsCount() {
+        return memberSessionIds_.size();
       }
       /**
-       * <code>required string groupSessionId = 1;</code>
-       *
-       * <pre>
-       * @required
-       * </pre>
+       * <code>repeated string memberSessionIds = 1;</code>
+       */
+      public java.lang.String getMemberSessionIds(int index) {
+        return memberSessionIds_.get(index);
+      }
+      /**
+       * <code>repeated string memberSessionIds = 1;</code>
        */
       public com.google.protobuf.ByteString
-          getGroupSessionIdBytes() {
-        java.lang.Object ref = groupSessionId_;
-        if (ref instanceof java.lang.String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          groupSessionId_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
+          getMemberSessionIdsBytes(int index) {
+        return memberSessionIds_.getByteString(index);
       }
 
       // required bytes adminSignature = 2;
@@ -14045,20 +13729,18 @@ public final class SignalServiceProtos {
        *
        * <pre>
        * @required
-       * signature of "DELETE" || sessionId || timestamp
-       * sessionId is the sessionId of the person being removed
+       * signature of "DELETE" || timestamp || sessionId[0] || ... || sessionId[n]
        * </pre>
        */
       public boolean hasAdminSignature() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
+        return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
        * <code>required bytes adminSignature = 2;</code>
        *
        * <pre>
        * @required
-       * signature of "DELETE" || sessionId || timestamp
-       * sessionId is the sessionId of the person being removed
+       * signature of "DELETE" || timestamp || sessionId[0] || ... || sessionId[n]
        * </pre>
        */
       public com.google.protobuf.ByteString getAdminSignature() {
@@ -14066,7 +13748,7 @@ public final class SignalServiceProtos {
       }
 
       private void initFields() {
-        groupSessionId_ = "";
+        memberSessionIds_ = com.google.protobuf.LazyStringArrayList.EMPTY;
         adminSignature_ = com.google.protobuf.ByteString.EMPTY;
       }
       private byte memoizedIsInitialized = -1;
@@ -14074,10 +13756,6 @@ public final class SignalServiceProtos {
         byte isInitialized = memoizedIsInitialized;
         if (isInitialized != -1) return isInitialized == 1;
 
-        if (!hasGroupSessionId()) {
-          memoizedIsInitialized = 0;
-          return false;
-        }
         if (!hasAdminSignature()) {
           memoizedIsInitialized = 0;
           return false;
@@ -14089,10 +13767,10 @@ public final class SignalServiceProtos {
       public void writeTo(com.google.protobuf.CodedOutputStream output)
                           throws java.io.IOException {
         getSerializedSize();
-        if (((bitField0_ & 0x00000001) == 0x00000001)) {
-          output.writeBytes(1, getGroupSessionIdBytes());
+        for (int i = 0; i < memberSessionIds_.size(); i++) {
+          output.writeBytes(1, memberSessionIds_.getByteString(i));
         }
-        if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
           output.writeBytes(2, adminSignature_);
         }
         getUnknownFields().writeTo(output);
@@ -14104,11 +13782,16 @@ public final class SignalServiceProtos {
         if (size != -1) return size;
 
         size = 0;
-        if (((bitField0_ & 0x00000001) == 0x00000001)) {
-          size += com.google.protobuf.CodedOutputStream
-            .computeBytesSize(1, getGroupSessionIdBytes());
+        {
+          int dataSize = 0;
+          for (int i = 0; i < memberSessionIds_.size(); i++) {
+            dataSize += com.google.protobuf.CodedOutputStream
+              .computeBytesSizeNoTag(memberSessionIds_.getByteString(i));
+          }
+          size += dataSize;
+          size += 1 * getMemberSessionIdsList().size();
         }
-        if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
           size += com.google.protobuf.CodedOutputStream
             .computeBytesSize(2, adminSignature_);
         }
@@ -14228,7 +13911,7 @@ public final class SignalServiceProtos {
 
         public Builder clear() {
           super.clear();
-          groupSessionId_ = "";
+          memberSessionIds_ = com.google.protobuf.LazyStringArrayList.EMPTY;
           bitField0_ = (bitField0_ & ~0x00000001);
           adminSignature_ = com.google.protobuf.ByteString.EMPTY;
           bitField0_ = (bitField0_ & ~0x00000002);
@@ -14260,12 +13943,14 @@ public final class SignalServiceProtos {
           org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage result = new org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage(this);
           int from_bitField0_ = bitField0_;
           int to_bitField0_ = 0;
-          if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
-            to_bitField0_ |= 0x00000001;
+          if (((bitField0_ & 0x00000001) == 0x00000001)) {
+            memberSessionIds_ = new com.google.protobuf.UnmodifiableLazyStringList(
+                memberSessionIds_);
+            bitField0_ = (bitField0_ & ~0x00000001);
           }
-          result.groupSessionId_ = groupSessionId_;
+          result.memberSessionIds_ = memberSessionIds_;
           if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
-            to_bitField0_ |= 0x00000002;
+            to_bitField0_ |= 0x00000001;
           }
           result.adminSignature_ = adminSignature_;
           result.bitField0_ = to_bitField0_;
@@ -14284,9 +13969,14 @@ public final class SignalServiceProtos {
 
         public Builder mergeFrom(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage other) {
           if (other == org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage.getDefaultInstance()) return this;
-          if (other.hasGroupSessionId()) {
-            bitField0_ |= 0x00000001;
-            groupSessionId_ = other.groupSessionId_;
+          if (!other.memberSessionIds_.isEmpty()) {
+            if (memberSessionIds_.isEmpty()) {
+              memberSessionIds_ = other.memberSessionIds_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+            } else {
+              ensureMemberSessionIdsIsMutable();
+              memberSessionIds_.addAll(other.memberSessionIds_);
+            }
             onChanged();
           }
           if (other.hasAdminSignature()) {
@@ -14297,10 +13987,6 @@ public final class SignalServiceProtos {
         }
 
         public final boolean isInitialized() {
-          if (!hasGroupSessionId()) {
-            
-            return false;
-          }
           if (!hasAdminSignature()) {
             
             return false;
@@ -14327,100 +14013,95 @@ public final class SignalServiceProtos {
         }
         private int bitField0_;
 
-        // required string groupSessionId = 1;
-        private java.lang.Object groupSessionId_ = "";
-        /**
-         * <code>required string groupSessionId = 1;</code>
-         *
-         * <pre>
-         * @required
-         * </pre>
-         */
-        public boolean hasGroupSessionId() {
-          return ((bitField0_ & 0x00000001) == 0x00000001);
+        // repeated string memberSessionIds = 1;
+        private com.google.protobuf.LazyStringList memberSessionIds_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        private void ensureMemberSessionIdsIsMutable() {
+          if (!((bitField0_ & 0x00000001) == 0x00000001)) {
+            memberSessionIds_ = new com.google.protobuf.LazyStringArrayList(memberSessionIds_);
+            bitField0_ |= 0x00000001;
+           }
         }
         /**
-         * <code>required string groupSessionId = 1;</code>
-         *
-         * <pre>
-         * @required
-         * </pre>
+         * <code>repeated string memberSessionIds = 1;</code>
          */
-        public java.lang.String getGroupSessionId() {
-          java.lang.Object ref = groupSessionId_;
-          if (!(ref instanceof java.lang.String)) {
-            java.lang.String s = ((com.google.protobuf.ByteString) ref)
-                .toStringUtf8();
-            groupSessionId_ = s;
-            return s;
-          } else {
-            return (java.lang.String) ref;
-          }
+        public java.util.List<java.lang.String>
+            getMemberSessionIdsList() {
+          return java.util.Collections.unmodifiableList(memberSessionIds_);
         }
         /**
-         * <code>required string groupSessionId = 1;</code>
-         *
-         * <pre>
-         * @required
-         * </pre>
+         * <code>repeated string memberSessionIds = 1;</code>
+         */
+        public int getMemberSessionIdsCount() {
+          return memberSessionIds_.size();
+        }
+        /**
+         * <code>repeated string memberSessionIds = 1;</code>
+         */
+        public java.lang.String getMemberSessionIds(int index) {
+          return memberSessionIds_.get(index);
+        }
+        /**
+         * <code>repeated string memberSessionIds = 1;</code>
          */
         public com.google.protobuf.ByteString
-            getGroupSessionIdBytes() {
-          java.lang.Object ref = groupSessionId_;
-          if (ref instanceof String) {
-            com.google.protobuf.ByteString b = 
-                com.google.protobuf.ByteString.copyFromUtf8(
-                    (java.lang.String) ref);
-            groupSessionId_ = b;
-            return b;
-          } else {
-            return (com.google.protobuf.ByteString) ref;
-          }
+            getMemberSessionIdsBytes(int index) {
+          return memberSessionIds_.getByteString(index);
         }
         /**
-         * <code>required string groupSessionId = 1;</code>
-         *
-         * <pre>
-         * @required
-         * </pre>
+         * <code>repeated string memberSessionIds = 1;</code>
          */
-        public Builder setGroupSessionId(
+        public Builder setMemberSessionIds(
+            int index, java.lang.String value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureMemberSessionIdsIsMutable();
+          memberSessionIds_.set(index, value);
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>repeated string memberSessionIds = 1;</code>
+         */
+        public Builder addMemberSessionIds(
             java.lang.String value) {
           if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000001;
-          groupSessionId_ = value;
+  ensureMemberSessionIdsIsMutable();
+          memberSessionIds_.add(value);
           onChanged();
           return this;
         }
         /**
-         * <code>required string groupSessionId = 1;</code>
-         *
-         * <pre>
-         * @required
-         * </pre>
+         * <code>repeated string memberSessionIds = 1;</code>
          */
-        public Builder clearGroupSessionId() {
+        public Builder addAllMemberSessionIds(
+            java.lang.Iterable<java.lang.String> values) {
+          ensureMemberSessionIdsIsMutable();
+          super.addAll(values, memberSessionIds_);
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>repeated string memberSessionIds = 1;</code>
+         */
+        public Builder clearMemberSessionIds() {
+          memberSessionIds_ = com.google.protobuf.LazyStringArrayList.EMPTY;
           bitField0_ = (bitField0_ & ~0x00000001);
-          groupSessionId_ = getDefaultInstance().getGroupSessionId();
           onChanged();
           return this;
         }
         /**
-         * <code>required string groupSessionId = 1;</code>
-         *
-         * <pre>
-         * @required
-         * </pre>
+         * <code>repeated string memberSessionIds = 1;</code>
          */
-        public Builder setGroupSessionIdBytes(
+        public Builder addMemberSessionIdsBytes(
             com.google.protobuf.ByteString value) {
           if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000001;
-          groupSessionId_ = value;
+  ensureMemberSessionIdsIsMutable();
+          memberSessionIds_.add(value);
           onChanged();
           return this;
         }
@@ -14432,8 +14113,7 @@ public final class SignalServiceProtos {
          *
          * <pre>
          * @required
-         * signature of "DELETE" || sessionId || timestamp
-         * sessionId is the sessionId of the person being removed
+         * signature of "DELETE" || timestamp || sessionId[0] || ... || sessionId[n]
          * </pre>
          */
         public boolean hasAdminSignature() {
@@ -14444,8 +14124,7 @@ public final class SignalServiceProtos {
          *
          * <pre>
          * @required
-         * signature of "DELETE" || sessionId || timestamp
-         * sessionId is the sessionId of the person being removed
+         * signature of "DELETE" || timestamp || sessionId[0] || ... || sessionId[n]
          * </pre>
          */
         public com.google.protobuf.ByteString getAdminSignature() {
@@ -14456,8 +14135,7 @@ public final class SignalServiceProtos {
          *
          * <pre>
          * @required
-         * signature of "DELETE" || sessionId || timestamp
-         * sessionId is the sessionId of the person being removed
+         * signature of "DELETE" || timestamp || sessionId[0] || ... || sessionId[n]
          * </pre>
          */
         public Builder setAdminSignature(com.google.protobuf.ByteString value) {
@@ -14474,8 +14152,7 @@ public final class SignalServiceProtos {
          *
          * <pre>
          * @required
-         * signature of "DELETE" || sessionId || timestamp
-         * sessionId is the sessionId of the person being removed
+         * signature of "DELETE" || timestamp || sessionId[0] || ... || sessionId[n]
          * </pre>
          */
         public Builder clearAdminSignature() {
@@ -14980,6 +14657,26 @@ public final class SignalServiceProtos {
        * <code>optional uint32 updatedExpiration = 3;</code>
        */
       int getUpdatedExpiration();
+
+      // required bytes adminSignature = 4;
+      /**
+       * <code>required bytes adminSignature = 4;</code>
+       *
+       * <pre>
+       * @required
+       * "INFO_CHANGE" || type || timestamp
+       * </pre>
+       */
+      boolean hasAdminSignature();
+      /**
+       * <code>required bytes adminSignature = 4;</code>
+       *
+       * <pre>
+       * @required
+       * "INFO_CHANGE" || type || timestamp
+       * </pre>
+       */
+      com.google.protobuf.ByteString getAdminSignature();
     }
     /**
      * Protobuf type {@code signalservice.DataMessage.GroupUpdateInfoChangeMessage}
@@ -15051,6 +14748,11 @@ public final class SignalServiceProtos {
               case 24: {
                 bitField0_ |= 0x00000004;
                 updatedExpiration_ = input.readUInt32();
+                break;
+              }
+              case 34: {
+                bitField0_ |= 0x00000008;
+                adminSignature_ = input.readBytes();
                 break;
               }
             }
@@ -15267,10 +14969,37 @@ public final class SignalServiceProtos {
         return updatedExpiration_;
       }
 
+      // required bytes adminSignature = 4;
+      public static final int ADMINSIGNATURE_FIELD_NUMBER = 4;
+      private com.google.protobuf.ByteString adminSignature_;
+      /**
+       * <code>required bytes adminSignature = 4;</code>
+       *
+       * <pre>
+       * @required
+       * "INFO_CHANGE" || type || timestamp
+       * </pre>
+       */
+      public boolean hasAdminSignature() {
+        return ((bitField0_ & 0x00000008) == 0x00000008);
+      }
+      /**
+       * <code>required bytes adminSignature = 4;</code>
+       *
+       * <pre>
+       * @required
+       * "INFO_CHANGE" || type || timestamp
+       * </pre>
+       */
+      public com.google.protobuf.ByteString getAdminSignature() {
+        return adminSignature_;
+      }
+
       private void initFields() {
         type_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage.Type.NAME;
         updatedName_ = "";
         updatedExpiration_ = 0;
+        adminSignature_ = com.google.protobuf.ByteString.EMPTY;
       }
       private byte memoizedIsInitialized = -1;
       public final boolean isInitialized() {
@@ -15278,6 +15007,10 @@ public final class SignalServiceProtos {
         if (isInitialized != -1) return isInitialized == 1;
 
         if (!hasType()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+        if (!hasAdminSignature()) {
           memoizedIsInitialized = 0;
           return false;
         }
@@ -15296,6 +15029,9 @@ public final class SignalServiceProtos {
         }
         if (((bitField0_ & 0x00000004) == 0x00000004)) {
           output.writeUInt32(3, updatedExpiration_);
+        }
+        if (((bitField0_ & 0x00000008) == 0x00000008)) {
+          output.writeBytes(4, adminSignature_);
         }
         getUnknownFields().writeTo(output);
       }
@@ -15317,6 +15053,10 @@ public final class SignalServiceProtos {
         if (((bitField0_ & 0x00000004) == 0x00000004)) {
           size += com.google.protobuf.CodedOutputStream
             .computeUInt32Size(3, updatedExpiration_);
+        }
+        if (((bitField0_ & 0x00000008) == 0x00000008)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeBytesSize(4, adminSignature_);
         }
         size += getUnknownFields().getSerializedSize();
         memoizedSerializedSize = size;
@@ -15440,6 +15180,8 @@ public final class SignalServiceProtos {
           bitField0_ = (bitField0_ & ~0x00000002);
           updatedExpiration_ = 0;
           bitField0_ = (bitField0_ & ~0x00000004);
+          adminSignature_ = com.google.protobuf.ByteString.EMPTY;
+          bitField0_ = (bitField0_ & ~0x00000008);
           return this;
         }
 
@@ -15480,6 +15222,10 @@ public final class SignalServiceProtos {
             to_bitField0_ |= 0x00000004;
           }
           result.updatedExpiration_ = updatedExpiration_;
+          if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+            to_bitField0_ |= 0x00000008;
+          }
+          result.adminSignature_ = adminSignature_;
           result.bitField0_ = to_bitField0_;
           onBuilt();
           return result;
@@ -15507,12 +15253,19 @@ public final class SignalServiceProtos {
           if (other.hasUpdatedExpiration()) {
             setUpdatedExpiration(other.getUpdatedExpiration());
           }
+          if (other.hasAdminSignature()) {
+            setAdminSignature(other.getAdminSignature());
+          }
           this.mergeUnknownFields(other.getUnknownFields());
           return this;
         }
 
         public final boolean isInitialized() {
           if (!hasType()) {
+            
+            return false;
+          }
+          if (!hasAdminSignature()) {
             
             return false;
           }
@@ -15697,6 +15450,62 @@ public final class SignalServiceProtos {
           return this;
         }
 
+        // required bytes adminSignature = 4;
+        private com.google.protobuf.ByteString adminSignature_ = com.google.protobuf.ByteString.EMPTY;
+        /**
+         * <code>required bytes adminSignature = 4;</code>
+         *
+         * <pre>
+         * @required
+         * "INFO_CHANGE" || type || timestamp
+         * </pre>
+         */
+        public boolean hasAdminSignature() {
+          return ((bitField0_ & 0x00000008) == 0x00000008);
+        }
+        /**
+         * <code>required bytes adminSignature = 4;</code>
+         *
+         * <pre>
+         * @required
+         * "INFO_CHANGE" || type || timestamp
+         * </pre>
+         */
+        public com.google.protobuf.ByteString getAdminSignature() {
+          return adminSignature_;
+        }
+        /**
+         * <code>required bytes adminSignature = 4;</code>
+         *
+         * <pre>
+         * @required
+         * "INFO_CHANGE" || type || timestamp
+         * </pre>
+         */
+        public Builder setAdminSignature(com.google.protobuf.ByteString value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000008;
+          adminSignature_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>required bytes adminSignature = 4;</code>
+         *
+         * <pre>
+         * @required
+         * "INFO_CHANGE" || type || timestamp
+         * </pre>
+         */
+        public Builder clearAdminSignature() {
+          bitField0_ = (bitField0_ & ~0x00000008);
+          adminSignature_ = getDefaultInstance().getAdminSignature();
+          onChanged();
+          return this;
+        }
+
         // @@protoc_insertion_point(builder_scope:signalservice.DataMessage.GroupUpdateInfoChangeMessage)
       }
 
@@ -15729,19 +15538,45 @@ public final class SignalServiceProtos {
        */
       org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage.Type getType();
 
-      // repeated bytes memberPublicKeys = 2;
+      // repeated string memberSessionIds = 2;
       /**
-       * <code>repeated bytes memberPublicKeys = 2;</code>
+       * <code>repeated string memberSessionIds = 2;</code>
        */
-      java.util.List<com.google.protobuf.ByteString> getMemberPublicKeysList();
+      java.util.List<java.lang.String>
+      getMemberSessionIdsList();
       /**
-       * <code>repeated bytes memberPublicKeys = 2;</code>
+       * <code>repeated string memberSessionIds = 2;</code>
        */
-      int getMemberPublicKeysCount();
+      int getMemberSessionIdsCount();
       /**
-       * <code>repeated bytes memberPublicKeys = 2;</code>
+       * <code>repeated string memberSessionIds = 2;</code>
        */
-      com.google.protobuf.ByteString getMemberPublicKeys(int index);
+      java.lang.String getMemberSessionIds(int index);
+      /**
+       * <code>repeated string memberSessionIds = 2;</code>
+       */
+      com.google.protobuf.ByteString
+          getMemberSessionIdsBytes(int index);
+
+      // required bytes adminSignature = 3;
+      /**
+       * <code>required bytes adminSignature = 3;</code>
+       *
+       * <pre>
+       * @required
+       * "MEMBER_CHANGE" || type || timestamp
+       * </pre>
+       */
+      boolean hasAdminSignature();
+      /**
+       * <code>required bytes adminSignature = 3;</code>
+       *
+       * <pre>
+       * @required
+       * "MEMBER_CHANGE" || type || timestamp
+       * </pre>
+       */
+      com.google.protobuf.ByteString getAdminSignature();
     }
     /**
      * Protobuf type {@code signalservice.DataMessage.GroupUpdateMemberChangeMessage}
@@ -15807,10 +15642,15 @@ public final class SignalServiceProtos {
               }
               case 18: {
                 if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
-                  memberPublicKeys_ = new java.util.ArrayList<com.google.protobuf.ByteString>();
+                  memberSessionIds_ = new com.google.protobuf.LazyStringArrayList();
                   mutable_bitField0_ |= 0x00000002;
                 }
-                memberPublicKeys_.add(input.readBytes());
+                memberSessionIds_.add(input.readBytes());
+                break;
+              }
+              case 26: {
+                bitField0_ |= 0x00000002;
+                adminSignature_ = input.readBytes();
                 break;
               }
             }
@@ -15822,7 +15662,7 @@ public final class SignalServiceProtos {
               e.getMessage()).setUnfinishedMessage(this);
         } finally {
           if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
-            memberPublicKeys_ = java.util.Collections.unmodifiableList(memberPublicKeys_);
+            memberSessionIds_ = new com.google.protobuf.UnmodifiableLazyStringList(memberSessionIds_);
           }
           this.unknownFields = unknownFields.build();
           makeExtensionsImmutable();
@@ -15971,32 +15811,66 @@ public final class SignalServiceProtos {
         return type_;
       }
 
-      // repeated bytes memberPublicKeys = 2;
-      public static final int MEMBERPUBLICKEYS_FIELD_NUMBER = 2;
-      private java.util.List<com.google.protobuf.ByteString> memberPublicKeys_;
+      // repeated string memberSessionIds = 2;
+      public static final int MEMBERSESSIONIDS_FIELD_NUMBER = 2;
+      private com.google.protobuf.LazyStringList memberSessionIds_;
       /**
-       * <code>repeated bytes memberPublicKeys = 2;</code>
+       * <code>repeated string memberSessionIds = 2;</code>
        */
-      public java.util.List<com.google.protobuf.ByteString>
-          getMemberPublicKeysList() {
-        return memberPublicKeys_;
+      public java.util.List<java.lang.String>
+          getMemberSessionIdsList() {
+        return memberSessionIds_;
       }
       /**
-       * <code>repeated bytes memberPublicKeys = 2;</code>
+       * <code>repeated string memberSessionIds = 2;</code>
        */
-      public int getMemberPublicKeysCount() {
-        return memberPublicKeys_.size();
+      public int getMemberSessionIdsCount() {
+        return memberSessionIds_.size();
       }
       /**
-       * <code>repeated bytes memberPublicKeys = 2;</code>
+       * <code>repeated string memberSessionIds = 2;</code>
        */
-      public com.google.protobuf.ByteString getMemberPublicKeys(int index) {
-        return memberPublicKeys_.get(index);
+      public java.lang.String getMemberSessionIds(int index) {
+        return memberSessionIds_.get(index);
+      }
+      /**
+       * <code>repeated string memberSessionIds = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getMemberSessionIdsBytes(int index) {
+        return memberSessionIds_.getByteString(index);
+      }
+
+      // required bytes adminSignature = 3;
+      public static final int ADMINSIGNATURE_FIELD_NUMBER = 3;
+      private com.google.protobuf.ByteString adminSignature_;
+      /**
+       * <code>required bytes adminSignature = 3;</code>
+       *
+       * <pre>
+       * @required
+       * "MEMBER_CHANGE" || type || timestamp
+       * </pre>
+       */
+      public boolean hasAdminSignature() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>required bytes adminSignature = 3;</code>
+       *
+       * <pre>
+       * @required
+       * "MEMBER_CHANGE" || type || timestamp
+       * </pre>
+       */
+      public com.google.protobuf.ByteString getAdminSignature() {
+        return adminSignature_;
       }
 
       private void initFields() {
         type_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage.Type.ADDED;
-        memberPublicKeys_ = java.util.Collections.emptyList();
+        memberSessionIds_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        adminSignature_ = com.google.protobuf.ByteString.EMPTY;
       }
       private byte memoizedIsInitialized = -1;
       public final boolean isInitialized() {
@@ -16004,6 +15878,10 @@ public final class SignalServiceProtos {
         if (isInitialized != -1) return isInitialized == 1;
 
         if (!hasType()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+        if (!hasAdminSignature()) {
           memoizedIsInitialized = 0;
           return false;
         }
@@ -16017,8 +15895,11 @@ public final class SignalServiceProtos {
         if (((bitField0_ & 0x00000001) == 0x00000001)) {
           output.writeEnum(1, type_.getNumber());
         }
-        for (int i = 0; i < memberPublicKeys_.size(); i++) {
-          output.writeBytes(2, memberPublicKeys_.get(i));
+        for (int i = 0; i < memberSessionIds_.size(); i++) {
+          output.writeBytes(2, memberSessionIds_.getByteString(i));
+        }
+        if (((bitField0_ & 0x00000002) == 0x00000002)) {
+          output.writeBytes(3, adminSignature_);
         }
         getUnknownFields().writeTo(output);
       }
@@ -16035,12 +15916,16 @@ public final class SignalServiceProtos {
         }
         {
           int dataSize = 0;
-          for (int i = 0; i < memberPublicKeys_.size(); i++) {
+          for (int i = 0; i < memberSessionIds_.size(); i++) {
             dataSize += com.google.protobuf.CodedOutputStream
-              .computeBytesSizeNoTag(memberPublicKeys_.get(i));
+              .computeBytesSizeNoTag(memberSessionIds_.getByteString(i));
           }
           size += dataSize;
-          size += 1 * getMemberPublicKeysList().size();
+          size += 1 * getMemberSessionIdsList().size();
+        }
+        if (((bitField0_ & 0x00000002) == 0x00000002)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeBytesSize(3, adminSignature_);
         }
         size += getUnknownFields().getSerializedSize();
         memoizedSerializedSize = size;
@@ -16160,8 +16045,10 @@ public final class SignalServiceProtos {
           super.clear();
           type_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage.Type.ADDED;
           bitField0_ = (bitField0_ & ~0x00000001);
-          memberPublicKeys_ = java.util.Collections.emptyList();
+          memberSessionIds_ = com.google.protobuf.LazyStringArrayList.EMPTY;
           bitField0_ = (bitField0_ & ~0x00000002);
+          adminSignature_ = com.google.protobuf.ByteString.EMPTY;
+          bitField0_ = (bitField0_ & ~0x00000004);
           return this;
         }
 
@@ -16195,10 +16082,15 @@ public final class SignalServiceProtos {
           }
           result.type_ = type_;
           if (((bitField0_ & 0x00000002) == 0x00000002)) {
-            memberPublicKeys_ = java.util.Collections.unmodifiableList(memberPublicKeys_);
+            memberSessionIds_ = new com.google.protobuf.UnmodifiableLazyStringList(
+                memberSessionIds_);
             bitField0_ = (bitField0_ & ~0x00000002);
           }
-          result.memberPublicKeys_ = memberPublicKeys_;
+          result.memberSessionIds_ = memberSessionIds_;
+          if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+            to_bitField0_ |= 0x00000002;
+          }
+          result.adminSignature_ = adminSignature_;
           result.bitField0_ = to_bitField0_;
           onBuilt();
           return result;
@@ -16218,15 +16110,18 @@ public final class SignalServiceProtos {
           if (other.hasType()) {
             setType(other.getType());
           }
-          if (!other.memberPublicKeys_.isEmpty()) {
-            if (memberPublicKeys_.isEmpty()) {
-              memberPublicKeys_ = other.memberPublicKeys_;
+          if (!other.memberSessionIds_.isEmpty()) {
+            if (memberSessionIds_.isEmpty()) {
+              memberSessionIds_ = other.memberSessionIds_;
               bitField0_ = (bitField0_ & ~0x00000002);
             } else {
-              ensureMemberPublicKeysIsMutable();
-              memberPublicKeys_.addAll(other.memberPublicKeys_);
+              ensureMemberSessionIdsIsMutable();
+              memberSessionIds_.addAll(other.memberSessionIds_);
             }
             onChanged();
+          }
+          if (other.hasAdminSignature()) {
+            setAdminSignature(other.getAdminSignature());
           }
           this.mergeUnknownFields(other.getUnknownFields());
           return this;
@@ -16234,6 +16129,10 @@ public final class SignalServiceProtos {
 
         public final boolean isInitialized() {
           if (!hasType()) {
+            
+            return false;
+          }
+          if (!hasAdminSignature()) {
             
             return false;
           }
@@ -16311,74 +16210,151 @@ public final class SignalServiceProtos {
           return this;
         }
 
-        // repeated bytes memberPublicKeys = 2;
-        private java.util.List<com.google.protobuf.ByteString> memberPublicKeys_ = java.util.Collections.emptyList();
-        private void ensureMemberPublicKeysIsMutable() {
+        // repeated string memberSessionIds = 2;
+        private com.google.protobuf.LazyStringList memberSessionIds_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        private void ensureMemberSessionIdsIsMutable() {
           if (!((bitField0_ & 0x00000002) == 0x00000002)) {
-            memberPublicKeys_ = new java.util.ArrayList<com.google.protobuf.ByteString>(memberPublicKeys_);
+            memberSessionIds_ = new com.google.protobuf.LazyStringArrayList(memberSessionIds_);
             bitField0_ |= 0x00000002;
            }
         }
         /**
-         * <code>repeated bytes memberPublicKeys = 2;</code>
+         * <code>repeated string memberSessionIds = 2;</code>
          */
-        public java.util.List<com.google.protobuf.ByteString>
-            getMemberPublicKeysList() {
-          return java.util.Collections.unmodifiableList(memberPublicKeys_);
+        public java.util.List<java.lang.String>
+            getMemberSessionIdsList() {
+          return java.util.Collections.unmodifiableList(memberSessionIds_);
         }
         /**
-         * <code>repeated bytes memberPublicKeys = 2;</code>
+         * <code>repeated string memberSessionIds = 2;</code>
          */
-        public int getMemberPublicKeysCount() {
-          return memberPublicKeys_.size();
+        public int getMemberSessionIdsCount() {
+          return memberSessionIds_.size();
         }
         /**
-         * <code>repeated bytes memberPublicKeys = 2;</code>
+         * <code>repeated string memberSessionIds = 2;</code>
          */
-        public com.google.protobuf.ByteString getMemberPublicKeys(int index) {
-          return memberPublicKeys_.get(index);
+        public java.lang.String getMemberSessionIds(int index) {
+          return memberSessionIds_.get(index);
         }
         /**
-         * <code>repeated bytes memberPublicKeys = 2;</code>
+         * <code>repeated string memberSessionIds = 2;</code>
          */
-        public Builder setMemberPublicKeys(
-            int index, com.google.protobuf.ByteString value) {
+        public com.google.protobuf.ByteString
+            getMemberSessionIdsBytes(int index) {
+          return memberSessionIds_.getByteString(index);
+        }
+        /**
+         * <code>repeated string memberSessionIds = 2;</code>
+         */
+        public Builder setMemberSessionIds(
+            int index, java.lang.String value) {
           if (value == null) {
     throw new NullPointerException();
   }
-  ensureMemberPublicKeysIsMutable();
-          memberPublicKeys_.set(index, value);
+  ensureMemberSessionIdsIsMutable();
+          memberSessionIds_.set(index, value);
           onChanged();
           return this;
         }
         /**
-         * <code>repeated bytes memberPublicKeys = 2;</code>
+         * <code>repeated string memberSessionIds = 2;</code>
          */
-        public Builder addMemberPublicKeys(com.google.protobuf.ByteString value) {
+        public Builder addMemberSessionIds(
+            java.lang.String value) {
           if (value == null) {
     throw new NullPointerException();
   }
-  ensureMemberPublicKeysIsMutable();
-          memberPublicKeys_.add(value);
+  ensureMemberSessionIdsIsMutable();
+          memberSessionIds_.add(value);
           onChanged();
           return this;
         }
         /**
-         * <code>repeated bytes memberPublicKeys = 2;</code>
+         * <code>repeated string memberSessionIds = 2;</code>
          */
-        public Builder addAllMemberPublicKeys(
-            java.lang.Iterable<? extends com.google.protobuf.ByteString> values) {
-          ensureMemberPublicKeysIsMutable();
-          super.addAll(values, memberPublicKeys_);
+        public Builder addAllMemberSessionIds(
+            java.lang.Iterable<java.lang.String> values) {
+          ensureMemberSessionIdsIsMutable();
+          super.addAll(values, memberSessionIds_);
           onChanged();
           return this;
         }
         /**
-         * <code>repeated bytes memberPublicKeys = 2;</code>
+         * <code>repeated string memberSessionIds = 2;</code>
          */
-        public Builder clearMemberPublicKeys() {
-          memberPublicKeys_ = java.util.Collections.emptyList();
+        public Builder clearMemberSessionIds() {
+          memberSessionIds_ = com.google.protobuf.LazyStringArrayList.EMPTY;
           bitField0_ = (bitField0_ & ~0x00000002);
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>repeated string memberSessionIds = 2;</code>
+         */
+        public Builder addMemberSessionIdsBytes(
+            com.google.protobuf.ByteString value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureMemberSessionIdsIsMutable();
+          memberSessionIds_.add(value);
+          onChanged();
+          return this;
+        }
+
+        // required bytes adminSignature = 3;
+        private com.google.protobuf.ByteString adminSignature_ = com.google.protobuf.ByteString.EMPTY;
+        /**
+         * <code>required bytes adminSignature = 3;</code>
+         *
+         * <pre>
+         * @required
+         * "MEMBER_CHANGE" || type || timestamp
+         * </pre>
+         */
+        public boolean hasAdminSignature() {
+          return ((bitField0_ & 0x00000004) == 0x00000004);
+        }
+        /**
+         * <code>required bytes adminSignature = 3;</code>
+         *
+         * <pre>
+         * @required
+         * "MEMBER_CHANGE" || type || timestamp
+         * </pre>
+         */
+        public com.google.protobuf.ByteString getAdminSignature() {
+          return adminSignature_;
+        }
+        /**
+         * <code>required bytes adminSignature = 3;</code>
+         *
+         * <pre>
+         * @required
+         * "MEMBER_CHANGE" || type || timestamp
+         * </pre>
+         */
+        public Builder setAdminSignature(com.google.protobuf.ByteString value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+          adminSignature_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>required bytes adminSignature = 3;</code>
+         *
+         * <pre>
+         * @required
+         * "MEMBER_CHANGE" || type || timestamp
+         * </pre>
+         */
+        public Builder clearAdminSignature() {
+          bitField0_ = (bitField0_ & ~0x00000004);
+          adminSignature_ = getDefaultInstance().getAdminSignature();
           onChanged();
           return this;
         }
@@ -17150,23 +17126,49 @@ public final class SignalServiceProtos {
     public interface GroupUpdateDeleteMemberContentMessageOrBuilder
         extends com.google.protobuf.MessageOrBuilder {
 
-      // repeated bytes memberPublicKeys = 1;
+      // repeated string memberSessionIds = 1;
       /**
-       * <code>repeated bytes memberPublicKeys = 1;</code>
+       * <code>repeated string memberSessionIds = 1;</code>
        */
-      java.util.List<com.google.protobuf.ByteString> getMemberPublicKeysList();
+      java.util.List<java.lang.String>
+      getMemberSessionIdsList();
       /**
-       * <code>repeated bytes memberPublicKeys = 1;</code>
+       * <code>repeated string memberSessionIds = 1;</code>
        */
-      int getMemberPublicKeysCount();
+      int getMemberSessionIdsCount();
       /**
-       * <code>repeated bytes memberPublicKeys = 1;</code>
+       * <code>repeated string memberSessionIds = 1;</code>
        */
-      com.google.protobuf.ByteString getMemberPublicKeys(int index);
+      java.lang.String getMemberSessionIds(int index);
+      /**
+       * <code>repeated string memberSessionIds = 1;</code>
+       */
+      com.google.protobuf.ByteString
+          getMemberSessionIdsBytes(int index);
 
-      // required bytes adminSignature = 2;
+      // repeated string messageHashes = 2;
       /**
-       * <code>required bytes adminSignature = 2;</code>
+       * <code>repeated string messageHashes = 2;</code>
+       */
+      java.util.List<java.lang.String>
+      getMessageHashesList();
+      /**
+       * <code>repeated string messageHashes = 2;</code>
+       */
+      int getMessageHashesCount();
+      /**
+       * <code>repeated string messageHashes = 2;</code>
+       */
+      java.lang.String getMessageHashes(int index);
+      /**
+       * <code>repeated string messageHashes = 2;</code>
+       */
+      com.google.protobuf.ByteString
+          getMessageHashesBytes(int index);
+
+      // optional bytes adminSignature = 3;
+      /**
+       * <code>optional bytes adminSignature = 3;</code>
        *
        * <pre>
        * @required
@@ -17174,7 +17176,7 @@ public final class SignalServiceProtos {
        */
       boolean hasAdminSignature();
       /**
-       * <code>required bytes adminSignature = 2;</code>
+       * <code>optional bytes adminSignature = 3;</code>
        *
        * <pre>
        * @required
@@ -17235,13 +17237,21 @@ public final class SignalServiceProtos {
               }
               case 10: {
                 if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-                  memberPublicKeys_ = new java.util.ArrayList<com.google.protobuf.ByteString>();
+                  memberSessionIds_ = new com.google.protobuf.LazyStringArrayList();
                   mutable_bitField0_ |= 0x00000001;
                 }
-                memberPublicKeys_.add(input.readBytes());
+                memberSessionIds_.add(input.readBytes());
                 break;
               }
               case 18: {
+                if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+                  messageHashes_ = new com.google.protobuf.LazyStringArrayList();
+                  mutable_bitField0_ |= 0x00000002;
+                }
+                messageHashes_.add(input.readBytes());
+                break;
+              }
+              case 26: {
                 bitField0_ |= 0x00000001;
                 adminSignature_ = input.readBytes();
                 break;
@@ -17255,7 +17265,10 @@ public final class SignalServiceProtos {
               e.getMessage()).setUnfinishedMessage(this);
         } finally {
           if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-            memberPublicKeys_ = java.util.Collections.unmodifiableList(memberPublicKeys_);
+            memberSessionIds_ = new com.google.protobuf.UnmodifiableLazyStringList(memberSessionIds_);
+          }
+          if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+            messageHashes_ = new com.google.protobuf.UnmodifiableLazyStringList(messageHashes_);
           }
           this.unknownFields = unknownFields.build();
           makeExtensionsImmutable();
@@ -17289,34 +17302,71 @@ public final class SignalServiceProtos {
       }
 
       private int bitField0_;
-      // repeated bytes memberPublicKeys = 1;
-      public static final int MEMBERPUBLICKEYS_FIELD_NUMBER = 1;
-      private java.util.List<com.google.protobuf.ByteString> memberPublicKeys_;
+      // repeated string memberSessionIds = 1;
+      public static final int MEMBERSESSIONIDS_FIELD_NUMBER = 1;
+      private com.google.protobuf.LazyStringList memberSessionIds_;
       /**
-       * <code>repeated bytes memberPublicKeys = 1;</code>
+       * <code>repeated string memberSessionIds = 1;</code>
        */
-      public java.util.List<com.google.protobuf.ByteString>
-          getMemberPublicKeysList() {
-        return memberPublicKeys_;
+      public java.util.List<java.lang.String>
+          getMemberSessionIdsList() {
+        return memberSessionIds_;
       }
       /**
-       * <code>repeated bytes memberPublicKeys = 1;</code>
+       * <code>repeated string memberSessionIds = 1;</code>
        */
-      public int getMemberPublicKeysCount() {
-        return memberPublicKeys_.size();
+      public int getMemberSessionIdsCount() {
+        return memberSessionIds_.size();
       }
       /**
-       * <code>repeated bytes memberPublicKeys = 1;</code>
+       * <code>repeated string memberSessionIds = 1;</code>
        */
-      public com.google.protobuf.ByteString getMemberPublicKeys(int index) {
-        return memberPublicKeys_.get(index);
+      public java.lang.String getMemberSessionIds(int index) {
+        return memberSessionIds_.get(index);
+      }
+      /**
+       * <code>repeated string memberSessionIds = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getMemberSessionIdsBytes(int index) {
+        return memberSessionIds_.getByteString(index);
       }
 
-      // required bytes adminSignature = 2;
-      public static final int ADMINSIGNATURE_FIELD_NUMBER = 2;
+      // repeated string messageHashes = 2;
+      public static final int MESSAGEHASHES_FIELD_NUMBER = 2;
+      private com.google.protobuf.LazyStringList messageHashes_;
+      /**
+       * <code>repeated string messageHashes = 2;</code>
+       */
+      public java.util.List<java.lang.String>
+          getMessageHashesList() {
+        return messageHashes_;
+      }
+      /**
+       * <code>repeated string messageHashes = 2;</code>
+       */
+      public int getMessageHashesCount() {
+        return messageHashes_.size();
+      }
+      /**
+       * <code>repeated string messageHashes = 2;</code>
+       */
+      public java.lang.String getMessageHashes(int index) {
+        return messageHashes_.get(index);
+      }
+      /**
+       * <code>repeated string messageHashes = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getMessageHashesBytes(int index) {
+        return messageHashes_.getByteString(index);
+      }
+
+      // optional bytes adminSignature = 3;
+      public static final int ADMINSIGNATURE_FIELD_NUMBER = 3;
       private com.google.protobuf.ByteString adminSignature_;
       /**
-       * <code>required bytes adminSignature = 2;</code>
+       * <code>optional bytes adminSignature = 3;</code>
        *
        * <pre>
        * @required
@@ -17326,7 +17376,7 @@ public final class SignalServiceProtos {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>required bytes adminSignature = 2;</code>
+       * <code>optional bytes adminSignature = 3;</code>
        *
        * <pre>
        * @required
@@ -17337,7 +17387,8 @@ public final class SignalServiceProtos {
       }
 
       private void initFields() {
-        memberPublicKeys_ = java.util.Collections.emptyList();
+        memberSessionIds_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        messageHashes_ = com.google.protobuf.LazyStringArrayList.EMPTY;
         adminSignature_ = com.google.protobuf.ByteString.EMPTY;
       }
       private byte memoizedIsInitialized = -1;
@@ -17345,10 +17396,6 @@ public final class SignalServiceProtos {
         byte isInitialized = memoizedIsInitialized;
         if (isInitialized != -1) return isInitialized == 1;
 
-        if (!hasAdminSignature()) {
-          memoizedIsInitialized = 0;
-          return false;
-        }
         memoizedIsInitialized = 1;
         return true;
       }
@@ -17356,11 +17403,14 @@ public final class SignalServiceProtos {
       public void writeTo(com.google.protobuf.CodedOutputStream output)
                           throws java.io.IOException {
         getSerializedSize();
-        for (int i = 0; i < memberPublicKeys_.size(); i++) {
-          output.writeBytes(1, memberPublicKeys_.get(i));
+        for (int i = 0; i < memberSessionIds_.size(); i++) {
+          output.writeBytes(1, memberSessionIds_.getByteString(i));
+        }
+        for (int i = 0; i < messageHashes_.size(); i++) {
+          output.writeBytes(2, messageHashes_.getByteString(i));
         }
         if (((bitField0_ & 0x00000001) == 0x00000001)) {
-          output.writeBytes(2, adminSignature_);
+          output.writeBytes(3, adminSignature_);
         }
         getUnknownFields().writeTo(output);
       }
@@ -17373,16 +17423,25 @@ public final class SignalServiceProtos {
         size = 0;
         {
           int dataSize = 0;
-          for (int i = 0; i < memberPublicKeys_.size(); i++) {
+          for (int i = 0; i < memberSessionIds_.size(); i++) {
             dataSize += com.google.protobuf.CodedOutputStream
-              .computeBytesSizeNoTag(memberPublicKeys_.get(i));
+              .computeBytesSizeNoTag(memberSessionIds_.getByteString(i));
           }
           size += dataSize;
-          size += 1 * getMemberPublicKeysList().size();
+          size += 1 * getMemberSessionIdsList().size();
+        }
+        {
+          int dataSize = 0;
+          for (int i = 0; i < messageHashes_.size(); i++) {
+            dataSize += com.google.protobuf.CodedOutputStream
+              .computeBytesSizeNoTag(messageHashes_.getByteString(i));
+          }
+          size += dataSize;
+          size += 1 * getMessageHashesList().size();
         }
         if (((bitField0_ & 0x00000001) == 0x00000001)) {
           size += com.google.protobuf.CodedOutputStream
-            .computeBytesSize(2, adminSignature_);
+            .computeBytesSize(3, adminSignature_);
         }
         size += getUnknownFields().getSerializedSize();
         memoizedSerializedSize = size;
@@ -17500,10 +17559,12 @@ public final class SignalServiceProtos {
 
         public Builder clear() {
           super.clear();
-          memberPublicKeys_ = java.util.Collections.emptyList();
+          memberSessionIds_ = com.google.protobuf.LazyStringArrayList.EMPTY;
           bitField0_ = (bitField0_ & ~0x00000001);
-          adminSignature_ = com.google.protobuf.ByteString.EMPTY;
+          messageHashes_ = com.google.protobuf.LazyStringArrayList.EMPTY;
           bitField0_ = (bitField0_ & ~0x00000002);
+          adminSignature_ = com.google.protobuf.ByteString.EMPTY;
+          bitField0_ = (bitField0_ & ~0x00000004);
           return this;
         }
 
@@ -17533,11 +17594,18 @@ public final class SignalServiceProtos {
           int from_bitField0_ = bitField0_;
           int to_bitField0_ = 0;
           if (((bitField0_ & 0x00000001) == 0x00000001)) {
-            memberPublicKeys_ = java.util.Collections.unmodifiableList(memberPublicKeys_);
+            memberSessionIds_ = new com.google.protobuf.UnmodifiableLazyStringList(
+                memberSessionIds_);
             bitField0_ = (bitField0_ & ~0x00000001);
           }
-          result.memberPublicKeys_ = memberPublicKeys_;
-          if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          result.memberSessionIds_ = memberSessionIds_;
+          if (((bitField0_ & 0x00000002) == 0x00000002)) {
+            messageHashes_ = new com.google.protobuf.UnmodifiableLazyStringList(
+                messageHashes_);
+            bitField0_ = (bitField0_ & ~0x00000002);
+          }
+          result.messageHashes_ = messageHashes_;
+          if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
             to_bitField0_ |= 0x00000001;
           }
           result.adminSignature_ = adminSignature_;
@@ -17557,13 +17625,23 @@ public final class SignalServiceProtos {
 
         public Builder mergeFrom(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage other) {
           if (other == org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage.getDefaultInstance()) return this;
-          if (!other.memberPublicKeys_.isEmpty()) {
-            if (memberPublicKeys_.isEmpty()) {
-              memberPublicKeys_ = other.memberPublicKeys_;
+          if (!other.memberSessionIds_.isEmpty()) {
+            if (memberSessionIds_.isEmpty()) {
+              memberSessionIds_ = other.memberSessionIds_;
               bitField0_ = (bitField0_ & ~0x00000001);
             } else {
-              ensureMemberPublicKeysIsMutable();
-              memberPublicKeys_.addAll(other.memberPublicKeys_);
+              ensureMemberSessionIdsIsMutable();
+              memberSessionIds_.addAll(other.memberSessionIds_);
+            }
+            onChanged();
+          }
+          if (!other.messageHashes_.isEmpty()) {
+            if (messageHashes_.isEmpty()) {
+              messageHashes_ = other.messageHashes_;
+              bitField0_ = (bitField0_ & ~0x00000002);
+            } else {
+              ensureMessageHashesIsMutable();
+              messageHashes_.addAll(other.messageHashes_);
             }
             onChanged();
           }
@@ -17575,10 +17653,6 @@ public final class SignalServiceProtos {
         }
 
         public final boolean isInitialized() {
-          if (!hasAdminSignature()) {
-            
-            return false;
-          }
           return true;
         }
 
@@ -17601,92 +17675,206 @@ public final class SignalServiceProtos {
         }
         private int bitField0_;
 
-        // repeated bytes memberPublicKeys = 1;
-        private java.util.List<com.google.protobuf.ByteString> memberPublicKeys_ = java.util.Collections.emptyList();
-        private void ensureMemberPublicKeysIsMutable() {
+        // repeated string memberSessionIds = 1;
+        private com.google.protobuf.LazyStringList memberSessionIds_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        private void ensureMemberSessionIdsIsMutable() {
           if (!((bitField0_ & 0x00000001) == 0x00000001)) {
-            memberPublicKeys_ = new java.util.ArrayList<com.google.protobuf.ByteString>(memberPublicKeys_);
+            memberSessionIds_ = new com.google.protobuf.LazyStringArrayList(memberSessionIds_);
             bitField0_ |= 0x00000001;
            }
         }
         /**
-         * <code>repeated bytes memberPublicKeys = 1;</code>
+         * <code>repeated string memberSessionIds = 1;</code>
          */
-        public java.util.List<com.google.protobuf.ByteString>
-            getMemberPublicKeysList() {
-          return java.util.Collections.unmodifiableList(memberPublicKeys_);
+        public java.util.List<java.lang.String>
+            getMemberSessionIdsList() {
+          return java.util.Collections.unmodifiableList(memberSessionIds_);
         }
         /**
-         * <code>repeated bytes memberPublicKeys = 1;</code>
+         * <code>repeated string memberSessionIds = 1;</code>
          */
-        public int getMemberPublicKeysCount() {
-          return memberPublicKeys_.size();
+        public int getMemberSessionIdsCount() {
+          return memberSessionIds_.size();
         }
         /**
-         * <code>repeated bytes memberPublicKeys = 1;</code>
+         * <code>repeated string memberSessionIds = 1;</code>
          */
-        public com.google.protobuf.ByteString getMemberPublicKeys(int index) {
-          return memberPublicKeys_.get(index);
+        public java.lang.String getMemberSessionIds(int index) {
+          return memberSessionIds_.get(index);
         }
         /**
-         * <code>repeated bytes memberPublicKeys = 1;</code>
+         * <code>repeated string memberSessionIds = 1;</code>
          */
-        public Builder setMemberPublicKeys(
-            int index, com.google.protobuf.ByteString value) {
+        public com.google.protobuf.ByteString
+            getMemberSessionIdsBytes(int index) {
+          return memberSessionIds_.getByteString(index);
+        }
+        /**
+         * <code>repeated string memberSessionIds = 1;</code>
+         */
+        public Builder setMemberSessionIds(
+            int index, java.lang.String value) {
           if (value == null) {
     throw new NullPointerException();
   }
-  ensureMemberPublicKeysIsMutable();
-          memberPublicKeys_.set(index, value);
+  ensureMemberSessionIdsIsMutable();
+          memberSessionIds_.set(index, value);
           onChanged();
           return this;
         }
         /**
-         * <code>repeated bytes memberPublicKeys = 1;</code>
+         * <code>repeated string memberSessionIds = 1;</code>
          */
-        public Builder addMemberPublicKeys(com.google.protobuf.ByteString value) {
+        public Builder addMemberSessionIds(
+            java.lang.String value) {
           if (value == null) {
     throw new NullPointerException();
   }
-  ensureMemberPublicKeysIsMutable();
-          memberPublicKeys_.add(value);
+  ensureMemberSessionIdsIsMutable();
+          memberSessionIds_.add(value);
           onChanged();
           return this;
         }
         /**
-         * <code>repeated bytes memberPublicKeys = 1;</code>
+         * <code>repeated string memberSessionIds = 1;</code>
          */
-        public Builder addAllMemberPublicKeys(
-            java.lang.Iterable<? extends com.google.protobuf.ByteString> values) {
-          ensureMemberPublicKeysIsMutable();
-          super.addAll(values, memberPublicKeys_);
+        public Builder addAllMemberSessionIds(
+            java.lang.Iterable<java.lang.String> values) {
+          ensureMemberSessionIdsIsMutable();
+          super.addAll(values, memberSessionIds_);
           onChanged();
           return this;
         }
         /**
-         * <code>repeated bytes memberPublicKeys = 1;</code>
+         * <code>repeated string memberSessionIds = 1;</code>
          */
-        public Builder clearMemberPublicKeys() {
-          memberPublicKeys_ = java.util.Collections.emptyList();
+        public Builder clearMemberSessionIds() {
+          memberSessionIds_ = com.google.protobuf.LazyStringArrayList.EMPTY;
           bitField0_ = (bitField0_ & ~0x00000001);
           onChanged();
           return this;
         }
+        /**
+         * <code>repeated string memberSessionIds = 1;</code>
+         */
+        public Builder addMemberSessionIdsBytes(
+            com.google.protobuf.ByteString value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureMemberSessionIdsIsMutable();
+          memberSessionIds_.add(value);
+          onChanged();
+          return this;
+        }
 
-        // required bytes adminSignature = 2;
+        // repeated string messageHashes = 2;
+        private com.google.protobuf.LazyStringList messageHashes_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        private void ensureMessageHashesIsMutable() {
+          if (!((bitField0_ & 0x00000002) == 0x00000002)) {
+            messageHashes_ = new com.google.protobuf.LazyStringArrayList(messageHashes_);
+            bitField0_ |= 0x00000002;
+           }
+        }
+        /**
+         * <code>repeated string messageHashes = 2;</code>
+         */
+        public java.util.List<java.lang.String>
+            getMessageHashesList() {
+          return java.util.Collections.unmodifiableList(messageHashes_);
+        }
+        /**
+         * <code>repeated string messageHashes = 2;</code>
+         */
+        public int getMessageHashesCount() {
+          return messageHashes_.size();
+        }
+        /**
+         * <code>repeated string messageHashes = 2;</code>
+         */
+        public java.lang.String getMessageHashes(int index) {
+          return messageHashes_.get(index);
+        }
+        /**
+         * <code>repeated string messageHashes = 2;</code>
+         */
+        public com.google.protobuf.ByteString
+            getMessageHashesBytes(int index) {
+          return messageHashes_.getByteString(index);
+        }
+        /**
+         * <code>repeated string messageHashes = 2;</code>
+         */
+        public Builder setMessageHashes(
+            int index, java.lang.String value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureMessageHashesIsMutable();
+          messageHashes_.set(index, value);
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>repeated string messageHashes = 2;</code>
+         */
+        public Builder addMessageHashes(
+            java.lang.String value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureMessageHashesIsMutable();
+          messageHashes_.add(value);
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>repeated string messageHashes = 2;</code>
+         */
+        public Builder addAllMessageHashes(
+            java.lang.Iterable<java.lang.String> values) {
+          ensureMessageHashesIsMutable();
+          super.addAll(values, messageHashes_);
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>repeated string messageHashes = 2;</code>
+         */
+        public Builder clearMessageHashes() {
+          messageHashes_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+          bitField0_ = (bitField0_ & ~0x00000002);
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>repeated string messageHashes = 2;</code>
+         */
+        public Builder addMessageHashesBytes(
+            com.google.protobuf.ByteString value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureMessageHashesIsMutable();
+          messageHashes_.add(value);
+          onChanged();
+          return this;
+        }
+
+        // optional bytes adminSignature = 3;
         private com.google.protobuf.ByteString adminSignature_ = com.google.protobuf.ByteString.EMPTY;
         /**
-         * <code>required bytes adminSignature = 2;</code>
+         * <code>optional bytes adminSignature = 3;</code>
          *
          * <pre>
          * @required
          * </pre>
          */
         public boolean hasAdminSignature() {
-          return ((bitField0_ & 0x00000002) == 0x00000002);
+          return ((bitField0_ & 0x00000004) == 0x00000004);
         }
         /**
-         * <code>required bytes adminSignature = 2;</code>
+         * <code>optional bytes adminSignature = 3;</code>
          *
          * <pre>
          * @required
@@ -17696,7 +17884,7 @@ public final class SignalServiceProtos {
           return adminSignature_;
         }
         /**
-         * <code>required bytes adminSignature = 2;</code>
+         * <code>optional bytes adminSignature = 3;</code>
          *
          * <pre>
          * @required
@@ -17706,20 +17894,20 @@ public final class SignalServiceProtos {
           if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000002;
+  bitField0_ |= 0x00000004;
           adminSignature_ = value;
           onChanged();
           return this;
         }
         /**
-         * <code>required bytes adminSignature = 2;</code>
+         * <code>optional bytes adminSignature = 3;</code>
          *
          * <pre>
          * @required
          * </pre>
          */
         public Builder clearAdminSignature() {
-          bitField0_ = (bitField0_ & ~0x00000002);
+          bitField0_ = (bitField0_ & ~0x00000004);
           adminSignature_ = getDefaultInstance().getAdminSignature();
           onChanged();
           return this;
@@ -35501,7 +35689,7 @@ public final class SignalServiceProtos {
       "actionNotification\022<\n\004type\030\001 \002(\0162..signa" +
       "lservice.DataExtractionNotification.Type" +
       "\022\021\n\ttimestamp\030\002 \001(\004\"\'\n\004Type\022\016\n\nSCREENSHO" +
-      "T\020\001\022\017\n\013MEDIA_SAVED\020\002\"\366\033\n\013DataMessage\022\014\n\004",
+      "T\020\001\022\017\n\013MEDIA_SAVED\020\002\"\361\033\n\013DataMessage\022\014\n\004",
       "body\030\001 \001(\t\0225\n\013attachments\030\002 \003(\0132 .signal" +
       "service.AttachmentPointer\022\r\n\005flags\030\004 \001(\r" +
       "\022\023\n\013expireTimer\030\005 \001(\r\022\022\n\nprofileKey\030\006 \001(" +
@@ -35547,96 +35735,96 @@ public final class SignalServiceProtos {
       "ce.DataMessage.GroupUpdateInviteResponse" +
       "Message\022]\n\023deleteMemberContent\030\010 \001(\0132@.s" +
       "ignalservice.DataMessage.GroupUpdateDele" +
-      "teMemberContentMessage\032\275\001\n\030GroupUpdateIn" +
-      "viteMessage\022\026\n\016groupSessionId\030\001 \002(\t\022\014\n\004n" +
-      "ame\030\002 \002(\t\022\026\n\016memberAuthData\030\003 \002(\014\022\022\n\npro" +
-      "fileKey\030\004 \001(\014\0227\n\007profile\030\005 \001(\0132&.signals" +
-      "ervice.DataMessage.LokiProfile\022\026\n\016adminS",
-      "ignature\030\006 \002(\014\032J\n\030GroupUpdateDeleteMessa" +
-      "ge\022\026\n\016groupSessionId\030\001 \002(\t\022\026\n\016adminSigna" +
-      "ture\030\002 \002(\014\0326\n\031GroupUpdatePromoteMessage\022" +
-      "\031\n\021groupIdentitySeed\030\001 \002(\014\032\323\001\n\034GroupUpda" +
-      "teInfoChangeMessage\022J\n\004type\030\001 \002(\0162<.sign" +
-      "alservice.DataMessage.GroupUpdateInfoCha" +
-      "ngeMessage.Type\022\023\n\013updatedName\030\002 \001(\t\022\031\n\021" +
-      "updatedExpiration\030\003 \001(\r\"7\n\004Type\022\010\n\004NAME\020" +
-      "\001\022\n\n\006AVATAR\020\002\022\031\n\025DISAPPEARING_MESSAGES\020\003" +
-      "\032\266\001\n\036GroupUpdateMemberChangeMessage\022L\n\004t",
-      "ype\030\001 \002(\0162>.signalservice.DataMessage.Gr" +
-      "oupUpdateMemberChangeMessage.Type\022\030\n\020mem" +
-      "berPublicKeys\030\002 \003(\014\",\n\004Type\022\t\n\005ADDED\020\001\022\013" +
-      "\n\007REMOVED\020\002\022\014\n\010PROMOTED\020\003\032\036\n\034GroupUpdate" +
-      "MemberLeftMessage\0326\n GroupUpdateInviteRe" +
-      "sponseMessage\022\022\n\nisApproved\030\001 \002(\010\032Y\n%Gro" +
-      "upUpdateDeleteMemberContentMessage\022\030\n\020me" +
-      "mberPublicKeys\030\001 \003(\014\022\026\n\016adminSignature\030\002" +
-      " \002(\014\032\203\005\n\031ClosedGroupControlMessage\022G\n\004ty" +
-      "pe\030\001 \002(\01629.signalservice.DataMessage.Clo",
-      "sedGroupControlMessage.Type\022\021\n\tpublicKey" +
-      "\030\002 \001(\014\022\014\n\004name\030\003 \001(\t\0221\n\021encryptionKeyPai" +
-      "r\030\004 \001(\0132\026.signalservice.KeyPair\022\017\n\007membe" +
-      "rs\030\005 \003(\014\022\016\n\006admins\030\006 \003(\014\022U\n\010wrappers\030\007 \003" +
-      "(\0132C.signalservice.DataMessage.ClosedGro" +
-      "upControlMessage.KeyPairWrapper\022\027\n\017expir" +
-      "ationTimer\030\010 \001(\r\022\030\n\020memberPrivateKey\030\t \001" +
-      "(\014\022\022\n\nprivateKey\030\n \001(\014\032=\n\016KeyPairWrapper" +
-      "\022\021\n\tpublicKey\030\001 \002(\014\022\030\n\020encryptedKeyPair\030" +
-      "\002 \002(\014\"\312\001\n\004Type\022\007\n\003NEW\020\001\022\027\n\023ENCRYPTION_KE",
-      "Y_PAIR\020\003\022\017\n\013NAME_CHANGE\020\004\022\021\n\rMEMBERS_ADD" +
-      "ED\020\005\022\023\n\017MEMBERS_REMOVED\020\006\022\017\n\013MEMBER_LEFT" +
-      "\020\007\022\n\n\006INVITE\020\t\022\013\n\007PROMOTE\020\n\022\020\n\014DELETE_GR" +
-      "OUP\020\013\022\023\n\017DELETE_MESSAGES\020\014\022\026\n\022DELETE_ATT" +
-      "ACHMENTS\020\r\032\222\001\n\010Reaction\022\n\n\002id\030\001 \002(\004\022\016\n\006a" +
-      "uthor\030\002 \002(\t\022\r\n\005emoji\030\003 \001(\t\022:\n\006action\030\004 \002" +
-      "(\0162*.signalservice.DataMessage.Reaction." +
-      "Action\"\037\n\006Action\022\t\n\005REACT\020\000\022\n\n\006REMOVE\020\001\"" +
-      "$\n\005Flags\022\033\n\027EXPIRATION_TIMER_UPDATE\020\002\"B\n" +
-      "\022GroupDeleteMessage\022\021\n\tpublicKey\030\001 \002(\014\022\031",
-      "\n\021lastEncryptionKey\030\002 \002(\014\"\030\n\026GroupMember" +
-      "LeftMessage\"O\n\022GroupInviteMessage\022\021\n\tpub" +
-      "licKey\030\001 \002(\014\022\014\n\004name\030\002 \002(\t\022\030\n\020memberPriv" +
-      "ateKey\030\003 \002(\014\"E\n\023GroupPromoteMessage\022\021\n\tp" +
-      "ublicKey\030\001 \002(\014\022\033\n\023encryptedPrivateKey\030\002 " +
-      "\002(\014\"\352\001\n\013CallMessage\022-\n\004type\030\001 \002(\0162\037.sign" +
-      "alservice.CallMessage.Type\022\014\n\004sdps\030\002 \003(\t" +
-      "\022\027\n\017sdpMLineIndexes\030\003 \003(\r\022\017\n\007sdpMids\030\004 \003" +
-      "(\t\022\014\n\004uuid\030\005 \002(\t\"f\n\004Type\022\r\n\tPRE_OFFER\020\006\022" +
-      "\t\n\005OFFER\020\001\022\n\n\006ANSWER\020\002\022\026\n\022PROVISIONAL_AN",
-      "SWER\020\003\022\022\n\016ICE_CANDIDATES\020\004\022\014\n\010END_CALL\020\005" +
-      "\"\245\004\n\024ConfigurationMessage\022E\n\014closedGroup" +
-      "s\030\001 \003(\0132/.signalservice.ConfigurationMes" +
-      "sage.ClosedGroup\022\022\n\nopenGroups\030\002 \003(\t\022\023\n\013" +
-      "displayName\030\003 \001(\t\022\026\n\016profilePicture\030\004 \001(" +
-      "\t\022\022\n\nprofileKey\030\005 \001(\014\022=\n\010contacts\030\006 \003(\0132" +
-      "+.signalservice.ConfigurationMessage.Con" +
-      "tact\032\233\001\n\013ClosedGroup\022\021\n\tpublicKey\030\001 \001(\014\022" +
-      "\014\n\004name\030\002 \001(\t\0221\n\021encryptionKeyPair\030\003 \001(\013" +
-      "2\026.signalservice.KeyPair\022\017\n\007members\030\004 \003(",
-      "\014\022\016\n\006admins\030\005 \003(\014\022\027\n\017expirationTimer\030\006 \001" +
-      "(\r\032\223\001\n\007Contact\022\021\n\tpublicKey\030\001 \002(\014\022\014\n\004nam" +
-      "e\030\002 \002(\t\022\026\n\016profilePicture\030\003 \001(\t\022\022\n\nprofi" +
-      "leKey\030\004 \001(\014\022\022\n\nisApproved\030\005 \001(\010\022\021\n\tisBlo" +
-      "cked\030\006 \001(\010\022\024\n\014didApproveMe\030\007 \001(\010\"y\n\026Mess" +
-      "ageRequestResponse\022\022\n\nisApproved\030\001 \002(\010\022\022" +
-      "\n\nprofileKey\030\002 \001(\014\0227\n\007profile\030\003 \001(\0132&.si" +
-      "gnalservice.DataMessage.LokiProfile\"\375\001\n\023" +
-      "SharedConfigMessage\0225\n\004kind\030\001 \002(\0162\'.sign" +
-      "alservice.SharedConfigMessage.Kind\022\r\n\005se",
-      "qno\030\002 \002(\003\022\014\n\004data\030\003 \002(\014\"\221\001\n\004Kind\022\020\n\014USER" +
-      "_PROFILE\020\001\022\014\n\010CONTACTS\020\002\022\027\n\023CONVO_INFO_V" +
-      "OLATILE\020\003\022\n\n\006GROUPS\020\004\022\025\n\021CLOSED_GROUP_IN" +
-      "FO\020\005\022\030\n\024CLOSED_GROUP_MEMBERS\020\006\022\023\n\017ENCRYP" +
-      "TION_KEYS\020\007\"u\n\016ReceiptMessage\0220\n\004type\030\001 " +
-      "\002(\0162\".signalservice.ReceiptMessage.Type\022" +
-      "\021\n\ttimestamp\030\002 \003(\004\"\036\n\004Type\022\014\n\010DELIVERY\020\000" +
-      "\022\010\n\004READ\020\001\"\354\001\n\021AttachmentPointer\022\n\n\002id\030\001" +
-      " \002(\006\022\023\n\013contentType\030\002 \001(\t\022\013\n\003key\030\003 \001(\014\022\014" +
-      "\n\004size\030\004 \001(\r\022\021\n\tthumbnail\030\005 \001(\014\022\016\n\006diges",
-      "t\030\006 \001(\014\022\020\n\010fileName\030\007 \001(\t\022\r\n\005flags\030\010 \001(\r" +
-      "\022\r\n\005width\030\t \001(\r\022\016\n\006height\030\n \001(\r\022\017\n\007capti" +
-      "on\030\013 \001(\t\022\013\n\003url\030e \001(\t\"\032\n\005Flags\022\021\n\rVOICE_" +
-      "MESSAGE\020\001B3\n\034org.session.libsignal.proto" +
-      "sB\023SignalServiceProtos"
+      "teMemberContentMessage\032p\n\030GroupUpdateInv" +
+      "iteMessage\022\026\n\016groupSessionId\030\001 \002(\t\022\014\n\004na" +
+      "me\030\002 \002(\t\022\026\n\016memberAuthData\030\003 \002(\014\022\026\n\016admi" +
+      "nSignature\030\004 \002(\014\032L\n\030GroupUpdateDeleteMes" +
+      "sage\022\030\n\020memberSessionIds\030\001 \003(\t\022\026\n\016adminS",
+      "ignature\030\002 \002(\014\0326\n\031GroupUpdatePromoteMess" +
+      "age\022\031\n\021groupIdentitySeed\030\001 \002(\014\032\353\001\n\034Group" +
+      "UpdateInfoChangeMessage\022J\n\004type\030\001 \002(\0162<." +
+      "signalservice.DataMessage.GroupUpdateInf" +
+      "oChangeMessage.Type\022\023\n\013updatedName\030\002 \001(\t" +
+      "\022\031\n\021updatedExpiration\030\003 \001(\r\022\026\n\016adminSign" +
+      "ature\030\004 \002(\014\"7\n\004Type\022\010\n\004NAME\020\001\022\n\n\006AVATAR\020" +
+      "\002\022\031\n\025DISAPPEARING_MESSAGES\020\003\032\316\001\n\036GroupUp" +
+      "dateMemberChangeMessage\022L\n\004type\030\001 \002(\0162>." +
+      "signalservice.DataMessage.GroupUpdateMem",
+      "berChangeMessage.Type\022\030\n\020memberSessionId" +
+      "s\030\002 \003(\t\022\026\n\016adminSignature\030\003 \002(\014\",\n\004Type\022" +
+      "\t\n\005ADDED\020\001\022\013\n\007REMOVED\020\002\022\014\n\010PROMOTED\020\003\032\036\n" +
+      "\034GroupUpdateMemberLeftMessage\0326\n GroupUp" +
+      "dateInviteResponseMessage\022\022\n\nisApproved\030" +
+      "\001 \002(\010\032p\n%GroupUpdateDeleteMemberContentM" +
+      "essage\022\030\n\020memberSessionIds\030\001 \003(\t\022\025\n\rmess" +
+      "ageHashes\030\002 \003(\t\022\026\n\016adminSignature\030\003 \001(\014\032" +
+      "\203\005\n\031ClosedGroupControlMessage\022G\n\004type\030\001 " +
+      "\002(\01629.signalservice.DataMessage.ClosedGr",
+      "oupControlMessage.Type\022\021\n\tpublicKey\030\002 \001(" +
+      "\014\022\014\n\004name\030\003 \001(\t\0221\n\021encryptionKeyPair\030\004 \001" +
+      "(\0132\026.signalservice.KeyPair\022\017\n\007members\030\005 " +
+      "\003(\014\022\016\n\006admins\030\006 \003(\014\022U\n\010wrappers\030\007 \003(\0132C." +
+      "signalservice.DataMessage.ClosedGroupCon" +
+      "trolMessage.KeyPairWrapper\022\027\n\017expiration" +
+      "Timer\030\010 \001(\r\022\030\n\020memberPrivateKey\030\t \001(\014\022\022\n" +
+      "\nprivateKey\030\n \001(\014\032=\n\016KeyPairWrapper\022\021\n\tp" +
+      "ublicKey\030\001 \002(\014\022\030\n\020encryptedKeyPair\030\002 \002(\014" +
+      "\"\312\001\n\004Type\022\007\n\003NEW\020\001\022\027\n\023ENCRYPTION_KEY_PAI",
+      "R\020\003\022\017\n\013NAME_CHANGE\020\004\022\021\n\rMEMBERS_ADDED\020\005\022" +
+      "\023\n\017MEMBERS_REMOVED\020\006\022\017\n\013MEMBER_LEFT\020\007\022\n\n" +
+      "\006INVITE\020\t\022\013\n\007PROMOTE\020\n\022\020\n\014DELETE_GROUP\020\013" +
+      "\022\023\n\017DELETE_MESSAGES\020\014\022\026\n\022DELETE_ATTACHME" +
+      "NTS\020\r\032\222\001\n\010Reaction\022\n\n\002id\030\001 \002(\004\022\016\n\006author" +
+      "\030\002 \002(\t\022\r\n\005emoji\030\003 \001(\t\022:\n\006action\030\004 \002(\0162*." +
+      "signalservice.DataMessage.Reaction.Actio" +
+      "n\"\037\n\006Action\022\t\n\005REACT\020\000\022\n\n\006REMOVE\020\001\"$\n\005Fl" +
+      "ags\022\033\n\027EXPIRATION_TIMER_UPDATE\020\002\"B\n\022Grou" +
+      "pDeleteMessage\022\021\n\tpublicKey\030\001 \002(\014\022\031\n\021las",
+      "tEncryptionKey\030\002 \002(\014\"\030\n\026GroupMemberLeftM" +
+      "essage\"O\n\022GroupInviteMessage\022\021\n\tpublicKe" +
+      "y\030\001 \002(\014\022\014\n\004name\030\002 \002(\t\022\030\n\020memberPrivateKe" +
+      "y\030\003 \002(\014\"E\n\023GroupPromoteMessage\022\021\n\tpublic" +
+      "Key\030\001 \002(\014\022\033\n\023encryptedPrivateKey\030\002 \002(\014\"\352" +
+      "\001\n\013CallMessage\022-\n\004type\030\001 \002(\0162\037.signalser" +
+      "vice.CallMessage.Type\022\014\n\004sdps\030\002 \003(\t\022\027\n\017s" +
+      "dpMLineIndexes\030\003 \003(\r\022\017\n\007sdpMids\030\004 \003(\t\022\014\n" +
+      "\004uuid\030\005 \002(\t\"f\n\004Type\022\r\n\tPRE_OFFER\020\006\022\t\n\005OF" +
+      "FER\020\001\022\n\n\006ANSWER\020\002\022\026\n\022PROVISIONAL_ANSWER\020",
+      "\003\022\022\n\016ICE_CANDIDATES\020\004\022\014\n\010END_CALL\020\005\"\245\004\n\024" +
+      "ConfigurationMessage\022E\n\014closedGroups\030\001 \003" +
+      "(\0132/.signalservice.ConfigurationMessage." +
+      "ClosedGroup\022\022\n\nopenGroups\030\002 \003(\t\022\023\n\013displ" +
+      "ayName\030\003 \001(\t\022\026\n\016profilePicture\030\004 \001(\t\022\022\n\n" +
+      "profileKey\030\005 \001(\014\022=\n\010contacts\030\006 \003(\0132+.sig" +
+      "nalservice.ConfigurationMessage.Contact\032" +
+      "\233\001\n\013ClosedGroup\022\021\n\tpublicKey\030\001 \001(\014\022\014\n\004na" +
+      "me\030\002 \001(\t\0221\n\021encryptionKeyPair\030\003 \001(\0132\026.si" +
+      "gnalservice.KeyPair\022\017\n\007members\030\004 \003(\014\022\016\n\006",
+      "admins\030\005 \003(\014\022\027\n\017expirationTimer\030\006 \001(\r\032\223\001" +
+      "\n\007Contact\022\021\n\tpublicKey\030\001 \002(\014\022\014\n\004name\030\002 \002" +
+      "(\t\022\026\n\016profilePicture\030\003 \001(\t\022\022\n\nprofileKey" +
+      "\030\004 \001(\014\022\022\n\nisApproved\030\005 \001(\010\022\021\n\tisBlocked\030" +
+      "\006 \001(\010\022\024\n\014didApproveMe\030\007 \001(\010\"y\n\026MessageRe" +
+      "questResponse\022\022\n\nisApproved\030\001 \002(\010\022\022\n\npro" +
+      "fileKey\030\002 \001(\014\0227\n\007profile\030\003 \001(\0132&.signals" +
+      "ervice.DataMessage.LokiProfile\"\375\001\n\023Share" +
+      "dConfigMessage\0225\n\004kind\030\001 \002(\0162\'.signalser" +
+      "vice.SharedConfigMessage.Kind\022\r\n\005seqno\030\002",
+      " \002(\003\022\014\n\004data\030\003 \002(\014\"\221\001\n\004Kind\022\020\n\014USER_PROF" +
+      "ILE\020\001\022\014\n\010CONTACTS\020\002\022\027\n\023CONVO_INFO_VOLATI" +
+      "LE\020\003\022\n\n\006GROUPS\020\004\022\025\n\021CLOSED_GROUP_INFO\020\005\022" +
+      "\030\n\024CLOSED_GROUP_MEMBERS\020\006\022\023\n\017ENCRYPTION_" +
+      "KEYS\020\007\"u\n\016ReceiptMessage\0220\n\004type\030\001 \002(\0162\"" +
+      ".signalservice.ReceiptMessage.Type\022\021\n\tti" +
+      "mestamp\030\002 \003(\004\"\036\n\004Type\022\014\n\010DELIVERY\020\000\022\010\n\004R" +
+      "EAD\020\001\"\354\001\n\021AttachmentPointer\022\n\n\002id\030\001 \002(\006\022" +
+      "\023\n\013contentType\030\002 \001(\t\022\013\n\003key\030\003 \001(\014\022\014\n\004siz" +
+      "e\030\004 \001(\r\022\021\n\tthumbnail\030\005 \001(\014\022\016\n\006digest\030\006 \001",
+      "(\014\022\020\n\010fileName\030\007 \001(\t\022\r\n\005flags\030\010 \001(\r\022\r\n\005w" +
+      "idth\030\t \001(\r\022\016\n\006height\030\n \001(\r\022\017\n\007caption\030\013 " +
+      "\001(\t\022\013\n\003url\030e \001(\t\"\032\n\005Flags\022\021\n\rVOICE_MESSA" +
+      "GE\020\001B3\n\034org.session.libsignal.protosB\023Si" +
+      "gnalServiceProtos"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -35726,13 +35914,13 @@ public final class SignalServiceProtos {
           internal_static_signalservice_DataMessage_GroupUpdateInviteMessage_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_signalservice_DataMessage_GroupUpdateInviteMessage_descriptor,
-              new java.lang.String[] { "GroupSessionId", "Name", "MemberAuthData", "ProfileKey", "Profile", "AdminSignature", });
+              new java.lang.String[] { "GroupSessionId", "Name", "MemberAuthData", "AdminSignature", });
           internal_static_signalservice_DataMessage_GroupUpdateDeleteMessage_descriptor =
             internal_static_signalservice_DataMessage_descriptor.getNestedTypes().get(6);
           internal_static_signalservice_DataMessage_GroupUpdateDeleteMessage_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_signalservice_DataMessage_GroupUpdateDeleteMessage_descriptor,
-              new java.lang.String[] { "GroupSessionId", "AdminSignature", });
+              new java.lang.String[] { "MemberSessionIds", "AdminSignature", });
           internal_static_signalservice_DataMessage_GroupUpdatePromoteMessage_descriptor =
             internal_static_signalservice_DataMessage_descriptor.getNestedTypes().get(7);
           internal_static_signalservice_DataMessage_GroupUpdatePromoteMessage_fieldAccessorTable = new
@@ -35744,13 +35932,13 @@ public final class SignalServiceProtos {
           internal_static_signalservice_DataMessage_GroupUpdateInfoChangeMessage_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_signalservice_DataMessage_GroupUpdateInfoChangeMessage_descriptor,
-              new java.lang.String[] { "Type", "UpdatedName", "UpdatedExpiration", });
+              new java.lang.String[] { "Type", "UpdatedName", "UpdatedExpiration", "AdminSignature", });
           internal_static_signalservice_DataMessage_GroupUpdateMemberChangeMessage_descriptor =
             internal_static_signalservice_DataMessage_descriptor.getNestedTypes().get(9);
           internal_static_signalservice_DataMessage_GroupUpdateMemberChangeMessage_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_signalservice_DataMessage_GroupUpdateMemberChangeMessage_descriptor,
-              new java.lang.String[] { "Type", "MemberPublicKeys", });
+              new java.lang.String[] { "Type", "MemberSessionIds", "AdminSignature", });
           internal_static_signalservice_DataMessage_GroupUpdateMemberLeftMessage_descriptor =
             internal_static_signalservice_DataMessage_descriptor.getNestedTypes().get(10);
           internal_static_signalservice_DataMessage_GroupUpdateMemberLeftMessage_fieldAccessorTable = new
@@ -35768,7 +35956,7 @@ public final class SignalServiceProtos {
           internal_static_signalservice_DataMessage_GroupUpdateDeleteMemberContentMessage_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_signalservice_DataMessage_GroupUpdateDeleteMemberContentMessage_descriptor,
-              new java.lang.String[] { "MemberPublicKeys", "AdminSignature", });
+              new java.lang.String[] { "MemberSessionIds", "MessageHashes", "AdminSignature", });
           internal_static_signalservice_DataMessage_ClosedGroupControlMessage_descriptor =
             internal_static_signalservice_DataMessage_descriptor.getNestedTypes().get(13);
           internal_static_signalservice_DataMessage_ClosedGroupControlMessage_fieldAccessorTable = new
