@@ -114,7 +114,7 @@ fun CellWithPaddingAndMargin(
     }
 }
 
-private val Colors.cellColor: Color
+val Colors.cellColor: Color
     @Composable
     get() = LocalExtraColors.current.settingsBackground
 

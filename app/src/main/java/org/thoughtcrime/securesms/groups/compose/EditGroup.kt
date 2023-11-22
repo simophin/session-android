@@ -3,6 +3,7 @@ package org.thoughtcrime.securesms.groups.compose
 import android.content.ContentResolver
 import android.content.Context
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,11 +14,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -26,6 +28,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -38,6 +43,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.cash.molecule.RecompositionMode.Immediate
 import app.cash.molecule.launchMolecule
+import com.google.android.material.color.MaterialColors
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.result.NavResult
@@ -314,15 +320,28 @@ fun EditGroupView(
                         }
                         // Resend button
                         if (viewState.admin && member.memberState == MemberState.InviteFailed) {
-                            OutlinedButton(onClick = {
-                                onReinvite(member.memberSessionId)
-                            },) {
-                                Text("Re-send")
+                            TextButton(
+                                onClick = {
+                                    onReinvite(member.memberSessionId)
+                                },
+                                modifier = Modifier
+                                    .clip(CircleShape)
+                                    .background(
+                                        Color(
+                                            MaterialColors.getColor(LocalContext.current,
+                                                R.attr.colorControlHighlight,
+                                                MaterialTheme.colors.onPrimary.toArgb())
+                                        )
+                                    )
+                            ) {
+                                Text(
+                                    "Re-send",
+                                    color = MaterialTheme.colors.onPrimary
+                                )
                             }
                         }
                     }
                 }
-
             }
         }
     }

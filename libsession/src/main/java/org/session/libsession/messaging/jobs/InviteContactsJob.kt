@@ -14,7 +14,6 @@ import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage
 import org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMessage
-import org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile
 import org.session.libsignal.utilities.SessionId
 import org.session.libsignal.utilities.prettifiedDescription
 
@@ -74,20 +73,12 @@ class InviteContactsJob(val groupSessionId: String, val memberSessionIds: Array<
                     val messageToSign = "INVITE$memberSessionId$timestamp"
                     val signature = SodiumUtilities.sign(messageToSign.toByteArray(), adminKey)
                     val userProfile = storage.getUserProfile()
-                    val lokiProfile = LokiProfile.newBuilder()
-                        .setDisplayName(userProfile.displayName)
-                    if (userProfile.profilePictureURL?.isNotEmpty() == true) {
-                        lokiProfile.profilePicture = userProfile.profilePictureURL
-                    }
+
                     val groupInvite = GroupUpdateInviteMessage.newBuilder()
                         .setGroupSessionId(groupSessionId)
                         .setMemberAuthData(ByteString.copyFrom(subAccount))
                         .setAdminSignature(ByteString.copyFrom(signature))
                         .setName(userProfile.displayName)
-                        .setProfile(lokiProfile.build())
-                    if (userProfile.profileKey?.isNotEmpty() == true) {
-                        groupInvite.profileKey = ByteString.copyFrom(userProfile.profileKey)
-                    }
                     val message = GroupUpdateMessage.newBuilder()
                         .setInviteMessage(groupInvite)
                         .build()

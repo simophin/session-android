@@ -1290,7 +1290,16 @@ open class Storage(
             membersConfig.get(it) == null
         }
         filteredMembers.forEach { memberSessionId ->
+            val contact = getContactWithSessionID(memberSessionId)
+            val name = contact?.name
+            val url = contact?.profilePictureURL
+            val key = contact?.profilePictureEncryptionKey
+            val userPic = if (url != null && key != null) {
+                UserPic(url, key)
+            } else UserPic.DEFAULT
             val member = membersConfig.getOrConstruct(memberSessionId).copy(
+                name = name,
+                profilePicture = userPic,
                 invitePending = true,
             )
             membersConfig.set(member)
