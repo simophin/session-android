@@ -538,20 +538,36 @@ private fun MessageReceiver.handleGroupUpdated(message: GroupUpdated, closedGrou
         inner.hasInviteResponse() -> handleInviteResponse(message, closedGroup!!)
         inner.hasPromoteMessage() -> handlePromotionMessage(message)
         inner.hasInfoChangeMessage() -> handleGroupInfoChange(message, closedGroup!!)
+        inner.hasMemberChangeMessage() -> handleMemberChange(message, closedGroup!!)
+        inner.hasMemberLeftMessage() -> handleMemberLeft(message, closedGroup!!)
     }
 }
 
+private fun handleMemberChange(message: GroupUpdated, closedGroup: SessionId) {
+    val storage = MessagingModuleConfiguration.shared.storage
+    val memberChange = message.inner.memberChangeMessage
+    val type = memberChange.type.name
+    val timestamp = message.sentTimestamp!!
+    verifyAdminSignature(closedGroup, memberChange.adminSignature.toByteArray(),
+        "MEMBER_CHANGE$type$timestamp"
+    )
+    storage.insertGroupInfoChange(message, closedGroup)
+}
+
+private fun handleMemberLeft(message: GroupUpdated, closedGroup: SessionId) {
+    val storage = MessagingModuleConfiguration.shared.storage
+    storage.insertGroupInfoChange(message, closedGroup)
+}
+
 private fun handleGroupInfoChange(message: GroupUpdated, closedGroup: SessionId) {
-    val sender = message.sender!!
     val storage = MessagingModuleConfiguration.shared.storage
     val inner = message.inner
     val infoChanged = inner.infoChangeMessage ?: return
     if (!infoChanged.hasAdminSignature()) return Log.e("GroupUpdated", "Info changed message doesn't contain admin signature")
     val adminSignature = infoChanged.adminSignature
     val type = infoChanged.type.name
-    verifyAdminSignature(closedGroup, adminSignature.toByteArray(), "INFO_CHANGE"+type+message.sentTimestamp!!)
-    val newName = if (infoChanged.hasUpdatedName()) infoChanged.updatedName else null
-    val newExpiration = if (infoChanged.hasUpdatedExpiration()) infoChanged.updatedExpiration else null
+    val timestamp = message.sentTimestamp!!
+    verifyAdminSignature(closedGroup, adminSignature.toByteArray(), "INFO_CHANGE$type$timestamp")
     storage.insertGroupInfoChange(message, closedGroup)
 }
 
@@ -559,6 +575,7 @@ private fun handlePromotionMessage(message: GroupUpdated) {
     val sender = message.sender!!
     val storage = MessagingModuleConfiguration.shared.storage
     val inner = message.inner
+    // TODO: set ourselves as admin and overwrite the auth data for group
 }
 
 private fun MessageReceiver.handleInviteResponse(message: GroupUpdated, closedGroup: SessionId) {
