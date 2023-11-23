@@ -528,13 +528,39 @@ private fun ClosedGroupControlMessage.getPublicKey(): String = kind!!.let { when
 }}
 
 private fun MessageReceiver.handleGroupUpdated(message: GroupUpdated, closedGroup: SessionId?) {
-    if (closedGroup == null && !message.inner.hasInviteMessage()) { // TODO: add all the cases for this
+    val inner = message.inner
+    if (closedGroup == null &&
+        (!inner.hasInviteMessage()) || !inner.hasPromoteMessage()) { // TODO: add all the cases for this
         throw NullPointerException("Message wasn't polled from a closed group!")
     }
     when {
-        message.inner.hasInviteMessage() -> handleNewLibSessionClosedGroupMessage(message)
-        message.inner.hasInviteResponse() -> handleInviteResponse(message, closedGroup!!)
+        inner.hasInviteMessage() -> handleNewLibSessionClosedGroupMessage(message)
+        inner.hasInviteResponse() -> handleInviteResponse(message, closedGroup!!)
+        inner.hasPromoteMessage() -> handlePromotionMessage(message)
+        inner.hasInfoChangeMessage() -> handleGroupInfoChange(message, closedGroup!!)
     }
+}
+
+private fun handleGroupInfoChange(message: GroupUpdated, closedGroup: SessionId) {
+    val sender = message.sender!!
+    val storage = MessagingModuleConfiguration.shared.storage
+    val inner = message.inner
+    val infoChanged = inner.infoChangeMessage ?: return
+    if (!infoChanged.hasAdminSignature()) return Log.e("GroupUpdated", "Info changed message doesn't contain admin signature")
+    val adminSignature = infoChanged.adminSignature
+    val type = infoChanged.type.name
+    verifyAdminSignature(closedGroup, adminSignature.toByteArray(), "INFO_CHANGE"+type+message.sentTimestamp!!)
+    val newName = if (infoChanged.hasUpdatedName()) infoChanged.updatedName else null
+    val newExpiration = if (infoChanged.hasUpdatedExpiration()) infoChanged.updatedExpiration else null
+    // insert control messages
+}
+
+private fun handlePromotionMessage(message: GroupUpdated) {
+    val sender = message.sender!!
+    val storage = MessagingModuleConfiguration.shared.storage
+    val inner = message.inner
+    // insert control messages
+
 }
 
 private fun MessageReceiver.handleInviteResponse(message: GroupUpdated, closedGroup: SessionId) {
