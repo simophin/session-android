@@ -1145,6 +1145,11 @@ open class Storage(
         mmsDB.markAsSent(infoMessageID, true)
     }
 
+//    override fun insertGroupUpdatedControlMessage(groupSessionId: SessionId,
+//                                                  controlMessage) {
+//
+//    }
+
     override fun isLegacyClosedGroup(publicKey: String): Boolean {
         return DatabaseComponent.get(context).lokiAPIDatabase().isClosedGroup(publicKey)
     }

@@ -3,10 +3,11 @@ package org.session.libsession.messaging.utilities
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.fasterxml.jackson.core.JsonParseException
+import org.session.libsession.messaging.messages.control.GroupUpdated
 import org.session.libsignal.messages.SignalServiceGroup
 import org.session.libsignal.utilities.JsonUtil
 import org.session.libsignal.utilities.Log
-import java.util.*
+import java.util.Collections
 
 // class used to save update messages details
 class UpdateMessageData () {
@@ -35,9 +36,18 @@ class UpdateMessageData () {
             constructor(): this(Collections.emptyList())
         }
         class GroupMemberLeft(): Kind()
+        class GroupMemberUpdated(val sessionIds: List<String>, val type: MemberUpdateType?): Kind() {
+            constructor(): this(emptyList(), null)
+        }
         class OpenGroupInvitation(val groupUrl: String, val groupName: String): Kind() {
             constructor(): this("", "")
         }
+    }
+
+    sealed class MemberUpdateType {
+        data object ADDED: MemberUpdateType()
+        data object REMOVED: MemberUpdateType()
+        data object PROMOTED: MemberUpdateType()
     }
 
     constructor(kind: Kind): this() {
@@ -56,6 +66,19 @@ class UpdateMessageData () {
                 SignalServiceGroup.Type.QUIT -> UpdateMessageData(Kind.GroupMemberLeft())
                 else -> null
             }
+        }
+
+        fun buildGroupUpdate(groupUpdated: GroupUpdated): UpdateMessageData? {
+            val inner = groupUpdated.inner
+            TODO()
+//            return when {
+//                inner.hasMemberChangeMessage() -> {
+//                    val memberChange = inner.memberChangeMessage
+//                    val type = memberChange.type
+//                    memberChange.memberSessionIdsList
+//                }
+//                else -> null
+//            }
         }
 
         fun buildOpenGroupInvitation(url: String, name: String): UpdateMessageData {

@@ -46,7 +46,9 @@ class ClosedGroupViewTests {
         }
         val overriddenStorage = Storage(applicationContext, mock(), ConfigFactory(context, emptyDb) {
             keyPair.secretKey to userSessionId.hexString()
-        }, mock())
+        }, mock(), { stringRes, toastLength, parameters ->
+
+        })
         storage = overriddenStorage
     }
 

@@ -552,15 +552,13 @@ private fun handleGroupInfoChange(message: GroupUpdated, closedGroup: SessionId)
     verifyAdminSignature(closedGroup, adminSignature.toByteArray(), "INFO_CHANGE"+type+message.sentTimestamp!!)
     val newName = if (infoChanged.hasUpdatedName()) infoChanged.updatedName else null
     val newExpiration = if (infoChanged.hasUpdatedExpiration()) infoChanged.updatedExpiration else null
-    // insert control messages
+//    storage.insertIncomingInfoMessage()
 }
 
 private fun handlePromotionMessage(message: GroupUpdated) {
     val sender = message.sender!!
     val storage = MessagingModuleConfiguration.shared.storage
     val inner = message.inner
-    // insert control messages
-
 }
 
 private fun MessageReceiver.handleInviteResponse(message: GroupUpdated, closedGroup: SessionId) {
