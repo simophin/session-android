@@ -1127,7 +1127,7 @@ open class Storage(
         val group = SignalServiceGroup(type, GroupUtil.getDecodedGroupIDAsData(groupID), SignalServiceGroup.GroupType.SIGNAL, name, members.toList(), null, admins.toList())
         val m = IncomingTextMessage(fromSerialized(senderPublicKey), 1, sentTimestamp, "", Optional.of(group), 0, true, false)
         val updateData = UpdateMessageData.buildGroupUpdate(type, name, members)?.toJSON()
-        val infoMessage = IncomingGroupMessage(m, groupID, updateData, true)
+        val infoMessage = IncomingGroupMessage(m, updateData, true)
         val smsDB = DatabaseComponent.get(context).smsDatabase()
         smsDB.insertMessageInbox(infoMessage,  true)
     }
@@ -1144,11 +1144,6 @@ open class Storage(
         val infoMessageID = mmsDB.insertMessageOutbox(infoMessage, threadID, false, null, runThreadUpdate = true)
         mmsDB.markAsSent(infoMessageID, true)
     }
-
-//    override fun insertGroupUpdatedControlMessage(groupSessionId: SessionId,
-//                                                  controlMessage) {
-//
-//    }
 
     override fun isLegacyClosedGroup(publicKey: String): Boolean {
         return DatabaseComponent.get(context).lokiAPIDatabase().isClosedGroup(publicKey)
@@ -1368,6 +1363,17 @@ open class Storage(
             return
         }
 
+    }
+
+    override fun insertGroupInfoChange(message: GroupUpdated, closedGroup: SessionId) {
+        val sentTimestamp = message.sentTimestamp ?: return
+        val senderPublicKey = message.sender ?: return
+        val group = SignalServiceGroup(Hex.fromStringCondensed(closedGroup.hexString()), SignalServiceGroup.GroupType.SIGNAL)
+        val m = IncomingTextMessage(fromSerialized(senderPublicKey), 1, sentTimestamp, "", Optional.of(group), 0, true, false)
+        val updateData = UpdateMessageData.buildGroupUpdate(message)?.toJSON() ?: return
+        val infoMessage = IncomingGroupMessage(m, updateData, true)
+        val smsDB = DatabaseComponent.get(context).smsDatabase()
+        smsDB.insertMessageInbox(infoMessage,  true)
     }
 
     override fun setServerCapabilities(server: String, capabilities: List<String>) {

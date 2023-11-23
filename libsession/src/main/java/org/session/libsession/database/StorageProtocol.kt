@@ -14,6 +14,7 @@ import org.session.libsession.messaging.jobs.MessageSendJob
 import org.session.libsession.messaging.messages.Destination
 import org.session.libsession.messaging.messages.Message
 import org.session.libsession.messaging.messages.control.ConfigurationMessage
+import org.session.libsession.messaging.messages.control.GroupUpdated
 import org.session.libsession.messaging.messages.control.MessageRequestResponse
 import org.session.libsession.messaging.messages.visible.Attachment
 import org.session.libsession.messaging.messages.visible.Profile
@@ -166,6 +167,7 @@ interface StorageProtocol {
     fun getLibSessionClosedGroup(groupSessionId: String): GroupInfo.ClosedGroupInfo?
     fun getClosedGroupDisplayInfo(groupSessionId: String): GroupDisplayInfo?
     fun inviteClosedGroupMembers(groupSessionId: String, invitees: List<String>)
+    fun insertGroupInfoChange(message: GroupUpdated, closedGroup: SessionId)
 
     // Groups
     fun getAllGroups(includeInactive: Boolean): List<GroupRecord>

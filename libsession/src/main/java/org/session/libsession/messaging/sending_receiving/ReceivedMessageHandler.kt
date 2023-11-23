@@ -530,7 +530,7 @@ private fun ClosedGroupControlMessage.getPublicKey(): String = kind!!.let { when
 private fun MessageReceiver.handleGroupUpdated(message: GroupUpdated, closedGroup: SessionId?) {
     val inner = message.inner
     if (closedGroup == null &&
-        (!inner.hasInviteMessage()) || !inner.hasPromoteMessage()) { // TODO: add all the cases for this
+        !inner.hasInviteMessage() && !inner.hasPromoteMessage()) {
         throw NullPointerException("Message wasn't polled from a closed group!")
     }
     when {
@@ -552,7 +552,7 @@ private fun handleGroupInfoChange(message: GroupUpdated, closedGroup: SessionId)
     verifyAdminSignature(closedGroup, adminSignature.toByteArray(), "INFO_CHANGE"+type+message.sentTimestamp!!)
     val newName = if (infoChanged.hasUpdatedName()) infoChanged.updatedName else null
     val newExpiration = if (infoChanged.hasUpdatedExpiration()) infoChanged.updatedExpiration else null
-//    storage.insertIncomingInfoMessage()
+    storage.insertGroupInfoChange(message, closedGroup)
 }
 
 private fun handlePromotionMessage(message: GroupUpdated) {

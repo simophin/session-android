@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.fasterxml.jackson.core.JsonParseException
 import org.session.libsession.messaging.messages.control.GroupUpdated
 import org.session.libsignal.messages.SignalServiceGroup
+import org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage.Type
 import org.session.libsignal.utilities.JsonUtil
 import org.session.libsignal.utilities.Log
 import java.util.Collections
@@ -22,10 +23,11 @@ class UpdateMessageData () {
             JsonSubTypes.Type(Kind.GroupMemberAdded::class, name = "GroupMemberAdded"),
             JsonSubTypes.Type(Kind.GroupMemberRemoved::class, name = "GroupMemberRemoved"),
             JsonSubTypes.Type(Kind.GroupMemberLeft::class, name = "GroupMemberLeft"),
-            JsonSubTypes.Type(Kind.OpenGroupInvitation::class, name = "OpenGroupInvitation")
+            JsonSubTypes.Type(Kind.OpenGroupInvitation::class, name = "OpenGroupInvitation"),
+        JsonSubTypes.Type(Kind.GroupAvatarUpdated::class, name = "GroupAvatarUpdated")
     )
-    sealed class Kind() {
-        class GroupCreation(): Kind()
+    sealed class Kind {
+        data object GroupCreation: Kind()
         class GroupNameChange(val name: String): Kind() {
             constructor(): this("") //default constructor required for json serialization
         }
@@ -35,10 +37,12 @@ class UpdateMessageData () {
         class GroupMemberRemoved(val updatedMembers: Collection<String>): Kind() {
             constructor(): this(Collections.emptyList())
         }
-        class GroupMemberLeft(): Kind()
+        data object GroupMemberLeft: Kind()
         class GroupMemberUpdated(val sessionIds: List<String>, val type: MemberUpdateType?): Kind() {
             constructor(): this(emptyList(), null)
         }
+        data object GroupAvatarUpdated: Kind()
+        class GroupExpiryUpdated @JvmOverloads constructor(val newExpiry: Int = 0): Kind()
         class OpenGroupInvitation(val groupUrl: String, val groupName: String): Kind() {
             constructor(): this("", "")
         }
@@ -59,26 +63,40 @@ class UpdateMessageData () {
 
         fun buildGroupUpdate(type: SignalServiceGroup.Type, name: String, members: Collection<String>): UpdateMessageData? {
             return when(type) {
-                SignalServiceGroup.Type.CREATION -> UpdateMessageData(Kind.GroupCreation())
+                SignalServiceGroup.Type.CREATION -> UpdateMessageData(Kind.GroupCreation)
                 SignalServiceGroup.Type.NAME_CHANGE -> UpdateMessageData(Kind.GroupNameChange(name))
                 SignalServiceGroup.Type.MEMBER_ADDED -> UpdateMessageData(Kind.GroupMemberAdded(members))
                 SignalServiceGroup.Type.MEMBER_REMOVED -> UpdateMessageData(Kind.GroupMemberRemoved(members))
-                SignalServiceGroup.Type.QUIT -> UpdateMessageData(Kind.GroupMemberLeft())
+                SignalServiceGroup.Type.QUIT -> UpdateMessageData(Kind.GroupMemberLeft)
                 else -> null
             }
         }
 
         fun buildGroupUpdate(groupUpdated: GroupUpdated): UpdateMessageData? {
             val inner = groupUpdated.inner
-            TODO()
-//            return when {
-//                inner.hasMemberChangeMessage() -> {
-//                    val memberChange = inner.memberChangeMessage
-//                    val type = memberChange.type
-//                    memberChange.memberSessionIdsList
-//                }
-//                else -> null
-//            }
+            return when {
+                inner.hasMemberChangeMessage() -> {
+                    val memberChange = inner.memberChangeMessage
+                    val type = when (memberChange.type) {
+                        Type.ADDED -> MemberUpdateType.ADDED
+                        Type.PROMOTED -> MemberUpdateType.PROMOTED
+                        Type.REMOVED -> MemberUpdateType.REMOVED
+                    }
+                    val members = memberChange.memberSessionIdsList
+                    UpdateMessageData(Kind.GroupMemberUpdated(members, type))
+                }
+                inner.hasInfoChangeMessage() -> {
+                    val infoChange = inner.infoChangeMessage
+                    val type = infoChange.type
+                    TODO()
+//                    when (type) {
+//                        GroupUpdateInfoChangeMessage.Type.NAME -> Kind.GroupNameChange(infoChange.updatedName)
+//                        GroupUpdateInfoChangeMessage.Type.AVATAR -> Kind.GroupAvatarUpdated
+//                        // GroupUpdateInfoChangeMessage.Type.DISAPPEARING_MESSAGES -> Kind.GroupExpirationUpdated(infoChange.updatedExpiration)
+//                    }
+                }
+                else -> null
+            }
         }
 
         fun buildOpenGroupInvitation(url: String, name: String): UpdateMessageData {
