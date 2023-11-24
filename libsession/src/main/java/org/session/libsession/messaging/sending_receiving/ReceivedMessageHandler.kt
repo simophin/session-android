@@ -2,6 +2,7 @@ package org.session.libsession.messaging.sending_receiving
 
 import android.text.TextUtils
 import network.loki.messenger.libsession_util.ConfigBase
+import network.loki.messenger.libsession_util.util.Sodium
 import org.session.libsession.avatars.AvatarHelper
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.jobs.AttachmentDownloadJob
@@ -572,10 +573,14 @@ private fun handleGroupInfoChange(message: GroupUpdated, closedGroup: SessionId)
 }
 
 private fun handlePromotionMessage(message: GroupUpdated) {
-    val sender = message.sender!!
     val storage = MessagingModuleConfiguration.shared.storage
-    val inner = message.inner
-    // TODO: set ourselves as admin and overwrite the auth data for group
+    val promotion = message.inner.promoteMessage
+    if (!promotion.hasGroupIdentitySeed()) {
+        Log.e("GroupUpdated", "")
+    }
+    val seed = promotion.groupIdentitySeed.toByteArray()
+    val keyPair = Sodium.ed25519KeyPair(seed)
+    storage.handlePromoted(keyPair)
 }
 
 private fun MessageReceiver.handleInviteResponse(message: GroupUpdated, closedGroup: SessionId) {

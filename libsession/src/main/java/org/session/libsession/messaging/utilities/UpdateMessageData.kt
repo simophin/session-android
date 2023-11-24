@@ -21,7 +21,6 @@ class UpdateMessageData () {
     @JsonSubTypes(
         JsonSubTypes.Type(Kind.GroupCreation::class, name = "GroupCreation"),
         JsonSubTypes.Type(Kind.GroupNameChange::class, name = "GroupNameChange"),
-        JsonSubTypes.Type(Kind.GroupDescriptionChange::class, name = "GroupDescriptionChange"),
         JsonSubTypes.Type(Kind.GroupMemberAdded::class, name = "GroupMemberAdded"),
         JsonSubTypes.Type(Kind.GroupMemberRemoved::class, name = "GroupMemberRemoved"),
         JsonSubTypes.Type(Kind.GroupMemberLeft::class, name = "GroupMemberLeft"),
@@ -35,7 +34,6 @@ class UpdateMessageData () {
         class GroupNameChange(val name: String): Kind() {
             constructor(): this("") //default constructor required for json serialization
         }
-        data class GroupDescriptionChange @JvmOverloads constructor(val description: String = ""): Kind()
         class GroupMemberAdded(val updatedMembers: Collection<String>): Kind() {
             constructor(): this(Collections.emptyList())
         }
@@ -53,6 +51,12 @@ class UpdateMessageData () {
         }
     }
 
+    @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
+    @JsonSubTypes(
+        JsonSubTypes.Type(MemberUpdateType.ADDED::class, name = "ADDED"),
+        JsonSubTypes.Type(MemberUpdateType.REMOVED::class, name = "REMOVED"),
+        JsonSubTypes.Type(MemberUpdateType.PROMOTED::class, name = "PROMOTED"),
+    )
     sealed class MemberUpdateType {
         data object ADDED: MemberUpdateType()
         data object REMOVED: MemberUpdateType()

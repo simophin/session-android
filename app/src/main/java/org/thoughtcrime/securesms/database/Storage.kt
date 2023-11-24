@@ -2,6 +2,7 @@ package org.thoughtcrime.securesms.database
 
 import android.content.Context
 import android.net.Uri
+import com.google.protobuf.ByteString
 import kotlinx.coroutines.runBlocking
 import network.loki.messenger.libsession_util.Config
 import network.loki.messenger.libsession_util.ConfigBase.Companion.PRIORITY_HIDDEN
@@ -19,6 +20,7 @@ import network.loki.messenger.libsession_util.util.Conversation
 import network.loki.messenger.libsession_util.util.ExpiryMode
 import network.loki.messenger.libsession_util.util.GroupDisplayInfo
 import network.loki.messenger.libsession_util.util.GroupInfo
+import network.loki.messenger.libsession_util.util.KeyPair
 import network.loki.messenger.libsession_util.util.UserPic
 import nl.komponents.kovenant.functional.bind
 import org.session.libsession.avatars.AvatarHelper
@@ -84,6 +86,7 @@ import org.session.libsignal.messages.SignalServiceAttachmentPointer
 import org.session.libsignal.messages.SignalServiceGroup
 import org.session.libsignal.protos.SignalServiceProtos.DataMessage
 import org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage
+import org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage
 import org.session.libsignal.utilities.Base64
 import org.session.libsignal.utilities.Hex
 import org.session.libsignal.utilities.IdPrefix
@@ -1351,6 +1354,20 @@ open class Storage(
             val job = InviteContactsJob(groupSessionId, filteredMembers.toTypedArray())
             JobQueue.shared.add(job)
 
+            val timestamp = SnodeAPI.nowWithOffset
+            val messageToSign = "MEMBER_CHANGE${GroupUpdateMemberChangeMessage.Type.ADDED.name}$timestamp"
+            val signature = SodiumUtilities.sign(messageToSign.toByteArray(), adminKey)
+            val updatedMessage = GroupUpdated(
+                DataMessage.GroupUpdateMessage.newBuilder()
+                    .setMemberChangeMessage(
+                        GroupUpdateMemberChangeMessage.newBuilder()
+                            .addAllMemberSessionIds(filteredMembers)
+                            .setType(GroupUpdateMemberChangeMessage.Type.ADDED)
+                            .setAdminSignature(ByteString.copyFrom(signature))
+                    )
+                    .build()
+            )
+            MessageSender.send(updatedMessage, fromSerialized(groupSessionId))
             infoConfig.free()
             membersConfig.free()
             keysConfig.free()
@@ -1368,12 +1385,99 @@ open class Storage(
     override fun insertGroupInfoChange(message: GroupUpdated, closedGroup: SessionId) {
         val sentTimestamp = message.sentTimestamp ?: return
         val senderPublicKey = message.sender ?: return
-        val group = SignalServiceGroup(Hex.fromStringCondensed(closedGroup.hexString()), SignalServiceGroup.GroupType.SIGNAL)
-        val m = IncomingTextMessage(fromSerialized(senderPublicKey), 1, sentTimestamp, "", Optional.of(group), 0, true, false)
+        val userPublicKey = getUserPublicKey()!!
         val updateData = UpdateMessageData.buildGroupUpdate(message)?.toJSON() ?: return
-        val infoMessage = IncomingGroupMessage(m, updateData, true)
-        val smsDB = DatabaseComponent.get(context).smsDatabase()
-        smsDB.insertMessageInbox(infoMessage,  true)
+
+        if (senderPublicKey == userPublicKey) {
+            val recipient = Recipient.from(context, fromSerialized(closedGroup.hexString()), false)
+            val infoMessage = OutgoingGroupMediaMessage(recipient, updateData, closedGroup.hexString(), null, sentTimestamp, 0, true, null, listOf(), listOf())
+            val mmsDB = DatabaseComponent.get(context).mmsDatabase()
+            val mmsSmsDB = DatabaseComponent.get(context).mmsSmsDatabase()
+            if (mmsSmsDB.getMessageFor(sentTimestamp, userPublicKey) != null) return
+            val threadDb = DatabaseComponent.get(context).threadDatabase()
+            val threadID = threadDb.getThreadIdIfExistsFor(recipient)
+            val infoMessageID = mmsDB.insertMessageOutbox(infoMessage, threadID, false, null, runThreadUpdate = true)
+            mmsDB.markAsSent(infoMessageID, true)
+        } else {
+            val group = SignalServiceGroup(Hex.fromStringCondensed(closedGroup.hexString()), SignalServiceGroup.GroupType.SIGNAL)
+            val m = IncomingTextMessage(fromSerialized(senderPublicKey), 1, sentTimestamp, "", Optional.of(group), 0, true, false)
+            val infoMessage = IncomingGroupMessage(m, updateData, true)
+            val smsDB = DatabaseComponent.get(context).smsDatabase()
+            smsDB.insertMessageInbox(infoMessage,  true)
+        }
+    }
+
+    override fun promoteMember(groupSessionId: String, promotions: Array<String>) {
+        val closedGroupId = SessionId.from(groupSessionId)
+        val adminKey = configFactory.userGroups?.getClosedGroup(groupSessionId)?.adminKey ?: return
+        if (adminKey.isEmpty()) {
+            return Log.e("ClosedGroup", "No admin key for group")
+        }
+        val info = configFactory.getGroupInfoConfig(closedGroupId) ?: return
+        val members = configFactory.getGroupMemberConfig(closedGroupId) ?: return
+        val keys = configFactory.getGroupKeysConfig(closedGroupId, info, members, free = false) ?: return
+
+        promotions.forEach { sessionId ->
+            val promoted = members.get(sessionId)?.copy(
+                promotionPending = true,
+            ) ?: return@forEach
+            members.set(promoted)
+
+            val message = GroupUpdated(
+                DataMessage.GroupUpdateMessage.newBuilder()
+                    .setPromoteMessage(
+                        DataMessage.GroupUpdatePromoteMessage.newBuilder()
+                            .setGroupIdentitySeed(ByteString.copyFrom(adminKey))
+                    )
+                    .build()
+            )
+            MessageSender.send(message, fromSerialized(sessionId))
+        }
+        configFactory.saveGroupConfigs(keys, info, members)
+        info.free()
+        members.free()
+        keys.free()
+        val groupDestination = Destination.ClosedGroup(groupSessionId)
+        ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(groupDestination)
+        val timestamp = SnodeAPI.nowWithOffset
+        val messageToSign = "MEMBER_CHANGE${GroupUpdateMemberChangeMessage.Type.PROMOTED.name}$timestamp"
+        val signature = SodiumUtilities.sign(messageToSign.toByteArray(), adminKey)
+        val message = GroupUpdated(
+            DataMessage.GroupUpdateMessage.newBuilder()
+                .setMemberChangeMessage(
+                    GroupUpdateMemberChangeMessage.newBuilder()
+                        .addAllMemberSessionIds(promotions.toList())
+                        .setType(GroupUpdateMemberChangeMessage.Type.PROMOTED)
+                        .setAdminSignature(ByteString.copyFrom(signature))
+                )
+                .build()
+        ).apply { sentTimestamp = timestamp }
+        MessageSender.send(message, fromSerialized(groupSessionId))
+    }
+
+    override fun handlePromoted(keyPair: KeyPair) {
+        val closedGroupId = SessionId(IdPrefix.GROUP, keyPair.pubKey)
+        val ourSessionId = getUserPublicKey()!!
+        val userGroups = configFactory.userGroups ?: return
+        val closedGroup = userGroups.getClosedGroup(closedGroupId.hexString())
+            ?: return Log.w("ClosedGroup", "No closed group in user groups matching promoted message")
+
+        val modified = closedGroup.copy(adminKey = keyPair.secretKey, authData = byteArrayOf())
+        userGroups.set(modified)
+        val info = configFactory.getGroupInfoConfig(closedGroupId) ?: return
+        val members = configFactory.getGroupMemberConfig(closedGroupId) ?: return
+        val keys = configFactory.getGroupKeysConfig(closedGroupId, info, members, free = false) ?: return
+        val ourMember = members.get(ourSessionId)?.copy(
+            admin = true,
+            promotionPending = false,
+            promotionFailed = false
+        ) ?: return Log.e("ClosedGroup", "We aren't a member in the closed group")
+        members.set(ourMember)
+        configFactory.saveGroupConfigs(keys, info, members)
+        ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(Destination.ClosedGroup(closedGroupId.hexString()))
+        info.free()
+        members.free()
+        keys.free()
     }
 
     override fun setServerCapabilities(server: String, capabilities: List<String>) {

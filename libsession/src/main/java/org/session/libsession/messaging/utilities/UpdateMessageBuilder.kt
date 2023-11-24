@@ -27,7 +27,7 @@ object UpdateMessageBuilder {
         else getSenderName(senderId!!)
 
         return when (updateData) {
-            is UpdateMessageData.Kind.GroupCreation -> if (isOutgoing) {
+            UpdateMessageData.Kind.GroupCreation -> if (isOutgoing) {
                 context.getString(R.string.MessageRecord_you_created_a_new_group)
             } else {
                 context.getString(R.string.MessageRecord_s_added_you_to_the_group, senderName)
@@ -64,12 +64,70 @@ object UpdateMessageBuilder {
                     }
                 }
             }
-            is UpdateMessageData.Kind.GroupMemberLeft -> if (isOutgoing) {
+            UpdateMessageData.Kind.GroupMemberLeft -> if (isOutgoing) {
                 context.getString(R.string.MessageRecord_left_group)
             } else {
                 context.getString(R.string.ConversationItem_group_action_left, senderName)
             }
-            else -> return ""
+            UpdateMessageData.Kind.GroupAvatarUpdated -> context.getString(R.string.ConversationItem_group_action_avatar_updated)
+            is UpdateMessageData.Kind.GroupExpirationUpdated -> TODO()
+            is UpdateMessageData.Kind.GroupMemberUpdated -> {
+                when (updateData.type) {
+                    UpdateMessageData.MemberUpdateType.ADDED -> {
+                        val number = updateData.sessionIds.size
+                        if (number == 1) context.getString(
+                            R.string.ConversationItem_group_member_added_single,
+                            getSenderName(updateData.sessionIds.first())
+                        )
+                        else if (number == 2) context.getString(
+                            R.string.ConversationItem_group_member_added_two,
+                            getSenderName(updateData.sessionIds.first()),
+                            getSenderName(updateData.sessionIds.last())
+                        )
+                        else context.getString(
+                            R.string.ConversationItem_group_member_added_multiple,
+                            getSenderName(updateData.sessionIds.first()),
+                            updateData.sessionIds.size - 1
+                        )
+                    }
+                    UpdateMessageData.MemberUpdateType.PROMOTED -> {
+                        val number = updateData.sessionIds.size
+                        if (number == 1) context.getString(
+                            R.string.ConversationItem_group_member_promoted_single,
+                            getSenderName(updateData.sessionIds.first())
+                        )
+                        else if (number == 2) context.getString(
+                            R.string.ConversationItem_group_member_promoted_two,
+                            getSenderName(updateData.sessionIds.first()),
+                            getSenderName(updateData.sessionIds.last())
+                        )
+                        else context.getString(
+                            R.string.ConversationItem_group_member_promoted_multiple,
+                            getSenderName(updateData.sessionIds.first()),
+                            updateData.sessionIds.size - 1
+                        )
+                    }
+                    UpdateMessageData.MemberUpdateType.REMOVED -> {
+                        val number = updateData.sessionIds.size
+                        if (number == 1) context.getString(
+                            R.string.ConversationItem_group_member_removed_single,
+                            getSenderName(updateData.sessionIds.first())
+                        )
+                        else if (number == 2) context.getString(
+                            R.string.ConversationItem_group_member_removed_two,
+                            getSenderName(updateData.sessionIds.first()),
+                            getSenderName(updateData.sessionIds.last())
+                        )
+                        else context.getString(
+                            R.string.ConversationItem_group_member_removed_multiple,
+                            getSenderName(updateData.sessionIds.first()),
+                            updateData.sessionIds.size - 1
+                        )
+                    }
+                    null -> ""
+                }
+            }
+            is UpdateMessageData.Kind.OpenGroupInvitation -> TODO()
         }
     }
 

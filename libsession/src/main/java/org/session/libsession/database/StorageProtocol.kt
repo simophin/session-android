@@ -5,6 +5,7 @@ import android.net.Uri
 import network.loki.messenger.libsession_util.Config
 import network.loki.messenger.libsession_util.util.GroupDisplayInfo
 import network.loki.messenger.libsession_util.util.GroupInfo
+import network.loki.messenger.libsession_util.util.KeyPair
 import org.session.libsession.messaging.BlindedIdMapping
 import org.session.libsession.messaging.calls.CallMessageType
 import org.session.libsession.messaging.contacts.Contact
@@ -168,13 +169,14 @@ interface StorageProtocol {
     fun getClosedGroupDisplayInfo(groupSessionId: String): GroupDisplayInfo?
     fun inviteClosedGroupMembers(groupSessionId: String, invitees: List<String>)
     fun insertGroupInfoChange(message: GroupUpdated, closedGroup: SessionId)
+    fun promoteMember(groupSessionId: String, promotions: Array<String>)
+    fun handlePromoted(keyPair: KeyPair)
 
     // Groups
     fun getAllGroups(includeInactive: Boolean): List<GroupRecord>
 
     // Settings
     fun setProfileSharing(address: Address, value: Boolean)
-
 
     // Thread
     fun getOrCreateThreadIdFor(address: Address): Long

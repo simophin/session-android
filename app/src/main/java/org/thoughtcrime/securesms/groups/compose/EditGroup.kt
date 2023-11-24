@@ -94,6 +94,9 @@ fun EditClosedGroupScreen(
         onReinvite = { contact ->
             eventSink(EditGroupEvent.ReInviteContact(contact))
         },
+        onPromote = { contact ->
+            eventSink(EditGroupEvent.PromoteContact(contact))
+        },
         viewState = viewState
     )
 }
@@ -182,7 +185,12 @@ class EditGroupViewModel @AssistedInject constructor(
                     ).show()
                 }
                 is EditGroupEvent.ReInviteContact -> {
+                    // do a buffer
                     JobQueue.shared.add(InviteContactsJob(groupSessionId, arrayOf(event.contactSessionId)))
+                }
+                is EditGroupEvent.PromoteContact -> {
+                    // do a buffer
+                    storage.promoteMember(groupSessionId, arrayOf(event.contactSessionId))
                 }
             }
         }
@@ -238,6 +246,7 @@ fun EditGroupView(
     onBack: ()->Unit,
     onInvite: ()->Unit,
     onReinvite: (String)->Unit,
+    onPromote: (String)->Unit,
     viewState: EditGroupViewState,
 ) {
     val scaffoldState = rememberScaffoldState()
@@ -339,6 +348,27 @@ fun EditGroupView(
                                     color = MaterialTheme.colors.onPrimary
                                 )
                             }
+                        } else if (viewState.admin && member.memberState == MemberState.Member) {
+                            TextButton(
+                                onClick = {
+                                    onPromote(member.memberSessionId)
+                                },
+                                modifier = Modifier
+                                    .clip(CircleShape)
+                                    .background(
+                                        Color(
+                                            MaterialColors.getColor(LocalContext.current,
+                                                R.attr.colorControlHighlight,
+                                                MaterialTheme.colors.onPrimary.toArgb())
+                                        )
+                                    )
+                            ) {
+                                Text(
+                                    "Promote",
+                                    color = MaterialTheme.colors.onPrimary
+                                )
+                            }
+
                         }
                     }
                 }
@@ -394,6 +424,7 @@ sealed class EditGroupEvent {
     data class InviteContacts(val context: Context,
                               val contacts: ContactList): EditGroupEvent()
     data class ReInviteContact(val contactSessionId: String): EditGroupEvent()
+    data class PromoteContact(val contactSessionId: String): EditGroupEvent()
 }
 
 data class EditGroupInviteViewState(
@@ -430,6 +461,7 @@ fun PreviewList() {
             onBack = {},
             onInvite = {},
             onReinvite = {},
+            onPromote = {},
             viewState = viewState
         )
     }
