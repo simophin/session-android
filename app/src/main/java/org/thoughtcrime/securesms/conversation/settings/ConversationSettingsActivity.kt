@@ -1,9 +1,13 @@
 package org.thoughtcrime.securesms.conversation.settings
 
 import android.content.Intent
+import android.graphics.Typeface
 import android.os.Bundle
+import android.text.SpannableStringBuilder
+import android.text.style.StyleSpan
 import android.view.View
 import androidx.activity.viewModels
+import androidx.core.text.set
 import androidx.core.view.isVisible
 import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.R
@@ -68,6 +72,7 @@ class ConversationSettingsActivity: PassphraseRequiredActionBarActivity(), View.
         binding.notificationSettings.setOnClickListener(this)
         binding.editGroup.setOnClickListener(this)
         binding.addAdmins.setOnClickListener(this)
+        binding.leaveGroup.setOnClickListener(this)
         binding.back.setOnClickListener(this)
         binding.autoDownloadMediaSwitch.setOnCheckedChangeListener { _, isChecked ->
             viewModel.setAutoDownloadAttachments(isChecked)
@@ -86,7 +91,7 @@ class ConversationSettingsActivity: PassphraseRequiredActionBarActivity(), View.
         }
         // Setup group description (if group)
         binding.conversationSubtitle.isVisible = recipient.isClosedGroupRecipient.apply {
-            binding.conversationSubtitle.text = "TODO: This is a test for group descriptions"
+            binding.conversationSubtitle.text = viewModel.closedGroupInfo(recipient.address.serialize())?.description
         }
 
         // Toggle group-specific settings
@@ -99,10 +104,12 @@ class ConversationSettingsActivity: PassphraseRequiredActionBarActivity(), View.
         val isUserGroupAdmin = areGroupOptionsVisible && viewModel.isUserGroupAdmin()
         with (binding) {
             groupMembersDivider.root.isVisible = areGroupOptionsVisible && !isUserGroupAdmin
-            groupMembers.isVisible = areGroupOptionsVisible && !isUserGroupAdmin
+            groupMembers.isVisible = !isUserGroupAdmin
             adminControlsGroup.isVisible = isUserGroupAdmin
             deleteGroup.isVisible = isUserGroupAdmin
+            clearMessages.isVisible = isUserGroupAdmin
             clearMessagesDivider.root.isVisible = isUserGroupAdmin
+            leaveGroupDivider.root.isVisible = isUserGroupAdmin
         }
 
         // Set pinned state
@@ -159,6 +166,35 @@ class ConversationSettingsActivity: PassphraseRequiredActionBarActivity(), View.
                         viewModel.clearMessages(false)
                     }
                     cancelButton()
+                }
+            }
+            v === binding.leaveGroup -> {
+                showSessionDialog {
+
+                    title(R.string.conversation_settings_leave_group)
+
+                    val name = viewModel.recipient!!.name!!
+                    val text = getString(R.string.conversation_settings_leave_group_name)
+                    val textWithArgs = getString(R.string.conversation_settings_leave_group_name, name)
+
+                    // Searches for the start index of %1$s
+                    val startIndex = """%1${"\\$"}s""".toRegex().find(text)?.range?.start
+                    val endIndex = startIndex?.plus(name.length)
+
+                    val styledText = if (startIndex == null || endIndex == null) {
+                        textWithArgs
+                    } else {
+                        val boldName = SpannableStringBuilder(textWithArgs)
+                        boldName[startIndex .. endIndex] = StyleSpan(Typeface.BOLD)
+                        boldName
+                    }
+                    text(styledText)
+                    destructiveButton(
+                        R.string.conversation_settings_leave_group,
+                        R.string.conversation_settings_leave_group
+                    ) {
+                        viewModel.leaveGroup()
+                    }
                 }
             }
             v === binding.editGroup -> {

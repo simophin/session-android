@@ -6,6 +6,7 @@ import androidx.core.database.getBlobOrNull
 import androidx.core.database.getLongOrNull
 import androidx.sqlite.db.transaction
 import org.session.libsignal.protos.SignalServiceProtos.SharedConfigMessage
+import org.session.libsignal.utilities.SessionId
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper
 
 class ConfigDatabase(context: Context, helper: SQLCipherOpenHelper): Database(context, helper) {
@@ -22,6 +23,7 @@ class ConfigDatabase(context: Context, helper: SQLCipherOpenHelper): Database(co
             "CREATE TABLE $TABLE_NAME ($VARIANT TEXT NOT NULL, $PUBKEY TEXT NOT NULL, $DATA BLOB, $TIMESTAMP INTEGER NOT NULL DEFAULT 0, PRIMARY KEY($VARIANT, $PUBKEY));"
 
         private const val VARIANT_AND_PUBKEY_WHERE = "$VARIANT = ? AND $PUBKEY = ?"
+        private const val VARIANT_IN_AND_PUBKEY_WHERE = "$VARIANT in (?) AND $PUBKEY = ?"
 
         val KEYS_VARIANT = SharedConfigMessage.Kind.ENCRYPTION_KEYS.name
         val INFO_VARIANT = SharedConfigMessage.Kind.CLOSED_GROUP_INFO.name
@@ -37,6 +39,16 @@ class ConfigDatabase(context: Context, helper: SQLCipherOpenHelper): Database(co
             TIMESTAMP to timestamp
         )
         db.insertOrUpdate(TABLE_NAME, contentValues, VARIANT_AND_PUBKEY_WHERE, arrayOf(variant, publicKey))
+    }
+
+    fun deleteGroupConfigs(closedGroupId: SessionId) {
+        val db = writableDatabase
+        db.transaction {
+            val variants = arrayOf(KEYS_VARIANT, INFO_VARIANT, MEMBER_VARIANT)
+            db.delete(TABLE_NAME, VARIANT_IN_AND_PUBKEY_WHERE,
+                arrayOf(variants, closedGroupId.hexString())
+            )
+        }
     }
 
     fun storeGroupConfigs(publicKey: String, keysConfig: ByteArray, infoConfig: ByteArray, memberConfig: ByteArray, timestamp: Long) {

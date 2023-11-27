@@ -402,6 +402,12 @@ class ConfigFactory(
         configDatabase.storeGroupConfigs(pubKey, groupKeys.dump(), groupInfo.dump(), groupMembers.dump(), timestamp)
     }
 
+    override fun removeGroup(closedGroupId: SessionId) {
+        val groups = userGroups ?: return
+        groups.eraseClosedGroup(closedGroupId.hexString())
+        configDatabase.deleteGroupConfigs(closedGroupId)
+    }
+
     override fun scheduleUpdate(destination: Destination) {
         // there's probably a better way to do this
         ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(destination)

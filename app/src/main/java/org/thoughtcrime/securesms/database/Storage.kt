@@ -34,6 +34,7 @@ import org.session.libsession.messaging.jobs.ConfigurationSyncJob
 import org.session.libsession.messaging.jobs.GroupAvatarDownloadJob
 import org.session.libsession.messaging.jobs.InviteContactsJob
 import org.session.libsession.messaging.jobs.Job
+import org.session.libsession.messaging.jobs.JobDelegate
 import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.messaging.jobs.MessageReceiveJob
 import org.session.libsession.messaging.jobs.MessageSendJob
@@ -87,6 +88,7 @@ import org.session.libsignal.messages.SignalServiceGroup
 import org.session.libsignal.protos.SignalServiceProtos.DataMessage
 import org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage
 import org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage
+import org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMessage
 import org.session.libsignal.utilities.Base64
 import org.session.libsignal.utilities.Hex
 import org.session.libsignal.utilities.IdPrefix
@@ -185,7 +187,7 @@ open class Storage(
                 // these should be removed in the group leave / handling new configs
                 Log.w("Loki", "Thread delete called for open group address, expecting to be handled elsewhere")
             } else if (address.isClosedGroup) {
-                TODO("add the thread deleted checks for new closed groups")
+                Log.w("Loki", "Thread delete called for closed group address, expecting to be handled elsewhere")
             }
         } else {
             // non-standard contact prefixes: 15, 00 etc shouldn't be stored in config
@@ -1345,9 +1347,23 @@ open class Storage(
             response.get()
 
             val newConfigSync = ConfigurationSyncJob(destination)
+            var exception: Exception? = null
+            val delegate = object: JobDelegate {
+                override fun handleJobSucceeded(job: Job, dispatcherName: String) {}
+                override fun handleJobFailed(job: Job, dispatcherName: String, error: Exception) { exception = error }
+                override fun handleJobFailedPermanently(
+                    job: Job,
+                    dispatcherName: String,
+                    error: Exception
+                ) { exception = error }
+            }
+            newConfigSync.delegate = delegate
             runBlocking {
                 newConfigSync.execute("updating-members")
             }
+
+            // rethrow failure
+            exception?.let { throw it }
 
             configFactory.saveGroupConfigs(keysConfig, infoConfig, membersConfig)
 
@@ -1366,8 +1382,9 @@ open class Storage(
                             .setAdminSignature(ByteString.copyFrom(signature))
                     )
                     .build()
-            )
+            ).apply { this.sentTimestamp = timestamp }
             MessageSender.send(updatedMessage, fromSerialized(groupSessionId))
+            insertGroupInfoChange(updatedMessage, sessionId)
             infoConfig.free()
             membersConfig.free()
             keysConfig.free()
@@ -1383,12 +1400,12 @@ open class Storage(
     }
 
     override fun insertGroupInfoChange(message: GroupUpdated, closedGroup: SessionId) {
-        val sentTimestamp = message.sentTimestamp ?: return
-        val senderPublicKey = message.sender ?: return
+        val sentTimestamp = message.sentTimestamp ?: SnodeAPI.nowWithOffset
+        val senderPublicKey = message.sender
         val userPublicKey = getUserPublicKey()!!
         val updateData = UpdateMessageData.buildGroupUpdate(message)?.toJSON() ?: return
 
-        if (senderPublicKey == userPublicKey) {
+        if (senderPublicKey == null || senderPublicKey == userPublicKey) {
             val recipient = Recipient.from(context, fromSerialized(closedGroup.hexString()), false)
             val infoMessage = OutgoingGroupMediaMessage(recipient, updateData, closedGroup.hexString(), null, sentTimestamp, 0, true, null, listOf(), listOf())
             val mmsDB = DatabaseComponent.get(context).mmsDatabase()
@@ -1451,8 +1468,11 @@ open class Storage(
                         .setAdminSignature(ByteString.copyFrom(signature))
                 )
                 .build()
-        ).apply { sentTimestamp = timestamp }
+        ).apply {
+            sentTimestamp = timestamp
+        }
         MessageSender.send(message, fromSerialized(groupSessionId))
+        insertGroupInfoChange(message, closedGroupId)
     }
 
     override fun handlePromoted(keyPair: KeyPair) {
@@ -1478,6 +1498,27 @@ open class Storage(
         info.free()
         members.free()
         keys.free()
+    }
+
+    override fun leaveGroup(groupSessionId: String) {
+        val closedGroupId = SessionId.from(groupSessionId)
+        val message = GroupUpdated(
+            GroupUpdateMessage.newBuilder()
+                .setMemberLeftMessage(DataMessage.GroupUpdateMemberLeftMessage.getDefaultInstance())
+                .build()
+        )
+        try {
+            MessageSender.sendNonDurably(message, fromSerialized(groupSessionId), false).get()
+            pollerFactory.pollerFor(closedGroupId)?.stop()
+            // TODO: unsub from pushes
+            getThreadId(fromSerialized(groupSessionId))?.let { threadId ->
+                deleteConversation(threadId)
+            }
+            configFactory.removeGroup(closedGroupId)
+            ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
+        } catch (e: Exception) {
+            Log.e("ClosedGroup", "Failed to send leave group message")
+        }
     }
 
     override fun setServerCapabilities(server: String, capabilities: List<String>) {

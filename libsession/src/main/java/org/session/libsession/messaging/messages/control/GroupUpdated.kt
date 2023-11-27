@@ -10,6 +10,8 @@ class GroupUpdated(val inner: GroupUpdateMessage): ControlMessage() {
         return true // TODO: add the validation here
     }
 
+    override val isSelfSendValid: Boolean = true
+
     companion object {
         fun fromProto(message: Content): GroupUpdated? =
             if (message.hasDataMessage() && message.dataMessage.hasGroupUpdateMessage())

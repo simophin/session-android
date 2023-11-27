@@ -35,6 +35,7 @@ interface ConfigFactoryProtocol {
         groupInfo: GroupInfoConfig,
         groupMembers: GroupMembersConfig
     )
+    fun removeGroup(closedGroupId: SessionId)
 
     fun scheduleUpdate(destination: Destination)
     fun constructGroupKeysConfig(

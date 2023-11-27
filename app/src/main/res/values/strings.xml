@@ -1079,6 +1079,5 @@
     <string name="media_overview_activity__clear_media">Clear All</string>
     <string name="activity_create_closed_group_select_contacts">Select Contacts</string>
     <string name="activity_create_closed_group_add_account_or_ons">Add Account ID or ONS</string>
-    <string name="closed_group_update_control__single_joined"></string>
-    <string name="closed_group_update_control__two_joined"></string>
+    <string name="conversation_settings_leave_group_name">Are you sure you want to leave %1$s?</string>
 </resources>

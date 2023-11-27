@@ -77,52 +77,54 @@ object UpdateMessageBuilder {
                         val number = updateData.sessionIds.size
                         if (number == 1) context.getString(
                             R.string.ConversationItem_group_member_added_single,
-                            getSenderName(updateData.sessionIds.first())
+                            context.youOrSender(updateData.sessionIds.first())
                         )
                         else if (number == 2) context.getString(
                             R.string.ConversationItem_group_member_added_two,
-                            getSenderName(updateData.sessionIds.first()),
-                            getSenderName(updateData.sessionIds.last())
+                            context.youOrSender(updateData.sessionIds.first()),
+                            context.youOrSender(updateData.sessionIds.last())
                         )
                         else context.getString(
                             R.string.ConversationItem_group_member_added_multiple,
-                            getSenderName(updateData.sessionIds.first()),
+                            context.youOrSender(updateData.sessionIds.first()),
                             updateData.sessionIds.size - 1
                         )
                     }
                     UpdateMessageData.MemberUpdateType.PROMOTED -> {
-                        val number = updateData.sessionIds.size
-                        if (number == 1) context.getString(
-                            R.string.ConversationItem_group_member_promoted_single,
-                            getSenderName(updateData.sessionIds.first())
-                        )
-                        else if (number == 2) context.getString(
-                            R.string.ConversationItem_group_member_promoted_two,
-                            getSenderName(updateData.sessionIds.first()),
-                            getSenderName(updateData.sessionIds.last())
-                        )
-                        else context.getString(
-                            R.string.ConversationItem_group_member_promoted_multiple,
-                            getSenderName(updateData.sessionIds.first()),
-                            updateData.sessionIds.size - 1
-                        )
+                        when (updateData.sessionIds.size) {
+                            1 -> context.getString(
+                                R.string.ConversationItem_group_member_promoted_single,
+                                context.youOrSender(updateData.sessionIds.first())
+                            )
+                            2 -> context.getString(
+                                R.string.ConversationItem_group_member_promoted_two,
+                                context.youOrSender(updateData.sessionIds.first()),
+                                context.youOrSender(updateData.sessionIds.last())
+                            )
+                            else -> context.getString(
+                                R.string.ConversationItem_group_member_promoted_multiple,
+                                context.youOrSender(updateData.sessionIds.first()),
+                                updateData.sessionIds.size - 1
+                            )
+                        }
                     }
                     UpdateMessageData.MemberUpdateType.REMOVED -> {
-                        val number = updateData.sessionIds.size
-                        if (number == 1) context.getString(
-                            R.string.ConversationItem_group_member_removed_single,
-                            getSenderName(updateData.sessionIds.first())
-                        )
-                        else if (number == 2) context.getString(
-                            R.string.ConversationItem_group_member_removed_two,
-                            getSenderName(updateData.sessionIds.first()),
-                            getSenderName(updateData.sessionIds.last())
-                        )
-                        else context.getString(
-                            R.string.ConversationItem_group_member_removed_multiple,
-                            getSenderName(updateData.sessionIds.first()),
-                            updateData.sessionIds.size - 1
-                        )
+                        when (updateData.sessionIds.size) {
+                            1 -> context.getString(
+                                R.string.ConversationItem_group_member_removed_single,
+                                context.youOrSender(updateData.sessionIds.first())
+                            )
+                            2 -> context.getString(
+                                R.string.ConversationItem_group_member_removed_two,
+                                context.youOrSender(updateData.sessionIds.first()),
+                                context.youOrSender(updateData.sessionIds.last())
+                            )
+                            else -> context.getString(
+                                R.string.ConversationItem_group_member_removed_multiple,
+                                context.youOrSender(updateData.sessionIds.first()),
+                                updateData.sessionIds.size - 1
+                            )
+                        }
                     }
                     null -> ""
                 }
@@ -130,6 +132,8 @@ object UpdateMessageBuilder {
             is UpdateMessageData.Kind.OpenGroupInvitation -> TODO()
         }
     }
+
+    fun Context.youOrSender(sessionId: String) = if (storage.getUserPublicKey() == sessionId) getString(R.string.MessageRecord_you) else getSenderName(sessionId)
 
     fun buildExpirationTimerMessage(context: Context, duration: Long, senderId: String? = null, isOutgoing: Boolean = false): String {
         if (!isOutgoing && senderId == null) return ""

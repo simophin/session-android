@@ -171,6 +171,7 @@ interface StorageProtocol {
     fun insertGroupInfoChange(message: GroupUpdated, closedGroup: SessionId)
     fun promoteMember(groupSessionId: String, promotions: Array<String>)
     fun handlePromoted(keyPair: KeyPair)
+    fun leaveGroup(groupSessionId: String)
 
     // Groups
     fun getAllGroups(includeInactive: Boolean): List<GroupRecord>
