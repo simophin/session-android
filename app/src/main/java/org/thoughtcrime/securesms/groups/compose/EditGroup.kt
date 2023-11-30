@@ -97,6 +97,9 @@ fun EditClosedGroupScreen(
         onPromote = { contact ->
             eventSink(EditGroupEvent.PromoteContact(contact))
         },
+        onRemove = { contact ->
+            eventSink(EditGroupEvent.RemoveContact(contact))
+        },
         viewState = viewState
     )
 }
@@ -192,6 +195,9 @@ class EditGroupViewModel @AssistedInject constructor(
                     // do a buffer
                     storage.promoteMember(groupSessionId, arrayOf(event.contactSessionId))
                 }
+                is EditGroupEvent.RemoveContact -> {
+                    storage.removeMember(groupSessionId, arrayOf(event.contactSessionId))
+                }
             }
         }
     }
@@ -247,6 +253,7 @@ fun EditGroupView(
     onInvite: ()->Unit,
     onReinvite: (String)->Unit,
     onPromote: (String)->Unit,
+    onRemove: (String)->Unit,
     viewState: EditGroupViewState,
 ) {
     val scaffoldState = rememberScaffoldState()
@@ -337,9 +344,11 @@ fun EditGroupView(
                                     .clip(CircleShape)
                                     .background(
                                         Color(
-                                            MaterialColors.getColor(LocalContext.current,
+                                            MaterialColors.getColor(
+                                                LocalContext.current,
                                                 R.attr.colorControlHighlight,
-                                                MaterialTheme.colors.onPrimary.toArgb())
+                                                MaterialTheme.colors.onPrimary.toArgb()
+                                            )
                                         )
                                     )
                             ) {
@@ -357,9 +366,11 @@ fun EditGroupView(
                                     .clip(CircleShape)
                                     .background(
                                         Color(
-                                            MaterialColors.getColor(LocalContext.current,
+                                            MaterialColors.getColor(
+                                                LocalContext.current,
                                                 R.attr.colorControlHighlight,
-                                                MaterialTheme.colors.onPrimary.toArgb())
+                                                MaterialTheme.colors.onPrimary.toArgb()
+                                            )
                                         )
                                     )
                             ) {
@@ -368,7 +379,24 @@ fun EditGroupView(
                                     color = MaterialTheme.colors.onPrimary
                                 )
                             }
-
+                            TextButton(
+                                onClick = {
+                                    onRemove(member.memberSessionId)
+                                },
+                                modifier = Modifier
+                                    .clip(CircleShape)
+                                    .background(
+                                        Color(
+                                            MaterialColors.getColor(
+                                                LocalContext.current,
+                                                R.attr.colorControlHighlight,
+                                                MaterialTheme.colors.onPrimary.toArgb()
+                                            )
+                                        )
+                                    )
+                            ) {
+                                Icon(painter = painterResource(id = R.drawable.ic_baseline_close_24), contentDescription = null)
+                            }
                         }
                     }
                 }
@@ -425,6 +453,7 @@ sealed class EditGroupEvent {
                               val contacts: ContactList): EditGroupEvent()
     data class ReInviteContact(val contactSessionId: String): EditGroupEvent()
     data class PromoteContact(val contactSessionId: String): EditGroupEvent()
+    data class RemoveContact(val contactSessionId: String): EditGroupEvent()
 }
 
 data class EditGroupInviteViewState(
@@ -443,16 +472,22 @@ fun PreviewList() {
         false
     )
     val twoMember = MemberViewModel(
-        "Test User",
+        "Test User 2",
         "05abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1235",
         MemberState.InviteFailed,
+        false
+    )
+    val threeMember = MemberViewModel(
+        "Test User 3",
+        "05abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1236",
+        MemberState.Member,
         false
     )
 
     val viewState = EditGroupViewState(
         "Preview",
         "This is a preview description",
-        listOf(oneMember, twoMember),
+        listOf(oneMember, twoMember, threeMember),
         true
     )
 
@@ -462,6 +497,7 @@ fun PreviewList() {
             onInvite = {},
             onReinvite = {},
             onPromote = {},
+            onRemove = {},
             viewState = viewState
         )
     }

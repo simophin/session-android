@@ -284,6 +284,7 @@ class GroupMembersConfig(pointer: Long): ConfigBase(pointer), Closeable {
 
     external fun all(): Stack<GroupMember>
     external fun erase(groupMember: GroupMember): Boolean
+    external fun erase(pubKeyHex: String): Boolean
     external fun get(pubKeyHex: String): GroupMember?
     external fun getOrConstruct(pubKeyHex: String): GroupMember
     external fun set(groupMember: GroupMember)
@@ -335,6 +336,7 @@ class GroupKeysConfig(pointer: Long): ConfigSig(pointer) {
     external fun keys(): Stack<ByteArray>
 
     external fun makeSubAccount(sessionId: SessionId, canWrite: Boolean = true, canDelete: Boolean = false): ByteArray
+    external fun getSubAccountToken(sessionId: SessionId, canWrite: Boolean = true, canDelete: Boolean = false): ByteArray
 
     external fun subAccountSign(message: ByteArray, signingValue: ByteArray): SwarmAuth
 

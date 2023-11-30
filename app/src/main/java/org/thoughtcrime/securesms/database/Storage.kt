@@ -1291,9 +1291,11 @@ open class Storage(
         val membersConfig = configFactory.getGroupMemberConfig(sessionId) ?: return
         val infoConfig = configFactory.getGroupInfoConfig(sessionId) ?: return
 
+        // Filter out people who aren't already invited
         val filteredMembers = invitees.filter {
             membersConfig.get(it) == null
         }
+        // Create each member's contact info if we have it
         filteredMembers.forEach { memberSessionId ->
             val contact = getContactWithSessionID(memberSessionId)
             val name = contact?.name
@@ -1310,6 +1312,7 @@ open class Storage(
             membersConfig.set(member)
         }
 
+        // re-key for new members
         val keysConfig = configFactory.getGroupKeysConfig(
             sessionId,
             info = infoConfig,
@@ -1321,6 +1324,14 @@ open class Storage(
 
         val sentTimestamp = SnodeAPI.nowWithOffset
 
+        // build unrevocation, in case of re-adding members
+        val unrevocation = SnodeAPI.buildAuthenticatedUnrevokeSubKeyBatchRequest(
+            groupSessionId,
+            adminKey,
+            filteredMembers.map { keysConfig.getSubAccountToken(SessionId.from(it)) }.toTypedArray()
+        ) ?: return Log.e("ClosedGroup", "Failed to build revocation update")
+
+        // Build and store the key update in group swarm
         val message = SnodeMessage(
                 groupSessionId,
                 Base64.encodeBytes(keysConfig.pendingConfig()!!), // should not be null from checking has pending
@@ -1337,7 +1348,8 @@ open class Storage(
             SnodeAPI.getRawBatchResponse(
                 snode,
                 groupSessionId,
-                listOf(authenticatedBatch),
+                listOf(unrevocation, authenticatedBatch),
+                sequence = true
             )
         }
 
@@ -1345,6 +1357,7 @@ open class Storage(
 
         try {
             response.get()
+            // todo: error handling here
 
             val newConfigSync = ConfigurationSyncJob(destination)
             var exception: Exception? = null
@@ -1441,7 +1454,7 @@ open class Storage(
             members.set(promoted)
 
             val message = GroupUpdated(
-                DataMessage.GroupUpdateMessage.newBuilder()
+                GroupUpdateMessage.newBuilder()
                     .setPromoteMessage(
                         DataMessage.GroupUpdatePromoteMessage.newBuilder()
                             .setGroupIdentitySeed(ByteString.copyFrom(adminKey))
@@ -1460,7 +1473,7 @@ open class Storage(
         val messageToSign = "MEMBER_CHANGE${GroupUpdateMemberChangeMessage.Type.PROMOTED.name}$timestamp"
         val signature = SodiumUtilities.sign(messageToSign.toByteArray(), adminKey)
         val message = GroupUpdated(
-            DataMessage.GroupUpdateMessage.newBuilder()
+            GroupUpdateMessage.newBuilder()
                 .setMemberChangeMessage(
                     GroupUpdateMemberChangeMessage.newBuilder()
                         .addAllMemberSessionIds(promotions.toList())
@@ -1475,6 +1488,108 @@ open class Storage(
         insertGroupInfoChange(message, closedGroupId)
     }
 
+    override fun removeMember(groupSessionId: String, removedMembers: Array<String>, fromDelete: Boolean) {
+        val closedGroupId = SessionId.from(groupSessionId)
+        val adminKey = configFactory.userGroups?.getClosedGroup(groupSessionId)?.adminKey ?: return
+        if (adminKey.isEmpty()) {
+            return Log.e("ClosedGroup", "No admin key for group")
+        }
+        val info = configFactory.getGroupInfoConfig(closedGroupId) ?: return
+        val members = configFactory.getGroupMemberConfig(closedGroupId) ?: return
+        val keys = configFactory.getGroupKeysConfig(closedGroupId, info, members, free = false) ?: return
+
+        removedMembers.forEach { sessionId ->
+            members.erase(sessionId)
+        }
+
+        // Re-key for removed members
+        keys.rekey(info, members)
+
+        val revocation = SnodeAPI.buildAuthenticatedRevokeSubKeyBatchRequest(
+            groupSessionId,
+            adminKey,
+            removedMembers.map { keys.getSubAccountToken(SessionId.from(it)) }.toTypedArray()
+        ) ?: return Log.e("ClosedGroup", "Failed to build revocation update")
+
+        // Build and store the key update in group swarm
+        val storeKeyMessage = SnodeMessage(
+            groupSessionId,
+            Base64.encodeBytes(keys.pendingConfig()!!), // should not be null from checking has pending
+            SnodeMessage.CONFIG_TTL,
+            SnodeAPI.nowWithOffset
+        )
+        val authenticatedBatch = SnodeAPI.buildAuthenticatedStoreBatchInfo(
+            keys.namespace(),
+            storeKeyMessage,
+            adminKey
+        )
+
+        val response = SnodeAPI.getSingleTargetSnode(groupSessionId).bind { snode ->
+            SnodeAPI.getRawBatchResponse(
+                snode,
+                groupSessionId,
+                listOf(revocation, authenticatedBatch),
+                sequence = true
+            )
+        }
+
+        try {
+            // handle new key update and revocations response
+            val rawResponse = response.get()
+            val results = (rawResponse["results"] as ArrayList<Any>).first() as Map<String,Any>
+            if (results["code"] as Int != 200) {
+                throw Exception("Response wasn't successful for revoke and key update: ${results["body"] as? String}")
+            }
+
+            val newConfigSync = ConfigurationSyncJob(Destination.ClosedGroup(groupSessionId))
+
+            configFactory.saveGroupConfigs(keys, info, members)
+            info.free()
+            members.free()
+            keys.free()
+
+            var exception: Exception? = null
+            val delegate = object: JobDelegate {
+                override fun handleJobSucceeded(job: Job, dispatcherName: String) {}
+                override fun handleJobFailed(job: Job, dispatcherName: String, error: Exception) { exception = error }
+                override fun handleJobFailedPermanently(
+                    job: Job,
+                    dispatcherName: String,
+                    error: Exception
+                ) { exception = error }
+            }
+            newConfigSync.delegate = delegate
+            runBlocking {
+                newConfigSync.execute("updating-members")
+            }
+
+            // rethrow failure
+            exception?.let { throw it }
+
+            val timestamp = SnodeAPI.nowWithOffset
+            val messageToSign = "MEMBER_CHANGE${GroupUpdateMemberChangeMessage.Type.REMOVED.name}$timestamp"
+            val signature = SodiumUtilities.sign(messageToSign.toByteArray(), adminKey)
+            val updateMessage = GroupUpdateMessage.newBuilder()
+                .setMemberChangeMessage(
+                    GroupUpdateMemberChangeMessage.newBuilder()
+                        .addAllMemberSessionIds(removedMembers.toList())
+                        .setType(GroupUpdateMemberChangeMessage.Type.REMOVED)
+                        .setAdminSignature(ByteString.copyFrom(signature))
+                )
+                .build()
+            val message = GroupUpdated(
+                updateMessage
+            ).apply { sentTimestamp = timestamp }
+            val groupDestination = Destination.ClosedGroup(groupSessionId)
+            MessageSender.send(message, groupDestination, false)
+            insertGroupInfoChange(message, closedGroupId)
+        } catch (e: Exception) {
+            info.free()
+            members.free()
+            keys.free()
+        }
+    }
+
     override fun handlePromoted(keyPair: KeyPair) {
         val closedGroupId = SessionId(IdPrefix.GROUP, keyPair.pubKey)
         val ourSessionId = getUserPublicKey()!!
@@ -1484,6 +1599,7 @@ open class Storage(
 
         val modified = closedGroup.copy(adminKey = keyPair.secretKey, authData = byteArrayOf())
         userGroups.set(modified)
+        configFactory.scheduleUpdate(Destination.from(fromSerialized(getUserPublicKey()!!)))
         val info = configFactory.getGroupInfoConfig(closedGroupId) ?: return
         val members = configFactory.getGroupMemberConfig(closedGroupId) ?: return
         val keys = configFactory.getGroupKeysConfig(closedGroupId, info, members, free = false) ?: return

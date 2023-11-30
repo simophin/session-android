@@ -45,11 +45,21 @@ Java_network_loki_messenger_libsession_1util_GroupMembersConfig_all(JNIEnv *env,
 
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_network_loki_messenger_libsession_1util_GroupMembersConfig_erase(JNIEnv *env, jobject thiz,
+Java_network_loki_messenger_libsession_1util_GroupMembersConfig_erase__Lnetwork_loki_messenger_libsession_1util_util_GroupMember_2(JNIEnv *env, jobject thiz,
                                                                       jobject group_member) {
     auto config = ptrToMembers(env, thiz);
     auto member = util::deserialize_group_member(env, group_member);
     return config->erase(member.session_id);
+}
+
+extern "C"
+JNIEXPORT jboolean JNICALL
+Java_network_loki_messenger_libsession_1util_GroupMembersConfig_erase__Ljava_lang_String_2(JNIEnv *env, jobject thiz, jstring pub_key_hex) {
+    auto config = ptrToMembers(env, thiz);
+    auto member_id = env->GetStringUTFChars(pub_key_hex, nullptr);
+    auto erased = config->erase(member_id);
+    env->ReleaseStringUTFChars(pub_key_hex, member_id);
+    return erased;
 }
 
 extern "C"

@@ -553,7 +553,39 @@ object SnodeAPI {
         )
     }
 
+    fun buildAuthenticatedUnrevokeSubKeyBatchRequest(
+        publicKeyDestination: String,
+        signingKey: ByteArray,
+        subAccounts: Array<ByteArray>,
+    ): SnodeBatchRequestInfo? {
+        val params= buildUnrevokeAccountParams(
+            publicKeyDestination,
+            signingKey,
+            subAccounts
+        ) ?: return null
+        return SnodeBatchRequestInfo(
+            Snode.Method.UnrevokeSubAccount.rawValue,
+            params,
+            null
+        )
+    }
 
+    fun buildAuthenticatedRevokeSubKeyBatchRequest(
+        publicKeyDestination: String,
+        signingKey: ByteArray,
+        subAccounts: Array<ByteArray>,
+    ): SnodeBatchRequestInfo? {
+        val params = buildRevokeAccountParams(
+            publicKeyDestination,
+            signingKey,
+            subAccounts
+        ) ?: return null
+        return SnodeBatchRequestInfo(
+            Snode.Method.RevokeSubAccount.rawValue,
+            params,
+            null
+        )
+    }
 
     fun getRawBatchResponse(snode: Snode, publicKey: String, requests: List<SnodeBatchRequestInfo>, sequence: Boolean = false): RawResponsePromise {
         val parameters = mutableMapOf<String, Any>(
@@ -669,6 +701,70 @@ object SnodeAPI {
 
         params["signature"] = Base64.encodeBytes(signature)
 
+        return params
+    }
+
+    private fun buildUnrevokeAccountParams(
+        publicKey: String,
+        signingKey: ByteArray,
+        unrevoke: Array<ByteArray>,
+        pubKeyEd25519: String? = null,
+    ): Map<String, Any>? {
+        val timestamp = nowWithOffset
+        val params = mutableMapOf(
+            "pubkey" to publicKey,
+            "timestamp" to timestamp,
+            "unrevoke" to unrevoke.map { Base64.encodeBytes(it) }
+        )
+        val signData = "unrevoke_subaccount$timestamp".toByteArray() + unrevoke.reduce(ByteArray::plus)
+        val signature = ByteArray(Sign.BYTES)
+        try {
+            sodium.cryptoSignDetached(
+                signature,
+                signData,
+                signData.size.toLong(),
+                signingKey
+            )
+        } catch (e: Exception) {
+            Log.e("Loki", "Signing data failed with secret key", e)
+            return null
+        }
+        params["signature"] = Base64.encodeBytes(signature)
+        if (pubKeyEd25519 != null) {
+            params["pubkey_ed25519"] = pubKeyEd25519
+        }
+        return params
+    }
+
+    private fun buildRevokeAccountParams(
+        publicKey: String,
+        signingKey: ByteArray,
+        revoke: Array<ByteArray>,
+        pubKeyEd25519: String? = null,
+    ): Map<String,Any>? {
+        val timestamp = nowWithOffset
+        val params = mutableMapOf(
+            "pubkey" to publicKey,
+            "timestamp" to timestamp,
+            "revoke" to revoke.map { Base64.encodeBytes(it) },
+        )
+        val signData = "revoke_subaccount$timestamp".toByteArray() + revoke.reduce(ByteArray::plus)
+        val signature = ByteArray(Sign.BYTES)
+        try {
+            sodium.cryptoSignDetached(
+                signature,
+                signData,
+                signData.size.toLong(),
+                signingKey
+            )
+        } catch (e: Exception) {
+            Log.e("Loki", "Signing data failed with secret key", e)
+            return null
+        }
+        params["signature"] = Base64.encodeBytes(signature)
+        if (pubKeyEd25519 != null) {
+            params["pubkey_ed25519"] = pubKeyEd25519
+        }
         return params
     }
 

@@ -170,6 +170,7 @@ interface StorageProtocol {
     fun inviteClosedGroupMembers(groupSessionId: String, invitees: List<String>)
     fun insertGroupInfoChange(message: GroupUpdated, closedGroup: SessionId)
     fun promoteMember(groupSessionId: String, promotions: Array<String>)
+    fun removeMember(groupSessionId: String, removedMembers: Array<String>, fromDelete: Boolean = false)
     fun handlePromoted(keyPair: KeyPair)
     fun leaveGroup(groupSessionId: String)
 
