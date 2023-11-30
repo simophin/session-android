@@ -557,7 +557,7 @@ private fun handleMemberChange(message: GroupUpdated, closedGroup: SessionId) {
 
 private fun handleMemberLeft(message: GroupUpdated, closedGroup: SessionId) {
     val storage = MessagingModuleConfiguration.shared.storage
-    storage.insertGroupInfoChange(message, closedGroup)
+    storage.handleMemberLeft(message, closedGroup)
 }
 
 private fun handleGroupInfoChange(message: GroupUpdated, closedGroup: SessionId) {

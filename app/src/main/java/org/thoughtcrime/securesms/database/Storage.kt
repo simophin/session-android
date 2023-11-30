@@ -1616,6 +1616,25 @@ open class Storage(
         keys.free()
     }
 
+    override fun handleMemberLeft(message: GroupUpdated, closedGroupId: SessionId) {
+        val userGroups = configFactory.userGroups ?: return
+        val closedGroup = userGroups.getClosedGroup(closedGroupId.hexString()) ?: return
+        if (closedGroup.hasAdminKey()) {
+            // re-key and do a new config removing the previous member
+            val info = configFactory.getGroupInfoConfig(closedGroupId) ?: return
+            val members = configFactory.getGroupMemberConfig(closedGroupId) ?: return
+            val keys = configFactory.getGroupKeysConfig(closedGroupId, info, members, free = false) ?: return
+            members.erase(message.sender!!)
+
+            keys.rekey(info, members)
+
+            val
+
+        }
+
+        insertGroupInfoChange(message, closedGroupId)
+    }
+
     override fun leaveGroup(groupSessionId: String) {
         val closedGroupId = SessionId.from(groupSessionId)
         val message = GroupUpdated(
