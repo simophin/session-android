@@ -102,58 +102,6 @@ data class ConfigurationSyncJob(val destination: Destination) : Job {
         return SyncInformation(configsRequiringPush, toDelete)
     }
 
-    private fun ConfigBase.messageInformation(toDelete: MutableList<String>,
-                                              destinationPubKey: String,
-                                              signingKey: ByteArray? = null,
-                                              ed25519PubKey: String? = null): ConfigMessageInformation {
-        val sentTimestamp = SnodeAPI.nowWithOffset
-        val (push, seqNo, obsoleteHashes) = push()
-        toDelete.addAll(obsoleteHashes)
-        val message =
-            SnodeMessage(
-                destinationPubKey,
-                Base64.encodeBytes(push),
-                SnodeMessage.CONFIG_TTL,
-                sentTimestamp
-            )
-
-        return ConfigMessageInformation(
-            if (signingKey != null && ed25519PubKey == null) {
-               SnodeAPI.buildAuthenticatedStoreBatchInfo(
-                   namespace(),
-                   message,
-                   signingKey,
-               )
-            } else SnodeAPI.buildAuthenticatedStoreBatchInfo(
-                namespace(),
-                message,
-            )!!,
-            this,
-            seqNo
-        )
-    }
-
-    private fun GroupKeysConfig.messageInformation(destinationPubKey: String, signingKey: ByteArray): ConfigMessageInformation {
-        val sentTimestamp = SnodeAPI.nowWithOffset
-        val message =
-            SnodeMessage(
-                destinationPubKey,
-                Base64.encodeBytes(pendingConfig()!!), // should not be null from checking has pending
-                SnodeMessage.CONFIG_TTL,
-                sentTimestamp
-            )
-
-        return ConfigMessageInformation(
-            SnodeAPI.buildAuthenticatedStoreBatchInfo(
-                namespace(),
-                message,
-                signingKey
-            ),
-            this,
-            0
-        )
-    }
-
     override suspend fun execute(dispatcherName: String) {
         val storage = MessagingModuleConfiguration.shared.storage
 
@@ -305,6 +253,58 @@ data class ConfigurationSyncJob(val destination: Destination) : Job {
         // type mappings
         const val CONTACT_TYPE = 1
         const val GROUP_TYPE = 2
+
+        fun ConfigBase.messageInformation(toDelete: MutableList<String>,
+                                          destinationPubKey: String,
+                                          signingKey: ByteArray? = null,
+                                          ed25519PubKey: String? = null): ConfigMessageInformation {
+            val sentTimestamp = SnodeAPI.nowWithOffset
+            val (push, seqNo, obsoleteHashes) = push()
+            toDelete.addAll(obsoleteHashes)
+            val message =
+                SnodeMessage(
+                    destinationPubKey,
+                    Base64.encodeBytes(push),
+                    SnodeMessage.CONFIG_TTL,
+                    sentTimestamp
+                )
+
+            return ConfigMessageInformation(
+                if (signingKey != null && ed25519PubKey == null) {
+                    SnodeAPI.buildAuthenticatedStoreBatchInfo(
+                        namespace(),
+                        message,
+                        signingKey,
+                    )
+                } else SnodeAPI.buildAuthenticatedStoreBatchInfo(
+                    namespace(),
+                    message,
+                )!!,
+                this,
+                seqNo
+            )
+        }
+
+        fun GroupKeysConfig.messageInformation(destinationPubKey: String, signingKey: ByteArray): ConfigMessageInformation {
+            val sentTimestamp = SnodeAPI.nowWithOffset
+            val message =
+                SnodeMessage(
+                    destinationPubKey,
+                    Base64.encodeBytes(pendingConfig()!!), // should not be null from checking has pending
+                    SnodeMessage.CONFIG_TTL,
+                    sentTimestamp
+                )
+
+            return ConfigMessageInformation(
+                SnodeAPI.buildAuthenticatedStoreBatchInfo(
+                    namespace(),
+                    message,
+                    signingKey
+                ),
+                this,
+                0
+            )
+        }
     }
 
     class Factory : Job.Factory<ConfigurationSyncJob> {

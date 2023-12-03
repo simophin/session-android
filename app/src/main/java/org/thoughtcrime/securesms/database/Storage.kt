@@ -31,6 +31,7 @@ import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.messaging.jobs.AttachmentUploadJob
 import org.session.libsession.messaging.jobs.BackgroundGroupAddJob
 import org.session.libsession.messaging.jobs.ConfigurationSyncJob
+import org.session.libsession.messaging.jobs.ConfigurationSyncJob.Companion.messageInformation
 import org.session.libsession.messaging.jobs.GroupAvatarDownloadJob
 import org.session.libsession.messaging.jobs.InviteContactsJob
 import org.session.libsession.messaging.jobs.Job
@@ -1618,9 +1619,12 @@ open class Storage(
 
     override fun handleMemberLeft(message: GroupUpdated, closedGroupId: SessionId) {
         val userGroups = configFactory.userGroups ?: return
+        val closedGroupHexString = closedGroupId.hexString()
         val closedGroup = userGroups.getClosedGroup(closedGroupId.hexString()) ?: return
         if (closedGroup.hasAdminKey()) {
             // re-key and do a new config removing the previous member
+            val adminKey = closedGroup.adminKey
+            val signCallback = SnodeAPI.signingKeyCallback(adminKey)
             val info = configFactory.getGroupInfoConfig(closedGroupId) ?: return
             val members = configFactory.getGroupMemberConfig(closedGroupId) ?: return
             val keys = configFactory.getGroupKeysConfig(closedGroupId, info, members, free = false) ?: return
@@ -1628,8 +1632,61 @@ open class Storage(
 
             keys.rekey(info, members)
 
-            val
+            val toDelete = mutableListOf<String>()
 
+            val keyMessage = keys.messageInformation(closedGroupHexString, adminKey)
+            val infoMessage = info.messageInformation(toDelete, closedGroupHexString, adminKey)
+            val membersMessage = members.messageInformation(toDelete, closedGroupHexString, adminKey)
+
+            val delete = SnodeAPI.buildAuthenticatedDeleteBatchInfo(
+                closedGroupHexString,
+                toDelete,
+                signCallback
+            )
+
+            val stores = listOf(keyMessage, infoMessage, membersMessage).map(ConfigurationSyncJob.ConfigMessageInformation::batch)
+
+            val response = SnodeAPI.getSingleTargetSnode(closedGroupHexString).bind { snode ->
+                SnodeAPI.getRawBatchResponse(
+                    snode,
+                    closedGroupHexString,
+                    stores + delete,
+                    sequence = true
+                )
+            }
+
+            try {
+                response.get()
+                // todo: error handling here
+
+                configFactory.saveGroupConfigs(keys, info, members)
+
+                val timestamp = SnodeAPI.nowWithOffset
+                val messageToSign = "MEMBER_CHANGE${GroupUpdateMemberChangeMessage.Type.REMOVED.name}$timestamp"
+                val signature = SodiumUtilities.sign(messageToSign.toByteArray(), adminKey)
+                val updatedMessage = GroupUpdated(
+                        DataMessage.GroupUpdateMessage.newBuilder()
+                                .setMemberChangeMessage(
+                                        GroupUpdateMemberChangeMessage.newBuilder()
+                                                .addAllMemberSessionIds(listOf(message.sender!!))
+                                                .setType(GroupUpdateMemberChangeMessage.Type.REMOVED)
+                                                .setAdminSignature(ByteString.copyFrom(signature))
+                                )
+                                .build()
+                ).apply { this.sentTimestamp = timestamp }
+                MessageSender.send(updatedMessage, fromSerialized(closedGroupHexString))
+                insertGroupInfoChange(updatedMessage, closedGroupId)
+                info.free()
+                members.free()
+                keys.free()
+            } catch (e: Exception) {
+                Log.e("ClosedGroup", "Failed to store new key", e)
+                info.free()
+                members.free()
+                keys.free()
+                // toaster toast here
+                return
+            }
         }
 
         insertGroupInfoChange(message, closedGroupId)
