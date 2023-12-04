@@ -23,6 +23,7 @@ val LocalPreviewMode = staticCompositionLocalOf { false }
 
 data class ExtraColors(
     val settingsBackground: Color,
+    val destructive: Color
 )
 
 /**
@@ -35,6 +36,7 @@ fun AppTheme(
     val extraColors = LocalContext.current.run {
         ExtraColors(
             settingsBackground = getColorFromTheme(R.attr.colorSettingsBackground),
+            destructive = Color(getColor(R.color.destructive)),
         )
     }
 

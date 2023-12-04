@@ -5,6 +5,8 @@ import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -17,6 +19,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
@@ -24,11 +27,15 @@ import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
@@ -37,6 +44,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
@@ -49,6 +57,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.result.NavResult
 import com.ramcosta.composedestinations.result.ResultBackNavigator
 import com.ramcosta.composedestinations.result.ResultRecipient
+import com.ramcosta.composedestinations.spec.DestinationStyle
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -60,9 +69,12 @@ import org.session.libsession.messaging.jobs.InviteContactsJob
 import org.session.libsession.messaging.jobs.JobQueue
 import org.thoughtcrime.securesms.groups.ContactList
 import org.thoughtcrime.securesms.groups.destinations.EditClosedGroupInviteScreenDestination
+import org.thoughtcrime.securesms.groups.destinations.EditClosedGroupNameScreenDestination
 import org.thoughtcrime.securesms.ui.CellWithPaddingAndMargin
+import org.thoughtcrime.securesms.ui.LocalExtraColors
 import org.thoughtcrime.securesms.ui.NavigationBar
 import org.thoughtcrime.securesms.ui.PreviewTheme
+import org.thoughtcrime.securesms.ui.ThemeResPreviewParameterProvider
 
 @EditGroupNavGraph(start = true)
 @Composable
@@ -70,6 +82,7 @@ import org.thoughtcrime.securesms.ui.PreviewTheme
 fun EditClosedGroupScreen(
     navigator: DestinationsNavigator,
     resultSelectContact: ResultRecipient<EditClosedGroupInviteScreenDestination, ContactList>,
+    resultEditName: ResultRecipient<EditClosedGroupNameScreenDestination, String>,
     viewModel: EditGroupViewModel,
     onFinish: () -> Unit
 ) {
@@ -81,6 +94,12 @@ fun EditClosedGroupScreen(
     resultSelectContact.onNavResult { navResult ->
         if (navResult is NavResult.Value) {
             eventSink(EditGroupEvent.InviteContacts(context, navResult.value))
+        }
+    }
+
+    resultEditName.onNavResult { navResult ->
+        if (navResult is NavResult.Value) {
+            eventSink(EditGroupEvent.ChangeName(navResult.value))
         }
     }
 
@@ -100,8 +119,123 @@ fun EditClosedGroupScreen(
         onRemove = { contact ->
             eventSink(EditGroupEvent.RemoveContact(contact))
         },
+        onEditName = {
+            navigator.navigate(EditClosedGroupNameScreenDestination)
+        },
         viewState = viewState
     )
+}
+
+@EditGroupNavGraph
+@Composable
+@Destination(style = DestinationStyle.Dialog::class)
+fun EditClosedGroupNameScreen(
+    resultNavigator: ResultBackNavigator<String>,
+    viewModel: EditGroupViewModel
+) {
+    EditClosedGroupView { name ->
+        if (name.isEmpty()) {
+            resultNavigator.navigateBack()
+        } else {
+            resultNavigator.navigateBack(name)
+        }
+    }
+}
+
+@Composable
+fun EditClosedGroupView(navigateBack: (String) -> Unit) {
+
+    var newName by remember {
+        mutableStateOf("")
+    }
+
+    var newDescription by remember {
+        mutableStateOf("")
+    }
+
+    Box(
+        Modifier
+            .fillMaxWidth()
+            .shadow(8.dp)
+            .background(MaterialTheme.colors.surface)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = stringResource(id = R.string.dialog_edit_group_information_title),
+                modifier = Modifier.padding(bottom = 8.dp),
+                style = MaterialTheme.typography.subtitle1,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = stringResource(id = R.string.dialog_edit_group_information_message),
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+            OutlinedTextField(
+                value = newName,
+                onValueChange = { newName = it },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp),
+                maxLines = 1,
+                singleLine = true,
+                placeholder = {
+                    Text(
+                        text = stringResource(id = R.string.dialog_edit_group_information_enter_group_name)
+                    )
+                }
+            )
+            OutlinedTextField(
+                value = newDescription,
+                onValueChange = { newDescription = it },
+                modifier = Modifier
+                    .fillMaxWidth(),
+                minLines = 2,
+                maxLines = 2,
+                placeholder = {
+                    Text(
+                        text = stringResource(id = R.string.dialog_edit_group_information_enter_group_description)
+                    )
+                }
+            )
+            Row(modifier = Modifier
+                .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = stringResource(R.string.save),
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .weight(1f)
+                        .clickable {
+                            navigateBack(newName)
+                        },
+                    textAlign = TextAlign.Center,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                )
+                Text(
+                    text = stringResource(R.string.cancel),
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .weight(1f)
+                        .clickable {
+                            navigateBack("")
+                        },
+                    textAlign = TextAlign.Center,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = LocalExtraColors.current.destructive
+                )
+            }
+        }
+    }
 }
 
 @EditGroupNavGraph
@@ -198,6 +332,9 @@ class EditGroupViewModel @AssistedInject constructor(
                 is EditGroupEvent.RemoveContact -> {
                     storage.removeMember(groupSessionId, arrayOf(event.contactSessionId))
                 }
+                is EditGroupEvent.ChangeName -> {
+                    storage.setName(groupSessionId, event.newName)
+                }
             }
         }
     }
@@ -254,6 +391,7 @@ fun EditGroupView(
     onReinvite: (String)->Unit,
     onPromote: (String)->Unit,
     onRemove: (String)->Unit,
+    onEditName: ()->Unit,
     viewState: EditGroupViewState,
 ) {
     val scaffoldState = rememberScaffoldState()
@@ -270,15 +408,31 @@ fun EditGroupView(
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
             // Group name title
-            Text(
-                text = viewState.groupName,
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
-                fontSize = 26.sp,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center
-            )
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = viewState.groupName,
+                    fontSize = 26.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center
+                )
+                if (viewState.admin) {
+                    Icon(
+                        painterResource(R.drawable.ic_baseline_edit_24),
+                        null,
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .size(16.dp)
+                            .clip(CircleShape)
+                            .align(CenterVertically)
+                            .clickable { onEditName() }
+                    )
+                }
+            }
             // Description
 
             // Invite
@@ -454,6 +608,7 @@ sealed class EditGroupEvent {
     data class ReInviteContact(val contactSessionId: String): EditGroupEvent()
     data class PromoteContact(val contactSessionId: String): EditGroupEvent()
     data class RemoveContact(val contactSessionId: String): EditGroupEvent()
+    data class ChangeName(val newName: String): EditGroupEvent()
 }
 
 data class EditGroupInviteViewState(
@@ -463,41 +618,55 @@ data class EditGroupInviteViewState(
 
 @Preview
 @Composable
+fun PreviewDialogChange(@PreviewParameter(ThemeResPreviewParameterProvider::class) styleRes: Int) {
+
+    PreviewTheme(themeResId = styleRes) {
+        EditClosedGroupView {
+
+        }
+    }
+
+}
+
+@Preview
+@Composable
 fun PreviewList() {
 
-    val oneMember = MemberViewModel(
-        "Test User",
-        "05abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234",
-        MemberState.InviteSent,
-        false
-    )
-    val twoMember = MemberViewModel(
-        "Test User 2",
-        "05abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1235",
-        MemberState.InviteFailed,
-        false
-    )
-    val threeMember = MemberViewModel(
-        "Test User 3",
-        "05abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1236",
-        MemberState.Member,
-        false
-    )
-
-    val viewState = EditGroupViewState(
-        "Preview",
-        "This is a preview description",
-        listOf(oneMember, twoMember, threeMember),
-        true
-    )
-
     PreviewTheme(themeResId = R.style.Classic_Dark) {
+
+        val oneMember = MemberViewModel(
+            "Test User",
+            "05abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234",
+            MemberState.InviteSent,
+            false
+        )
+        val twoMember = MemberViewModel(
+            "Test User 2",
+            "05abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1235",
+            MemberState.InviteFailed,
+            false
+        )
+        val threeMember = MemberViewModel(
+            "Test User 3",
+            "05abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1236",
+            MemberState.Member,
+            false
+        )
+
+        val viewState = EditGroupViewState(
+            "Preview",
+            "This is a preview description",
+            listOf(oneMember, twoMember, threeMember),
+            true
+        )
+
         EditGroupView(
             onBack = {},
             onInvite = {},
             onReinvite = {},
             onPromote = {},
             onRemove = {},
+            onEditName = {},
             viewState = viewState
         )
     }

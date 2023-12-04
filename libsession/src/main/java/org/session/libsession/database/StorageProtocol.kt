@@ -174,6 +174,7 @@ interface StorageProtocol {
     fun handlePromoted(keyPair: KeyPair)
     fun handleMemberLeft(message: GroupUpdated, closedGroupId: SessionId)
     fun leaveGroup(groupSessionId: String)
+    fun setName(groupSessionId: String, newName: String)
 
     // Groups
     fun getAllGroups(includeInactive: Boolean): List<GroupRecord>
