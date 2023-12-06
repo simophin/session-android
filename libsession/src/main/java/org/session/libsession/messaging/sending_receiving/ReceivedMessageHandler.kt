@@ -597,10 +597,10 @@ private fun MessageReceiver.handleNewLibSessionClosedGroupMessage(message: Group
     val invite = message.inner.inviteMessage
     val groupId = SessionId.from(invite.groupSessionId)
     verifyAdminSignature(groupId, invite.adminSignature.toByteArray(), "INVITE"+ourUserId+message.sentTimestamp!!)
-    val adminId = SessionId.from(message.sender!!)
-    // TODO: add the pending invite logic after testing initial group signing / message adding / encryption works for members as well
+    val sender = message.sender!!
+    val adminId = SessionId.from(sender)
     // add the group
-    storage.acceptClosedGroupInvite(groupId, invite.name, invite.memberAuthData.toByteArray(), adminId)
+    storage.addClosedGroupInvite(groupId, invite.name, invite.memberAuthData.toByteArray(), adminId)
 }
 
 /**

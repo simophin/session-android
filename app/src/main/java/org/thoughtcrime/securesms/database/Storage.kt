@@ -1219,7 +1219,12 @@ open class Storage(
     override fun getMembers(groupPublicKey: String): List<LibSessionGroupMember> =
         configFactory.getGroupMemberConfig(SessionId.from(groupPublicKey))?.use { it.all() }?.toList() ?: emptyList()
 
-    override fun acceptClosedGroupInvite(groupId: SessionId, name: String, authData: ByteArray, invitingAdmin: SessionId) {
+    override fun addClosedGroupInvite(
+        groupId: SessionId,
+        name: String,
+        authData: ByteArray,
+        invitingAdmin: SessionId
+    ) {
         val recipient = Recipient.from(context, fromSerialized(groupId.hexString()), false)
         val profileManager = SSKEnvironment.shared.profileManager
         val groups = configFactory.userGroups ?: return
@@ -1229,17 +1234,20 @@ open class Storage(
         groups.set(closedGroupInfo)
         configFactory.persist(groups, SnodeAPI.nowWithOffset)
         profileManager.setName(context, recipient, name)
-        setRecipientApprovedMe(recipient, true)
-        setRecipientApproved(recipient, true)
         getOrCreateThreadIdFor(recipient.address)
-        pollerFactory.pollerFor(groupId)?.start()
-        val inviteResponse = GroupUpdateInviteResponseMessage.newBuilder()
-            .setIsApproved(true)
-        val responseData = DataMessage.GroupUpdateMessage.newBuilder()
-            .setInviteResponse(inviteResponse)
-        val responseMessage = GroupUpdated(responseData.build())
-        // this will fail the first couple of times :)
-        MessageSender.send(responseMessage, fromSerialized(groupId.hexString()))
+        setRecipientApprovedMe(recipient, true)
+        val shouldAutoApprove = false //TESTING// getRecipientApproved(fromSerialized(invitingAdmin.hexString()))
+        setRecipientApproved(recipient, shouldAutoApprove)
+        if (shouldAutoApprove) {
+            pollerFactory.pollerFor(groupId)?.start()
+            val inviteResponse = GroupUpdateInviteResponseMessage.newBuilder()
+                .setIsApproved(true)
+            val responseData = GroupUpdateMessage.newBuilder()
+                .setInviteResponse(inviteResponse)
+            val responseMessage = GroupUpdated(responseData.build())
+            // this will fail the first couple of times :)
+            MessageSender.send(responseMessage, fromSerialized(groupId.hexString()))
+        }
     }
 
     override fun setGroupInviteCompleteIfNeeded(approved: Boolean, invitee: String, closedGroup: SessionId) {
@@ -1357,8 +1365,11 @@ open class Storage(
         }
 
         try {
-            response.get()
-            // todo: error handling here
+            val rawResponse = response.get()
+            val results = (rawResponse["results"] as ArrayList<Any>).first() as Map<String,Any>
+            if (results["code"] as Int != 200) {
+                throw Exception("Response wasn't successful for unrevoke and key update: ${results["body"] as? String}")
+            }
 
             configFactory.saveGroupConfigs(keysConfig, infoConfig, membersConfig)
 
@@ -1604,6 +1615,12 @@ open class Storage(
             val infoMessage = info.messageInformation(toDelete, closedGroupHexString, adminKey)
             val membersMessage = members.messageInformation(toDelete, closedGroupHexString, adminKey)
 
+            val revocation = SnodeAPI.buildAuthenticatedRevokeSubKeyBatchRequest(
+                closedGroupHexString,
+                adminKey,
+                arrayOf(message.sender!!.let { keys.getSubAccountToken(SessionId.from(it)) })
+            ) ?: return Log.e("ClosedGroup", "Failed to build revocation update")
+
             val delete = SnodeAPI.buildAuthenticatedDeleteBatchInfo(
                 closedGroupHexString,
                 toDelete,
@@ -1616,14 +1633,17 @@ open class Storage(
                 SnodeAPI.getRawBatchResponse(
                     snode,
                     closedGroupHexString,
-                    stores + delete,
+                    stores + revocation + delete,
                     sequence = true
                 )
             }
 
             try {
-                response.get()
-                // todo: error handling here
+                val rawResponse = response.get()
+                val results = (rawResponse["results"] as ArrayList<Any>).first() as Map<String,Any>
+                if (results["code"] as Int != 200) {
+                    throw Exception("Response wasn't successful for revoke and key update: ${results["body"] as? String}")
+                }
 
                 configFactory.saveGroupConfigs(keys, info, members)
 

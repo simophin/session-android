@@ -3,6 +3,7 @@ package org.thoughtcrime.securesms.messagerequests
 import android.content.Context
 import android.content.res.ColorStateList
 import android.database.Cursor
+import android.os.Build
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.ContextThemeWrapper
@@ -61,10 +62,14 @@ class MessageRequestsAdapter(
             val item = popupMenu.menu.getItem(i)
             val s = SpannableString(item.title)
             s.setSpan(ForegroundColorSpan(context.getColor(R.color.destructive)), 0, s.length, 0)
-            item.iconTintList = ColorStateList.valueOf(context.getColor(R.color.destructive))
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                item.iconTintList = ColorStateList.valueOf(context.getColor(R.color.destructive))
+            }
             item.title = s
         }
-        popupMenu.setForceShowIcon(true)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            popupMenu.setForceShowIcon(true)
+        }
         popupMenu.show()
     }
 

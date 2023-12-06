@@ -503,7 +503,7 @@ public class ThreadDatabase extends Database {
   }
 
   public Cursor getApprovedConversationList() {
-    String where  = "((" + HAS_SENT + " = 1 OR " + RecipientDatabase.APPROVED + " = 1 OR "+ GroupDatabase.TABLE_NAME +"."+GROUP_ID+" LIKE '"+ LEGACY_CLOSED_GROUP_PREFIX +"%' OR "+RecipientDatabase.TABLE_NAME+"."+RecipientDatabase.ADDRESS+" LIKE '"+ IdPrefix.GROUP.getValue() +"%') " +
+    String where  = "((" + HAS_SENT + " = 1 OR " + RecipientDatabase.APPROVED + " = 1 OR "+ GroupDatabase.TABLE_NAME +"."+GROUP_ID+" LIKE '"+ LEGACY_CLOSED_GROUP_PREFIX +"%') " +
             "OR " + GroupDatabase.TABLE_NAME + "." + GROUP_ID + " LIKE '" + OPEN_GROUP_PREFIX + "%') " +
             "AND " + ARCHIVED + " = 0 ";
     return getConversationList(where);
