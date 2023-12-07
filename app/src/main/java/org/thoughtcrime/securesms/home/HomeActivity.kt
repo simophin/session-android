@@ -334,9 +334,9 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     }
 
     private fun setupMessageRequestsBanner() {
-        val messageRequestCount = threadDb.unapprovedConversationCount
+        val messageRequestCount = threadDb.unapprovedConversationList.use { it.count }
         // Set up message requests
-        if (messageRequestCount > 0 && !textSecurePreferences.hasHiddenMessageRequests()) {
+        if (messageRequestCount > 0 && !textSecurePreferences.hasHiddenMessageRequests() && messageRequestCount != homeAdapter.requestCount) {
             with(ViewMessageRequestBannerBinding.inflate(layoutInflater)) {
                 unreadCountTextView.text = messageRequestCount.toString()
                 timestampTextView.text = DateUtils.getDisplayFormattedTimeSpanString(
@@ -352,13 +352,14 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                 if (hadHeader) homeAdapter.notifyItemChanged(0)
                 else homeAdapter.notifyItemInserted(0)
             }
-        } else {
+        } else if (messageRequestCount == 0) {
             val hadHeader = homeAdapter.hasHeaderView()
             homeAdapter.header = null
             if (hadHeader) {
                 homeAdapter.notifyItemRemoved(0)
             }
         }
+        homeAdapter.requestCount = messageRequestCount
     }
 
     private fun updateLegacyConfigView() {

@@ -831,8 +831,13 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     private fun setUpMessageRequestsBar() {
+        val recipient = viewModel.recipient ?: return
         binding?.inputBar?.showMediaControls = !isOutgoingMessageRequestThread()
         binding?.messageRequestBar?.isVisible = isIncomingMessageRequestThread()
+        binding?.sendAcceptsTextView?.setText(
+            if (recipient.isClosedGroupRecipient) R.string.message_requests_send_group_notice
+            else R.string.message_requests_send_notice
+        )
         binding?.acceptMessageRequestButton?.setOnClickListener {
             acceptMessageRequest()
         }
@@ -866,11 +871,12 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     private fun isIncomingMessageRequestThread(): Boolean {
         val recipient = viewModel.recipient ?: return false
-        return !recipient.isGroupRecipient &&
+        return !recipient.isLegacyClosedGroupRecipient &&
+                !recipient.isOpenGroupRecipient &&
                 !recipient.isApproved &&
                 !recipient.isLocalNumber &&
                 !threadDb.getLastSeenAndHasSent(viewModel.threadId).second() &&
-                threadDb.getMessageCount(viewModel.threadId) > 0
+                (threadDb.getMessageCount(viewModel.threadId) > 0 || recipient.isClosedGroupRecipient)
     }
 
     override fun inputBarEditTextContentChanged(newContent: CharSequence) {

@@ -4,6 +4,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.plus
+import network.loki.messenger.libsession_util.util.GroupInfo
 import org.session.libsession.messaging.sending_receiving.pollers.ClosedGroupPoller
 import org.session.libsignal.utilities.SessionId
 import java.util.concurrent.ConcurrentHashMap
@@ -24,7 +25,7 @@ class PollerFactory(private val scope: CoroutineScope,
     }
 
     fun startAll() {
-        configFactory.userGroups?.allClosedGroupInfo()?.forEach {
+        configFactory.userGroups?.allClosedGroupInfo()?.filterNot(GroupInfo.ClosedGroupInfo::invited)?.forEach {
             pollerFor(it.groupSessionId)?.start()
         }
     }
@@ -36,7 +37,7 @@ class PollerFactory(private val scope: CoroutineScope,
     }
 
     fun updatePollers() {
-        val currentGroups = configFactory.userGroups?.allClosedGroupInfo() ?: return
+        val currentGroups = configFactory.userGroups?.allClosedGroupInfo()?.filterNot(GroupInfo.ClosedGroupInfo::invited) ?: return
         val toRemove = pollers.filter { (id, _) -> id !in currentGroups.map { it.groupSessionId } }
         toRemove.forEach { (id, _) ->
             pollers.remove(id)?.stop()

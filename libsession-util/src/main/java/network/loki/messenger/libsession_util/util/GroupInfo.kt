@@ -11,6 +11,7 @@ sealed class GroupInfo {
         val adminKey: ByteArray,
         val authData: ByteArray,
         val priority: Long,
+        val invited: Boolean,
     ): GroupInfo() {
 
         companion object {

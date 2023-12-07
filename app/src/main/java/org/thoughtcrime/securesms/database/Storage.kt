@@ -649,10 +649,12 @@ open class Storage(
         for (closedGroup in newClosedGroups) {
             val recipient = Recipient.from(context, Address.fromSerialized(closedGroup.groupSessionId.hexString()), false)
             setRecipientApprovedMe(recipient, true)
-            setRecipientApproved(recipient, true)
+            setRecipientApproved(recipient, !closedGroup.invited)
             val threadId = getOrCreateThreadIdFor(recipient.address)
             setPinned(threadId, closedGroup.priority == PRIORITY_PINNED)
-            pollerFactory.pollerFor(closedGroup.groupSessionId)?.start()
+            if (!closedGroup.invited) {
+                pollerFactory.pollerFor(closedGroup.groupSessionId)?.start()
+            }
         }
 
         for (group in lgc) {
@@ -1219,6 +1221,24 @@ open class Storage(
     override fun getMembers(groupPublicKey: String): List<LibSessionGroupMember> =
         configFactory.getGroupMemberConfig(SessionId.from(groupPublicKey))?.use { it.all() }?.toList() ?: emptyList()
 
+    override fun respondToClosedGroupInvitation(groupRecipient: Recipient, approved: Boolean) {
+        val groups = configFactory.userGroups ?: return
+        val groupSessionId = SessionId.from(groupRecipient.address.serialize())
+        val closedGroupInfo = groups.getClosedGroup(groupSessionId.hexString())?.copy(
+            invited = false
+        ) ?: return
+        groups.set(closedGroupInfo)
+        ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
+        pollerFactory.pollerFor(groupSessionId)?.start()
+        val inviteResponse = GroupUpdateInviteResponseMessage.newBuilder()
+            .setIsApproved(true)
+        val responseData = GroupUpdateMessage.newBuilder()
+            .setInviteResponse(inviteResponse)
+        val responseMessage = GroupUpdated(responseData.build())
+        // this will fail the first couple of times :)
+        MessageSender.send(responseMessage, fromSerialized(groupSessionId.hexString()))
+    }
+
     override fun addClosedGroupInvite(
         groupId: SessionId,
         name: String,
@@ -1228,15 +1248,19 @@ open class Storage(
         val recipient = Recipient.from(context, fromSerialized(groupId.hexString()), false)
         val profileManager = SSKEnvironment.shared.profileManager
         val groups = configFactory.userGroups ?: return
+        val shouldAutoApprove = false //TESTING// getRecipientApproved(fromSerialized(invitingAdmin.hexString()))
         val closedGroupInfo = GroupInfo.ClosedGroupInfo(
-            groupId, byteArrayOf(), authData, PRIORITY_VISIBLE
+            groupId,
+            byteArrayOf(),
+            authData,
+            PRIORITY_VISIBLE,
+            !shouldAutoApprove,
         )
         groups.set(closedGroupInfo)
         configFactory.persist(groups, SnodeAPI.nowWithOffset)
         profileManager.setName(context, recipient, name)
         getOrCreateThreadIdFor(recipient.address)
         setRecipientApprovedMe(recipient, true)
-        val shouldAutoApprove = false //TESTING// getRecipientApproved(fromSerialized(invitingAdmin.hexString()))
         setRecipientApproved(recipient, shouldAutoApprove)
         if (shouldAutoApprove) {
             pollerFactory.pollerFor(groupId)?.start()

@@ -38,6 +38,7 @@ class HomeAdapter(
         }
 
     fun hasHeaderView(): Boolean = header != null
+    var requestCount = 0
 
     private val headerCount: Int
         get() = if (header == null) 0 else 1

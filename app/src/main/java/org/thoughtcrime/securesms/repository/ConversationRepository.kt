@@ -306,14 +306,18 @@ class DefaultConversationRepository @Inject constructor(
 
     override suspend fun acceptMessageRequest(threadId: Long, recipient: Recipient): ResultOf<Unit> = suspendCoroutine { continuation ->
         storage.setRecipientApproved(recipient, true)
-        val message = MessageRequestResponse(true)
-        MessageSender.send(message, Destination.from(recipient.address), isSyncMessage = recipient.isLocalNumber)
-            .success {
-                threadDb.setHasSent(threadId, true)
-                continuation.resume(ResultOf.Success(Unit))
-            }.fail { error ->
-                continuation.resumeWithException(error)
-            }
+        if (recipient.isClosedGroupRecipient) {
+            storage.respondToClosedGroupInvitation(recipient, true)
+        } else {
+            val message = MessageRequestResponse(true)
+            MessageSender.send(message, Destination.from(recipient.address), isSyncMessage = recipient.isLocalNumber)
+                .success {
+                    threadDb.setHasSent(threadId, true)
+                    continuation.resume(ResultOf.Success(Unit))
+                }.fail { error ->
+                    continuation.resumeWithException(error)
+                }
+        }
     }
 
     override fun declineMessageRequest(threadId: Long) {

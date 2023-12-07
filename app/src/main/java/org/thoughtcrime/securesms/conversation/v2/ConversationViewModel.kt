@@ -79,7 +79,7 @@ class ConversationViewModel(
     val isMessageRequestThread : Boolean
         get() {
             val recipient = recipient ?: return false
-            return !recipient.isLocalNumber && !recipient.isGroupRecipient && !recipient.isApproved
+            return !recipient.isLocalNumber && !recipient.isLegacyClosedGroupRecipient && !recipient.isOpenGroupRecipient && !recipient.isApproved
         }
 
     val canReactToMessages: Boolean

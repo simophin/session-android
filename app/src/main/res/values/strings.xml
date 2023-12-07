@@ -934,6 +934,7 @@
     <string name="global_search_messages">Messages</string>
     <string name="activity_message_requests_title">Message Requests</string>
     <string name="message_requests_send_notice">Sending a message to this user will automatically accept their message request and reveal your Session ID.</string>
+    <string name="message_requests_send_group_notice">Sending a message to this group will automatically accept the group invite.</string>
     <string name="accept">Accept</string>
     <string name="decline">Decline</string>
     <string name="message_requests_clear_all">Clear All</string>
