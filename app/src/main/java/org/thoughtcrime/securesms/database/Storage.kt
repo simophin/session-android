@@ -611,9 +611,9 @@ open class Storage(
         val toAddCommunities = communities.filter { it.community.fullUrl() !in existingCommunities.map { it.value.joinURL } }
         val existingJoinUrls = existingCommunities.values.map { it.joinURL }
 
-        val existingClosedGroups = getAllGroups(includeInactive = true).filter { it.isLegacyClosedGroup }
+        val existingLegacyClosedGroups = getAllGroups(includeInactive = true).filter { it.isLegacyClosedGroup }
         val lgcIds = lgc.map { it.sessionId.hexString() }
-        val toDeleteClosedGroups = existingClosedGroups.filter { group ->
+        val toDeleteClosedGroups = existingLegacyClosedGroups.filter { group ->
             GroupUtil.doubleDecodeGroupId(group.encodedId) !in lgcIds
         }
 
@@ -656,9 +656,10 @@ open class Storage(
                 pollerFactory.pollerFor(closedGroup.groupSessionId)?.start()
             }
         }
+        // TODO: add in removing legacy closed groups via config update
 
         for (group in lgc) {
-            val existingGroup = existingClosedGroups.firstOrNull { GroupUtil.doubleDecodeGroupId(it.encodedId) == group.sessionId.hexString() }
+            val existingGroup = existingLegacyClosedGroups.firstOrNull { GroupUtil.doubleDecodeGroupId(it.encodedId) == group.sessionId.hexString() }
             val existingThread = existingGroup?.let { getThreadId(existingGroup.encodedId) }
             if (existingGroup != null) {
                 if (group.priority == PRIORITY_HIDDEN && existingThread != null) {
@@ -1224,19 +1225,25 @@ open class Storage(
     override fun respondToClosedGroupInvitation(groupRecipient: Recipient, approved: Boolean) {
         val groups = configFactory.userGroups ?: return
         val groupSessionId = SessionId.from(groupRecipient.address.serialize())
-        val closedGroupInfo = groups.getClosedGroup(groupSessionId.hexString())?.copy(
-            invited = false
-        ) ?: return
-        groups.set(closedGroupInfo)
-        ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
-        pollerFactory.pollerFor(groupSessionId)?.start()
-        val inviteResponse = GroupUpdateInviteResponseMessage.newBuilder()
-            .setIsApproved(true)
-        val responseData = GroupUpdateMessage.newBuilder()
-            .setInviteResponse(inviteResponse)
-        val responseMessage = GroupUpdated(responseData.build())
-        // this will fail the first couple of times :)
-        MessageSender.send(responseMessage, fromSerialized(groupSessionId.hexString()))
+        if (!approved) {
+            groups.eraseClosedGroup(groupSessionId.hexString())
+            ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
+            return
+        } else {
+            val closedGroupInfo = groups.getClosedGroup(groupSessionId.hexString())?.copy(
+                invited = false
+            ) ?: return
+            groups.set(closedGroupInfo)
+            ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
+            pollerFactory.pollerFor(groupSessionId)?.start()
+            val inviteResponse = GroupUpdateInviteResponseMessage.newBuilder()
+                .setIsApproved(true)
+            val responseData = GroupUpdateMessage.newBuilder()
+                .setInviteResponse(inviteResponse)
+            val responseMessage = GroupUpdated(responseData.build())
+            // this will fail the first couple of times :)
+            MessageSender.send(responseMessage, fromSerialized(groupSessionId.hexString()))
+        }
     }
 
     override fun addClosedGroupInvite(

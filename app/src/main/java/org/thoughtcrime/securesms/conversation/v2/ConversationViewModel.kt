@@ -195,7 +195,8 @@ class ConversationViewModel(
     }
 
     fun declineMessageRequest() {
-        repository.declineMessageRequest(threadId)
+        val recipient = recipient ?: return
+        repository.declineMessageRequest(threadId, recipient)
     }
 
     private fun showMessage(message: String) {

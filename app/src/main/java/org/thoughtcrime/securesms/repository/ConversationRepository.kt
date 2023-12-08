@@ -77,7 +77,7 @@ interface ConversationRepository {
 
     suspend fun acceptMessageRequest(threadId: Long, recipient: Recipient): ResultOf<Unit>
 
-    fun declineMessageRequest(threadId: Long)
+    fun declineMessageRequest(threadId: Long, recipient: Recipient)
 
     fun hasReceived(threadId: Long): Boolean
 
@@ -286,8 +286,7 @@ class DefaultConversationRepository @Inject constructor(
     }
 
     override suspend fun deleteMessageRequest(thread: ThreadRecord): ResultOf<Unit> {
-        sessionJobDb.cancelPendingMessageSendJobs(thread.threadId)
-        storage.deleteConversation(thread.threadId)
+        declineMessageRequest(thread.threadId, thread.recipient)
         return ResultOf.Success(Unit)
     }
 
@@ -320,9 +319,13 @@ class DefaultConversationRepository @Inject constructor(
         }
     }
 
-    override fun declineMessageRequest(threadId: Long) {
+    override fun declineMessageRequest(threadId: Long, recipient: Recipient) {
         sessionJobDb.cancelPendingMessageSendJobs(threadId)
-        storage.deleteConversation(threadId)
+        if (recipient.isClosedGroupRecipient) {
+            storage.respondToClosedGroupInvitation(recipient, false)
+        } else {
+            storage.deleteConversation(threadId)
+        }
     }
 
     override fun hasReceived(threadId: Long): Boolean {
