@@ -1704,6 +1704,14 @@ open class Storage(
                 // toaster toast here
                 return
             }
+        } else {
+            val members = configFactory.getGroupMemberConfig(closedGroupId) ?: return
+            members.use { memberConfig ->
+                // if the leaving member is an admin, disable the
+                if (memberConfig.get(message.sender!!)?.admin == true) {
+
+                }
+            }
         }
 
         insertGroupInfoChange(message, closedGroupId)

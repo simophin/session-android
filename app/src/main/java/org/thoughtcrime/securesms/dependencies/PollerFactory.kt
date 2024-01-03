@@ -16,8 +16,8 @@ class PollerFactory(private val scope: CoroutineScope,
     private val pollers = ConcurrentHashMap<SessionId, ClosedGroupPoller>()
 
     fun pollerFor(sessionId: SessionId): ClosedGroupPoller? {
-        // Check if the group is currently in our config, don't start if it isn't
-        configFactory.userGroups?.getClosedGroup(sessionId.hexString()) ?: return null
+        // Check if the group is currently in our config and approved, don't start if it isn't
+        if (configFactory.userGroups?.getClosedGroup(sessionId.hexString())?.invited != false) return null
 
         return pollers.getOrPut(sessionId) {
             ClosedGroupPoller(scope + SupervisorJob(), executor, sessionId, configFactory)

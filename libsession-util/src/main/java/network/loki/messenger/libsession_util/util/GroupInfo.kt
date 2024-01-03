@@ -27,9 +27,7 @@ sealed class GroupInfo {
 
             if (groupSessionId != other.groupSessionId) return false
             if (!adminKey.contentEquals(other.adminKey)) return false
-            if (!authData.contentEquals(other.authData)) return false
-
-            return true
+            return authData.contentEquals(other.authData)
         }
 
         override fun hashCode(): Int {
