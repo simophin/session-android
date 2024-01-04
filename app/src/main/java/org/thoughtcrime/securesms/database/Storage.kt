@@ -1032,13 +1032,14 @@ open class Storage(
             configFactory.saveGroupConfigs(groupKeys, groupInfo, groupMembers) // now check poller to be all
             convoVolatile.set(Conversation.ClosedGroup(newGroupRecipient, groupCreationTimestamp, false))
             ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
+            val groupRecipient = Recipient.from(context, fromSerialized(newGroupRecipient), false)
+            SSKEnvironment.shared.profileManager.setName(context, groupRecipient, groupInfo.getName())
+            setRecipientApprovedMe(groupRecipient, true)
+            setRecipientApproved(groupRecipient, true)
             Log.d("Group Config", "Saved group config for $newGroupRecipient")
             groupKeys.free()
             groupInfo.free()
             groupMembers.free()
-            val groupRecipient = Recipient.from(context, fromSerialized(newGroupRecipient), false)
-            setRecipientApprovedMe(groupRecipient, true)
-            setRecipientApproved(groupRecipient, true)
             pollerFactory.updatePollers()
 
             val memberArray = members.map(Contact::sessionID).toTypedArray()

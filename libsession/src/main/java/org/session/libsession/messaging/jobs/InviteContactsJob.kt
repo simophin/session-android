@@ -33,7 +33,6 @@ class InviteContactsJob(val groupSessionId: String, val memberSessionIds: Array<
     override suspend fun execute(dispatcherName: String) {
         val delegate = delegate ?: return
         val configs = MessagingModuleConfiguration.shared.configFactory
-        val storage = MessagingModuleConfiguration.shared.storage
         val adminKey = configs.userGroups?.getClosedGroup(groupSessionId)?.adminKey
             ?: return delegate.handleJobFailedPermanently(
                 this,
@@ -72,13 +71,12 @@ class InviteContactsJob(val groupSessionId: String, val memberSessionIds: Array<
                     val timestamp = SnodeAPI.nowWithOffset
                     val messageToSign = "INVITE$memberSessionId$timestamp"
                     val signature = SodiumUtilities.sign(messageToSign.toByteArray(), adminKey)
-                    val userProfile = storage.getUserProfile()
 
                     val groupInvite = GroupUpdateInviteMessage.newBuilder()
                         .setGroupSessionId(groupSessionId)
                         .setMemberAuthData(ByteString.copyFrom(subAccount))
                         .setAdminSignature(ByteString.copyFrom(signature))
-                        .setName(userProfile.displayName)
+                        .setName(info.getName())
                     val message = GroupUpdateMessage.newBuilder()
                         .setInviteMessage(groupInvite)
                         .build()
