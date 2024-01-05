@@ -1228,6 +1228,7 @@ open class Storage(
         val groupSessionId = SessionId.from(groupRecipient.address.serialize())
         if (!approved) {
             groups.eraseClosedGroup(groupSessionId.hexString())
+            configFactory.persist(groups, SnodeAPI.nowWithOffset)
             ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
             return
         } else {
@@ -1235,6 +1236,7 @@ open class Storage(
                 invited = false
             ) ?: return
             groups.set(closedGroupInfo)
+            configFactory.persist(groups, SnodeAPI.nowWithOffset)
             ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
             pollerFactory.pollerFor(groupSessionId)?.start()
             val inviteResponse = GroupUpdateInviteResponseMessage.newBuilder()

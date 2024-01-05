@@ -83,6 +83,7 @@ class ClosedGroupPoller(private val scope: CoroutineScope,
                     return@launch
                 }
             }
+            isRunning = false
             // assume null poll time means don't continue polling, either the group has been deleted or something else
         }
     }
