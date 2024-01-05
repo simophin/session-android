@@ -805,7 +805,7 @@ object SnodeAPI {
     }
 
     fun subkeyCallback(authData: ByteArray, groupKeysConfig: GroupKeysConfig, freeAfter: Boolean = true): SignCallback = { message, timestamp, namespace ->
-        val (subaccount, subaccountSig, sig) = groupKeysConfig.subAccountSign(message.toByteArray(),authData)
+        val (subaccount, subaccountSig, sig) = groupKeysConfig.subAccountSign(message.toByteArray(), authData)
         val params = mutableMapOf<String, Any>(
             "subaccount" to subaccount,
             "subaccount_sig" to subaccountSig,

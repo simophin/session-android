@@ -1258,7 +1258,7 @@ open class Storage(
         val recipient = Recipient.from(context, fromSerialized(groupId.hexString()), false)
         val profileManager = SSKEnvironment.shared.profileManager
         val groups = configFactory.userGroups ?: return
-        val shouldAutoApprove = false //TESTING// getRecipientApproved(fromSerialized(invitingAdmin.hexString()))
+        val shouldAutoApprove = true //TESTING// getRecipientApproved(fromSerialized(invitingAdmin.hexString()))
         val closedGroupInfo = GroupInfo.ClosedGroupInfo(
             groupId,
             byteArrayOf(),
