@@ -59,7 +59,7 @@ class ClosedGroupPoller(private val scope: CoroutineScope,
 
     companion object {
         const val POLL_INTERVAL = 3_000L
-        const val ENABLE_LOGGING = true
+        const val ENABLE_LOGGING = false
     }
 
     private var isRunning: Boolean = false

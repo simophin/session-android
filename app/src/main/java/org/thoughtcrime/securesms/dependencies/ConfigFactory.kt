@@ -405,6 +405,7 @@ class ConfigFactory(
     override fun removeGroup(closedGroupId: SessionId) {
         val groups = userGroups ?: return
         groups.eraseClosedGroup(closedGroupId.hexString())
+        persist(groups, SnodeAPI.nowWithOffset)
         configDatabase.deleteGroupConfigs(closedGroupId)
     }
 

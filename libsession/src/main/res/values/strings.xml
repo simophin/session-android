@@ -76,4 +76,7 @@
 
     <!-- RecipientProvider -->
     <string name="RecipientProvider_unnamed_group">Unnamed group</string>
+    <string name="InviteContacts_failed_single">Failed to invite %1$s to %2$s</string>
+    <string name="InviteContacts_failed_two">Failed to invite %1$s and %2$s to %3$s</string>
+    <string name="InviteContacts_failed_multiple">Failed to invite %1$s and %2$d others to %3$s</string>
 </resources>

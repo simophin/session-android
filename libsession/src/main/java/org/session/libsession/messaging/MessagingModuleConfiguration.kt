@@ -6,6 +6,7 @@ import org.session.libsession.database.MessageDataProvider
 import org.session.libsession.database.StorageProtocol
 import org.session.libsession.utilities.ConfigFactoryProtocol
 import org.session.libsession.utilities.Device
+import org.session.libsession.utilities.Toaster
 
 class MessagingModuleConfiguration(
     val context: Context,
@@ -14,6 +15,7 @@ class MessagingModuleConfiguration(
     val messageDataProvider: MessageDataProvider,
     val getUserED25519KeyPair: () -> KeyPair?,
     val configFactory: ConfigFactoryProtocol,
+    val toaster: Toaster,
 ) {
 
     companion object {

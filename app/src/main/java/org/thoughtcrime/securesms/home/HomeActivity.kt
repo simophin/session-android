@@ -655,7 +655,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                         }
                     }
                     if (recipient.address.isClosedGroup) {
-                        TODO("Implement leaving / deleting a new closed group conversation")
+                        storage.leaveGroup(recipient.address.serialize())
                     }
                     // Delete the conversation
                     val v2OpenGroup = DatabaseComponent.get(context).lokiThreadDatabase().getOpenGroupChat(threadID)

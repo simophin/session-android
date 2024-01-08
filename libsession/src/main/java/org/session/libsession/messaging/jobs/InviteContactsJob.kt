@@ -1,10 +1,12 @@
 package org.session.libsession.messaging.jobs
 
+import android.widget.Toast
 import com.google.protobuf.ByteString
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
+import org.session.libsession.R
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.messages.Destination
 import org.session.libsession.messaging.messages.control.GroupUpdated
@@ -12,6 +14,7 @@ import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.messaging.utilities.Data
 import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.snode.SnodeAPI
+import org.session.libsession.utilities.truncateIdForDisplay
 import org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage
 import org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMessage
 import org.session.libsignal.utilities.SessionId
@@ -84,7 +87,6 @@ class InviteContactsJob(val groupSessionId: String, val memberSessionIds: Array<
                         sentTimestamp = timestamp
                     }
                     try {
-                        //throw Exception("Just for testing")
                         MessageSender.send(update, Destination.Contact(memberSessionId), false)
                             .get()
                         InviteResult.success(memberSessionId)
@@ -109,6 +111,43 @@ class InviteContactsJob(val groupSessionId: String, val memberSessionIds: Array<
                         invitePending = false
                     ) ?: return@forEach
                     members.set(toSet)
+                }
+            }
+            val failures = results.filter { true }
+            // if this is the final failure, display a message
+            if (failures.isNotEmpty() && failureCount + 1 >= maxFailureCount) {
+                // show the failure toast
+                val storage = MessagingModuleConfiguration.shared.storage
+                val toaster = MessagingModuleConfiguration.shared.toaster
+                when (failures.size) {
+                    1 -> {
+                        val first = failures.first()
+                        val firstString = first.memberSessionId.let { storage.getContactWithSessionID(it) }?.name
+                            ?: truncateIdForDisplay(first.memberSessionId)
+                        withContext(Dispatchers.Main) {
+                            toaster.toast(R.string.InviteContacts_failed_single, Toast.LENGTH_LONG, firstString, info.getName())
+                        }
+                    }
+                    2 -> {
+                        val (first, second) = failures
+                        val firstString = first.memberSessionId.let { storage.getContactWithSessionID(it) }?.name
+                            ?: truncateIdForDisplay(first.memberSessionId)
+                        val secondString = second.memberSessionId.let { storage.getContactWithSessionID(it) }?.name
+                            ?: truncateIdForDisplay(second.memberSessionId)
+
+                        withContext(Dispatchers.Main) {
+                            toaster.toast(R.string.InviteContacts_failed_two, Toast.LENGTH_LONG, firstString, secondString, info.getName())
+                        }
+                    }
+                    else -> {
+                        val first = failures.first()
+                        val firstString = first.memberSessionId.let { storage.getContactWithSessionID(it) }?.name
+                            ?: truncateIdForDisplay(first.memberSessionId)
+                        val remaining = failures.size - 1
+                        withContext(Dispatchers.Main) {
+                            toaster.toast(R.string.InviteContacts_failed_multiple, Toast.LENGTH_LONG, firstString, remaining, info.getName())
+                        }
+                    }
                 }
             }
             configs.saveGroupConfigs(keys, info, members)

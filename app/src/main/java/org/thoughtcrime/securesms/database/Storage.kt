@@ -104,7 +104,6 @@ import org.thoughtcrime.securesms.database.model.ReactionRecord
 import org.thoughtcrime.securesms.dependencies.ConfigFactory
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.dependencies.PollerFactory
-import org.thoughtcrime.securesms.dependencies.Toaster
 import org.thoughtcrime.securesms.groups.ClosedGroupManager
 import org.thoughtcrime.securesms.groups.GroupManager
 import org.thoughtcrime.securesms.groups.OpenGroupManager
@@ -120,7 +119,6 @@ open class Storage(
     helper: SQLCipherOpenHelper,
     private val configFactory: ConfigFactory,
     private val pollerFactory: PollerFactory,
-    private val toaster: Toaster,
 ) : Database(context, helper), StorageProtocol,
     ThreadDatabase.ConversationThreadUpdateListener {
 
@@ -1258,7 +1256,7 @@ open class Storage(
         val recipient = Recipient.from(context, fromSerialized(groupId.hexString()), false)
         val profileManager = SSKEnvironment.shared.profileManager
         val groups = configFactory.userGroups ?: return
-        val shouldAutoApprove = true //TESTING// getRecipientApproved(fromSerialized(invitingAdmin.hexString()))
+        val shouldAutoApprove = getRecipientApproved(fromSerialized(invitingAdmin.hexString()))
         val closedGroupInfo = GroupInfo.ClosedGroupInfo(
             groupId,
             byteArrayOf(),
@@ -1708,16 +1706,22 @@ open class Storage(
                 return
             }
         } else {
-            val members = configFactory.getGroupMemberConfig(closedGroupId) ?: return
-            members.use { memberConfig ->
-                // if the leaving member is an admin, disable the
+            configFactory.getGroupMemberConfig(closedGroupId)?.use { memberConfig ->
+                // if the leaving member is an admin, disable the group and remove it
                 if (memberConfig.get(message.sender!!)?.admin == true) {
-
+                    pollerFactory.pollerFor(closedGroupId)?.stop()
+                    getThreadId(fromSerialized(closedGroupHexString))?.let { threadId ->
+                        deleteConversation(threadId)
+                    }
+                    configFactory.removeGroup(closedGroupId)
                 }
             }
         }
 
-        insertGroupInfoChange(message, closedGroupId)
+        // if we still have the group, insert the info message
+        if (userGroups.getClosedGroup(closedGroupHexString) != null) {
+            insertGroupInfoChange(message, closedGroupId)
+        }
     }
 
     override fun leaveGroup(groupSessionId: String) {
@@ -1731,6 +1735,7 @@ open class Storage(
             MessageSender.sendNonDurably(message, fromSerialized(groupSessionId), false).get()
             pollerFactory.pollerFor(closedGroupId)?.stop()
             // TODO: unsub from pushes
+            // TODO: set "deleted" and post to -10 group namespace?
             getThreadId(fromSerialized(groupSessionId))?.let { threadId ->
                 deleteConversation(threadId)
             }

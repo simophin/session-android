@@ -25,6 +25,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.DefaultLifecycleObserver;
@@ -46,6 +47,7 @@ import org.session.libsession.utilities.Device;
 import org.session.libsession.utilities.ProfilePictureUtilities;
 import org.session.libsession.utilities.SSKEnvironment;
 import org.session.libsession.utilities.TextSecurePreferences;
+import org.session.libsession.utilities.Toaster;
 import org.session.libsession.utilities.Util;
 import org.session.libsession.utilities.WindowDebouncer;
 import org.session.libsession.utilities.dynamiclanguage.DynamicLanguageContextWrapper;
@@ -123,7 +125,7 @@ import network.loki.messenger.libsession_util.UserProfile;
  * @author Moxie Marlinspike
  */
 @HiltAndroidApp
-public class ApplicationContext extends Application implements DefaultLifecycleObserver, ConfigFactoryUpdateListener {
+public class ApplicationContext extends Application implements DefaultLifecycleObserver, ConfigFactoryUpdateListener, Toaster {
 
     public static final String PREFERENCES_NAME = "SecureSMS-Preferences";
 
@@ -207,6 +209,12 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
     }
 
     @Override
+    public void toast(int stringRes, int toastLength, @NonNull Object... parameters) {
+        String text = getString(stringRes, parameters);
+        Toast.makeText(getApplicationContext(), text, toastLength).show();
+    }
+
+    @Override
     public void onCreate() {
         TextSecurePreferences.setPushSuffix(BuildConfig.PUSH_KEY_SUFFIX);
 
@@ -219,7 +227,8 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
                 device,
                 messageDataProvider,
                 ()-> KeyPairUtilities.INSTANCE.getUserED25519KeyPair(this),
-                configFactory
+                configFactory,
+                this
         );
         callMessageProcessor = new CallMessageProcessor(this, textSecurePreferences, ProcessLifecycleOwner.get().getLifecycle(), storage);
         Log.i(TAG, "onCreate()");

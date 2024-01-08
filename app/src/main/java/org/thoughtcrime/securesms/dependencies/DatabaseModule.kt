@@ -135,9 +135,9 @@ object DatabaseModule {
                        openHelper: SQLCipherOpenHelper,
                        configFactory: ConfigFactory,
                        threadDatabase: ThreadDatabase,
-                       pollerFactory: PollerFactory,
-                       toaster: Toaster): Storage {
-        val storage = Storage(context, openHelper, configFactory, pollerFactory, toaster)
+                       pollerFactory: PollerFactory
+    ): Storage {
+        val storage = Storage(context, openHelper, configFactory, pollerFactory)
         threadDatabase.setUpdateListener(storage)
         return storage
     }
