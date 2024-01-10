@@ -2,6 +2,8 @@ package org.thoughtcrime.securesms.dependencies
 
 import android.content.Context
 import android.os.Trace
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import network.loki.messenger.libsession_util.Config
 import network.loki.messenger.libsession_util.ConfigBase
 import network.loki.messenger.libsession_util.Contacts
@@ -61,6 +63,10 @@ class ConfigFactory(
     private val isConfigForcedOn by lazy { TextSecurePreferences.hasForcedNewConfig(context) }
 
     private val listeners: MutableList<ConfigFactoryUpdateListener> = mutableListOf()
+
+    private val _configUpdateNotifications = Channel<SessionId>()
+    val configUpdateNotifications = _configUpdateNotifications.receiveAsFlow()
+
     fun registerListener(listener: ConfigFactoryUpdateListener) {
         listeners += listener
     }
@@ -226,7 +232,7 @@ class ConfigFactory(
         keys
     }
 
-    override fun getGroupMemberConfig(groupSessionId: SessionId): GroupMembersConfig? = getGroupAuthInfo(groupSessionId)?.let { (sk, auth) ->
+    override fun getGroupMemberConfig(groupSessionId: SessionId): GroupMembersConfig? = getGroupAuthInfo(groupSessionId)?.let { (sk, _) ->
         // Get initial dump if we have one
         val dump = configDatabase.retrieveConfigAndHashes(
             ConfigDatabase.MEMBER_VARIANT,
@@ -316,12 +322,17 @@ class ConfigFactory(
             dumped,
             timestamp
         )
+        _configUpdateNotifications.trySend(groupSessionId)
     }
 
     override fun persist(forConfigObject: Config, timestamp: Long, forPublicKey: String?) {
         try {
             listeners.forEach { listener ->
                 listener.notifyUpdates(forConfigObject)
+            }
+            if (forConfigObject is ConfigBase && !forConfigObject.needsDump() || forConfigObject is GroupKeysConfig && !forConfigObject.needsDump()) {
+                Log.d("ConfigFactory", "Don't need to persist ${forConfigObject.javaClass} for $forPublicKey pubkey")
+                return
             }
             when (forConfigObject) {
                 is UserProfile -> persistUserConfigDump(timestamp)
@@ -400,6 +411,7 @@ class ConfigFactory(
         val pubKey = groupInfo.id().hexString()
         val timestamp = SnodeAPI.nowWithOffset
         configDatabase.storeGroupConfigs(pubKey, groupKeys.dump(), groupInfo.dump(), groupMembers.dump(), timestamp)
+        _configUpdateNotifications.trySend(groupInfo.id())
     }
 
     override fun removeGroup(closedGroupId: SessionId) {

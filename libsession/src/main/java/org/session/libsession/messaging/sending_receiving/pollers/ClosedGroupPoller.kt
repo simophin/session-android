@@ -187,7 +187,9 @@ class ClosedGroupPoller(private val scope: CoroutineScope,
 
             val requiresSync = info.needsPush() || members.needsPush() || keys.needsRekey() || keys.pendingConfig() != null
 
-            configFactoryProtocol.saveGroupConfigs(keys, info, members)
+            if (info.needsDump() || members.needsDump() || keys.needsDump()) {
+                configFactoryProtocol.saveGroupConfigs(keys, info, members)
+            }
             keys.free()
             info.free()
             members.free()

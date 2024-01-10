@@ -34,7 +34,7 @@ class EditClosedGroupActivity: PassphraseRequiredActionBarActivity() {
                     navGraph = NavGraphs.editGroup,
                     dependenciesContainerBuilder = {
                         dependency(NavGraphs.editGroup) {
-                            editFactory.create(intent.getStringExtra(groupIDKey)!!, contentResolver)
+                            editFactory.create(intent.getStringExtra(groupIDKey)!!)
                         }
                         dependency(NavGraphs.editGroup) {
                             inviteFactory.create(intent.getStringExtra(groupIDKey)!!)

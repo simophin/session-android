@@ -1,8 +1,6 @@
 package org.thoughtcrime.securesms.groups.compose
 
-import android.content.ContentResolver
 import android.content.Context
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -61,12 +59,16 @@ import com.ramcosta.composedestinations.spec.DestinationStyle
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
 import network.loki.messenger.R
 import network.loki.messenger.libsession_util.util.GroupMember
 import org.session.libsession.database.StorageProtocol
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.messaging.jobs.InviteContactsJob
 import org.session.libsession.messaging.jobs.JobQueue
+import org.session.libsignal.utilities.SessionId
+import org.thoughtcrime.securesms.dependencies.ConfigFactory
 import org.thoughtcrime.securesms.groups.ContactList
 import org.thoughtcrime.securesms.groups.destinations.EditClosedGroupInviteScreenDestination
 import org.thoughtcrime.securesms.groups.destinations.EditClosedGroupNameScreenDestination
@@ -264,8 +266,8 @@ fun EditClosedGroupInviteScreen(
 
 class EditGroupViewModel @AssistedInject constructor(
     @Assisted private val groupSessionId: String,
-    @Assisted private val contentResolver: ContentResolver,
     private val storage: StorageProtocol,
+    private val configFactory: ConfigFactory
 ): ViewModel() {
 
     val viewState = viewModelScope.launchMolecule(Immediate) {
@@ -274,19 +276,12 @@ class EditGroupViewModel @AssistedInject constructor(
             storage.getUserPublicKey()!!
         }
 
-//        val closedGroupRecipient by contentResolver
-//            .observeQuery(DatabaseContentProviders.ConversationList.CONTENT_URI)
-//            .collectAsState(initial = null)
+        val closedGroup by configFactory.configUpdateNotifications.map(SessionId::hexString).filter { it == groupSessionId }
+            .map {
+                storage.getClosedGroupDisplayInfo(it)!!
+            }.collectAsState(initial = storage.getClosedGroupDisplayInfo(groupSessionId)!!)
 
-        val closedGroupInfo = remember {
-            storage.getLibSessionClosedGroup(groupSessionId)!!
-        }
-
-        val closedGroup = remember(closedGroupInfo) {
-            storage.getClosedGroupDisplayInfo(groupSessionId)!!
-        }
-
-        val closedGroupMembers = remember(closedGroupInfo) {
+        val closedGroupMembers =
             storage.getMembers(groupSessionId).map { member ->
                 MemberViewModel(
                     memberName = member.name,
@@ -295,7 +290,6 @@ class EditGroupViewModel @AssistedInject constructor(
                     memberState = memberStateOf(member)
                 )
             }
-        }
 
         val name = closedGroup.name
         val description = closedGroup.description
@@ -315,11 +309,6 @@ class EditGroupViewModel @AssistedInject constructor(
                         groupSessionId,
                         sessionIds.contacts.map(Contact::sessionID)
                     )
-                    Toast.makeText(
-                        event.context,
-                        "Inviting ${event.contacts.contacts.size}",
-                        Toast.LENGTH_LONG
-                    ).show()
                 }
                 is EditGroupEvent.ReInviteContact -> {
                     // do a buffer
@@ -341,7 +330,7 @@ class EditGroupViewModel @AssistedInject constructor(
 
     @AssistedFactory
     interface Factory {
-        fun create(groupSessionId: String, contentResolver: ContentResolver): EditGroupViewModel
+        fun create(groupSessionId: String): EditGroupViewModel
     }
 
 }
