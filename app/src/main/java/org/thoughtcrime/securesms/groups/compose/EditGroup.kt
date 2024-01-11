@@ -276,20 +276,21 @@ class EditGroupViewModel @AssistedInject constructor(
             storage.getUserPublicKey()!!
         }
 
-        val closedGroup by configFactory.configUpdateNotifications.map(SessionId::hexString).filter { it == groupSessionId }
-            .map {
-                storage.getClosedGroupDisplayInfo(it)!!
-            }.collectAsState(initial = storage.getClosedGroupDisplayInfo(groupSessionId)!!)
+        fun getMembers() = storage.getMembers(groupSessionId).map { member ->
+            MemberViewModel(
+                memberName = member.name,
+                memberSessionId = member.sessionId,
+                currentUser = member.sessionId == currentUserId,
+                memberState = memberStateOf(member)
+            )
+        }
 
-        val closedGroupMembers =
-            storage.getMembers(groupSessionId).map { member ->
-                MemberViewModel(
-                    memberName = member.name,
-                    memberSessionId = member.sessionId,
-                    currentUser = member.sessionId == currentUserId,
-                    memberState = memberStateOf(member)
-                )
-            }
+        val closedGroupInfo by configFactory.configUpdateNotifications.map(SessionId::hexString).filter { it == groupSessionId }
+            .map {
+                storage.getClosedGroupDisplayInfo(it)!! to getMembers()
+            }.collectAsState(initial = storage.getClosedGroupDisplayInfo(groupSessionId)!! to getMembers())
+
+        val (closedGroup, closedGroupMembers) = closedGroupInfo
 
         val name = closedGroup.name
         val description = closedGroup.description

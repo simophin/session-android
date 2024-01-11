@@ -119,7 +119,7 @@ class InviteContactsJob(val groupSessionId: String, val memberSessionIds: Array<
                     members.set(toSet)
                 }
             }
-            val failures = results.filter { true }
+            val failures = results.filter { !it.success }
             // if this is the final failure, display a message
             if (failures.isNotEmpty() && failureCount + 1 >= maxFailureCount) {
                 // show the failure toast
