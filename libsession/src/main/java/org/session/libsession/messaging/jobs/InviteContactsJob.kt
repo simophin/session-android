@@ -26,6 +26,12 @@ class InviteContactsJob(val groupSessionId: String, val memberSessionIds: Array<
         const val KEY = "InviteContactJob"
         private const val GROUP = "group"
         private const val MEMBER = "member"
+
+        private const val FIRST = "first"
+        private const val SECOND = "second"
+        private const val USER = "user"
+        private const val NUM_OTHERS = "num_others"
+
     }
 
     override var delegate: JobDelegate? = null
@@ -125,7 +131,12 @@ class InviteContactsJob(val groupSessionId: String, val memberSessionIds: Array<
                         val firstString = first.memberSessionId.let { storage.getContactWithSessionID(it) }?.name
                             ?: truncateIdForDisplay(first.memberSessionId)
                         withContext(Dispatchers.Main) {
-                            toaster.toast(R.string.InviteContacts_failed_single, Toast.LENGTH_LONG, firstString, info.getName())
+                            toaster.toast(R.string.InviteContacts_failed_single, Toast.LENGTH_LONG,
+                                mapOf(
+                                    USER to firstString,
+                                    SECOND to info.getName()
+                                )
+                            )
                         }
                     }
                     2 -> {
@@ -136,7 +147,13 @@ class InviteContactsJob(val groupSessionId: String, val memberSessionIds: Array<
                             ?: truncateIdForDisplay(second.memberSessionId)
 
                         withContext(Dispatchers.Main) {
-                            toaster.toast(R.string.InviteContacts_failed_two, Toast.LENGTH_LONG, firstString, secondString, info.getName())
+                            toaster.toast(R.string.InviteContacts_failed_two, Toast.LENGTH_LONG,
+                                mapOf(
+                                    FIRST to firstString,
+                                    SECOND to secondString,
+                                    GROUP to info.getName()
+                                )
+                            )
                         }
                     }
                     else -> {
@@ -145,7 +162,13 @@ class InviteContactsJob(val groupSessionId: String, val memberSessionIds: Array<
                             ?: truncateIdForDisplay(first.memberSessionId)
                         val remaining = failures.size - 1
                         withContext(Dispatchers.Main) {
-                            toaster.toast(R.string.InviteContacts_failed_multiple, Toast.LENGTH_LONG, firstString, remaining, info.getName())
+                            toaster.toast(R.string.InviteContacts_failed_multiple, Toast.LENGTH_LONG,
+                                mapOf(
+                                    FIRST to firstString,
+                                    NUM_OTHERS to remaining.toString(),
+                                    GROUP to info.getName()
+                                )
+                            )
                         }
                     }
                 }

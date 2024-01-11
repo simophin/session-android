@@ -28,9 +28,12 @@ import android.os.HandlerThread;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 import androidx.lifecycle.DefaultLifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ProcessLifecycleOwner;
+
+import com.squareup.phrase.Phrase;
 
 import org.conscrypt.Conscrypt;
 import org.jetbrains.annotations.NotNull;
@@ -103,6 +106,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
 import java.util.concurrent.Executors;
@@ -209,9 +213,12 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
     }
 
     @Override
-    public void toast(int stringRes, int toastLength, @NonNull Object... parameters) {
-        String text = getString(stringRes, parameters);
-        Toast.makeText(getApplicationContext(), text, toastLength).show();
+    public void toast(@StringRes int stringRes, int toastLength, @NonNull Map<String, String> parameters) {
+        Phrase builder = Phrase.from(this, stringRes);
+        for (Map.Entry<String,String> entry : parameters.entrySet()) {
+            builder.put(entry.getKey(), entry.getValue());
+        }
+        Toast.makeText(getApplicationContext(), builder.format(), toastLength).show();
     }
 
     @Override
