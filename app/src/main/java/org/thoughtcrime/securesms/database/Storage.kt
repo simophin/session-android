@@ -1693,7 +1693,6 @@ open class Storage(
                                 .build()
                 ).apply { this.sentTimestamp = timestamp }
                 MessageSender.send(updatedMessage, fromSerialized(closedGroupHexString))
-                insertGroupInfoChange(updatedMessage, closedGroupId)
                 info.free()
                 members.free()
                 keys.free()
