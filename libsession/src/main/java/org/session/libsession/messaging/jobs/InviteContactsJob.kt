@@ -120,8 +120,9 @@ class InviteContactsJob(val groupSessionId: String, val memberSessionIds: Array<
                 }
             }
             val failures = results.filter { !it.success }
-            // if this is the final failure, display a message
-            if (failures.isNotEmpty() && failureCount + 1 >= maxFailureCount) {
+            // if there are failed invites, display a message
+            // assume job "success" even if we fail, the state of invites is tracked outside of this job
+            if (failures.isNotEmpty()) {
                 // show the failure toast
                 val storage = MessagingModuleConfiguration.shared.storage
                 val toaster = MessagingModuleConfiguration.shared.toaster
