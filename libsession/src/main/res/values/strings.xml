@@ -65,8 +65,8 @@
     <string name="ConversationItem_group_action_avatar_updated">Group display picture updated.</string>
     <string name="ConversationItem_group_name_updated">Group name is now <b>{name}</b></string>
     <string name="ConversationItem_group_name_updated_fallback">Group name updated.</string>
-    <string name="ConversationItem_group_member_added_single"><b>{first}</b> was added to the group.</string>
-    <string name="ConversationItem_group_member_added_two"><b>{first}</b> and <b>{second}</b> were added to the group.</string>
+    <string name="ConversationItem_group_member_added_single"><b>{first}</b> was invited to join the group.</string>
+    <string name="ConversationItem_group_member_added_two"><b>{first}</b> and <b>{second}</b> were invited to join the group.</string>
     <string name="ConversationItem_group_member_added_multiple"><b>{first}</b> and <b>{number_others} others</b> were invited to join the group.</string>
     <string name="ConversationItem_group_member_removed_single"><b>{first}</b> was removed from the group.</string>
     <string name="ConversationItem_group_member_removed_two"><b>{first}</b> and <b>{second}</b> were removed from the group.</string>
@@ -77,12 +77,13 @@
     <string name="ConversationItem_group_member_you_added_single">You were invited to join the group.</string>
     <string name="ConversationItem_group_member_you_added_two">You and <b>{second}</b> were invited to join the group.</string>
     <string name="ConversationItem_group_member_you_added_multiple">You and <b>{number_others} others</b> were invited to join the group.</string>
-    <string name="ConversationItem_group_member_you_removed_single">You was removed from the group.</string>
+    <string name="ConversationItem_group_member_you_removed_single">You were removed from the group.</string>
     <string name="ConversationItem_group_member_you_removed_two">You and <b>{second}</b> were removed from the group.</string>
     <string name="ConversationItem_group_member_you_removed_multiple">You and <b>{number_others} others</b> were removed from the group.</string>
     <string name="ConversationItem_group_member_you_promoted_single">You were promoted to Admin.</string>
     <string name="ConversationItem_group_member_you_promoted_two">You and <b>{second}</b> were promoted to Admin.</string>
     <string name="ConversationItem_group_member_you_promoted_multiple">You and <b>{number_others} others</b> were promoted to Admin.</string>
+    <string name="ConversationItem_group_member_admin_cannot_remove">Admins cannot be removed</string>
 
     <!-- RecipientProvider -->
     <string name="RecipientProvider_unnamed_group">Unnamed group</string>

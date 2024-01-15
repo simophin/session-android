@@ -1,6 +1,7 @@
 package org.thoughtcrime.securesms.ui
 
 import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -8,6 +9,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
@@ -34,6 +36,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -41,13 +44,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -337,6 +343,80 @@ fun BoxScope.CloseIcon(onClose: ()->Unit) {
             .align(Alignment.Center)
             .padding(16.dp)
     )
+}
+
+@Composable
+fun RowScope.WeightedOptionButton(
+    modifier: Modifier = Modifier,
+    @StringRes label: Int,
+    destructive: Boolean = false,
+    weight: Float = 1f,
+    onClick: () -> Unit
+) {
+    Text(
+        text = stringResource(label),
+        modifier = modifier
+            .padding(16.dp)
+            .weight(weight)
+            .clickable {
+                onClick()
+            },
+        textAlign = TextAlign.Center,
+        fontSize = 16.sp,
+        fontWeight = FontWeight.Bold,
+        color = if (destructive) LocalExtraColors.current.destructive else Color.Unspecified
+    )
+}
+
+@Preview
+@Composable
+fun PreviewWeightedOptionButtons(
+    @PreviewParameter(ThemeResPreviewParameterProvider::class) themeResId: Int,
+) {
+    PreviewTheme(themeResId) {
+        Column(modifier = Modifier.fillMaxWidth()) {
+            // two equal sized
+            Row(modifier = Modifier.fillMaxWidth()) {
+                WeightedOptionButton(label = R.string.ok) {
+
+                }
+                WeightedOptionButton(label = R.string.cancel, destructive = true) {
+
+                }
+            }
+            // single left justified
+            Row(modifier = Modifier.fillMaxWidth()) {
+                WeightedOptionButton(label = R.string.cancel, destructive = true, weight = 1f) {
+
+                }
+                // press F to pay respects to `android:weightSum`
+                Box(Modifier.weight(1f))
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+fun PreviewWeightedOptionButtonsBidi(
+    @PreviewParameter(BidiPreviewParameterProvider::class) direction: LayoutDirection
+) {
+    PreviewTheme(themeResId = R.style.Classic_Dark) {
+        CompositionLocalProvider(LocalLayoutDirection provides direction) {
+            Column(modifier = Modifier.fillMaxWidth()) {
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    WeightedOptionButton(label = R.string.ok, weight = 1f) {}
+                    WeightedOptionButton(label = R.string.cancel, destructive = true, weight = 1f) {}
+                }
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    Box(Modifier.weight(1f))
+                    WeightedOptionButton(label = R.string.cancel, destructive = true, weight = 1f) {
+
+                    }
+                }
+            }
+        }
+    }
 }
 
 @Composable

@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import androidx.compose.ui.unit.LayoutDirection
 import com.google.accompanist.themeadapter.appcompat.AppCompatTheme
 import com.google.android.material.color.MaterialColors
 import network.loki.messenger.R
@@ -77,4 +78,9 @@ class ThemeResPreviewParameterProvider : PreviewParameterProvider<Int> {
         R.style.Ocean_Dark,
         R.style.Ocean_Light,
     )
+}
+
+class BidiPreviewParameterProvider: PreviewParameterProvider<LayoutDirection> {
+    override val values: Sequence<LayoutDirection>
+        get() = sequenceOf( LayoutDirection.Ltr, LayoutDirection.Rtl)
 }

@@ -832,19 +832,23 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     private fun setUpMessageRequestsBar() {
         val recipient = viewModel.recipient ?: return
-        binding?.inputBar?.showMediaControls = !isOutgoingMessageRequestThread()
-        binding?.messageRequestBar?.isVisible = isIncomingMessageRequestThread()
-        binding?.sendAcceptsTextView?.setText(
+        val binding = binding ?: return
+        binding.inputBar.showMediaControls = !isOutgoingMessageRequestThread()
+        binding.messageRequestBar.isVisible = isIncomingMessageRequestThread()
+        binding.sendAcceptsTextView.setText(
             if (recipient.isClosedGroupRecipient) R.string.message_requests_send_group_notice
             else R.string.message_requests_send_notice
         )
-        binding?.acceptMessageRequestButton?.setOnClickListener {
+        binding.acceptMessageRequestButton.setOnClickListener {
             acceptMessageRequest()
         }
-        binding?.messageRequestBlock?.setOnClickListener {
+        binding.messageRequestBlock.setOnClickListener {
             block(deleteThread = true)
         }
-        binding?.declineMessageRequestButton?.setOnClickListener {
+        if (recipient.isClosedGroupRecipient) {
+            binding.declineMessageRequestButton.setText(R.string.delete)
+        }
+        binding.declineMessageRequestButton.setOnClickListener {
             viewModel.declineMessageRequest()
             lifecycleScope.launch(Dispatchers.IO) {
                 ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(this@ConversationActivityV2)

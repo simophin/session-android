@@ -30,7 +30,7 @@ class MessageRequestsAdapter(
         val view = MessageRequestView(context)
         view.setOnClickListener { view.thread?.let { listener.onConversationClick(it) } }
         view.setOnLongClickListener {
-            view.thread?.let { showPopupMenu(view) }
+            view.thread?.let { showPopupMenu(view, it.recipient.isGroupRecipient) }
             true
         }
         return ViewHolder(view)
@@ -46,9 +46,13 @@ class MessageRequestsAdapter(
         holder?.view?.recycle()
     }
 
-    private fun showPopupMenu(view: MessageRequestView) {
+    private fun showPopupMenu(view: MessageRequestView, groupRecipient: Boolean) {
         val popupMenu = PopupMenu(ContextThemeWrapper(context, R.style.PopupMenu_MessageRequests), view)
-        popupMenu.menuInflater.inflate(R.menu.menu_message_request, popupMenu.menu)
+        if (groupRecipient) {
+            popupMenu.menuInflater.inflate(R.menu.menu_group_request, popupMenu.menu)
+        } else {
+            popupMenu.menuInflater.inflate(R.menu.menu_message_request, popupMenu.menu)
+        }
         popupMenu.menu.findItem(R.id.menu_block_message_request)?.isVisible = !view.thread!!.recipient.isOpenGroupInboxRecipient
         popupMenu.setOnMenuItemClickListener { menuItem ->
             if (menuItem.itemId == R.id.menu_delete_message_request) {

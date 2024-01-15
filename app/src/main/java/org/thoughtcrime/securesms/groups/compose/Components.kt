@@ -72,7 +72,8 @@ fun LazyListScope.multiSelectMemberList(
             onListUpdated(newList)
         }
 
-        Row(modifier = modifier.fillMaxWidth()
+        Row(modifier = modifier
+            .fillMaxWidth()
             .clickable(onClick = update)
             .padding(vertical = 8.dp, horizontal = 24.dp),
             verticalAlignment = CenterVertically
