@@ -1,10 +1,8 @@
 package org.session.libsession.messaging.messages
 
-import com.google.protobuf.ByteString
 import org.session.libsession.database.StorageProtocol
 import org.session.libsession.messaging.messages.control.ExpirationTimerUpdate
 import org.session.libsession.messaging.messages.visible.VisibleMessage
-import org.session.libsession.utilities.GroupUtil
 import org.session.libsignal.protos.SignalServiceProtos
 
 abstract class Message {
@@ -42,5 +40,7 @@ abstract class Message {
     }
 
     abstract fun toProto(): SignalServiceProtos.Content?
+
+    abstract fun shouldDiscardIfBlocked(): Boolean
 
 }

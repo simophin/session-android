@@ -13,6 +13,8 @@ class ReadReceipt() : ControlMessage() {
         return false
     }
 
+    override fun shouldDiscardIfBlocked(): Boolean = true
+
     companion object {
         const val TAG = "ReadReceipt"
 

@@ -2,6 +2,7 @@
 #define SESSION_ANDROID_CONVERSATION_H
 
 #include <jni.h>
+#include <android/log.h>
 #include "util.h"
 #include "session/config/convo_info_volatile.hpp"
 
@@ -52,15 +53,24 @@ inline jobject serialize_closed_group(JNIEnv* env, session::config::convo::group
 }
 
 inline jobject serialize_any(JNIEnv *env, session::config::convo::any any) {
+    __android_log_print(ANDROID_LOG_WARN, "DESERIALIE", "deserializing any");
     if (auto* dm = std::get_if<session::config::convo::one_to_one>(&any)) {
+        __android_log_print(ANDROID_LOG_WARN, "DESERIALIE", "deserializing one to one");
+
         return serialize_one_to_one(env, *dm);
     } else if (auto* og = std::get_if<session::config::convo::community>(&any)) {
+        __android_log_print(ANDROID_LOG_WARN, "DESERIALIE", "deserializing community");
+
         return serialize_open_group(env, *og);
     } else if (auto* lgc = std::get_if<session::config::convo::legacy_group>(&any)) {
+        __android_log_print(ANDROID_LOG_WARN, "DESERIALIE", "deserializing legacy closed group");
+
         return serialize_legacy_group(env, *lgc);
     } else if (auto* gc = std::get_if<session::config::convo::group>(&any)) {
+        __android_log_print(ANDROID_LOG_WARN, "DESERIALIE", "deserializing closed group");
         return serialize_closed_group(env, *gc);
     }
+    __android_log_print(ANDROID_LOG_WARN, "DESERIALIE", "deserializing something unknown?");
     return nullptr;
 }
 

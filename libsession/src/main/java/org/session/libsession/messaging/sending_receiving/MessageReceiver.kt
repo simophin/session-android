@@ -137,10 +137,6 @@ object MessageReceiver {
                 }
             }
         }
-        // Don't process the envelope any further if the sender is blocked
-        if (isBlocked(sender!!)) {
-            throw Error.SenderBlocked
-        }
         // Parse the proto
         val proto = SignalServiceProtos.Content.parseFrom(PushTransportDetails.getStrippedPaddingMessageBody(plaintext))
         // Parse the message
@@ -157,6 +153,10 @@ object MessageReceiver {
             GroupUpdated.fromProto(proto) ?:
             VisibleMessage.fromProto(proto) ?: run {
             throw Error.UnknownMessage
+        }
+        // Don't process the envelope any further if the sender is blocked
+        if (isBlocked(sender!!) && message.shouldDiscardIfBlocked()) {
+            throw Error.SenderBlocked
         }
         val isUserBlindedSender = sender == openGroupPublicKey?.let { SodiumUtilities.blindedKeyPair(it, MessagingModuleConfiguration.shared.getUserED25519KeyPair()!!) }?.let { SessionId(IdPrefix.BLINDED, it.publicKey.asBytes).hexString() }
         // Ignore self send if needed

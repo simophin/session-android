@@ -9,6 +9,8 @@ class UnsendRequest(): ControlMessage() {
 
     override val isSelfSendValid: Boolean = true
 
+    override fun shouldDiscardIfBlocked(): Boolean = true // current behavior, not sure if should be true
+
     // region Validation
     override fun isValid(): Boolean {
         if (!super.isValid()) return false

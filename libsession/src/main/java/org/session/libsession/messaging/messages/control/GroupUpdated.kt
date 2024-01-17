@@ -12,6 +12,11 @@ class GroupUpdated(val inner: GroupUpdateMessage): ControlMessage() {
 
     override val isSelfSendValid: Boolean = true
 
+    override fun shouldDiscardIfBlocked(): Boolean =
+        !inner.hasDeleteMessage() && !inner.hasPromoteMessage() && !inner.hasInfoChangeMessage()
+                && !inner.hasMemberChangeMessage() && !inner.hasMemberLeftMessage()
+                && !inner.hasInviteResponse() && !inner.hasDeleteMemberContent()
+
     companion object {
         fun fromProto(message: Content): GroupUpdated? =
             if (message.hasDataMessage() && message.dataMessage.hasGroupUpdateMessage())

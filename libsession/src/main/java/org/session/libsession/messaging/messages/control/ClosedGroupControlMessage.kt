@@ -21,6 +21,8 @@ class ClosedGroupControlMessage() : ControlMessage() {
         }
     }
 
+    override fun shouldDiscardIfBlocked(): Boolean = kind !is Kind.EncryptionKeyPair
+
     override val isSelfSendValid: Boolean = true
 
     override fun isValid(): Boolean {

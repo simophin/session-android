@@ -18,6 +18,8 @@ class ExpirationTimerUpdate() : ControlMessage() {
         return duration != null
     }
 
+    override fun shouldDiscardIfBlocked(): Boolean = true
+
     companion object {
         const val TAG = "ExpirationTimerUpdate"
 

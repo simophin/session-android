@@ -17,6 +17,8 @@ class DataExtractionNotification() : ControlMessage() {
             }
     }
 
+    override fun shouldDiscardIfBlocked(): Boolean = true
+
     companion object {
         const val TAG = "DataExtractionNotification"
 
