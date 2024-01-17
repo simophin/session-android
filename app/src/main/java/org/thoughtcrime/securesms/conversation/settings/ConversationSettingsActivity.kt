@@ -1,14 +1,11 @@
 package org.thoughtcrime.securesms.conversation.settings
 
 import android.content.Intent
-import android.graphics.Typeface
 import android.os.Bundle
-import android.text.SpannableStringBuilder
-import android.text.style.StyleSpan
 import android.view.View
 import androidx.activity.viewModels
-import androidx.core.text.set
 import androidx.core.view.isVisible
+import com.squareup.phrase.Phrase
 import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityConversationSettingsBinding
@@ -71,7 +68,6 @@ class ConversationSettingsActivity: PassphraseRequiredActionBarActivity(), View.
         binding.pinConversation.setOnClickListener(this)
         binding.notificationSettings.setOnClickListener(this)
         binding.editGroup.setOnClickListener(this)
-        binding.addAdmins.setOnClickListener(this)
         binding.leaveGroup.setOnClickListener(this)
         binding.back.setOnClickListener(this)
         binding.autoDownloadMediaSwitch.setOnCheckedChangeListener { _, isChecked ->
@@ -174,27 +170,17 @@ class ConversationSettingsActivity: PassphraseRequiredActionBarActivity(), View.
                     title(R.string.conversation_settings_leave_group)
 
                     val name = viewModel.recipient!!.name!!
-                    val text = getString(R.string.conversation_settings_leave_group_name)
-                    val textWithArgs = getString(R.string.conversation_settings_leave_group_name, name)
-
-                    // Searches for the start index of %1$s
-                    val startIndex = """%1${"\\$"}s""".toRegex().find(text)?.range?.start
-                    val endIndex = startIndex?.plus(name.length)
-
-                    val styledText = if (startIndex == null || endIndex == null) {
-                        textWithArgs
-                    } else {
-                        val boldName = SpannableStringBuilder(textWithArgs)
-                        boldName[startIndex .. endIndex] = StyleSpan(Typeface.BOLD)
-                        boldName
-                    }
-                    text(styledText)
+                    val textWithArgs = Phrase.from(context, R.string.conversation_settings_leave_group_name)
+                        .put("group", name)
+                        .format()
+                    text(textWithArgs)
                     destructiveButton(
                         R.string.conversation_settings_leave_group,
                         R.string.conversation_settings_leave_group
                     ) {
                         viewModel.leaveGroup()
                     }
+                    cancelButton()
                 }
             }
             v === binding.editGroup -> {

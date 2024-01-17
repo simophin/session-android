@@ -1080,7 +1080,7 @@
     <string name="media_overview_activity__clear_media">Clear All</string>
     <string name="activity_create_closed_group_select_contacts">Select Contacts</string>
     <string name="activity_create_closed_group_add_account_or_ons">Add Account ID or ONS</string>
-    <string name="conversation_settings_leave_group_name">Are you sure you want to leave %1$s?</string>
+    <string name="conversation_settings_leave_group_name">Are you sure you want to leave <b>{group}</b>?</string>
     <string name="dialog_edit_group_information_title">Update Group Information</string>
     <string name="dialog_edit_group_information_message">Group name and description is visible to all group members.</string>
     <string name="dialog_edit_group_information_enter_group_name">Enter group name</string>
