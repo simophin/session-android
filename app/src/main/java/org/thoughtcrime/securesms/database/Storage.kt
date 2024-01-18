@@ -1723,7 +1723,7 @@ open class Storage(
         }
     }
 
-    override fun leaveGroup(groupSessionId: String) {
+    override fun leaveGroup(groupSessionId: String): Boolean {
         val closedGroupId = SessionId.from(groupSessionId)
         val message = GroupUpdated(
             GroupUpdateMessage.newBuilder()
@@ -1742,7 +1742,9 @@ open class Storage(
             ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
         } catch (e: Exception) {
             Log.e("ClosedGroup", "Failed to send leave group message")
+            return false
         }
+        return true
     }
 
     override fun setName(groupSessionId: String, newName: String) {

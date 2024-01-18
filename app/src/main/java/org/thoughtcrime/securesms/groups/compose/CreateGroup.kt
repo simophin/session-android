@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import network.loki.messenger.R
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.utilities.recipients.Recipient
+import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.ui.CellWithPaddingAndMargin
 import org.thoughtcrime.securesms.ui.CloseIcon
 import org.thoughtcrime.securesms.ui.Divider
@@ -172,6 +173,7 @@ fun CreateGroup(
             }
         }
         if (viewState.isLoading) {
+            Log.d("Compose", "Should show loading state")
             Box(modifier = modifier
                 .fillMaxSize()
                 .background(Color.Gray.copy(alpha = 0.5f))) {

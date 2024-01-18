@@ -23,7 +23,6 @@ import com.ramcosta.composedestinations.result.ResultBackNavigator
 import com.ramcosta.composedestinations.result.ResultRecipient
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.parcelize.Parcelize
-import network.loki.messenger.databinding.FragmentCreateGroupBinding
 import org.session.libsession.messaging.contacts.Contact
 import org.thoughtcrime.securesms.conversation.start.NewConversationDelegate
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
@@ -37,8 +36,6 @@ import org.thoughtcrime.securesms.ui.AppTheme
 
 @AndroidEntryPoint
 class CreateGroupFragment : Fragment() {
-
-    private lateinit var binding: FragmentCreateGroupBinding
 
     lateinit var delegate: NewConversationDelegate
 
@@ -82,7 +79,8 @@ fun CreateGroupScreen(
                 viewModel.updateState(StateUpdate.AddContacts(navResult.value.contacts))
             }
 
-            is NavResult.Canceled -> { /* do nothing */
+            is NavResult.Canceled -> {
+                /* do nothing */
             }
         }
     }

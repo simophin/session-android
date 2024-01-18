@@ -5,7 +5,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import network.loki.messenger.libsession_util.util.GroupDisplayInfo
 import org.session.libsession.database.StorageProtocol
 import org.session.libsession.utilities.Address
@@ -62,10 +64,10 @@ class ConversationSettingsViewModel(
         }
     }
 
-    fun closedGroupInfo(address: String): GroupDisplayInfo? = storage.getClosedGroupDisplayInfo(address)
+    fun closedGroupInfo(): GroupDisplayInfo? = recipient?.address?.serialize()?.let(storage::getClosedGroupDisplayInfo)
 
-    fun leaveGroup() {
-        viewModelScope.launch {
+    suspend fun leaveGroup(): Boolean {
+        return withContext(Dispatchers.IO) {
             storage.leaveGroup(recipient!!.address.serialize())
         }
     }

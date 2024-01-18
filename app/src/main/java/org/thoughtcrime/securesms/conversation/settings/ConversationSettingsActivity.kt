@@ -5,8 +5,10 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import com.squareup.phrase.Phrase
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityConversationSettingsBinding
 import org.session.libsignal.utilities.Log
@@ -87,7 +89,7 @@ class ConversationSettingsActivity: PassphraseRequiredActionBarActivity(), View.
         }
         // Setup group description (if group)
         binding.conversationSubtitle.isVisible = recipient.isClosedGroupRecipient.apply {
-            binding.conversationSubtitle.text = viewModel.closedGroupInfo(recipient.address.serialize())?.description
+            binding.conversationSubtitle.text = viewModel.closedGroupInfo()?.description
         }
 
         // Toggle group-specific settings
@@ -165,23 +167,34 @@ class ConversationSettingsActivity: PassphraseRequiredActionBarActivity(), View.
                 }
             }
             v === binding.leaveGroup -> {
+                val groupInfo = viewModel.closedGroupInfo()
+
                 showSessionDialog {
 
                     title(R.string.conversation_settings_leave_group)
 
                     val name = viewModel.recipient!!.name!!
-                    val textWithArgs = Phrase.from(context, R.string.conversation_settings_leave_group_name)
-                        .put("group", name)
-                        .format()
+                    val textWithArgs = if (groupInfo?.isUserAdmin == true) {
+                        context.getString(R.string.conversation_settings_leave_group_as_admin)
+                    } else {
+                        Phrase.from(context, R.string.conversation_settings_leave_group_name)
+                            .put("group", name)
+                            .format()
+                    }
                     text(textWithArgs)
                     destructiveButton(
                         R.string.conversation_settings_leave_group,
                         R.string.conversation_settings_leave_group
                     ) {
-                        viewModel.leaveGroup()
+                        lifecycleScope.launch {
+                            if (viewModel.leaveGroup()) {
+                                finish()
+                            }
+                        }
                     }
                     cancelButton()
                 }
+
             }
             v === binding.editGroup -> {
                 val recipient = viewModel.recipient ?: return

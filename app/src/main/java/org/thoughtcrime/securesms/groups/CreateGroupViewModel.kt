@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import network.loki.messenger.R
 import org.thoughtcrime.securesms.database.Storage
@@ -32,14 +33,18 @@ class CreateGroupViewModel @Inject constructor(
             is StateUpdate.Description -> _viewState.update { copy(description = stateUpdate.value) }
             is StateUpdate.Name -> _viewState.update { copy(name = stateUpdate.value) }
             is StateUpdate.RemoveContact -> _viewState.update { copy(members = members - stateUpdate.value) }
-            StateUpdate.Create -> { viewModelScope.launch { tryCreateGroup() } }
+            StateUpdate.Create -> {
+                viewModelScope.launch(Dispatchers.IO) {
+                    tryCreateGroup()
+                }
+            }
         }
     }
 
     val contacts
         get() = liveData { emit(storage.getAllContacts()) }
 
-    fun tryCreateGroup() {
+    suspend fun tryCreateGroup() {
 
         val currentState = _viewState.value!!
 
