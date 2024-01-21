@@ -749,4 +749,21 @@ class InstrumentedTests {
         assertThat(ourKeyConfig.groupKeys().first(), equalTo(mergeConfig.groupKeys().first()))
     }
 
+    @Test
+    fun testConvoVolatileSetAndGet() {
+        val (userPubKey, userSecret) = keyPair
+        val groupConfig = UserGroupsConfig.newInstance(userSecret)
+        val group = groupConfig.createGroup()
+        groupConfig.set(group)
+        val volatiles = ConversationVolatileConfig.newInstance(userSecret)
+        val conversation = Conversation.ClosedGroup(
+            group.groupSessionId.hexString(),
+            System.currentTimeMillis(),
+            false
+        )
+        volatiles.set(conversation)
+        assertThat(volatiles.all().size, equalTo(1))
+
+    }
+
 }

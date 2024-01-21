@@ -103,7 +103,7 @@ class RecipientProvider {
   }
 
   private @NonNull RecipientDetails getRecipientDetailsSync(Context context, @NonNull Address address, Optional<RecipientSettings> settings, Optional<GroupRecord> groupRecord, boolean nestedAsynchronous) {
-    if (address.isGroup()) return getGroupRecipientDetails(context, address, groupRecord, settings, nestedAsynchronous);
+    if (address.isGroup() && !address.isClosedGroup()) return getGroupRecipientDetails(context, address, groupRecord, settings, nestedAsynchronous);
     else                   return getIndividualRecipientDetails(context, address, settings);
   }
 

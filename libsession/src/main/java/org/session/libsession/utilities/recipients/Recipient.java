@@ -60,6 +60,8 @@ import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.ExecutionException;
 
+import network.loki.messenger.libsession_util.util.GroupDisplayInfo;
+
 public class Recipient implements RecipientModifiedListener {
 
   private static final String            TAG      = Recipient.class.getSimpleName();
@@ -320,7 +322,7 @@ public class Recipient implements RecipientModifiedListener {
   public synchronized @Nullable String getName() {
     StorageProtocol storage = MessagingModuleConfiguration.getShared().getStorage();
     String sessionID = this.address.toString();
-    if (isGroupRecipient()) {
+    if (isClosedGroupRecipient()) {
       if (this.name == null) {
         List<String> names = new LinkedList<>();
         for (Recipient recipient : participants) {
