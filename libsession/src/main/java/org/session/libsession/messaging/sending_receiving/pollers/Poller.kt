@@ -150,7 +150,8 @@ class Poller(private val configFactory: ConfigFactoryProtocol) {
             }
         }
         // process new results
-        if (forConfigObject.needsDump()) {
+        // latestMessageTimestamp should always be non-null if the config object needs dump
+        if (forConfigObject.needsDump() && latestMessageTimestamp != null) {
             configFactory.persist(forConfigObject, latestMessageTimestamp ?: SnodeAPI.nowWithOffset)
         }
     }

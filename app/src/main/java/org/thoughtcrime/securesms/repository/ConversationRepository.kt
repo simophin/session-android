@@ -1,5 +1,6 @@
 package org.thoughtcrime.securesms.repository
 
+import network.loki.messenger.libsession_util.util.ExpiryMode
 import android.content.ContentResolver
 import android.content.Context
 import app.cash.copper.flow.observeQuery
@@ -23,6 +24,7 @@ import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.toHexString
 import org.thoughtcrime.securesms.database.DatabaseContentProviders
 import org.thoughtcrime.securesms.database.DraftDatabase
+import org.thoughtcrime.securesms.database.ExpirationConfigurationDatabase
 import org.thoughtcrime.securesms.database.LokiMessageDatabase
 import org.thoughtcrime.securesms.database.LokiThreadDatabase
 import org.thoughtcrime.securesms.database.MmsDatabase
@@ -97,6 +99,7 @@ class DefaultConversationRepository @Inject constructor(
     private val storage: Storage,
     private val lokiMessageDb: LokiMessageDatabase,
     private val sessionJobDb: SessionJobDatabase,
+    private val configDb: ExpirationConfigurationDatabase,
     private val configFactory: ConfigFactory,
     private val contentResolver: ContentResolver,
 ) : ConversationRepository {
@@ -145,10 +148,15 @@ class DefaultConversationRepository @Inject constructor(
             openGroupInvitation.name = openGroup.name
             openGroupInvitation.url = openGroup.joinURL
             message.openGroupInvitation = openGroupInvitation
+            val expirationConfig = storage.getExpirationConfiguration(threadId)
+            val expiresInMillis = (expirationConfig?.expiryMode?.expiryMillis ?: 0)
+            val expireStartedAt = if (expirationConfig?.expiryMode is ExpiryMode.AfterSend) message.sentTimestamp!! else 0
             val outgoingTextMessage = OutgoingTextMessage.fromOpenGroupInvitation(
                 openGroupInvitation,
                 contact,
-                message.sentTimestamp
+                message.sentTimestamp,
+                expiresInMillis,
+                expireStartedAt
             )
             smsDb.insertMessageOutbox(-1, outgoingTextMessage, message.sentTimestamp!!, true)
             MessageSender.send(message, contact.address)
@@ -194,7 +202,7 @@ class DefaultConversationRepository @Inject constructor(
             }
         } else {
             messageDataProvider.deleteMessage(message.id, !message.isMms)
-            messageDataProvider.getServerHashForMessage(message.id)?.let { serverHash ->
+            messageDataProvider.getServerHashForMessage(message.id, message.isMms)?.let { serverHash ->
                 var publicKey = recipient.address.serialize()
                 if (recipient.isClosedGroupRecipient) {
                     publicKey = GroupUtil.doubleDecodeGroupID(publicKey).toHexString()
@@ -211,16 +219,15 @@ class DefaultConversationRepository @Inject constructor(
 
     override fun buildUnsendRequest(recipient: Recipient, message: MessageRecord): UnsendRequest? {
         if (recipient.isOpenGroupRecipient) return null
-        messageDataProvider.getServerHashForMessage(message.id) ?: return null
-        val unsendRequest = UnsendRequest()
-        if (message.isOutgoing) {
-            unsendRequest.author = textSecurePreferences.getLocalNumber()
-        } else {
-            unsendRequest.author = message.individualRecipient.address.contactIdentifier()
+        messageDataProvider.getServerHashForMessage(message.id, message.isMms) ?: return null
+        return UnsendRequest().apply {
+            author = if (message.isOutgoing) {
+                textSecurePreferences.getLocalNumber()
+            } else {
+                message.individualRecipient.address.contactIdentifier()
+            }
+            timestamp = message.timestamp
         }
-        unsendRequest.timestamp = message.timestamp
-
-        return unsendRequest
     }
 
     override suspend fun deleteMessageWithoutUnsendRequest(
@@ -235,7 +242,7 @@ class DefaultConversationRepository @Inject constructor(
                     lokiMessageDb.getServerID(message.id, !message.isMms) ?: continue
                 messageServerIDs[messageServerID] = message
             }
-            for ((messageServerID, message) in messageServerIDs) {
+            messageServerIDs.forEach { (messageServerID, message) ->
                 OpenGroupApi.deleteMessage(messageServerID, openGroup.room, openGroup.server)
                     .success {
                         messageDataProvider.deleteMessage(message.id, !message.isMms)

@@ -131,6 +131,7 @@ object MockDataGenerator {
                                         .joinToString(),
                                 Optional.absent(),
                                 0,
+                                0,
                                 false,
                                 -1,
                                 false
@@ -147,6 +148,7 @@ object MockDataGenerator {
                                 (0 until messageWords)
                                     .map { wordContent.random(dmThreadRandomGenerator.asKotlinRandom()) }
                                     .joinToString(),
+                                0,
                                 0,
                                 -1,
                                 (timestampNow - (index * 5000))
@@ -232,7 +234,6 @@ object MockDataGenerator {
                 // Add the group to the user's set of public keys to poll for and store the key pair
                 val encryptionKeyPair = Curve.generateKeyPair()
                 storage.addClosedGroupEncryptionKeyPair(encryptionKeyPair, randomGroupPublicKey, System.currentTimeMillis())
-                storage.setExpirationTimer(groupId, 0)
                 storage.createInitialConfigGroup(randomGroupPublicKey, groupName, GroupUtil.createConfigMemberMap(members, setOf(adminUserId)), System.currentTimeMillis(), encryptionKeyPair)
 
                 // Add the group created message
@@ -261,6 +262,7 @@ object MockDataGenerator {
                                     .joinToString(),
                                 Optional.absent(),
                                 0,
+                                0,
                                 false,
                                 -1,
                                 false
@@ -277,6 +279,7 @@ object MockDataGenerator {
                                 (0 until messageWords)
                                     .map { wordContent.random(cgThreadRandomGenerator.asKotlinRandom()) }
                                     .joinToString(),
+                                0,
                                 0,
                                 -1,
                                 (timestampNow - (index * 5000))
@@ -386,6 +389,7 @@ object MockDataGenerator {
                                     .joinToString(),
                                 Optional.absent(),
                                 0,
+                                0,
                                 false,
                                 -1,
                                 false
@@ -401,6 +405,7 @@ object MockDataGenerator {
                                 (0 until messageWords)
                                     .map { wordContent.random(ogThreadRandomGenerator.asKotlinRandom()) }
                                     .joinToString(),
+                                0,
                                 0,
                                 -1,
                                 (timestampNow - (index * 5000))

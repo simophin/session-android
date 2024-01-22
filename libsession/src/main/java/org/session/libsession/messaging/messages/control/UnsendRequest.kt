@@ -1,5 +1,6 @@
 package org.session.libsession.messaging.messages.control
 
+import org.session.libsession.messaging.messages.copyExpiration
 import org.session.libsignal.protos.SignalServiceProtos
 import org.session.libsignal.utilities.Log
 
@@ -26,6 +27,7 @@ class UnsendRequest(): ControlMessage() {
             val timestamp = unsendRequestProto.timestamp
             val author = unsendRequestProto.author
             return UnsendRequest(timestamp, author)
+                    .copyExpiration(proto)
         }
     }
 
@@ -45,12 +47,13 @@ class UnsendRequest(): ControlMessage() {
         unsendRequestProto.timestamp = timestamp
         unsendRequestProto.author = author
         val contentProto = SignalServiceProtos.Content.newBuilder()
-        try {
+        return try {
             contentProto.unsendRequest = unsendRequestProto.build()
-            return contentProto.build()
+            contentProto.setExpirationConfigurationIfNeeded(threadID)
+            contentProto.build()
         } catch (e: Exception) {
             Log.w(TAG, "Couldn't construct unsend request proto from: $this")
-            return null
+            null
         }
     }
 

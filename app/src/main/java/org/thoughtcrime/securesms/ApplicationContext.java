@@ -204,12 +204,12 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
     }
 
     @Override
-    public void notifyUpdates(@NotNull Config forConfigObject) {
+    public void notifyUpdates(@NotNull Config forConfigObject, long messageTimestamp) {
         // forward to the config factory / storage ig
         if (forConfigObject instanceof UserProfile && !textSecurePreferences.getConfigurationMessageSynced()) {
             textSecurePreferences.setConfigurationMessageSynced(true);
         }
-        storage.notifyConfigUpdates(forConfigObject);
+        storage.notifyConfigUpdates(forConfigObject, messageTimestamp);
     }
 
     @Override

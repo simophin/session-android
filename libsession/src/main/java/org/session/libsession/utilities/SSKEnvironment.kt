@@ -1,6 +1,7 @@
 package org.session.libsession.utilities
 
 import android.content.Context
+import network.loki.messenger.libsession_util.util.ExpiryMode
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.messaging.messages.control.ExpirationTimerUpdate
 import org.session.libsession.messaging.sending_receiving.notifications.MessageNotifier
@@ -38,8 +39,7 @@ class SSKEnvironment(
 
     interface MessageExpirationManagerProtocol {
         fun setExpirationTimer(message: ExpirationTimerUpdate)
-        fun disableExpirationTimer(message: ExpirationTimerUpdate)
-        fun startAnyExpiration(timestamp: Long, author: String)
+        fun startAnyExpiration(timestamp: Long, author: String, expireStartedAt: Long)
     }
 
     companion object {

@@ -2,6 +2,7 @@ package org.session.libsession.messaging.utilities
 
 import android.content.Context
 import com.squareup.phrase.Phrase
+import android.util.Log
 import org.session.libsession.R
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.calls.CallMessageType
@@ -10,11 +11,16 @@ import org.session.libsession.messaging.calls.CallMessageType.CALL_INCOMING
 import org.session.libsession.messaging.calls.CallMessageType.CALL_MISSED
 import org.session.libsession.messaging.calls.CallMessageType.CALL_OUTGOING
 import org.session.libsession.messaging.contacts.Contact
+import org.session.libsession.messaging.messages.ExpirationConfiguration.Companion.isNewConfigEnabled
 import org.session.libsession.messaging.sending_receiving.data_extraction.DataExtractionNotificationInfoMessage
 import org.session.libsession.utilities.ExpirationUtil
+import org.session.libsession.utilities.getExpirationTypeDisplayValue
+import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsession.utilities.truncateIdForDisplay
 
 object UpdateMessageBuilder {
+    private val TAG = "UpdateMessageBuilder"
+
 
     private const val FIRST = "first"
     private const val SECOND = "second"
@@ -22,7 +28,7 @@ object UpdateMessageBuilder {
 
     val storage = MessagingModuleConfiguration.shared.storage
 
-    fun getSenderName(senderId: String) = storage.getContactWithSessionID(senderId)
+    private fun getSenderName(senderId: String) = storage.getContactWithSessionID(senderId)
         ?.displayName(Contact.ContactContext.REGULAR)
         ?: truncateIdForDisplay(senderId)
 
@@ -180,19 +186,48 @@ object UpdateMessageBuilder {
 
     fun Context.youOrSender(sessionId: String) = if (storage.getUserPublicKey() == sessionId) getString(R.string.MessageRecord_you) else getSenderName(sessionId)
 
-    fun buildExpirationTimerMessage(context: Context, duration: Long, senderId: String? = null, isOutgoing: Boolean = false): String {
+    fun buildExpirationTimerMessage(
+        context: Context,
+        duration: Long,
+        recipient: Recipient,
+        senderId: String? = null,
+        isOutgoing: Boolean = false,
+        timestamp: Long,
+        expireStarted: Long
+    ): String {
+        Log.d(TAG, "buildExpirationTimerMessage() called with: duration = $duration, senderId = $senderId, isOutgoing = $isOutgoing, timestamp = $timestamp, expireStarted = $expireStarted")
+
         if (!isOutgoing && senderId == null) return ""
-        val senderName: String = if (!isOutgoing) {
-            getSenderName(senderId!!)
-        } else { context.getString(R.string.MessageRecord_you) }
+        val senderName = if (isOutgoing) context.getString(R.string.MessageRecord_you) else getSenderName(senderId!!)
         return if (duration <= 0) {
-            if (isOutgoing) context.getString(R.string.MessageRecord_you_disabled_disappearing_messages)
-            else context.getString(R.string.MessageRecord_s_disabled_disappearing_messages, senderName)
+            if (isOutgoing) {
+                if (!isNewConfigEnabled) context.getString(R.string.MessageRecord_you_disabled_disappearing_messages)
+                else context.getString(if (recipient.is1on1) R.string.MessageRecord_you_turned_off_disappearing_messages_1_on_1 else R.string.MessageRecord_you_turned_off_disappearing_messages)
+            } else {
+                if (!isNewConfigEnabled) context.getString(R.string.MessageRecord_s_disabled_disappearing_messages, senderName)
+                else context.getString(if (recipient.is1on1) R.string.MessageRecord_s_turned_off_disappearing_messages_1_on_1 else R.string.MessageRecord_s_turned_off_disappearing_messages, senderName)
+            }
         } else {
             val time = ExpirationUtil.getExpirationDisplayValue(context, duration.toInt())
-            if (isOutgoing)context.getString(R.string.MessageRecord_you_set_disappearing_message_time_to_s, time)
-            else context.getString(R.string.MessageRecord_s_set_disappearing_message_time_to_s, senderName, time)
-        }
+            val action = context.getExpirationTypeDisplayValue(timestamp == expireStarted)
+            Log.d(TAG, "action = $action because timestamp = $timestamp and expireStarted = $expireStarted equal = ${timestamp == expireStarted}")
+            if (isOutgoing) {
+                if (!isNewConfigEnabled) context.getString(R.string.MessageRecord_you_set_disappearing_message_time_to_s, time)
+                else context.getString(
+                    if (recipient.is1on1) R.string.MessageRecord_you_set_messages_to_disappear_s_after_s_1_on_1 else R.string.MessageRecord_you_set_messages_to_disappear_s_after_s,
+                    time,
+                    action
+                )
+            } else {
+                if (!isNewConfigEnabled) context.getString(R.string.MessageRecord_s_set_disappearing_message_time_to_s, senderName, time)
+                else context.getString(
+                    if (recipient.is1on1) R.string.MessageRecord_s_set_messages_to_disappear_s_after_s_1_on_1 else R.string.MessageRecord_s_set_messages_to_disappear_s_after_s,
+                    senderName,
+                    time,
+                    action
+                )
+            }
+        }.also { Log.d(TAG, "display: $it") }
     }
 
     fun buildDataExtractionMessage(context: Context, kind: DataExtractionNotificationInfoMessage.Kind, senderId: String? = null): String {

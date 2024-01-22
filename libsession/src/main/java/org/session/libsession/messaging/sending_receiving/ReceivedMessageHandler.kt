@@ -3,11 +3,14 @@ package org.session.libsession.messaging.sending_receiving
 import android.text.TextUtils
 import network.loki.messenger.libsession_util.ConfigBase
 import network.loki.messenger.libsession_util.util.Sodium
+import network.loki.messenger.libsession_util.util.ExpiryMode
 import org.session.libsession.avatars.AvatarHelper
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.jobs.AttachmentDownloadJob
 import org.session.libsession.messaging.jobs.BackgroundGroupAddJob
 import org.session.libsession.messaging.jobs.JobQueue
+import org.session.libsession.messaging.messages.ExpirationConfiguration
+import org.session.libsession.messaging.messages.ExpirationConfiguration.Companion.isNewConfigEnabled
 import org.session.libsession.messaging.messages.Message
 import org.session.libsession.messaging.messages.control.CallMessage
 import org.session.libsession.messaging.messages.control.ClosedGroupControlMessage
@@ -33,8 +36,10 @@ import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.messaging.utilities.WebRtcUtils
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.Address
+import org.session.libsession.utilities.Address.Companion.fromSerialized
 import org.session.libsession.utilities.GroupRecord
 import org.session.libsession.utilities.GroupUtil
+import org.session.libsession.utilities.GroupUtil.doubleEncodeGroupID
 import org.session.libsession.utilities.ProfileKeyUtil
 import org.session.libsession.utilities.SSKEnvironment
 import org.session.libsession.utilities.TextSecurePreferences
@@ -153,10 +158,24 @@ fun MessageReceiver.cancelTypingIndicatorsIfNeeded(senderPublicKey: String) {
 }
 
 private fun MessageReceiver.handleExpirationTimerUpdate(message: ExpirationTimerUpdate) {
-    if (message.duration!! > 0) {
-        SSKEnvironment.shared.messageExpirationManager.setExpirationTimer(message)
-    } else {
-        SSKEnvironment.shared.messageExpirationManager.disableExpirationTimer(message)
+    SSKEnvironment.shared.messageExpirationManager.setExpirationTimer(message)
+
+    if (isNewConfigEnabled) return
+
+    val module = MessagingModuleConfiguration.shared
+    try {
+        val threadId = fromSerialized(message.groupPublicKey?.let(::doubleEncodeGroupID) ?: message.sender!!)
+            .let(module.storage::getOrCreateThreadIdFor)
+
+        module.storage.setExpirationConfiguration(
+            ExpirationConfiguration(
+                threadId,
+                message.expiryMode,
+                message.sentTimestamp!!
+            )
+        )
+    } catch (e: Exception) {
+        Log.e("Loki", "Failed to update expiration configuration.")
     }
 }
 
@@ -197,7 +216,7 @@ private fun handleConfigurationMessage(message: ConfigurationMessage) {
         if (allClosedGroupPublicKeys.contains(closedGroup.publicKey)) {
             // just handle the closed group encryption key pairs to avoid sync'd devices getting out of sync
             storage.addClosedGroupEncryptionKeyPair(closedGroup.encryptionKeyPair!!, closedGroup.publicKey, message.sentTimestamp!!)
-        } else if (firstTimeSync) {
+        } else {
             // only handle new closed group if it's first time sync
             handleNewClosedGroup(message.sender!!, message.sentTimestamp!!, closedGroup.publicKey, closedGroup.name,
                 closedGroup.encryptionKeyPair!!, closedGroup.members, closedGroup.admins, message.sentTimestamp!!, closedGroup.expirationTimer)
@@ -238,8 +257,8 @@ fun MessageReceiver.handleUnsendRequest(message: UnsendRequest): Long? {
     val messageDataProvider = MessagingModuleConfiguration.shared.messageDataProvider
     val timestamp = message.timestamp ?: return null
     val author = message.author ?: return null
-    val messageIdToDelete = storage.getMessageIdInDatabase(timestamp, author) ?: return null
-    messageDataProvider.getServerHashForMessage(messageIdToDelete)?.let { serverHash ->
+    val (messageIdToDelete, mms) = storage.getMessageIdInDatabase(timestamp, author) ?: return null
+    messageDataProvider.getServerHashForMessage(messageIdToDelete, mms)?.let { serverHash ->
         SnodeAPI.deleteMessage(author, listOf(serverHash))
     }
     val deletedMessageId = messageDataProvider.updateMessageAsDeleted(timestamp, author)
@@ -254,6 +273,14 @@ fun handleMessageRequestResponse(message: MessageRequestResponse) {
     MessagingModuleConfiguration.shared.storage.insertMessageRequestResponse(message)
 }
 //endregion
+
+private fun SignalServiceProtos.Content.ExpirationType.expiryMode(durationSeconds: Long) = takeIf { durationSeconds > 0 }?.let {
+    when (it) {
+        SignalServiceProtos.Content.ExpirationType.DELETE_AFTER_READ -> ExpiryMode.AfterRead(durationSeconds)
+        SignalServiceProtos.Content.ExpirationType.DELETE_AFTER_SEND, SignalServiceProtos.Content.ExpirationType.UNKNOWN -> ExpiryMode.AfterSend(durationSeconds)
+        else -> ExpiryMode.NONE
+    }
+} ?: ExpiryMode.NONE
 
 fun MessageReceiver.handleVisibleMessage(
     message: VisibleMessage,
@@ -313,6 +340,17 @@ fun MessageReceiver.handleVisibleMessage(
         if (userPublicKey != messageSender && !isUserBlindedSender) {
             storage.setBlocksCommunityMessageRequests(recipient, message.blocksMessageRequests)
         }
+
+        // update the disappearing / legacy banner for the sender
+        val disappearingState = when {
+            proto.dataMessage.expireTimer > 0 && !proto.hasExpirationType() -> Recipient.DisappearingState.LEGACY
+            else -> Recipient.DisappearingState.UPDATED
+        }
+        storage.updateDisappearingState(
+            messageSender,
+            threadID,
+            disappearingState
+        )
     }
     // Handle group invite response if new closed group
     if (threadRecipient?.isClosedGroupRecipient == true) {
@@ -399,10 +437,7 @@ fun MessageReceiver.handleVisibleMessage(
 
         // Persist the message
         message.threadID = threadID
-        val messageID =
-            storage.persist(message, quoteModel, linkPreviews, message.groupPublicKey, openGroupID,
-         attachments, runThreadUpdate
-        ) ?: return null
+        val messageID = storage.persist(message, quoteModel, linkPreviews, message.groupPublicKey, openGroupID, attachments, runThreadUpdate) ?: return null
         // Parse & persist attachments
         // Start attachment downloads if needed
         if (threadRecipient?.autoDownloadAttachments == true || messageSender == userPublicKey) {
@@ -413,10 +448,9 @@ fun MessageReceiver.handleVisibleMessage(
                 }
             }
         }
-        val openGroupServerID = message.openGroupServerMessageID
-        if (openGroupServerID != null) {
-            val isSms = !(message.isMediaMessage() || attachments.isNotEmpty())
-            storage.setOpenGroupServerMessageID(messageID, openGroupServerID, threadID, isSms)
+        message.openGroupServerMessageID?.let {
+            val isSms = !message.isMediaMessage() && attachments.isEmpty()
+            storage.setOpenGroupServerMessageID(messageID, it, threadID, isSms)
         }
         return messageID
     }
@@ -625,8 +659,8 @@ private fun MessageReceiver.handleNewClosedGroup(message: ClosedGroupControlMess
     val groupPublicKey = kind.publicKey.toByteArray().toHexString()
     val members = kind.members.map { it.toByteArray().toHexString() }
     val admins = kind.admins.map { it.toByteArray().toHexString() }
-    val expireTimer = kind.expirationTimer
-    handleNewClosedGroup(message.sender!!, message.sentTimestamp!!, groupPublicKey, kind.name, kind.encryptionKeyPair!!, members, admins, message.sentTimestamp!!, expireTimer)
+    val expirationTimer = kind.expirationTimer
+    handleNewClosedGroup(message.sender!!, message.sentTimestamp!!, groupPublicKey, kind.name, kind.encryptionKeyPair!!, members, admins, message.sentTimestamp!!, expirationTimer)
 }
 
 private fun handleNewClosedGroup(sender: String, sentTimestamp: Long, groupPublicKey: String, name: String, encryptionKeyPair: ECKeyPair, members: List<String>, admins: List<String>, formationTimestamp: Long, expireTimer: Int) {
@@ -661,7 +695,7 @@ private fun handleNewClosedGroup(sender: String, sentTimestamp: Long, groupPubli
         storage.updateTitle(groupID, name)
         storage.updateMembers(groupID, members.map { Address.fromSerialized(it) })
     } else {
-        storage.createGroup(groupID, name, LinkedList(members.map { Address.fromSerialized(it) }),
+        storage.createGroup(groupID, name, LinkedList(members.map { fromSerialized(it) }),
             null, null, LinkedList(admins.map { Address.fromSerialized(it) }), formationTimestamp)
     }
     storage.setProfileSharing(Address.fromSerialized(groupID), true)
@@ -670,8 +704,6 @@ private fun handleNewClosedGroup(sender: String, sentTimestamp: Long, groupPubli
     // Store the encryption key pair
     storage.addClosedGroupEncryptionKeyPair(encryptionKeyPair, groupPublicKey, sentTimestamp)
     storage.createInitialConfigGroup(groupPublicKey, name, GroupUtil.createConfigMemberMap(members, admins), formationTimestamp, encryptionKeyPair)
-    // Set expiration timer
-    storage.setExpirationTimer(groupID, expireTimer)
     // Notify the PN server
     PushRegistryV1.register(device = MessagingModuleConfiguration.shared.device, publicKey = userPublicKey)
     // Notify the user

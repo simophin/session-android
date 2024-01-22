@@ -1,6 +1,7 @@
 package org.session.libsession.messaging.messages.control
 
 import com.google.protobuf.ByteString
+import org.session.libsession.messaging.messages.copyExpiration
 import org.session.libsignal.protos.SignalServiceProtos
 import org.session.libsignal.protos.SignalServiceProtos.SharedConfigMessage
 
@@ -16,6 +17,7 @@ class SharedConfigurationMessage(val kind: SharedConfigMessage.Kind, val data: B
             val sharedConfig = proto.sharedConfigMessage
             if (!sharedConfig.hasKind() || !sharedConfig.hasData()) return null
             return SharedConfigurationMessage(sharedConfig.kind, sharedConfig.data.toByteArray(), sharedConfig.seqno)
+                    .copyExpiration(proto)
         }
     }
 

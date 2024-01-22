@@ -1,5 +1,6 @@
 package org.session.libsession.messaging.messages.control
 
+import org.session.libsession.messaging.messages.copyExpiration
 import org.session.libsignal.protos.SignalServiceProtos
 import org.session.libsignal.utilities.Log
 
@@ -33,6 +34,7 @@ class DataExtractionNotification() : ControlMessage() {
                 }
             }
             return DataExtractionNotification(kind)
+                    .copyExpiration(proto)
         }
     }
 
@@ -66,6 +68,7 @@ class DataExtractionNotification() : ControlMessage() {
             }
             val contentProto = SignalServiceProtos.Content.newBuilder()
             contentProto.dataExtractionNotification = dataExtractionNotification.build()
+            contentProto.setExpirationConfigurationIfNeeded(threadID, true)
             return contentProto.build()
         } catch (e: Exception) {
             Log.w(TAG, "Couldn't construct data extraction notification proto from: $this")

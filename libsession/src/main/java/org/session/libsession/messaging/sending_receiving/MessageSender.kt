@@ -1,6 +1,7 @@
 package org.session.libsession.messaging.sending_receiving
 
 import network.loki.messenger.libsession_util.util.GroupInfo.ClosedGroupInfo.Companion.isAuthData
+import network.loki.messenger.libsession_util.util.ExpiryMode
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.deferred
 import org.session.libsession.messaging.MessagingModuleConfiguration
@@ -29,6 +30,7 @@ import org.session.libsession.snode.RawResponsePromise
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.snode.SnodeAPI.signingKeyCallback
 import org.session.libsession.snode.SnodeAPI.subkeyCallback
+import org.session.libsession.snode.SnodeAPI.nowWithOffset
 import org.session.libsession.snode.SnodeMessage
 import org.session.libsession.snode.SnodeModule
 import org.session.libsession.utilities.Address
@@ -37,7 +39,13 @@ import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.SSKEnvironment
 import org.session.libsignal.crypto.PushTransportDetails
 import org.session.libsignal.protos.SignalServiceProtos
-import org.session.libsignal.utilities.*
+import org.session.libsignal.utilities.Base64
+import org.session.libsignal.utilities.IdPrefix
+import org.session.libsignal.utilities.Log
+import org.session.libsignal.utilities.Namespace
+import org.session.libsignal.utilities.defaultRequiresAuth
+import org.session.libsignal.utilities.hasNamespaces
+import org.session.libsignal.utilities.hexEncodedPublicKey
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 import org.session.libsession.messaging.sending_receiving.attachments.Attachment as SignalAttachment
@@ -82,14 +90,14 @@ object MessageSender {
         val configFactory = MessagingModuleConfiguration.shared.configFactory
         val userPublicKey = storage.getUserPublicKey()
         // Set the timestamp, sender and recipient
-        val messageSendTime = SnodeAPI.nowWithOffset
+        val messageSendTime = nowWithOffset
         if (message.sentTimestamp == null) {
             message.sentTimestamp =
                 messageSendTime // Visible messages will already have their sent timestamp set
         }
 
         message.sender = userPublicKey
-
+        // SHARED CONFIG
         when (destination) {
             is Destination.Contact -> message.recipient = destination.publicKey
             is Destination.LegacyClosedGroup -> message.recipient = destination.groupPublicKey
@@ -190,7 +198,7 @@ object MessageSender {
         return SnodeMessage(
             message.recipient!!,
             base64EncodedData,
-            message.ttl,
+            ttl = getSpecifiedTtl(message, isSyncMessage) ?: message.ttl,
             messageSendTime
         )
     }
@@ -221,9 +229,14 @@ object MessageSender {
             val namespaces: List<Int> = when {
                 destination is Destination.LegacyClosedGroup
                         && forkInfo.defaultRequiresAuth() -> listOf(Namespace.UNAUTHENTICATED_CLOSED_GROUP())
+
                 destination is Destination.LegacyClosedGroup
-                        && forkInfo.hasNamespaces() -> listOf(Namespace.UNAUTHENTICATED_CLOSED_GROUP(), Namespace.DEFAULT())
+                        && forkInfo.hasNamespaces() -> listOf(
+                    Namespace.UNAUTHENTICATED_CLOSED_GROUP(),
+                    Namespace.DEFAULT
+                ())
                 destination is Destination.ClosedGroup -> listOf(Namespace.CLOSED_GROUP_MESSAGES())
+
                 else -> listOf(Namespace.DEFAULT())
             }
             namespaces.map { namespace ->
@@ -283,13 +296,27 @@ object MessageSender {
         return promise
     }
 
+    private fun getSpecifiedTtl(message: Message, isSyncMessage: Boolean): Long? {
+        val storage = MessagingModuleConfiguration.shared.storage
+        val threadId = message.threadID
+            ?: run {
+                val address = if (isSyncMessage && message is VisibleMessage) message.syncTarget else message.recipient
+                storage.getThreadId(Address.fromSerialized(address!!)) ?: return null
+            }
+        val config = storage.getExpirationConfiguration(threadId)?.takeIf { it.isEnabled } ?: return null
+        val expiryMode = config.expiryMode
+        return if (expiryMode is ExpiryMode.AfterSend || isSyncMessage) {
+            expiryMode.expiryMillis
+        } else null
+    }
+
     // Open Groups
     private fun sendToOpenGroupDestination(destination: Destination, message: Message): Promise<Unit, Exception> {
         val deferred = deferred<Unit, Exception>()
         val storage = MessagingModuleConfiguration.shared.storage
         val configFactory = MessagingModuleConfiguration.shared.configFactory
         if (message.sentTimestamp == null) {
-            message.sentTimestamp = SnodeAPI.nowWithOffset
+            message.sentTimestamp = nowWithOffset
         }
         // Attach the blocks message requests info
         configFactory.user?.let { user ->
@@ -392,20 +419,23 @@ object MessageSender {
     fun handleSuccessfulMessageSend(message: Message, destination: Destination, isSyncMessage: Boolean = false, openGroupSentTimestamp: Long = -1) {
         val storage = MessagingModuleConfiguration.shared.storage
         val userPublicKey = storage.getUserPublicKey()!!
+        val timestamp = message.sentTimestamp!!
         // Ignore future self-sends
-        storage.addReceivedMessageTimestamp(message.sentTimestamp!!)
-        storage.getMessageIdInDatabase(message.sentTimestamp!!, userPublicKey)?.let { messageID ->
+        storage.addReceivedMessageTimestamp(timestamp)
+        storage.getMessageIdInDatabase(timestamp, userPublicKey)?.let { (messageID, mms) ->
             if (openGroupSentTimestamp != -1L && message is VisibleMessage) {
                 storage.addReceivedMessageTimestamp(openGroupSentTimestamp)
                 storage.updateSentTimestamp(messageID, message.isMediaMessage(), openGroupSentTimestamp, message.threadID!!)
                 message.sentTimestamp = openGroupSentTimestamp
             }
+
             // When the sync message is successfully sent, the hash value of this TSOutgoingMessage
             // will be replaced by the hash value of the sync message. Since the hash value of the
             // real message has no use when we delete a message. It is OK to let it be.
             message.serverHash?.let {
-                storage.setMessageServerHash(messageID, it)
+                storage.setMessageServerHash(messageID, mms, it)
             }
+
             // in case any errors from previous sends
             storage.clearErrorMessage(messageID)
             // Track the open group server message ID
@@ -432,11 +462,14 @@ object MessageSender {
                 }
             }
             // Mark the message as sent
-            storage.markAsSent(message.sentTimestamp!!, userPublicKey)
-            storage.markUnidentified(message.sentTimestamp!!, userPublicKey)
+            storage.markAsSent(timestamp, userPublicKey)
+            storage.markUnidentified(timestamp, userPublicKey)
             // Start the disappearing messages timer if needed
-            if (message is VisibleMessage && !isSyncMessage) {
-                SSKEnvironment.shared.messageExpirationManager.startAnyExpiration(message.sentTimestamp!!, userPublicKey)
+            Log.d("MessageSender", "Start the disappearing messages timer if needed message.recipient = ${message.recipient}, userPublicKey = $userPublicKey, isSyncMessage = $isSyncMessage")
+            message.threadID?.let(storage::getExpirationConfiguration)?.takeIf { it.expiryMode.expirySeconds > 0 }?.let { config ->
+                if (message.recipient == userPublicKey || !isSyncMessage) {
+                    SSKEnvironment.shared.messageExpirationManager.startAnyExpiration(timestamp, userPublicKey, timestamp)
+                }
             }
         } ?: run {
             storage.updateReactionIfNeeded(message, message.sender?:userPublicKey, openGroupSentTimestamp)
@@ -449,7 +482,7 @@ object MessageSender {
             if (message is VisibleMessage) message.syncTarget = destination.publicKey
             if (message is ExpirationTimerUpdate) message.syncTarget = destination.publicKey
 
-            storage.markAsSyncing(message.sentTimestamp!!, userPublicKey)
+            storage.markAsSyncing(timestamp, userPublicKey)
             sendToSnodeDestination(Destination.Contact(userPublicKey), message, true)
         }
     }
@@ -476,7 +509,7 @@ object MessageSender {
         message.linkPreview?.let { linkPreview ->
             if (linkPreview.attachmentID == null) {
                 messageDataProvider.getLinkPreviewAttachmentIDFor(message.id!!)?.let { attachmentID ->
-                    message.linkPreview!!.attachmentID = attachmentID
+                    linkPreview.attachmentID = attachmentID
                     message.attachmentIDs.remove(attachmentID)
                 }
             }

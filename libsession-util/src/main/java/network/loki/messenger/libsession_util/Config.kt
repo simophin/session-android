@@ -4,6 +4,7 @@ import network.loki.messenger.libsession_util.util.BaseCommunityInfo
 import network.loki.messenger.libsession_util.util.ConfigPush
 import network.loki.messenger.libsession_util.util.Contact
 import network.loki.messenger.libsession_util.util.Conversation
+import network.loki.messenger.libsession_util.util.ExpiryMode
 import network.loki.messenger.libsession_util.util.GroupInfo
 import network.loki.messenger.libsession_util.util.GroupMember
 import network.loki.messenger.libsession_util.util.UserPic
@@ -139,6 +140,8 @@ class UserProfile(pointer: Long) : ConfigBase(pointer) {
     external fun setPic(userPic: UserPic)
     external fun setNtsPriority(priority: Long)
     external fun getNtsPriority(): Long
+    external fun setNtsExpiry(expiryMode: ExpiryMode)
+    external fun getNtsExpiry(): ExpiryMode
     external fun getCommunityMessageRequests(): Boolean
     external fun setCommunityMessageRequests(blocks: Boolean)
     external fun isBlockCommunityMessageRequestsSet(): Boolean

@@ -1,5 +1,6 @@
 package org.thoughtcrime.securesms.conversation.v2
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -14,9 +15,11 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import network.loki.messenger.libsession_util.util.GroupMember
 import org.session.libsession.database.StorageProtocol
+import org.session.libsession.messaging.messages.ExpirationConfiguration
 import org.session.libsession.messaging.open_groups.OpenGroup
 import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.messaging.utilities.SodiumUtilities
+import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.Log
@@ -41,6 +44,9 @@ class ConversationViewModel(
     private var _recipient: RetrieveOnce<Recipient> = RetrieveOnce {
         repository.maybeGetRecipientForThreadId(threadId)
     }
+    val expirationConfiguration: ExpirationConfiguration?
+        get() = storage.getExpirationConfiguration(threadId)
+
     val recipient: Recipient?
         get() = _recipient.value
 
@@ -226,6 +232,11 @@ class ConversationViewModel(
 
     fun hidesInputBar(): Boolean = openGroup?.canWrite != true &&
                 blindedRecipient?.blocksCommunityMessageRequests == true
+
+    fun legacyBannerRecipient(context: Context): Recipient? = recipient?.let { recipient ->
+        val legacyAddress = storage.getLastLegacyRecipient(recipient.address.serialize()) ?: return@let null
+        return Recipient.from(context, Address.fromSerialized(legacyAddress), false)
+    }
 
 
     @dagger.assisted.AssistedFactory

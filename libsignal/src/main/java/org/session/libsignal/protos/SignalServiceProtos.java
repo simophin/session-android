@@ -2482,6 +2482,36 @@ public final class SignalServiceProtos {
      * <code>optional .signalservice.SharedConfigMessage sharedConfigMessage = 11;</code>
      */
     org.session.libsignal.protos.SignalServiceProtos.SharedConfigMessageOrBuilder getSharedConfigMessageOrBuilder();
+
+    // optional .signalservice.Content.ExpirationType expirationType = 12;
+    /**
+     * <code>optional .signalservice.Content.ExpirationType expirationType = 12;</code>
+     */
+    boolean hasExpirationType();
+    /**
+     * <code>optional .signalservice.Content.ExpirationType expirationType = 12;</code>
+     */
+    org.session.libsignal.protos.SignalServiceProtos.Content.ExpirationType getExpirationType();
+
+    // optional uint32 expirationTimer = 13;
+    /**
+     * <code>optional uint32 expirationTimer = 13;</code>
+     */
+    boolean hasExpirationTimer();
+    /**
+     * <code>optional uint32 expirationTimer = 13;</code>
+     */
+    int getExpirationTimer();
+
+    // optional uint64 lastDisappearingMessageChangeTimestamp = 14;
+    /**
+     * <code>optional uint64 lastDisappearingMessageChangeTimestamp = 14;</code>
+     */
+    boolean hasLastDisappearingMessageChangeTimestamp();
+    /**
+     * <code>optional uint64 lastDisappearingMessageChangeTimestamp = 14;</code>
+     */
+    long getLastDisappearingMessageChangeTimestamp();
   }
   /**
    * Protobuf type {@code signalservice.Content}
@@ -2651,6 +2681,27 @@ public final class SignalServiceProtos {
               bitField0_ |= 0x00000100;
               break;
             }
+            case 96: {
+              int rawValue = input.readEnum();
+              org.session.libsignal.protos.SignalServiceProtos.Content.ExpirationType value = org.session.libsignal.protos.SignalServiceProtos.Content.ExpirationType.valueOf(rawValue);
+              if (value == null) {
+                unknownFields.mergeVarintField(12, rawValue);
+              } else {
+                bitField0_ |= 0x00000200;
+                expirationType_ = value;
+              }
+              break;
+            }
+            case 104: {
+              bitField0_ |= 0x00000400;
+              expirationTimer_ = input.readUInt32();
+              break;
+            }
+            case 112: {
+              bitField0_ |= 0x00000800;
+              lastDisappearingMessageChangeTimestamp_ = input.readUInt64();
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -2688,6 +2739,97 @@ public final class SignalServiceProtos {
     @java.lang.Override
     public com.google.protobuf.Parser<Content> getParserForType() {
       return PARSER;
+    }
+
+    /**
+     * Protobuf enum {@code signalservice.Content.ExpirationType}
+     */
+    public enum ExpirationType
+        implements com.google.protobuf.ProtocolMessageEnum {
+      /**
+       * <code>UNKNOWN = 0;</code>
+       */
+      UNKNOWN(0, 0),
+      /**
+       * <code>DELETE_AFTER_READ = 1;</code>
+       */
+      DELETE_AFTER_READ(1, 1),
+      /**
+       * <code>DELETE_AFTER_SEND = 2;</code>
+       */
+      DELETE_AFTER_SEND(2, 2),
+      ;
+
+      /**
+       * <code>UNKNOWN = 0;</code>
+       */
+      public static final int UNKNOWN_VALUE = 0;
+      /**
+       * <code>DELETE_AFTER_READ = 1;</code>
+       */
+      public static final int DELETE_AFTER_READ_VALUE = 1;
+      /**
+       * <code>DELETE_AFTER_SEND = 2;</code>
+       */
+      public static final int DELETE_AFTER_SEND_VALUE = 2;
+
+
+      public final int getNumber() { return value; }
+
+      public static ExpirationType valueOf(int value) {
+        switch (value) {
+          case 0: return UNKNOWN;
+          case 1: return DELETE_AFTER_READ;
+          case 2: return DELETE_AFTER_SEND;
+          default: return null;
+        }
+      }
+
+      public static com.google.protobuf.Internal.EnumLiteMap<ExpirationType>
+          internalGetValueMap() {
+        return internalValueMap;
+      }
+      private static com.google.protobuf.Internal.EnumLiteMap<ExpirationType>
+          internalValueMap =
+            new com.google.protobuf.Internal.EnumLiteMap<ExpirationType>() {
+              public ExpirationType findValueByNumber(int number) {
+                return ExpirationType.valueOf(number);
+              }
+            };
+
+      public final com.google.protobuf.Descriptors.EnumValueDescriptor
+          getValueDescriptor() {
+        return getDescriptor().getValues().get(index);
+      }
+      public final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptorForType() {
+        return getDescriptor();
+      }
+      public static final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptor() {
+        return org.session.libsignal.protos.SignalServiceProtos.Content.getDescriptor().getEnumTypes().get(0);
+      }
+
+      private static final ExpirationType[] VALUES = values();
+
+      public static ExpirationType valueOf(
+          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+        if (desc.getType() != getDescriptor()) {
+          throw new java.lang.IllegalArgumentException(
+            "EnumValueDescriptor is not for this type.");
+        }
+        return VALUES[desc.getIndex()];
+      }
+
+      private final int index;
+      private final int value;
+
+      private ExpirationType(int index, int value) {
+        this.index = index;
+        this.value = value;
+      }
+
+      // @@protoc_insertion_point(enum_scope:signalservice.Content.ExpirationType)
     }
 
     private int bitField0_;
@@ -2889,6 +3031,54 @@ public final class SignalServiceProtos {
       return sharedConfigMessage_;
     }
 
+    // optional .signalservice.Content.ExpirationType expirationType = 12;
+    public static final int EXPIRATIONTYPE_FIELD_NUMBER = 12;
+    private org.session.libsignal.protos.SignalServiceProtos.Content.ExpirationType expirationType_;
+    /**
+     * <code>optional .signalservice.Content.ExpirationType expirationType = 12;</code>
+     */
+    public boolean hasExpirationType() {
+      return ((bitField0_ & 0x00000200) == 0x00000200);
+    }
+    /**
+     * <code>optional .signalservice.Content.ExpirationType expirationType = 12;</code>
+     */
+    public org.session.libsignal.protos.SignalServiceProtos.Content.ExpirationType getExpirationType() {
+      return expirationType_;
+    }
+
+    // optional uint32 expirationTimer = 13;
+    public static final int EXPIRATIONTIMER_FIELD_NUMBER = 13;
+    private int expirationTimer_;
+    /**
+     * <code>optional uint32 expirationTimer = 13;</code>
+     */
+    public boolean hasExpirationTimer() {
+      return ((bitField0_ & 0x00000400) == 0x00000400);
+    }
+    /**
+     * <code>optional uint32 expirationTimer = 13;</code>
+     */
+    public int getExpirationTimer() {
+      return expirationTimer_;
+    }
+
+    // optional uint64 lastDisappearingMessageChangeTimestamp = 14;
+    public static final int LASTDISAPPEARINGMESSAGECHANGETIMESTAMP_FIELD_NUMBER = 14;
+    private long lastDisappearingMessageChangeTimestamp_;
+    /**
+     * <code>optional uint64 lastDisappearingMessageChangeTimestamp = 14;</code>
+     */
+    public boolean hasLastDisappearingMessageChangeTimestamp() {
+      return ((bitField0_ & 0x00000800) == 0x00000800);
+    }
+    /**
+     * <code>optional uint64 lastDisappearingMessageChangeTimestamp = 14;</code>
+     */
+    public long getLastDisappearingMessageChangeTimestamp() {
+      return lastDisappearingMessageChangeTimestamp_;
+    }
+
     private void initFields() {
       dataMessage_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.getDefaultInstance();
       callMessage_ = org.session.libsignal.protos.SignalServiceProtos.CallMessage.getDefaultInstance();
@@ -2899,6 +3089,9 @@ public final class SignalServiceProtos {
       unsendRequest_ = org.session.libsignal.protos.SignalServiceProtos.UnsendRequest.getDefaultInstance();
       messageRequestResponse_ = org.session.libsignal.protos.SignalServiceProtos.MessageRequestResponse.getDefaultInstance();
       sharedConfigMessage_ = org.session.libsignal.protos.SignalServiceProtos.SharedConfigMessage.getDefaultInstance();
+      expirationType_ = org.session.libsignal.protos.SignalServiceProtos.Content.ExpirationType.UNKNOWN;
+      expirationTimer_ = 0;
+      lastDisappearingMessageChangeTimestamp_ = 0L;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -2993,6 +3186,15 @@ public final class SignalServiceProtos {
       if (((bitField0_ & 0x00000100) == 0x00000100)) {
         output.writeMessage(11, sharedConfigMessage_);
       }
+      if (((bitField0_ & 0x00000200) == 0x00000200)) {
+        output.writeEnum(12, expirationType_.getNumber());
+      }
+      if (((bitField0_ & 0x00000400) == 0x00000400)) {
+        output.writeUInt32(13, expirationTimer_);
+      }
+      if (((bitField0_ & 0x00000800) == 0x00000800)) {
+        output.writeUInt64(14, lastDisappearingMessageChangeTimestamp_);
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -3037,6 +3239,18 @@ public final class SignalServiceProtos {
       if (((bitField0_ & 0x00000100) == 0x00000100)) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(11, sharedConfigMessage_);
+      }
+      if (((bitField0_ & 0x00000200) == 0x00000200)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(12, expirationType_.getNumber());
+      }
+      if (((bitField0_ & 0x00000400) == 0x00000400)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt32Size(13, expirationTimer_);
+      }
+      if (((bitField0_ & 0x00000800) == 0x00000800)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt64Size(14, lastDisappearingMessageChangeTimestamp_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -3217,6 +3431,12 @@ public final class SignalServiceProtos {
           sharedConfigMessageBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000100);
+        expirationType_ = org.session.libsignal.protos.SignalServiceProtos.Content.ExpirationType.UNKNOWN;
+        bitField0_ = (bitField0_ & ~0x00000200);
+        expirationTimer_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000400);
+        lastDisappearingMessageChangeTimestamp_ = 0L;
+        bitField0_ = (bitField0_ & ~0x00000800);
         return this;
       }
 
@@ -3317,6 +3537,18 @@ public final class SignalServiceProtos {
         } else {
           result.sharedConfigMessage_ = sharedConfigMessageBuilder_.build();
         }
+        if (((from_bitField0_ & 0x00000200) == 0x00000200)) {
+          to_bitField0_ |= 0x00000200;
+        }
+        result.expirationType_ = expirationType_;
+        if (((from_bitField0_ & 0x00000400) == 0x00000400)) {
+          to_bitField0_ |= 0x00000400;
+        }
+        result.expirationTimer_ = expirationTimer_;
+        if (((from_bitField0_ & 0x00000800) == 0x00000800)) {
+          to_bitField0_ |= 0x00000800;
+        }
+        result.lastDisappearingMessageChangeTimestamp_ = lastDisappearingMessageChangeTimestamp_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -3359,6 +3591,15 @@ public final class SignalServiceProtos {
         }
         if (other.hasSharedConfigMessage()) {
           mergeSharedConfigMessage(other.getSharedConfigMessage());
+        }
+        if (other.hasExpirationType()) {
+          setExpirationType(other.getExpirationType());
+        }
+        if (other.hasExpirationTimer()) {
+          setExpirationTimer(other.getExpirationTimer());
+        }
+        if (other.hasLastDisappearingMessageChangeTimestamp()) {
+          setLastDisappearingMessageChangeTimestamp(other.getLastDisappearingMessageChangeTimestamp());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -4492,6 +4733,108 @@ public final class SignalServiceProtos {
           sharedConfigMessage_ = null;
         }
         return sharedConfigMessageBuilder_;
+      }
+
+      // optional .signalservice.Content.ExpirationType expirationType = 12;
+      private org.session.libsignal.protos.SignalServiceProtos.Content.ExpirationType expirationType_ = org.session.libsignal.protos.SignalServiceProtos.Content.ExpirationType.UNKNOWN;
+      /**
+       * <code>optional .signalservice.Content.ExpirationType expirationType = 12;</code>
+       */
+      public boolean hasExpirationType() {
+        return ((bitField0_ & 0x00000200) == 0x00000200);
+      }
+      /**
+       * <code>optional .signalservice.Content.ExpirationType expirationType = 12;</code>
+       */
+      public org.session.libsignal.protos.SignalServiceProtos.Content.ExpirationType getExpirationType() {
+        return expirationType_;
+      }
+      /**
+       * <code>optional .signalservice.Content.ExpirationType expirationType = 12;</code>
+       */
+      public Builder setExpirationType(org.session.libsignal.protos.SignalServiceProtos.Content.ExpirationType value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000200;
+        expirationType_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional .signalservice.Content.ExpirationType expirationType = 12;</code>
+       */
+      public Builder clearExpirationType() {
+        bitField0_ = (bitField0_ & ~0x00000200);
+        expirationType_ = org.session.libsignal.protos.SignalServiceProtos.Content.ExpirationType.UNKNOWN;
+        onChanged();
+        return this;
+      }
+
+      // optional uint32 expirationTimer = 13;
+      private int expirationTimer_ ;
+      /**
+       * <code>optional uint32 expirationTimer = 13;</code>
+       */
+      public boolean hasExpirationTimer() {
+        return ((bitField0_ & 0x00000400) == 0x00000400);
+      }
+      /**
+       * <code>optional uint32 expirationTimer = 13;</code>
+       */
+      public int getExpirationTimer() {
+        return expirationTimer_;
+      }
+      /**
+       * <code>optional uint32 expirationTimer = 13;</code>
+       */
+      public Builder setExpirationTimer(int value) {
+        bitField0_ |= 0x00000400;
+        expirationTimer_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional uint32 expirationTimer = 13;</code>
+       */
+      public Builder clearExpirationTimer() {
+        bitField0_ = (bitField0_ & ~0x00000400);
+        expirationTimer_ = 0;
+        onChanged();
+        return this;
+      }
+
+      // optional uint64 lastDisappearingMessageChangeTimestamp = 14;
+      private long lastDisappearingMessageChangeTimestamp_ ;
+      /**
+       * <code>optional uint64 lastDisappearingMessageChangeTimestamp = 14;</code>
+       */
+      public boolean hasLastDisappearingMessageChangeTimestamp() {
+        return ((bitField0_ & 0x00000800) == 0x00000800);
+      }
+      /**
+       * <code>optional uint64 lastDisappearingMessageChangeTimestamp = 14;</code>
+       */
+      public long getLastDisappearingMessageChangeTimestamp() {
+        return lastDisappearingMessageChangeTimestamp_;
+      }
+      /**
+       * <code>optional uint64 lastDisappearingMessageChangeTimestamp = 14;</code>
+       */
+      public Builder setLastDisappearingMessageChangeTimestamp(long value) {
+        bitField0_ |= 0x00000800;
+        lastDisappearingMessageChangeTimestamp_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional uint64 lastDisappearingMessageChangeTimestamp = 14;</code>
+       */
+      public Builder clearLastDisappearingMessageChangeTimestamp() {
+        bitField0_ = (bitField0_ & ~0x00000800);
+        lastDisappearingMessageChangeTimestamp_ = 0L;
+        onChanged();
+        return this;
       }
 
       // @@protoc_insertion_point(builder_scope:signalservice.Content)
@@ -11543,37 +11886,37 @@ public final class SignalServiceProtos {
         public final boolean isInitialized() {
           if (hasInviteMessage()) {
             if (!getInviteMessage().isInitialized()) {
-              
+
               return false;
             }
           }
           if (hasDeleteMessage()) {
             if (!getDeleteMessage().isInitialized()) {
-              
+
               return false;
             }
           }
           if (hasInfoChangeMessage()) {
             if (!getInfoChangeMessage().isInitialized()) {
-              
+
               return false;
             }
           }
           if (hasMemberChangeMessage()) {
             if (!getMemberChangeMessage().isInitialized()) {
-              
+
               return false;
             }
           }
           if (hasPromoteMessage()) {
             if (!getPromoteMessage().isInitialized()) {
-              
+
               return false;
             }
           }
           if (hasInviteResponse()) {
             if (!getInviteResponse().isInitialized()) {
-              
+
               return false;
             }
           }
@@ -11703,7 +12046,7 @@ public final class SignalServiceProtos {
          * <code>optional .signalservice.DataMessage.GroupUpdateInviteMessage inviteMessage = 1;</code>
          */
         private com.google.protobuf.SingleFieldBuilder<
-            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessageOrBuilder> 
+            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessageOrBuilder>
             getInviteMessageFieldBuilder() {
           if (inviteMessageBuilder_ == null) {
             inviteMessageBuilder_ = new com.google.protobuf.SingleFieldBuilder<
@@ -11820,7 +12163,7 @@ public final class SignalServiceProtos {
          * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMessage deleteMessage = 2;</code>
          */
         private com.google.protobuf.SingleFieldBuilder<
-            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessageOrBuilder> 
+            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessageOrBuilder>
             getDeleteMessageFieldBuilder() {
           if (deleteMessageBuilder_ == null) {
             deleteMessageBuilder_ = new com.google.protobuf.SingleFieldBuilder<
@@ -11937,7 +12280,7 @@ public final class SignalServiceProtos {
          * <code>optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 3;</code>
          */
         private com.google.protobuf.SingleFieldBuilder<
-            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessageOrBuilder> 
+            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessageOrBuilder>
             getInfoChangeMessageFieldBuilder() {
           if (infoChangeMessageBuilder_ == null) {
             infoChangeMessageBuilder_ = new com.google.protobuf.SingleFieldBuilder<
@@ -12054,7 +12397,7 @@ public final class SignalServiceProtos {
          * <code>optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 4;</code>
          */
         private com.google.protobuf.SingleFieldBuilder<
-            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessageOrBuilder> 
+            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessageOrBuilder>
             getMemberChangeMessageFieldBuilder() {
           if (memberChangeMessageBuilder_ == null) {
             memberChangeMessageBuilder_ = new com.google.protobuf.SingleFieldBuilder<
@@ -12171,7 +12514,7 @@ public final class SignalServiceProtos {
          * <code>optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 5;</code>
          */
         private com.google.protobuf.SingleFieldBuilder<
-            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessageOrBuilder> 
+            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessageOrBuilder>
             getPromoteMessageFieldBuilder() {
           if (promoteMessageBuilder_ == null) {
             promoteMessageBuilder_ = new com.google.protobuf.SingleFieldBuilder<
@@ -12288,7 +12631,7 @@ public final class SignalServiceProtos {
          * <code>optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 6;</code>
          */
         private com.google.protobuf.SingleFieldBuilder<
-            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessageOrBuilder> 
+            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessageOrBuilder>
             getMemberLeftMessageFieldBuilder() {
           if (memberLeftMessageBuilder_ == null) {
             memberLeftMessageBuilder_ = new com.google.protobuf.SingleFieldBuilder<
@@ -12405,7 +12748,7 @@ public final class SignalServiceProtos {
          * <code>optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 7;</code>
          */
         private com.google.protobuf.SingleFieldBuilder<
-            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessageOrBuilder> 
+            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessageOrBuilder>
             getInviteResponseFieldBuilder() {
           if (inviteResponseBuilder_ == null) {
             inviteResponseBuilder_ = new com.google.protobuf.SingleFieldBuilder<
@@ -12522,7 +12865,7 @@ public final class SignalServiceProtos {
          * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 8;</code>
          */
         private com.google.protobuf.SingleFieldBuilder<
-            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessageOrBuilder> 
+            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessageOrBuilder>
             getDeleteMemberContentFieldBuilder() {
           if (deleteMemberContentBuilder_ == null) {
             deleteMemberContentBuilder_ = new com.google.protobuf.SingleFieldBuilder<
@@ -12779,7 +13122,7 @@ public final class SignalServiceProtos {
         if (ref instanceof java.lang.String) {
           return (java.lang.String) ref;
         } else {
-          com.google.protobuf.ByteString bs = 
+          com.google.protobuf.ByteString bs =
               (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
           if (bs.isValidUtf8()) {
@@ -12799,7 +13142,7 @@ public final class SignalServiceProtos {
           getGroupSessionIdBytes() {
         java.lang.Object ref = groupSessionId_;
         if (ref instanceof java.lang.String) {
-          com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString b =
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
           groupSessionId_ = b;
@@ -12834,7 +13177,7 @@ public final class SignalServiceProtos {
         if (ref instanceof java.lang.String) {
           return (java.lang.String) ref;
         } else {
-          com.google.protobuf.ByteString bs = 
+          com.google.protobuf.ByteString bs =
               (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
           if (bs.isValidUtf8()) {
@@ -12854,7 +13197,7 @@ public final class SignalServiceProtos {
           getNameBytes() {
         java.lang.Object ref = name_;
         if (ref instanceof java.lang.String) {
-          com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString b =
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
           name_ = b;
@@ -13193,19 +13536,19 @@ public final class SignalServiceProtos {
 
         public final boolean isInitialized() {
           if (!hasGroupSessionId()) {
-            
+
             return false;
           }
           if (!hasName()) {
-            
+
             return false;
           }
           if (!hasMemberAuthData()) {
-            
+
             return false;
           }
           if (!hasAdminSignature()) {
-            
+
             return false;
           }
           return true;
@@ -13271,7 +13614,7 @@ public final class SignalServiceProtos {
             getGroupSessionIdBytes() {
           java.lang.Object ref = groupSessionId_;
           if (ref instanceof String) {
-            com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString b =
                 com.google.protobuf.ByteString.copyFromUtf8(
                     (java.lang.String) ref);
             groupSessionId_ = b;
@@ -13369,7 +13712,7 @@ public final class SignalServiceProtos {
             getNameBytes() {
           java.lang.Object ref = name_;
           if (ref instanceof String) {
-            com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString b =
                 com.google.protobuf.ByteString.copyFromUtf8(
                     (java.lang.String) ref);
             name_ = b;
@@ -13988,7 +14331,7 @@ public final class SignalServiceProtos {
 
         public final boolean isInitialized() {
           if (!hasAdminSignature()) {
-            
+
             return false;
           }
           return true;
@@ -14524,7 +14867,7 @@ public final class SignalServiceProtos {
 
         public final boolean isInitialized() {
           if (!hasGroupIdentitySeed()) {
-            
+
             return false;
           }
           return true;
@@ -14927,7 +15270,7 @@ public final class SignalServiceProtos {
         if (ref instanceof java.lang.String) {
           return (java.lang.String) ref;
         } else {
-          com.google.protobuf.ByteString bs = 
+          com.google.protobuf.ByteString bs =
               (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
           if (bs.isValidUtf8()) {
@@ -14943,7 +15286,7 @@ public final class SignalServiceProtos {
           getUpdatedNameBytes() {
         java.lang.Object ref = updatedName_;
         if (ref instanceof java.lang.String) {
-          com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString b =
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
           updatedName_ = b;
@@ -15262,11 +15605,11 @@ public final class SignalServiceProtos {
 
         public final boolean isInitialized() {
           if (!hasType()) {
-            
+
             return false;
           }
           if (!hasAdminSignature()) {
-            
+
             return false;
           }
           return true;
@@ -15372,7 +15715,7 @@ public final class SignalServiceProtos {
             getUpdatedNameBytes() {
           java.lang.Object ref = updatedName_;
           if (ref instanceof String) {
-            com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString b =
                 com.google.protobuf.ByteString.copyFromUtf8(
                     (java.lang.String) ref);
             updatedName_ = b;
@@ -16129,11 +16472,11 @@ public final class SignalServiceProtos {
 
         public final boolean isInitialized() {
           if (!hasType()) {
-            
+
             return false;
           }
           if (!hasAdminSignature()) {
-            
+
             return false;
           }
           return true;
@@ -17038,7 +17381,7 @@ public final class SignalServiceProtos {
 
         public final boolean isInitialized() {
           if (!hasIsApproved()) {
-            
+
             return false;
           }
           return true;
@@ -22540,7 +22883,7 @@ public final class SignalServiceProtos {
       public final boolean isInitialized() {
         for (int i = 0; i < getAttachmentsCount(); i++) {
           if (!getAttachments(i).isInitialized()) {
-            
+
             return false;
           }
         }
@@ -22576,7 +22919,7 @@ public final class SignalServiceProtos {
         }
         if (hasGroupUpdateMessage()) {
           if (!getGroupUpdateMessage().isInitialized()) {
-            
+
             return false;
           }
         }
@@ -24087,7 +24430,7 @@ public final class SignalServiceProtos {
        * <code>optional .signalservice.DataMessage.GroupUpdateMessage groupUpdateMessage = 120;</code>
        */
       private com.google.protobuf.SingleFieldBuilder<
-          org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMessageOrBuilder> 
+          org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMessageOrBuilder>
           getGroupUpdateMessageFieldBuilder() {
         if (groupUpdateMessageBuilder_ == null) {
           groupUpdateMessageBuilder_ = new com.google.protobuf.SingleFieldBuilder<
@@ -24530,11 +24873,11 @@ public final class SignalServiceProtos {
 
       public final boolean isInitialized() {
         if (!hasPublicKey()) {
-          
+
           return false;
         }
         if (!hasLastEncryptionKey()) {
-          
+
           return false;
         }
         return true;
@@ -25212,7 +25555,7 @@ public final class SignalServiceProtos {
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
-        com.google.protobuf.ByteString bs = 
+        com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
@@ -25232,7 +25575,7 @@ public final class SignalServiceProtos {
         getNameBytes() {
       java.lang.Object ref = name_;
       if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
+        com.google.protobuf.ByteString b =
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
         name_ = b;
@@ -25520,15 +25863,15 @@ public final class SignalServiceProtos {
 
       public final boolean isInitialized() {
         if (!hasPublicKey()) {
-          
+
           return false;
         }
         if (!hasName()) {
-          
+
           return false;
         }
         if (!hasMemberPrivateKey()) {
-          
+
           return false;
         }
         return true;
@@ -25646,7 +25989,7 @@ public final class SignalServiceProtos {
           getNameBytes() {
         java.lang.Object ref = name_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString b =
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
           name_ = b;
@@ -26185,11 +26528,11 @@ public final class SignalServiceProtos {
 
       public final boolean isInitialized() {
         if (!hasPublicKey()) {
-          
+
           return false;
         }
         if (!hasEncryptedPrivateKey()) {
-          
+
           return false;
         }
         return true;
@@ -35670,7 +36013,7 @@ public final class SignalServiceProtos {
       "\002(\004\0223\n\006action\030\002 \002(\0162#.signalservice.Typi" +
       "ngMessage.Action\"\"\n\006Action\022\013\n\007STARTED\020\000\022" +
       "\013\n\007STOPPED\020\001\"2\n\rUnsendRequest\022\021\n\ttimesta",
-      "mp\030\001 \002(\004\022\016\n\006author\030\002 \002(\t\"\246\004\n\007Content\022/\n\013" +
+      "mp\030\001 \002(\004\022\016\n\006author\030\002 \002(\t\"\373\005\n\007Content\022/\n\013" +
       "dataMessage\030\001 \001(\0132\032.signalservice.DataMe" +
       "ssage\022/\n\013callMessage\030\003 \001(\0132\032.signalservi" +
       "ce.CallMessage\0225\n\016receiptMessage\030\005 \001(\0132\035" +
@@ -35854,7 +36197,7 @@ public final class SignalServiceProtos {
           internal_static_signalservice_Content_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_signalservice_Content_descriptor,
-              new java.lang.String[] { "DataMessage", "CallMessage", "ReceiptMessage", "TypingMessage", "ConfigurationMessage", "DataExtractionNotification", "UnsendRequest", "MessageRequestResponse", "SharedConfigMessage", });
+              new java.lang.String[] { "DataMessage", "CallMessage", "ReceiptMessage", "TypingMessage", "ConfigurationMessage", "DataExtractionNotification", "UnsendRequest", "MessageRequestResponse", "SharedConfigMessage", "ExpirationType", "ExpirationTimer", "LastDisappearingMessageChangeTimestamp", });
           internal_static_signalservice_KeyPair_descriptor =
             getDescriptor().getMessageTypes().get(4);
           internal_static_signalservice_KeyPair_fieldAccessorTable = new

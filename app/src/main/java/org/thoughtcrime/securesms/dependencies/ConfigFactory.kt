@@ -328,7 +328,7 @@ class ConfigFactory(
     override fun persist(forConfigObject: Config, timestamp: Long, forPublicKey: String?) {
         try {
             listeners.forEach { listener ->
-                listener.notifyUpdates(forConfigObject)
+                listener.notifyUpdates(forConfigObject, timestamp)
             }
             if (forConfigObject is ConfigBase && !forConfigObject.needsDump() || forConfigObject is GroupKeysConfig && !forConfigObject.needsDump()) {
                 Log.d("ConfigFactory", "Don't need to persist ${forConfigObject.javaClass} for $forPublicKey pubkey")

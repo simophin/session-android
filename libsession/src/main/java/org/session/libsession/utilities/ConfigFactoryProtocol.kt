@@ -46,5 +46,5 @@ interface ConfigFactoryProtocol {
 }
 
 interface ConfigFactoryUpdateListener {
-    fun notifyUpdates(forConfigObject: Config)
+    fun notifyUpdates(forConfigObject: Config, messageTimestamp: Long)
 }

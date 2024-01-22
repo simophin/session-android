@@ -24,7 +24,8 @@ val LocalPreviewMode = staticCompositionLocalOf { false }
 
 data class ExtraColors(
     val settingsBackground: Color,
-    val destructive: Color
+    val destructive: Color,
+    val prominentButtonColor: Color,
 )
 
 /**
@@ -38,6 +39,7 @@ fun AppTheme(
         ExtraColors(
             settingsBackground = getColorFromTheme(R.attr.colorSettingsBackground),
             destructive = Color(getColor(R.color.destructive)),
+            prominentButtonColor = getColorFromTheme(R.attr.prominentButtonColor),
         )
     }
 

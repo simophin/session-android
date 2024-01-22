@@ -116,6 +116,11 @@ object GroupUtil {
         return Hex.toStringCondensed(getDecodedGroupIDAsData(getDecodedGroupID(groupID)))
     }
 
+    @JvmStatic
+    fun addressToGroupSessionId(address: Address): String {
+        return doubleDecodeGroupId(address.toGroupString())
+    }
+
     fun createConfigMemberMap(
         members: Collection<String>,
         admins: Collection<String>
