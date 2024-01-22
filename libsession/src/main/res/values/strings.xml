@@ -97,6 +97,13 @@
     <string name="ConversationItem_group_member_you_promoted_multiple">You and <b>{number_others} others</b> were promoted to Admin.</string>
     <string name="ConversationItem_group_member_admin_cannot_remove">Admins cannot be removed</string>
 
+    <string name="ConversationItem_group_member_added_single_modal">New messages in this Group are shared with <b>{first}</b>.</string>
+    <string name="ConversationItem_group_member_added_two_modal">New messages in this Group are shared with <b>{first}</b> and <b>{second}</b>.</string>
+    <string name="ConversationItem_group_member_added_multiple_modal">New messages in this Group are shared with <b>{first}</b> and <b>{number_others} others</b>.</string>
+    <string name="ConversationItem_group_member_you_added_single_modal">New messages in this Group are shared with <b>{first}</b>.</string>
+    <string name="ConversationItem_group_member_you_added_two_modal">New messages in this Group are shared with <b>{first}</b> and <b>{second}</b>.</string>
+    <string name="ConversationItem_group_member_you_added_multiple_modal">New messages in this Group are shared with <b>{first}</b> and <b>{number_others} others</b>.</string>
+
     <!-- RecipientProvider -->
     <string name="RecipientProvider_unnamed_group">Unnamed group</string>
     <string name="InviteContacts_failed_single">Failed to invite <b>{user}</b> to <b>{group}</b></string>

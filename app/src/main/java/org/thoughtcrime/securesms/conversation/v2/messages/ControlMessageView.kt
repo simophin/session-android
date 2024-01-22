@@ -19,6 +19,7 @@ import org.thoughtcrime.securesms.conversation.disappearingmessages.Disappearing
 import org.thoughtcrime.securesms.conversation.disappearingmessages.expiryMode
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
+import org.thoughtcrime.securesms.showSessionDialog
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -45,6 +46,8 @@ class ControlMessageView : LinearLayout {
         binding.expirationTimerView.isGone = true
         binding.followSetting.isGone = true
         var messageBody: CharSequence = message.getDisplayBody(context)
+        val messageInfo = message.getModalBody(context)
+
         binding.root.contentDescription = null
         when {
             message.isExpirationTimerUpdate -> {
@@ -90,6 +93,15 @@ class ControlMessageView : LinearLayout {
         }
 
         binding.textView.text = messageBody
+        if (messageInfo == null) {
+            binding.textView.setOnClickListener(null)
+        } else {
+            binding.textView.setOnClickListener {
+                context.showSessionDialog {
+                    text(messageInfo)
+                }
+            }
+        }
     }
 
     fun recycle() {

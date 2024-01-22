@@ -42,11 +42,14 @@
     <TextView
         android:id="@+id/textView"
         android:contentDescription="@string/AccessibilityId_control_message"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textColor="?android:textColorPrimary"
         android:textSize="@dimen/very_small_font_size"
+        android:drawableLeft="@drawable/ic_question_mark"
+        android:drawablePadding="@dimen/small_spacing"
+        app:drawableTint="?android:textColor"
         tools:text="@string/MessageRecord_you_disabled_disappearing_messages" />
 
     <TextView

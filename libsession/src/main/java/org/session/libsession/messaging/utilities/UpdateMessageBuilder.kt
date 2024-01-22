@@ -1,8 +1,8 @@
 package org.session.libsession.messaging.utilities
 
 import android.content.Context
-import com.squareup.phrase.Phrase
 import android.util.Log
+import com.squareup.phrase.Phrase
 import org.session.libsession.R
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.calls.CallMessageType
@@ -248,4 +248,50 @@ object UpdateMessageBuilder {
         }.let {
             context.getString(it, storage.getContactWithSessionID(sender)?.displayName(Contact.ContactContext.REGULAR) ?: sender)
         }
+
+    fun buildGroupModalMessage(
+        context: Context,
+        updateMessageData: UpdateMessageData,
+        serialize: String
+    ): CharSequence? {
+        return updateMessageData.kind?.takeIf {
+            it is UpdateMessageData.Kind.GroupMemberUpdated
+                    && it.type == UpdateMessageData.MemberUpdateType.ADDED
+        }?.let { kind ->
+            val members = (kind as UpdateMessageData.Kind.GroupMemberUpdated).sessionIds
+            val userPublicKey = storage.getUserPublicKey()!!
+            val number = members.size
+            val containsUser = members.contains(userPublicKey)
+            when {
+                number == 1 && containsUser -> Phrase.from(context,
+                    R.string.ConversationItem_group_member_you_added_single_modal)
+                    .put(FIRST, context.youOrSender(kind.sessionIds.first()))
+                    .format()
+                number == 1 -> Phrase.from(context,
+                    R.string.ConversationItem_group_member_added_single_modal)
+                    .put(FIRST, context.youOrSender(kind.sessionIds.first()))
+                    .format()
+                number == 2 && containsUser -> Phrase.from(context,
+                    R.string.ConversationItem_group_member_you_added_two_modal)
+                    .put(FIRST, context.youOrSender(kind.sessionIds.first()))
+                    .put(SECOND, context.youOrSender(kind.sessionIds.last()))
+                    .format()
+                number == 2 -> Phrase.from(context,
+                    R.string.ConversationItem_group_member_added_two_modal)
+                    .put(FIRST, context.youOrSender(kind.sessionIds.first()))
+                    .put(SECOND, context.youOrSender(kind.sessionIds.last()))
+                    .format()
+                containsUser -> Phrase.from(context,
+                    R.string.ConversationItem_group_member_you_added_multiple_modal)
+                    .put(FIRST, context.youOrSender(kind.sessionIds.first()))
+                    .put(NUM_OTHERS, kind.sessionIds.size - 1)
+                    .format()
+                else -> Phrase.from(context,
+                    R.string.ConversationItem_group_member_added_multiple_modal)
+                    .put(FIRST, context.youOrSender(kind.sessionIds.first()))
+                    .put(NUM_OTHERS, kind.sessionIds.size - 1)
+                    .format()
+            }
+        }
+    }
 }

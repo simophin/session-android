@@ -114,6 +114,19 @@ public abstract class MessageRecord extends DisplayRecord {
   }
 
   @Override
+  public SpannableString getModalBody(@NonNull Context context) {
+    if (isGroupUpdateMessage()) {
+      UpdateMessageData updateMessageData = UpdateMessageData.Companion.fromJSON(getBody());
+      if (updateMessageData.getKind() instanceof UpdateMessageData.Kind.GroupMemberAdded) {
+        CharSequence updateMessage = UpdateMessageBuilder.INSTANCE.buildGroupModalMessage(context, updateMessageData, getIndividualRecipient().getAddress().serialize());
+        if (updateMessage == null) return null;
+        return new SpannableString(updateMessage);
+      }
+    }
+    return null;
+  }
+
+  @Override
   public SpannableString getDisplayBody(@NonNull Context context) {
     if (isGroupUpdateMessage()) {
       UpdateMessageData updateMessageData = UpdateMessageData.Companion.fromJSON(getBody());
