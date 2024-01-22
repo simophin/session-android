@@ -240,7 +240,8 @@ class ClosedGroupPoller(private val scope: CoroutineScope,
             if (ENABLE_LOGGING) Log.d("ClosedGroupPoller", "Merged $hash for info on ${closedGroupSessionId.hexString()}")
         }
         if (messages.isNotEmpty()) {
-            MessagingModuleConfiguration.shared.storage.notifyConfigUpdates(infoConfig)
+            val lastTimestamp = messages.maxOf { it.timestamp }
+            MessagingModuleConfiguration.shared.storage.notifyConfigUpdates(infoConfig, lastTimestamp)
         }
     }
 

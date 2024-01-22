@@ -3,7 +3,6 @@ package org.thoughtcrime.securesms.ui
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
@@ -70,6 +69,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import network.loki.messenger.R
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsession.utilities.runIf
 import org.thoughtcrime.securesms.components.ProfilePictureView

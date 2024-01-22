@@ -59,7 +59,6 @@
     <string name="AccessibilityId_create_group">Create group</string>
     <string name="AccessibilityId_join_community">Join community button</string>
     <!-- Join community pop up -->
-    <string name="AccessibilityId_community_input_box">Community input</string>
     <string name="AccessibilityId_join_community_button">Join community button</string>
     <!--  Conversation options (three dots menu)-->
     <string name="AccessibilityId_all_media">All media</string>

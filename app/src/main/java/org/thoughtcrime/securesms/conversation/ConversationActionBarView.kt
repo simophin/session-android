@@ -3,6 +3,7 @@ package org.thoughtcrime.securesms.conversation
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.annotation.DimenRes
@@ -24,6 +25,7 @@ import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.conversation.v2.utilities.MentionManagerUtilities
 import org.thoughtcrime.securesms.database.GroupDatabase
 import org.thoughtcrime.securesms.database.LokiAPIDatabase
+import org.thoughtcrime.securesms.database.Storage
 import org.thoughtcrime.securesms.util.DateUtils
 import java.util.Locale
 import javax.inject.Inject
@@ -36,6 +38,7 @@ class ConversationActionBarView : LinearLayout {
 
     @Inject lateinit var lokiApiDb: LokiAPIDatabase
     @Inject lateinit var groupDb: GroupDatabase
+    @Inject lateinit var storage: Storage
 
     var delegate: ConversationActionBarDelegate? = null
 
@@ -48,6 +51,9 @@ class ConversationActionBarView : LinearLayout {
     constructor(context: Context) : super(context) { initialize() }
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) { initialize() }
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) { initialize() }
+
+    val profilePictureView: View
+        get() = binding.profilePictureView
 
     private fun initialize() {
         binding = ViewConversationActionBarBinding.inflate(LayoutInflater.from(context), this, true)
@@ -143,7 +149,11 @@ class ConversationActionBarView : LinearLayout {
                 val userCount = openGroup?.let { lokiApiDb.getUserCount(it.room, it.server) } ?: 0
                 context.getString(R.string.ConversationActivity_active_member_count, userCount)
             } else {
-                val userCount = groupDb.getGroupMemberAddresses(recipient.address.toGroupString(), true).size
+                val userCount = if (recipient.isClosedGroupRecipient) {
+                    storage.getMembers(recipient.address.serialize()).size
+                } else { // legacy closed groups
+                    groupDb.getGroupMemberAddresses(recipient.address.toGroupString(), true).size
+                }
                 context.getString(R.string.ConversationActivity_member_count, userCount)
             }
             settings.add(

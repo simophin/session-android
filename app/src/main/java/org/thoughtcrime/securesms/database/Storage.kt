@@ -1483,19 +1483,37 @@ open class Storage(
         val userPublicKey = getUserPublicKey()!!
         val updateData = UpdateMessageData.buildGroupUpdate(message)?.toJSON() ?: return
 
+        val recipient = Recipient.from(context, fromSerialized(closedGroup.hexString()), false)
+        val threadDb = DatabaseComponent.get(context).threadDatabase()
+        val threadID = threadDb.getThreadIdIfExistsFor(recipient)
+        val expirationConfig = getExpirationConfiguration(threadID)
+        val expiryMode = expirationConfig?.expiryMode
+        val expiresInMillis = expiryMode?.expiryMillis ?: 0
+        val expireStartedAt = if (expiryMode is ExpiryMode.AfterSend) sentTimestamp else 0
+
+
         if (senderPublicKey == null || senderPublicKey == userPublicKey) {
-            val recipient = Recipient.from(context, fromSerialized(closedGroup.hexString()), false)
-            val infoMessage = OutgoingGroupMediaMessage(recipient, updateData, closedGroup.hexString(), null, sentTimestamp, 0, true, null, listOf(), listOf())
+            val infoMessage = OutgoingGroupMediaMessage(
+                recipient,
+                updateData,
+                closedGroup.hexString(),
+                null,
+                sentTimestamp,
+                expiresInMillis,
+                expireStartedAt,
+                true,
+                null,
+                listOf(),
+                listOf()
+            )
             val mmsDB = DatabaseComponent.get(context).mmsDatabase()
             val mmsSmsDB = DatabaseComponent.get(context).mmsSmsDatabase()
             if (mmsSmsDB.getMessageFor(sentTimestamp, userPublicKey) != null) return
-            val threadDb = DatabaseComponent.get(context).threadDatabase()
-            val threadID = threadDb.getThreadIdIfExistsFor(recipient)
             val infoMessageID = mmsDB.insertMessageOutbox(infoMessage, threadID, false, null, runThreadUpdate = true)
             mmsDB.markAsSent(infoMessageID, true)
         } else {
             val group = SignalServiceGroup(Hex.fromStringCondensed(closedGroup.hexString()), SignalServiceGroup.GroupType.SIGNAL)
-            val m = IncomingTextMessage(fromSerialized(senderPublicKey), 1, sentTimestamp, "", Optional.of(group), 0, true, false)
+            val m = IncomingTextMessage(fromSerialized(senderPublicKey), 1, sentTimestamp, "", Optional.of(group), expiresInMillis, expireStartedAt, true, false)
             val infoMessage = IncomingGroupMessage(m, updateData, true)
             val smsDB = DatabaseComponent.get(context).smsDatabase()
             smsDB.insertMessageInbox(infoMessage,  true)

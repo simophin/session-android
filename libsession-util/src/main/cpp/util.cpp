@@ -197,17 +197,6 @@ namespace util {
         return group_member;
     }
 
-    jobject build_string_stack(JNIEnv* env, std::vector<std::string> to_add) {
-        jclass stack_class = env->FindClass("java/util/Stack");
-        jmethodID constructor = env->GetMethodID(stack_class,"<init>", "()V");
-        jmethodID add = env->GetMethodID(stack_class, "push", "(Ljava/lang/Object;)Ljava/lang/Object;");
-        jobject our_stack = env->NewObject(stack_class, constructor);
-        for (std::basic_string_view<char> string: to_add) {
-            env->CallObjectMethod(our_stack, add, env->NewStringUTF(string.data()));
-        }
-        return our_stack;
-    }
-
     jobject deserialize_swarm_auth(JNIEnv *env, session::config::groups::Keys::swarm_auth auth) {
         jclass swarm_auth_class = env->FindClass("network/loki/messenger/libsession_util/GroupKeysConfig$SwarmAuth");
         jmethodID constructor = env->GetMethodID(swarm_auth_class, "<init>", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");

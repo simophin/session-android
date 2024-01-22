@@ -11886,37 +11886,37 @@ public final class SignalServiceProtos {
         public final boolean isInitialized() {
           if (hasInviteMessage()) {
             if (!getInviteMessage().isInitialized()) {
-
+              
               return false;
             }
           }
           if (hasDeleteMessage()) {
             if (!getDeleteMessage().isInitialized()) {
-
+              
               return false;
             }
           }
           if (hasInfoChangeMessage()) {
             if (!getInfoChangeMessage().isInitialized()) {
-
+              
               return false;
             }
           }
           if (hasMemberChangeMessage()) {
             if (!getMemberChangeMessage().isInitialized()) {
-
+              
               return false;
             }
           }
           if (hasPromoteMessage()) {
             if (!getPromoteMessage().isInitialized()) {
-
+              
               return false;
             }
           }
           if (hasInviteResponse()) {
             if (!getInviteResponse().isInitialized()) {
-
+              
               return false;
             }
           }
@@ -12046,7 +12046,7 @@ public final class SignalServiceProtos {
          * <code>optional .signalservice.DataMessage.GroupUpdateInviteMessage inviteMessage = 1;</code>
          */
         private com.google.protobuf.SingleFieldBuilder<
-            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessageOrBuilder>
+            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessageOrBuilder> 
             getInviteMessageFieldBuilder() {
           if (inviteMessageBuilder_ == null) {
             inviteMessageBuilder_ = new com.google.protobuf.SingleFieldBuilder<
@@ -12163,7 +12163,7 @@ public final class SignalServiceProtos {
          * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMessage deleteMessage = 2;</code>
          */
         private com.google.protobuf.SingleFieldBuilder<
-            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessageOrBuilder>
+            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessageOrBuilder> 
             getDeleteMessageFieldBuilder() {
           if (deleteMessageBuilder_ == null) {
             deleteMessageBuilder_ = new com.google.protobuf.SingleFieldBuilder<
@@ -12280,7 +12280,7 @@ public final class SignalServiceProtos {
          * <code>optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 3;</code>
          */
         private com.google.protobuf.SingleFieldBuilder<
-            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessageOrBuilder>
+            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessageOrBuilder> 
             getInfoChangeMessageFieldBuilder() {
           if (infoChangeMessageBuilder_ == null) {
             infoChangeMessageBuilder_ = new com.google.protobuf.SingleFieldBuilder<
@@ -12397,7 +12397,7 @@ public final class SignalServiceProtos {
          * <code>optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 4;</code>
          */
         private com.google.protobuf.SingleFieldBuilder<
-            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessageOrBuilder>
+            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessageOrBuilder> 
             getMemberChangeMessageFieldBuilder() {
           if (memberChangeMessageBuilder_ == null) {
             memberChangeMessageBuilder_ = new com.google.protobuf.SingleFieldBuilder<
@@ -12514,7 +12514,7 @@ public final class SignalServiceProtos {
          * <code>optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 5;</code>
          */
         private com.google.protobuf.SingleFieldBuilder<
-            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessageOrBuilder>
+            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessageOrBuilder> 
             getPromoteMessageFieldBuilder() {
           if (promoteMessageBuilder_ == null) {
             promoteMessageBuilder_ = new com.google.protobuf.SingleFieldBuilder<
@@ -12631,7 +12631,7 @@ public final class SignalServiceProtos {
          * <code>optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 6;</code>
          */
         private com.google.protobuf.SingleFieldBuilder<
-            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessageOrBuilder>
+            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessageOrBuilder> 
             getMemberLeftMessageFieldBuilder() {
           if (memberLeftMessageBuilder_ == null) {
             memberLeftMessageBuilder_ = new com.google.protobuf.SingleFieldBuilder<
@@ -12748,7 +12748,7 @@ public final class SignalServiceProtos {
          * <code>optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 7;</code>
          */
         private com.google.protobuf.SingleFieldBuilder<
-            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessageOrBuilder>
+            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessageOrBuilder> 
             getInviteResponseFieldBuilder() {
           if (inviteResponseBuilder_ == null) {
             inviteResponseBuilder_ = new com.google.protobuf.SingleFieldBuilder<
@@ -12865,7 +12865,7 @@ public final class SignalServiceProtos {
          * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 8;</code>
          */
         private com.google.protobuf.SingleFieldBuilder<
-            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessageOrBuilder>
+            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessageOrBuilder> 
             getDeleteMemberContentFieldBuilder() {
           if (deleteMemberContentBuilder_ == null) {
             deleteMemberContentBuilder_ = new com.google.protobuf.SingleFieldBuilder<
@@ -13122,7 +13122,7 @@ public final class SignalServiceProtos {
         if (ref instanceof java.lang.String) {
           return (java.lang.String) ref;
         } else {
-          com.google.protobuf.ByteString bs =
+          com.google.protobuf.ByteString bs = 
               (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
           if (bs.isValidUtf8()) {
@@ -13142,7 +13142,7 @@ public final class SignalServiceProtos {
           getGroupSessionIdBytes() {
         java.lang.Object ref = groupSessionId_;
         if (ref instanceof java.lang.String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
           groupSessionId_ = b;
@@ -13177,7 +13177,7 @@ public final class SignalServiceProtos {
         if (ref instanceof java.lang.String) {
           return (java.lang.String) ref;
         } else {
-          com.google.protobuf.ByteString bs =
+          com.google.protobuf.ByteString bs = 
               (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
           if (bs.isValidUtf8()) {
@@ -13197,7 +13197,7 @@ public final class SignalServiceProtos {
           getNameBytes() {
         java.lang.Object ref = name_;
         if (ref instanceof java.lang.String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
           name_ = b;
@@ -13536,19 +13536,19 @@ public final class SignalServiceProtos {
 
         public final boolean isInitialized() {
           if (!hasGroupSessionId()) {
-
+            
             return false;
           }
           if (!hasName()) {
-
+            
             return false;
           }
           if (!hasMemberAuthData()) {
-
+            
             return false;
           }
           if (!hasAdminSignature()) {
-
+            
             return false;
           }
           return true;
@@ -13614,7 +13614,7 @@ public final class SignalServiceProtos {
             getGroupSessionIdBytes() {
           java.lang.Object ref = groupSessionId_;
           if (ref instanceof String) {
-            com.google.protobuf.ByteString b =
+            com.google.protobuf.ByteString b = 
                 com.google.protobuf.ByteString.copyFromUtf8(
                     (java.lang.String) ref);
             groupSessionId_ = b;
@@ -13712,7 +13712,7 @@ public final class SignalServiceProtos {
             getNameBytes() {
           java.lang.Object ref = name_;
           if (ref instanceof String) {
-            com.google.protobuf.ByteString b =
+            com.google.protobuf.ByteString b = 
                 com.google.protobuf.ByteString.copyFromUtf8(
                     (java.lang.String) ref);
             name_ = b;
@@ -14331,7 +14331,7 @@ public final class SignalServiceProtos {
 
         public final boolean isInitialized() {
           if (!hasAdminSignature()) {
-
+            
             return false;
           }
           return true;
@@ -14867,7 +14867,7 @@ public final class SignalServiceProtos {
 
         public final boolean isInitialized() {
           if (!hasGroupIdentitySeed()) {
-
+            
             return false;
           }
           return true;
@@ -15270,7 +15270,7 @@ public final class SignalServiceProtos {
         if (ref instanceof java.lang.String) {
           return (java.lang.String) ref;
         } else {
-          com.google.protobuf.ByteString bs =
+          com.google.protobuf.ByteString bs = 
               (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
           if (bs.isValidUtf8()) {
@@ -15286,7 +15286,7 @@ public final class SignalServiceProtos {
           getUpdatedNameBytes() {
         java.lang.Object ref = updatedName_;
         if (ref instanceof java.lang.String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
           updatedName_ = b;
@@ -15605,11 +15605,11 @@ public final class SignalServiceProtos {
 
         public final boolean isInitialized() {
           if (!hasType()) {
-
+            
             return false;
           }
           if (!hasAdminSignature()) {
-
+            
             return false;
           }
           return true;
@@ -15715,7 +15715,7 @@ public final class SignalServiceProtos {
             getUpdatedNameBytes() {
           java.lang.Object ref = updatedName_;
           if (ref instanceof String) {
-            com.google.protobuf.ByteString b =
+            com.google.protobuf.ByteString b = 
                 com.google.protobuf.ByteString.copyFromUtf8(
                     (java.lang.String) ref);
             updatedName_ = b;
@@ -16472,11 +16472,11 @@ public final class SignalServiceProtos {
 
         public final boolean isInitialized() {
           if (!hasType()) {
-
+            
             return false;
           }
           if (!hasAdminSignature()) {
-
+            
             return false;
           }
           return true;
@@ -17381,7 +17381,7 @@ public final class SignalServiceProtos {
 
         public final boolean isInitialized() {
           if (!hasIsApproved()) {
-
+            
             return false;
           }
           return true;
@@ -22883,7 +22883,7 @@ public final class SignalServiceProtos {
       public final boolean isInitialized() {
         for (int i = 0; i < getAttachmentsCount(); i++) {
           if (!getAttachments(i).isInitialized()) {
-
+            
             return false;
           }
         }
@@ -22919,7 +22919,7 @@ public final class SignalServiceProtos {
         }
         if (hasGroupUpdateMessage()) {
           if (!getGroupUpdateMessage().isInitialized()) {
-
+            
             return false;
           }
         }
@@ -24430,7 +24430,7 @@ public final class SignalServiceProtos {
        * <code>optional .signalservice.DataMessage.GroupUpdateMessage groupUpdateMessage = 120;</code>
        */
       private com.google.protobuf.SingleFieldBuilder<
-          org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMessageOrBuilder>
+          org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMessageOrBuilder> 
           getGroupUpdateMessageFieldBuilder() {
         if (groupUpdateMessageBuilder_ == null) {
           groupUpdateMessageBuilder_ = new com.google.protobuf.SingleFieldBuilder<
@@ -24873,11 +24873,11 @@ public final class SignalServiceProtos {
 
       public final boolean isInitialized() {
         if (!hasPublicKey()) {
-
+          
           return false;
         }
         if (!hasLastEncryptionKey()) {
-
+          
           return false;
         }
         return true;
@@ -25555,7 +25555,7 @@ public final class SignalServiceProtos {
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
-        com.google.protobuf.ByteString bs =
+        com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
@@ -25575,7 +25575,7 @@ public final class SignalServiceProtos {
         getNameBytes() {
       java.lang.Object ref = name_;
       if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
         name_ = b;
@@ -25863,15 +25863,15 @@ public final class SignalServiceProtos {
 
       public final boolean isInitialized() {
         if (!hasPublicKey()) {
-
+          
           return false;
         }
         if (!hasName()) {
-
+          
           return false;
         }
         if (!hasMemberPrivateKey()) {
-
+          
           return false;
         }
         return true;
@@ -25989,7 +25989,7 @@ public final class SignalServiceProtos {
           getNameBytes() {
         java.lang.Object ref = name_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
           name_ = b;
@@ -26528,11 +26528,11 @@ public final class SignalServiceProtos {
 
       public final boolean isInitialized() {
         if (!hasPublicKey()) {
-
+          
           return false;
         }
         if (!hasEncryptedPrivateKey()) {
-
+          
           return false;
         }
         return true;
@@ -36027,147 +36027,152 @@ public final class SignalServiceProtos {
       "t\022E\n\026messageRequestResponse\030\n \001(\0132%.sign" +
       "alservice.MessageRequestResponse\022?\n\023shar" +
       "edConfigMessage\030\013 \001(\0132\".signalservice.Sh" +
-      "aredConfigMessage\"0\n\007KeyPair\022\021\n\tpublicKe" +
-      "y\030\001 \002(\014\022\022\n\nprivateKey\030\002 \002(\014\"\226\001\n\032DataExtr" +
-      "actionNotification\022<\n\004type\030\001 \002(\0162..signa" +
-      "lservice.DataExtractionNotification.Type" +
-      "\022\021\n\ttimestamp\030\002 \001(\004\"\'\n\004Type\022\016\n\nSCREENSHO" +
-      "T\020\001\022\017\n\013MEDIA_SAVED\020\002\"\361\033\n\013DataMessage\022\014\n\004",
-      "body\030\001 \001(\t\0225\n\013attachments\030\002 \003(\0132 .signal" +
+      "aredConfigMessage\022=\n\016expirationType\030\014 \001(" +
+      "\0162%.signalservice.Content.ExpirationType" +
+      "\022\027\n\017expirationTimer\030\r \001(\r\022.\n&lastDisappe" +
+      "aringMessageChangeTimestamp\030\016 \001(\004\"K\n\016Exp" +
+      "irationType\022\013\n\007UNKNOWN\020\000\022\025\n\021DELETE_AFTER" +
+      "_READ\020\001\022\025\n\021DELETE_AFTER_SEND\020\002\"0\n\007KeyPai",
+      "r\022\021\n\tpublicKey\030\001 \002(\014\022\022\n\nprivateKey\030\002 \002(\014" +
+      "\"\226\001\n\032DataExtractionNotification\022<\n\004type\030" +
+      "\001 \002(\0162..signalservice.DataExtractionNoti" +
+      "fication.Type\022\021\n\ttimestamp\030\002 \001(\004\"\'\n\004Type" +
+      "\022\016\n\nSCREENSHOT\020\001\022\017\n\013MEDIA_SAVED\020\002\"\361\033\n\013Da" +
+      "taMessage\022\014\n\004body\030\001 \001(\t\0225\n\013attachments\030\002" +
+      " \003(\0132 .signalservice.AttachmentPointer\022\r" +
+      "\n\005flags\030\004 \001(\r\022\023\n\013expireTimer\030\005 \001(\r\022\022\n\npr" +
+      "ofileKey\030\006 \001(\014\022\021\n\ttimestamp\030\007 \001(\004\022/\n\005quo" +
+      "te\030\010 \001(\0132 .signalservice.DataMessage.Quo",
+      "te\0223\n\007preview\030\n \003(\0132\".signalservice.Data" +
+      "Message.Preview\0225\n\010reaction\030\013 \001(\0132#.sign" +
+      "alservice.DataMessage.Reaction\0227\n\007profil" +
+      "e\030e \001(\0132&.signalservice.DataMessage.Loki" +
+      "Profile\022K\n\023openGroupInvitation\030f \001(\0132..s" +
+      "ignalservice.DataMessage.OpenGroupInvita" +
+      "tion\022W\n\031closedGroupControlMessage\030h \001(\0132" +
+      "4.signalservice.DataMessage.ClosedGroupC" +
+      "ontrolMessage\022\022\n\nsyncTarget\030i \001(\t\022&\n\036blo" +
+      "cksCommunityMessageRequests\030j \001(\010\022I\n\022gro",
+      "upUpdateMessage\030x \001(\0132-.signalservice.Da" +
+      "taMessage.GroupUpdateMessage\032\225\002\n\005Quote\022\n" +
+      "\n\002id\030\001 \002(\004\022\016\n\006author\030\002 \002(\t\022\014\n\004text\030\003 \001(\t" +
+      "\022F\n\013attachments\030\004 \003(\01321.signalservice.Da" +
+      "taMessage.Quote.QuotedAttachment\032\231\001\n\020Quo" +
+      "tedAttachment\022\023\n\013contentType\030\001 \001(\t\022\020\n\010fi" +
+      "leName\030\002 \001(\t\0223\n\tthumbnail\030\003 \001(\0132 .signal" +
       "service.AttachmentPointer\022\r\n\005flags\030\004 \001(\r" +
-      "\022\023\n\013expireTimer\030\005 \001(\r\022\022\n\nprofileKey\030\006 \001(" +
-      "\014\022\021\n\ttimestamp\030\007 \001(\004\022/\n\005quote\030\010 \001(\0132 .si" +
-      "gnalservice.DataMessage.Quote\0223\n\007preview" +
-      "\030\n \003(\0132\".signalservice.DataMessage.Previ" +
-      "ew\0225\n\010reaction\030\013 \001(\0132#.signalservice.Dat" +
-      "aMessage.Reaction\0227\n\007profile\030e \001(\0132&.sig" +
-      "nalservice.DataMessage.LokiProfile\022K\n\023op" +
-      "enGroupInvitation\030f \001(\0132..signalservice.",
-      "DataMessage.OpenGroupInvitation\022W\n\031close" +
-      "dGroupControlMessage\030h \001(\01324.signalservi" +
-      "ce.DataMessage.ClosedGroupControlMessage" +
-      "\022\022\n\nsyncTarget\030i \001(\t\022&\n\036blocksCommunityM" +
-      "essageRequests\030j \001(\010\022I\n\022groupUpdateMessa" +
-      "ge\030x \001(\0132-.signalservice.DataMessage.Gro" +
-      "upUpdateMessage\032\225\002\n\005Quote\022\n\n\002id\030\001 \002(\004\022\016\n" +
-      "\006author\030\002 \002(\t\022\014\n\004text\030\003 \001(\t\022F\n\013attachmen" +
-      "ts\030\004 \003(\01321.signalservice.DataMessage.Quo" +
-      "te.QuotedAttachment\032\231\001\n\020QuotedAttachment",
-      "\022\023\n\013contentType\030\001 \001(\t\022\020\n\010fileName\030\002 \001(\t\022" +
-      "3\n\tthumbnail\030\003 \001(\0132 .signalservice.Attac" +
-      "hmentPointer\022\r\n\005flags\030\004 \001(\r\"\032\n\005Flags\022\021\n\r" +
-      "VOICE_MESSAGE\020\001\032V\n\007Preview\022\013\n\003url\030\001 \002(\t\022" +
-      "\r\n\005title\030\002 \001(\t\022/\n\005image\030\003 \001(\0132 .signalse" +
-      "rvice.AttachmentPointer\032:\n\013LokiProfile\022\023" +
-      "\n\013displayName\030\001 \001(\t\022\026\n\016profilePicture\030\002 " +
-      "\001(\t\0320\n\023OpenGroupInvitation\022\013\n\003url\030\001 \002(\t\022" +
-      "\014\n\004name\030\003 \002(\t\032\256\005\n\022GroupUpdateMessage\022J\n\r" +
-      "inviteMessage\030\001 \001(\01323.signalservice.Data",
-      "Message.GroupUpdateInviteMessage\022J\n\rdele" +
-      "teMessage\030\002 \001(\01323.signalservice.DataMess" +
-      "age.GroupUpdateDeleteMessage\022R\n\021infoChan" +
-      "geMessage\030\003 \001(\01327.signalservice.DataMess" +
-      "age.GroupUpdateInfoChangeMessage\022V\n\023memb" +
-      "erChangeMessage\030\004 \001(\01329.signalservice.Da" +
-      "taMessage.GroupUpdateMemberChangeMessage" +
-      "\022L\n\016promoteMessage\030\005 \001(\01324.signalservice" +
-      ".DataMessage.GroupUpdatePromoteMessage\022R" +
-      "\n\021memberLeftMessage\030\006 \001(\01327.signalservic",
-      "e.DataMessage.GroupUpdateMemberLeftMessa" +
-      "ge\022S\n\016inviteResponse\030\007 \001(\0132;.signalservi" +
-      "ce.DataMessage.GroupUpdateInviteResponse" +
-      "Message\022]\n\023deleteMemberContent\030\010 \001(\0132@.s" +
-      "ignalservice.DataMessage.GroupUpdateDele" +
-      "teMemberContentMessage\032p\n\030GroupUpdateInv" +
-      "iteMessage\022\026\n\016groupSessionId\030\001 \002(\t\022\014\n\004na" +
-      "me\030\002 \002(\t\022\026\n\016memberAuthData\030\003 \002(\014\022\026\n\016admi" +
-      "nSignature\030\004 \002(\014\032L\n\030GroupUpdateDeleteMes" +
-      "sage\022\030\n\020memberSessionIds\030\001 \003(\t\022\026\n\016adminS",
-      "ignature\030\002 \002(\014\0326\n\031GroupUpdatePromoteMess" +
-      "age\022\031\n\021groupIdentitySeed\030\001 \002(\014\032\353\001\n\034Group" +
-      "UpdateInfoChangeMessage\022J\n\004type\030\001 \002(\0162<." +
-      "signalservice.DataMessage.GroupUpdateInf" +
-      "oChangeMessage.Type\022\023\n\013updatedName\030\002 \001(\t" +
-      "\022\031\n\021updatedExpiration\030\003 \001(\r\022\026\n\016adminSign" +
-      "ature\030\004 \002(\014\"7\n\004Type\022\010\n\004NAME\020\001\022\n\n\006AVATAR\020" +
-      "\002\022\031\n\025DISAPPEARING_MESSAGES\020\003\032\316\001\n\036GroupUp" +
-      "dateMemberChangeMessage\022L\n\004type\030\001 \002(\0162>." +
-      "signalservice.DataMessage.GroupUpdateMem",
-      "berChangeMessage.Type\022\030\n\020memberSessionId" +
-      "s\030\002 \003(\t\022\026\n\016adminSignature\030\003 \002(\014\",\n\004Type\022" +
-      "\t\n\005ADDED\020\001\022\013\n\007REMOVED\020\002\022\014\n\010PROMOTED\020\003\032\036\n" +
-      "\034GroupUpdateMemberLeftMessage\0326\n GroupUp" +
-      "dateInviteResponseMessage\022\022\n\nisApproved\030" +
-      "\001 \002(\010\032p\n%GroupUpdateDeleteMemberContentM" +
-      "essage\022\030\n\020memberSessionIds\030\001 \003(\t\022\025\n\rmess" +
-      "ageHashes\030\002 \003(\t\022\026\n\016adminSignature\030\003 \001(\014\032" +
-      "\203\005\n\031ClosedGroupControlMessage\022G\n\004type\030\001 " +
-      "\002(\01629.signalservice.DataMessage.ClosedGr",
-      "oupControlMessage.Type\022\021\n\tpublicKey\030\002 \001(" +
-      "\014\022\014\n\004name\030\003 \001(\t\0221\n\021encryptionKeyPair\030\004 \001" +
-      "(\0132\026.signalservice.KeyPair\022\017\n\007members\030\005 " +
-      "\003(\014\022\016\n\006admins\030\006 \003(\014\022U\n\010wrappers\030\007 \003(\0132C." +
-      "signalservice.DataMessage.ClosedGroupCon" +
-      "trolMessage.KeyPairWrapper\022\027\n\017expiration" +
-      "Timer\030\010 \001(\r\022\030\n\020memberPrivateKey\030\t \001(\014\022\022\n" +
-      "\nprivateKey\030\n \001(\014\032=\n\016KeyPairWrapper\022\021\n\tp" +
-      "ublicKey\030\001 \002(\014\022\030\n\020encryptedKeyPair\030\002 \002(\014" +
-      "\"\312\001\n\004Type\022\007\n\003NEW\020\001\022\027\n\023ENCRYPTION_KEY_PAI",
-      "R\020\003\022\017\n\013NAME_CHANGE\020\004\022\021\n\rMEMBERS_ADDED\020\005\022" +
-      "\023\n\017MEMBERS_REMOVED\020\006\022\017\n\013MEMBER_LEFT\020\007\022\n\n" +
-      "\006INVITE\020\t\022\013\n\007PROMOTE\020\n\022\020\n\014DELETE_GROUP\020\013" +
-      "\022\023\n\017DELETE_MESSAGES\020\014\022\026\n\022DELETE_ATTACHME" +
-      "NTS\020\r\032\222\001\n\010Reaction\022\n\n\002id\030\001 \002(\004\022\016\n\006author" +
-      "\030\002 \002(\t\022\r\n\005emoji\030\003 \001(\t\022:\n\006action\030\004 \002(\0162*." +
-      "signalservice.DataMessage.Reaction.Actio" +
-      "n\"\037\n\006Action\022\t\n\005REACT\020\000\022\n\n\006REMOVE\020\001\"$\n\005Fl" +
-      "ags\022\033\n\027EXPIRATION_TIMER_UPDATE\020\002\"B\n\022Grou" +
-      "pDeleteMessage\022\021\n\tpublicKey\030\001 \002(\014\022\031\n\021las",
-      "tEncryptionKey\030\002 \002(\014\"\030\n\026GroupMemberLeftM" +
-      "essage\"O\n\022GroupInviteMessage\022\021\n\tpublicKe" +
-      "y\030\001 \002(\014\022\014\n\004name\030\002 \002(\t\022\030\n\020memberPrivateKe" +
-      "y\030\003 \002(\014\"E\n\023GroupPromoteMessage\022\021\n\tpublic" +
-      "Key\030\001 \002(\014\022\033\n\023encryptedPrivateKey\030\002 \002(\014\"\352" +
-      "\001\n\013CallMessage\022-\n\004type\030\001 \002(\0162\037.signalser" +
-      "vice.CallMessage.Type\022\014\n\004sdps\030\002 \003(\t\022\027\n\017s" +
-      "dpMLineIndexes\030\003 \003(\r\022\017\n\007sdpMids\030\004 \003(\t\022\014\n" +
-      "\004uuid\030\005 \002(\t\"f\n\004Type\022\r\n\tPRE_OFFER\020\006\022\t\n\005OF" +
-      "FER\020\001\022\n\n\006ANSWER\020\002\022\026\n\022PROVISIONAL_ANSWER\020",
-      "\003\022\022\n\016ICE_CANDIDATES\020\004\022\014\n\010END_CALL\020\005\"\245\004\n\024" +
-      "ConfigurationMessage\022E\n\014closedGroups\030\001 \003" +
-      "(\0132/.signalservice.ConfigurationMessage." +
-      "ClosedGroup\022\022\n\nopenGroups\030\002 \003(\t\022\023\n\013displ" +
-      "ayName\030\003 \001(\t\022\026\n\016profilePicture\030\004 \001(\t\022\022\n\n" +
-      "profileKey\030\005 \001(\014\022=\n\010contacts\030\006 \003(\0132+.sig" +
-      "nalservice.ConfigurationMessage.Contact\032" +
-      "\233\001\n\013ClosedGroup\022\021\n\tpublicKey\030\001 \001(\014\022\014\n\004na" +
-      "me\030\002 \001(\t\0221\n\021encryptionKeyPair\030\003 \001(\0132\026.si" +
-      "gnalservice.KeyPair\022\017\n\007members\030\004 \003(\014\022\016\n\006",
-      "admins\030\005 \003(\014\022\027\n\017expirationTimer\030\006 \001(\r\032\223\001" +
-      "\n\007Contact\022\021\n\tpublicKey\030\001 \002(\014\022\014\n\004name\030\002 \002" +
-      "(\t\022\026\n\016profilePicture\030\003 \001(\t\022\022\n\nprofileKey" +
-      "\030\004 \001(\014\022\022\n\nisApproved\030\005 \001(\010\022\021\n\tisBlocked\030" +
-      "\006 \001(\010\022\024\n\014didApproveMe\030\007 \001(\010\"y\n\026MessageRe" +
-      "questResponse\022\022\n\nisApproved\030\001 \002(\010\022\022\n\npro" +
-      "fileKey\030\002 \001(\014\0227\n\007profile\030\003 \001(\0132&.signals" +
-      "ervice.DataMessage.LokiProfile\"\375\001\n\023Share" +
-      "dConfigMessage\0225\n\004kind\030\001 \002(\0162\'.signalser" +
-      "vice.SharedConfigMessage.Kind\022\r\n\005seqno\030\002",
-      " \002(\003\022\014\n\004data\030\003 \002(\014\"\221\001\n\004Kind\022\020\n\014USER_PROF" +
-      "ILE\020\001\022\014\n\010CONTACTS\020\002\022\027\n\023CONVO_INFO_VOLATI" +
-      "LE\020\003\022\n\n\006GROUPS\020\004\022\025\n\021CLOSED_GROUP_INFO\020\005\022" +
-      "\030\n\024CLOSED_GROUP_MEMBERS\020\006\022\023\n\017ENCRYPTION_" +
-      "KEYS\020\007\"u\n\016ReceiptMessage\0220\n\004type\030\001 \002(\0162\"" +
-      ".signalservice.ReceiptMessage.Type\022\021\n\tti" +
-      "mestamp\030\002 \003(\004\"\036\n\004Type\022\014\n\010DELIVERY\020\000\022\010\n\004R" +
-      "EAD\020\001\"\354\001\n\021AttachmentPointer\022\n\n\002id\030\001 \002(\006\022" +
-      "\023\n\013contentType\030\002 \001(\t\022\013\n\003key\030\003 \001(\014\022\014\n\004siz" +
-      "e\030\004 \001(\r\022\021\n\tthumbnail\030\005 \001(\014\022\016\n\006digest\030\006 \001",
-      "(\014\022\020\n\010fileName\030\007 \001(\t\022\r\n\005flags\030\010 \001(\r\022\r\n\005w" +
-      "idth\030\t \001(\r\022\016\n\006height\030\n \001(\r\022\017\n\007caption\030\013 " +
-      "\001(\t\022\013\n\003url\030e \001(\t\"\032\n\005Flags\022\021\n\rVOICE_MESSA" +
-      "GE\020\001B3\n\034org.session.libsignal.protosB\023Si" +
-      "gnalServiceProtos"
+      "\"\032\n\005Flags\022\021\n\rVOICE_MESSAGE\020\001\032V\n\007Preview\022" +
+      "\013\n\003url\030\001 \002(\t\022\r\n\005title\030\002 \001(\t\022/\n\005image\030\003 \001",
+      "(\0132 .signalservice.AttachmentPointer\032:\n\013" +
+      "LokiProfile\022\023\n\013displayName\030\001 \001(\t\022\026\n\016prof" +
+      "ilePicture\030\002 \001(\t\0320\n\023OpenGroupInvitation\022" +
+      "\013\n\003url\030\001 \002(\t\022\014\n\004name\030\003 \002(\t\032\256\005\n\022GroupUpda" +
+      "teMessage\022J\n\rinviteMessage\030\001 \001(\01323.signa" +
+      "lservice.DataMessage.GroupUpdateInviteMe" +
+      "ssage\022J\n\rdeleteMessage\030\002 \001(\01323.signalser" +
+      "vice.DataMessage.GroupUpdateDeleteMessag" +
+      "e\022R\n\021infoChangeMessage\030\003 \001(\01327.signalser" +
+      "vice.DataMessage.GroupUpdateInfoChangeMe",
+      "ssage\022V\n\023memberChangeMessage\030\004 \001(\01329.sig" +
+      "nalservice.DataMessage.GroupUpdateMember" +
+      "ChangeMessage\022L\n\016promoteMessage\030\005 \001(\01324." +
+      "signalservice.DataMessage.GroupUpdatePro" +
+      "moteMessage\022R\n\021memberLeftMessage\030\006 \001(\01327" +
+      ".signalservice.DataMessage.GroupUpdateMe" +
+      "mberLeftMessage\022S\n\016inviteResponse\030\007 \001(\0132" +
+      ";.signalservice.DataMessage.GroupUpdateI" +
+      "nviteResponseMessage\022]\n\023deleteMemberCont" +
+      "ent\030\010 \001(\0132@.signalservice.DataMessage.Gr",
+      "oupUpdateDeleteMemberContentMessage\032p\n\030G" +
+      "roupUpdateInviteMessage\022\026\n\016groupSessionI" +
+      "d\030\001 \002(\t\022\014\n\004name\030\002 \002(\t\022\026\n\016memberAuthData\030" +
+      "\003 \002(\014\022\026\n\016adminSignature\030\004 \002(\014\032L\n\030GroupUp" +
+      "dateDeleteMessage\022\030\n\020memberSessionIds\030\001 " +
+      "\003(\t\022\026\n\016adminSignature\030\002 \002(\014\0326\n\031GroupUpda" +
+      "tePromoteMessage\022\031\n\021groupIdentitySeed\030\001 " +
+      "\002(\014\032\353\001\n\034GroupUpdateInfoChangeMessage\022J\n\004" +
+      "type\030\001 \002(\0162<.signalservice.DataMessage.G" +
+      "roupUpdateInfoChangeMessage.Type\022\023\n\013upda",
+      "tedName\030\002 \001(\t\022\031\n\021updatedExpiration\030\003 \001(\r" +
+      "\022\026\n\016adminSignature\030\004 \002(\014\"7\n\004Type\022\010\n\004NAME" +
+      "\020\001\022\n\n\006AVATAR\020\002\022\031\n\025DISAPPEARING_MESSAGES\020" +
+      "\003\032\316\001\n\036GroupUpdateMemberChangeMessage\022L\n\004" +
+      "type\030\001 \002(\0162>.signalservice.DataMessage.G" +
+      "roupUpdateMemberChangeMessage.Type\022\030\n\020me" +
+      "mberSessionIds\030\002 \003(\t\022\026\n\016adminSignature\030\003" +
+      " \002(\014\",\n\004Type\022\t\n\005ADDED\020\001\022\013\n\007REMOVED\020\002\022\014\n\010" +
+      "PROMOTED\020\003\032\036\n\034GroupUpdateMemberLeftMessa" +
+      "ge\0326\n GroupUpdateInviteResponseMessage\022\022",
+      "\n\nisApproved\030\001 \002(\010\032p\n%GroupUpdateDeleteM" +
+      "emberContentMessage\022\030\n\020memberSessionIds\030" +
+      "\001 \003(\t\022\025\n\rmessageHashes\030\002 \003(\t\022\026\n\016adminSig" +
+      "nature\030\003 \001(\014\032\203\005\n\031ClosedGroupControlMessa" +
+      "ge\022G\n\004type\030\001 \002(\01629.signalservice.DataMes" +
+      "sage.ClosedGroupControlMessage.Type\022\021\n\tp" +
+      "ublicKey\030\002 \001(\014\022\014\n\004name\030\003 \001(\t\0221\n\021encrypti" +
+      "onKeyPair\030\004 \001(\0132\026.signalservice.KeyPair\022" +
+      "\017\n\007members\030\005 \003(\014\022\016\n\006admins\030\006 \003(\014\022U\n\010wrap" +
+      "pers\030\007 \003(\0132C.signalservice.DataMessage.C",
+      "losedGroupControlMessage.KeyPairWrapper\022" +
+      "\027\n\017expirationTimer\030\010 \001(\r\022\030\n\020memberPrivat" +
+      "eKey\030\t \001(\014\022\022\n\nprivateKey\030\n \001(\014\032=\n\016KeyPai" +
+      "rWrapper\022\021\n\tpublicKey\030\001 \002(\014\022\030\n\020encrypted" +
+      "KeyPair\030\002 \002(\014\"\312\001\n\004Type\022\007\n\003NEW\020\001\022\027\n\023ENCRY" +
+      "PTION_KEY_PAIR\020\003\022\017\n\013NAME_CHANGE\020\004\022\021\n\rMEM" +
+      "BERS_ADDED\020\005\022\023\n\017MEMBERS_REMOVED\020\006\022\017\n\013MEM" +
+      "BER_LEFT\020\007\022\n\n\006INVITE\020\t\022\013\n\007PROMOTE\020\n\022\020\n\014D" +
+      "ELETE_GROUP\020\013\022\023\n\017DELETE_MESSAGES\020\014\022\026\n\022DE" +
+      "LETE_ATTACHMENTS\020\r\032\222\001\n\010Reaction\022\n\n\002id\030\001 ",
+      "\002(\004\022\016\n\006author\030\002 \002(\t\022\r\n\005emoji\030\003 \001(\t\022:\n\006ac" +
+      "tion\030\004 \002(\0162*.signalservice.DataMessage.R" +
+      "eaction.Action\"\037\n\006Action\022\t\n\005REACT\020\000\022\n\n\006R" +
+      "EMOVE\020\001\"$\n\005Flags\022\033\n\027EXPIRATION_TIMER_UPD" +
+      "ATE\020\002\"B\n\022GroupDeleteMessage\022\021\n\tpublicKey" +
+      "\030\001 \002(\014\022\031\n\021lastEncryptionKey\030\002 \002(\014\"\030\n\026Gro" +
+      "upMemberLeftMessage\"O\n\022GroupInviteMessag" +
+      "e\022\021\n\tpublicKey\030\001 \002(\014\022\014\n\004name\030\002 \002(\t\022\030\n\020me" +
+      "mberPrivateKey\030\003 \002(\014\"E\n\023GroupPromoteMess" +
+      "age\022\021\n\tpublicKey\030\001 \002(\014\022\033\n\023encryptedPriva",
+      "teKey\030\002 \002(\014\"\352\001\n\013CallMessage\022-\n\004type\030\001 \002(" +
+      "\0162\037.signalservice.CallMessage.Type\022\014\n\004sd" +
+      "ps\030\002 \003(\t\022\027\n\017sdpMLineIndexes\030\003 \003(\r\022\017\n\007sdp" +
+      "Mids\030\004 \003(\t\022\014\n\004uuid\030\005 \002(\t\"f\n\004Type\022\r\n\tPRE_" +
+      "OFFER\020\006\022\t\n\005OFFER\020\001\022\n\n\006ANSWER\020\002\022\026\n\022PROVIS" +
+      "IONAL_ANSWER\020\003\022\022\n\016ICE_CANDIDATES\020\004\022\014\n\010EN" +
+      "D_CALL\020\005\"\245\004\n\024ConfigurationMessage\022E\n\014clo" +
+      "sedGroups\030\001 \003(\0132/.signalservice.Configur" +
+      "ationMessage.ClosedGroup\022\022\n\nopenGroups\030\002" +
+      " \003(\t\022\023\n\013displayName\030\003 \001(\t\022\026\n\016profilePict",
+      "ure\030\004 \001(\t\022\022\n\nprofileKey\030\005 \001(\014\022=\n\010contact" +
+      "s\030\006 \003(\0132+.signalservice.ConfigurationMes" +
+      "sage.Contact\032\233\001\n\013ClosedGroup\022\021\n\tpublicKe" +
+      "y\030\001 \001(\014\022\014\n\004name\030\002 \001(\t\0221\n\021encryptionKeyPa" +
+      "ir\030\003 \001(\0132\026.signalservice.KeyPair\022\017\n\007memb" +
+      "ers\030\004 \003(\014\022\016\n\006admins\030\005 \003(\014\022\027\n\017expirationT" +
+      "imer\030\006 \001(\r\032\223\001\n\007Contact\022\021\n\tpublicKey\030\001 \002(" +
+      "\014\022\014\n\004name\030\002 \002(\t\022\026\n\016profilePicture\030\003 \001(\t\022" +
+      "\022\n\nprofileKey\030\004 \001(\014\022\022\n\nisApproved\030\005 \001(\010\022" +
+      "\021\n\tisBlocked\030\006 \001(\010\022\024\n\014didApproveMe\030\007 \001(\010",
+      "\"y\n\026MessageRequestResponse\022\022\n\nisApproved" +
+      "\030\001 \002(\010\022\022\n\nprofileKey\030\002 \001(\014\0227\n\007profile\030\003 " +
+      "\001(\0132&.signalservice.DataMessage.LokiProf" +
+      "ile\"\375\001\n\023SharedConfigMessage\0225\n\004kind\030\001 \002(" +
+      "\0162\'.signalservice.SharedConfigMessage.Ki" +
+      "nd\022\r\n\005seqno\030\002 \002(\003\022\014\n\004data\030\003 \002(\014\"\221\001\n\004Kind" +
+      "\022\020\n\014USER_PROFILE\020\001\022\014\n\010CONTACTS\020\002\022\027\n\023CONV" +
+      "O_INFO_VOLATILE\020\003\022\n\n\006GROUPS\020\004\022\025\n\021CLOSED_" +
+      "GROUP_INFO\020\005\022\030\n\024CLOSED_GROUP_MEMBERS\020\006\022\023" +
+      "\n\017ENCRYPTION_KEYS\020\007\"u\n\016ReceiptMessage\0220\n",
+      "\004type\030\001 \002(\0162\".signalservice.ReceiptMessa" +
+      "ge.Type\022\021\n\ttimestamp\030\002 \003(\004\"\036\n\004Type\022\014\n\010DE" +
+      "LIVERY\020\000\022\010\n\004READ\020\001\"\354\001\n\021AttachmentPointer" +
+      "\022\n\n\002id\030\001 \002(\006\022\023\n\013contentType\030\002 \001(\t\022\013\n\003key" +
+      "\030\003 \001(\014\022\014\n\004size\030\004 \001(\r\022\021\n\tthumbnail\030\005 \001(\014\022" +
+      "\016\n\006digest\030\006 \001(\014\022\020\n\010fileName\030\007 \001(\t\022\r\n\005fla" +
+      "gs\030\010 \001(\r\022\r\n\005width\030\t \001(\r\022\016\n\006height\030\n \001(\r\022" +
+      "\017\n\007caption\030\013 \001(\t\022\013\n\003url\030e \001(\t\"\032\n\005Flags\022\021" +
+      "\n\rVOICE_MESSAGE\020\001B3\n\034org.session.libsign" +
+      "al.protosB\023SignalServiceProtos"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
