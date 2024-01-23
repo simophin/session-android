@@ -62,7 +62,6 @@ public abstract class DisplayRecord {
   public @NonNull String getBody() {
     return body == null ? "" : body;
   }
-  public abstract CharSequence getModalBody(@NonNull Context context);
   public abstract SpannableString getDisplayBody(@NonNull Context context);
   public Recipient getRecipient() { return recipient; }
   public long getDateSent() { return dateSent; }

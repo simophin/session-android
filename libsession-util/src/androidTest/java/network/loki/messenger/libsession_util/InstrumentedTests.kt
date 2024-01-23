@@ -763,7 +763,7 @@ class InstrumentedTests {
         )
         volatiles.set(conversation)
         assertThat(volatiles.all().size, equalTo(1))
-
+        assertThat(volatiles.allClosedGroups().size, equalTo(1))
     }
 
 }

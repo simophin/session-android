@@ -47,9 +47,6 @@
         android:gravity="center"
         android:textColor="?android:textColorPrimary"
         android:textSize="@dimen/very_small_font_size"
-        android:drawableLeft="@drawable/ic_question_mark"
-        android:drawablePadding="@dimen/small_spacing"
-        app:drawableTint="?android:textColor"
         tools:text="@string/MessageRecord_you_disabled_disappearing_messages" />
 
     <TextView

@@ -3,6 +3,7 @@ package network.loki.messenger.groups
 import android.content.Context
 import androidx.test.platform.app.InstrumentationRegistry
 import junit.framework.TestCase.assertNotNull
+import kotlinx.coroutines.test.runTest
 import network.loki.messenger.libsession_util.util.Sodium
 import org.junit.Before
 import org.junit.Test
@@ -46,28 +47,26 @@ class ClosedGroupViewTests {
         }
         val overriddenStorage = Storage(applicationContext, mock(), ConfigFactory(context, emptyDb) {
             keyPair.secretKey to userSessionId.hexString()
-        }, mock(), { stringRes, toastLength, parameters ->
-
-        })
+        }, mock())
         storage = overriddenStorage
     }
 
     @Test
-    fun tryCreateGroup_shouldErrorOnEmptyName() {
+    fun tryCreateGroup_shouldErrorOnEmptyName() = runTest {
         val viewModel = createViewModel()
         viewModel.tryCreateGroup()
         assertNotNull(viewModel.viewState.value?.error)
     }
 
     @Test
-    fun tryCreateGroup_shouldErrorOnEmptyMembers() {
+    fun tryCreateGroup_shouldErrorOnEmptyMembers() = runTest {
         val viewModel = createViewModel()
         viewModel.tryCreateGroup()
         assertNotNull(viewModel.viewState.value?.error)
     }
 
     @Test
-    fun tryCreateGroup_shouldSucceedWithCorrectParameters() {
+    fun tryCreateGroup_shouldSucceedWithCorrectParameters() = runTest {
         val viewModel = createViewModel()
         assertNotNull(viewModel.tryCreateGroup())
     }
