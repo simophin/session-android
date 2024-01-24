@@ -70,7 +70,7 @@ Java_network_loki_messenger_libsession_1util_GroupKeysConfig_groupKeys(JNIEnv *e
 }
 
 extern "C"
-JNIEXPORT void JNICALL
+JNIEXPORT jboolean JNICALL
 Java_network_loki_messenger_libsession_1util_GroupKeysConfig_loadKey(JNIEnv *env, jobject thiz,
                                                                      jbyteArray message,
                                                                      jstring hash,
@@ -83,9 +83,10 @@ Java_network_loki_messenger_libsession_1util_GroupKeysConfig_loadKey(JNIEnv *env
     auto hash_bytes = env->GetStringUTFChars(hash, nullptr);
     auto info = ptrToInfo(env, info_jobject);
     auto members = ptrToMembers(env, members_jobject);
-    keys->load_key_message(hash_bytes, message_bytes, timestamp_ms, *info, *members);
+    bool processed = keys->load_key_message(hash_bytes, message_bytes, timestamp_ms, *info, *members);
 
     env->ReleaseStringUTFChars(hash, hash_bytes);
+    return processed;
 }
 
 extern "C"

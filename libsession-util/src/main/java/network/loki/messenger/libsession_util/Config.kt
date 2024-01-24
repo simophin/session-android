@@ -323,7 +323,7 @@ class GroupKeysConfig(pointer: Long): ConfigSig(pointer) {
                          hash: String,
                          timestampMs: Long,
                          info: GroupInfoConfig,
-                         members: GroupMembersConfig)
+                         members: GroupMembersConfig): Boolean
     external fun needsRekey(): Boolean
     external fun pendingKey(): ByteArray?
     external fun supplementFor(userSessionId: String): ByteArray

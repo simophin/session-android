@@ -75,6 +75,7 @@
     <string name="AccessibilityId_edit_group">Edit group</string>
     <string name="AccessibilityId_leave_group">Leave group</string>
     <string name="AccessibilityId_group_name">Group name</string>
+    <string name="AccessibilityId_group_description">Group description</string>
     <string name="AccessibilityId_accept_name_change">Accept name change</string>
     <string name="AccessibilityId_cancel_name_change">Cancel name change</string>
     <string name="AccessibilityId_apply_changes">Apply changes</string>

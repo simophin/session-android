@@ -70,7 +70,7 @@ class ClosedGroupPoller(private val scope: CoroutineScope,
 
         if (ENABLE_LOGGING) Log.d("ClosedGroupPoller", "Starting closed group poller for ${closedGroupSessionId.hexString().take(4)}")
         job?.cancel()
-        job = scope.launch {
+        job = scope.launch(execute) {
             val closedGroups = configFactoryProtocol.userGroups ?: return@launch
             isRunning = true
             while (isActive && isRunning) {
@@ -226,10 +226,16 @@ class ClosedGroupPoller(private val scope: CoroutineScope,
                               infoConfig: GroupInfoConfig,
                               membersConfig: GroupMembersConfig) {
         // get all the data to hash objects and process them
-        parseMessages(response).forEach { (message, hash, timestamp) ->
-            keysConfig.loadKey(message, hash, timestamp, infoConfig, membersConfig)
+        val allMessages = parseMessages(response)
+        if (ENABLE_LOGGING) Log.d("ClosedGroupPoller", "Total key messages this poll: ${allMessages.size}")
+        var total = 0
+        allMessages.forEach { (message, hash, timestamp) ->
+            if (keysConfig.loadKey(message, hash, timestamp, infoConfig, membersConfig)) {
+                total++
+            }
             if (ENABLE_LOGGING) Log.d("ClosedGroupPoller", "Merged $hash for keys on ${closedGroupSessionId.hexString()}")
         }
+        if (ENABLE_LOGGING) Log.d("ClosedGroupPoller", "Total key messages consumed: $total")
     }
 
     private fun handleInfo(response: RawResponse,
@@ -265,7 +271,7 @@ class ClosedGroupPoller(private val scope: CoroutineScope,
             val job = BatchMessageReceiveJob(chunk)
             JobQueue.shared.add(job)
         }
-        if (ENABLE_LOGGING) Log.d("ClosedGroupPoller", "namespace 0 message size: ${messages.size}")
+        if (ENABLE_LOGGING) Log.d("ClosedGroupPoller", "namespace for messages rx count: ${messages.size}")
 
     }
 

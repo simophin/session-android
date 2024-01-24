@@ -34,6 +34,8 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -293,11 +295,15 @@ fun EditGroupView(
                     .padding(16.dp),
                 horizontalArrangement = Arrangement.Center
             ) {
+                val nameDesc = stringResource(R.string.AccessibilityId_group_name)
                 Text(
                     text = viewState.groupName,
                     fontSize = 26.sp,
                     fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.semantics {
+                        contentDescription = nameDesc
+                    }
                 )
                 if (viewState.admin) {
                     Icon(
@@ -313,6 +319,19 @@ fun EditGroupView(
                 }
             }
             // Description
+            if (viewState.groupDescription?.isNotEmpty() == true) {
+                val descriptionDesc = stringResource(R.string.AccessibilityId_group_description)
+                Text(
+                    text = viewState.groupDescription,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp, vertical = 8.dp)
+                        .semantics {
+                            contentDescription = descriptionDesc
+                        }
+                )
+            }
 
             // Invite
             if (viewState.admin) {
@@ -337,110 +356,120 @@ fun EditGroupView(
                 modifier = Modifier
                     .padding(vertical = 8.dp, horizontal = 32.dp)
             )
+            // List of members
             LazyColumn(modifier = Modifier) {
 
                 items(viewState.memberStateList) { member ->
-                    Row(
-                        Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                // handle clicking the member
-                                onMemberSelected(member)
-                            }
-                            .padding(vertical = 8.dp, horizontal = 16.dp)) {
-                        ContactPhoto(member.memberSessionId)
-                        Column(modifier = Modifier
-                            .weight(1f)
-                            .fillMaxHeight()
-                            .padding(horizontal = 8.dp)
-                            .align(CenterVertically)) {
-                            // Member's name
-                            Text(
-                                text = member.memberName ?: member.memberSessionId,
-                                style = MemberNameStyle,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(1.dp)
-                            )
-                            if (member.memberState !in listOf(MemberState.Member, MemberState.Admin)) {
-                                Text(
-                                    text = member.memberState.toString(),
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(1.dp)
-                                )
-                            }
-                        }
-                        // Resend button
-                        if (viewState.admin && member.memberState == MemberState.InviteFailed) {
-                            TextButton(
-                                onClick = {
-                                    onReinvite(member.memberSessionId)
-                                },
-                                modifier = Modifier
-                                    .clip(CircleShape)
-                                    .background(
-                                        Color(
-                                            MaterialColors.getColor(
-                                                LocalContext.current,
-                                                R.attr.colorControlHighlight,
-                                                MaterialTheme.colors.onPrimary.toArgb()
-                                            )
-                                        )
-                                    )
-                            ) {
-                                Text(
-                                    "Re-send",
-                                    color = MaterialTheme.colors.onPrimary
-                                )
-                            }
-                        } else if (viewState.admin && member.memberState == MemberState.Member) {
-                            TextButton(
-                                onClick = {
-                                    onPromote(member.memberSessionId)
-                                },
-                                modifier = Modifier
-                                    .clip(CircleShape)
-                                    .background(
-                                        Color(
-                                            MaterialColors.getColor(
-                                                LocalContext.current,
-                                                R.attr.colorControlHighlight,
-                                                MaterialTheme.colors.onPrimary.toArgb()
-                                            )
-                                        )
-                                    )
-                            ) {
-                                Text(
-                                    "Promote",
-                                    color = MaterialTheme.colors.onPrimary
-                                )
-                            }
-                            TextButton(
-                                onClick = {
-                                    onRemove(member.memberSessionId)
-                                },
-                                modifier = Modifier
-                                    .clip(CircleShape)
-                                    .background(
-                                        Color(
-                                            MaterialColors.getColor(
-                                                LocalContext.current,
-                                                R.attr.colorControlHighlight,
-                                                MaterialTheme.colors.onPrimary.toArgb()
-                                            )
-                                        )
-                                    )
-                            ) {
-                                Icon(painter = painterResource(id = R.drawable.ic_baseline_close_24), contentDescription = null)
-                            }
-                        }
-                    }
+                    // Each member's view
+                    MemberItem(
+                        isAdmin = viewState.admin,
+                        member = member,
+                        onReinvite = onReinvite,
+                        onPromote = onPromote,
+                        onRemove = onRemove,
+                        onMemberSelected = onMemberSelected
+                    )
                 }
             }
         }
     }
 }
+
+@Composable
+fun MemberItem(modifier: Modifier = Modifier,
+               isAdmin: Boolean,
+               member: MemberViewModel,
+               onReinvite: (String) -> Unit,
+               onPromote: (String) -> Unit,
+               onRemove: (String) -> Unit,
+               onMemberSelected: (MemberViewModel) -> Unit) {
+    Row(
+        modifier
+            .fillMaxWidth()
+            .clickable {
+                // handle clicking the member
+                onMemberSelected(member)
+            }
+            .padding(vertical = 8.dp, horizontal = 16.dp)) {
+        ContactPhoto(member.memberSessionId)
+        Column(modifier = Modifier
+            .weight(1f)
+            .fillMaxHeight()
+            .padding(horizontal = 8.dp)
+            .align(CenterVertically)) {
+            // Member's name
+            Text(
+                text = member.memberName ?: member.memberSessionId,
+                style = MemberNameStyle,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(1.dp)
+            )
+            if (member.memberState !in listOf(MemberState.Member, MemberState.Admin)) {
+                Text(
+                    text = member.memberState.toString(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(1.dp)
+                )
+            }
+        }
+        // Resend button
+        if (isAdmin && member.memberState == MemberState.InviteFailed) {
+            TextButton(
+                onClick = {
+                    onReinvite(member.memberSessionId)
+                },
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .controlHighlightBackground()
+            ) {
+                Text(
+                    "Re-send",
+                    color = MaterialTheme.colors.onPrimary
+                )
+            }
+        } else if (isAdmin && member.memberState == MemberState.Member) {
+            // Promotion button
+            TextButton(
+                onClick = {
+                    onPromote(member.memberSessionId)
+                },
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .controlHighlightBackground()
+            ) {
+                Text(
+                    "Promote",
+                    color = MaterialTheme.colors.onPrimary
+                )
+            }
+            // Removal button
+            TextButton(
+                onClick = {
+                    onRemove(member.memberSessionId)
+                },
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .controlHighlightBackground()
+            ) {
+                Icon(painter = painterResource(id = R.drawable.ic_baseline_close_24), contentDescription = null)
+            }
+        }
+    }
+
+}
+
+@Composable
+fun Modifier.controlHighlightBackground() = this.background(
+    Color(
+        MaterialColors.getColor(
+            LocalContext.current,
+            R.attr.colorControlHighlight,
+            MaterialTheme.colors.onPrimary.toArgb()
+        )
+    )
+)
 
 data class EditGroupState(
     val viewState: EditGroupViewState,
