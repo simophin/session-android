@@ -1,11 +1,16 @@
 package network.loki.messenger
 
+import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.hasContentDescriptionExactly
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
 import androidx.test.platform.app.InstrumentationRegistry
+import org.hamcrest.CoreMatchers.equalTo
+import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -42,6 +47,13 @@ class EditGroupTests {
         false
     )
 
+    val fourMember = MemberViewModel(
+        "Test User 4",
+        "05abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1237",
+        MemberState.Admin,
+        false
+    )
+
     @Test
     fun testDisplaysNameAndDesc() {
         val application = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as ApplicationContext
@@ -49,33 +61,160 @@ class EditGroupTests {
         val nameDesc = application.getString(R.string.AccessibilityId_group_name)
         val descriptionDesc = application.getString(R.string.AccessibilityId_group_description)
 
-        val state = EditGroupViewState(
-            "TestGroup",
-            "TestDesc",
-            emptyList(),
-            false
-        )
+        with (composeTest) {
+            val state = EditGroupViewState(
+                "TestGroup",
+                "TestDesc",
+                emptyList(),
+                false
+            )
 
-        composeTest.setContent {
-            AppTheme {
-                EditGroupView(
-                    onBack = {},
-                    onInvite = {},
-                    onReinvite = {},
-                    onPromote = {},
-                    onRemove = {},
-                    onEditName = {},
-                    onMemberSelected = {},
-                    viewState = state
-                )
+            setContent {
+                AppTheme {
+                    EditGroupView(
+                        onBack = {},
+                        onInvite = {},
+                        onReinvite = {},
+                        onPromote = {},
+                        onRemove = {},
+                        onEditName = {},
+                        onMemberSelected = {},
+                        viewState = state
+                    )
+                }
             }
-        }
-
-        with(composeTest) {
             onNode(hasContentDescriptionExactly(nameDesc)).assertTextEquals("TestGroup")
             onNode(hasContentDescriptionExactly(descriptionDesc)).assertTextEquals("TestDesc")
         }
+    }
 
+    @Test
+    fun testDisplaysReinviteProperly() {
+        val application = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as ApplicationContext
+
+        // Accessibility IDs
+        val reinviteDesc = application.getString(R.string.AccessibilityId_reinvite_member)
+        val removeDesc = application.getString(R.string.AccessibilityId_remove_member)
+        val promoteDesc = application.getString(R.string.AccessibilityId_promote_member)
+
+        var reinvited = false
+
+        with (composeTest) {
+
+            val state = EditGroupViewState(
+                "TestGroup",
+                "TestDesc",
+                listOf(
+                    twoMember
+                ),
+                // reinvite only shows for admin users
+                true
+            )
+
+            setContent {
+                AppTheme {
+                    EditGroupView(
+                        onBack = {},
+                        onInvite = {},
+                        onReinvite = { reinvited = true },
+                        onPromote = {},
+                        onRemove = {},
+                        onEditName = {},
+                        onMemberSelected = {},
+                        viewState = state
+                    )
+                }
+            }
+            onNodeWithContentDescription(reinviteDesc).assertIsDisplayed().performClick()
+            onNodeWithContentDescription(removeDesc).assertDoesNotExist()
+            onNodeWithContentDescription(promoteDesc).assertDoesNotExist()
+            assertThat(reinvited, equalTo(true))
+        }
+    }
+
+    @Test
+    fun testDisplaysRegularMemberProperly() {
+        val application = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as ApplicationContext
+
+        // Accessibility IDs
+        val reinviteDesc = application.getString(R.string.AccessibilityId_reinvite_member)
+        val removeDesc = application.getString(R.string.AccessibilityId_remove_member)
+        val promoteDesc = application.getString(R.string.AccessibilityId_promote_member)
+
+        var promoted = false
+
+        with (composeTest) {
+
+            val state = EditGroupViewState(
+                "TestGroup",
+                "TestDesc",
+                listOf(
+                    threeMember
+                ),
+                // reinvite only shows for admin users
+                true
+            )
+
+            setContent {
+                AppTheme {
+                    EditGroupView(
+                        onBack = {},
+                        onInvite = {},
+                        onReinvite = {},
+                        onPromote = { promoted = true },
+                        onRemove = {},
+                        onEditName = {},
+                        onMemberSelected = {},
+                        viewState = state
+                    )
+                }
+            }
+            onNodeWithContentDescription(reinviteDesc).assertDoesNotExist()
+            onNodeWithContentDescription(removeDesc).assertIsDisplayed()
+            onNodeWithContentDescription(promoteDesc).assertIsDisplayed().performClick()
+            assertThat(promoted, equalTo(true))
+        }
+    }
+
+    @Test
+    fun testDisplaysAdminProperly() {
+        val application = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as ApplicationContext
+
+        // Accessibility IDs
+        val reinviteDesc = application.getString(R.string.AccessibilityId_reinvite_member)
+        val removeDesc = application.getString(R.string.AccessibilityId_remove_member)
+        val promoteDesc = application.getString(R.string.AccessibilityId_promote_member)
+
+        with (composeTest) {
+
+            val state = EditGroupViewState(
+                "TestGroup",
+                "TestDesc",
+                listOf(
+                    fourMember
+                ),
+                // reinvite only shows for admin users
+                true
+            )
+
+            setContent {
+                AppTheme {
+                    EditGroupView(
+                        onBack = {},
+                        onInvite = {},
+                        onReinvite = {},
+                        onPromote = {},
+                        onRemove = {},
+                        onEditName = {},
+                        onMemberSelected = {},
+                        viewState = state
+                    )
+                }
+            }
+            onNodeWithContentDescription(reinviteDesc).assertDoesNotExist()
+            onNodeWithContentDescription(removeDesc).assertDoesNotExist()
+            onNodeWithContentDescription(promoteDesc).assertDoesNotExist()
+        }
     }
 
 }

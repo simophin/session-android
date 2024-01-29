@@ -25,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
@@ -54,8 +55,10 @@ import com.ramcosta.composedestinations.result.ResultRecipient
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import network.loki.messenger.R
 import network.loki.messenger.libsession_util.util.GroupMember
 import org.session.libsession.database.StorageProtocol
@@ -160,6 +163,8 @@ class EditGroupViewModel @AssistedInject constructor(
     private val configFactory: ConfigFactory
 ): ViewModel() {
 
+    val processingStream = Channel<EditGroupEvent>(Channel.UNLIMITED)
+
     val viewState = viewModelScope.launchMolecule(Immediate) {
 
         val currentUserId = rememberSaveable {
@@ -184,6 +189,12 @@ class EditGroupViewModel @AssistedInject constructor(
 
         val name = closedGroup.name
         val description = closedGroup.description
+
+        val scope = rememberCoroutineScope()
+
+        scope.launch {
+            processingStream.chu
+        }
 
         EditGroupState(
             EditGroupViewState(
@@ -416,6 +427,7 @@ fun MemberItem(modifier: Modifier = Modifier,
         }
         // Resend button
         if (isAdmin && member.memberState == MemberState.InviteFailed) {
+            val reinviteDesc = stringResource(R.string.AccessibilityId_reinvite_member)
             TextButton(
                 onClick = {
                     onReinvite(member.memberSessionId)
@@ -423,6 +435,9 @@ fun MemberItem(modifier: Modifier = Modifier,
                 modifier = Modifier
                     .clip(CircleShape)
                     .controlHighlightBackground()
+                    .semantics {
+                        contentDescription = reinviteDesc
+                    }
             ) {
                 Text(
                     "Re-send",
@@ -431,6 +446,7 @@ fun MemberItem(modifier: Modifier = Modifier,
             }
         } else if (isAdmin && member.memberState == MemberState.Member) {
             // Promotion button
+            val promoteDesc = stringResource(R.string.AccessibilityId_promote_member)
             TextButton(
                 onClick = {
                     onPromote(member.memberSessionId)
@@ -438,6 +454,9 @@ fun MemberItem(modifier: Modifier = Modifier,
                 modifier = Modifier
                     .clip(CircleShape)
                     .controlHighlightBackground()
+                    .semantics {
+                        contentDescription = promoteDesc
+                    }
             ) {
                 Text(
                     "Promote",
@@ -445,6 +464,7 @@ fun MemberItem(modifier: Modifier = Modifier,
                 )
             }
             // Removal button
+            val removeDesc = stringResource(R.string.AccessibilityId_remove_member)
             TextButton(
                 onClick = {
                     onRemove(member.memberSessionId)
@@ -452,6 +472,9 @@ fun MemberItem(modifier: Modifier = Modifier,
                 modifier = Modifier
                     .clip(CircleShape)
                     .controlHighlightBackground()
+                    .semantics {
+                        contentDescription = removeDesc
+                    }
             ) {
                 Icon(painter = painterResource(id = R.drawable.ic_baseline_close_24), contentDescription = null)
             }

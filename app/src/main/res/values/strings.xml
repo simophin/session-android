@@ -80,6 +80,9 @@
     <string name="AccessibilityId_cancel_name_change">Cancel name change</string>
     <string name="AccessibilityId_apply_changes">Apply changes</string>
     <string name="AccessibilityId_add_members">Add members</string>
+    <string name="AccessibilityId_reinvite_member">Reinvite member</string>
+    <string name="AccessibilityId_remove_member">Remove member</string>
+    <string name="AccessibilityId_promote_member">Promote member</string>
     <string name="AccessibilityId_done">Done</string>
     <string name="AccessibilityId_mentions_list">Mentions list</string>
     <string name="AccessibilityId_contact_mentions">Contact mentions</string>
