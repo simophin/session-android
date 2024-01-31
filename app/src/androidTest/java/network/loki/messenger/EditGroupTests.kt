@@ -217,4 +217,49 @@ class EditGroupTests {
         }
     }
 
+    @Test
+    fun testDisplaysPendingInviteProperly() {
+        val application = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as ApplicationContext
+
+        // Accessibility IDs
+        val reinviteDesc = application.getString(R.string.AccessibilityId_reinvite_member)
+        val removeDesc = application.getString(R.string.AccessibilityId_remove_member)
+        val promoteDesc = application.getString(R.string.AccessibilityId_promote_member)
+        val stateDesc = application.getString(R.string.AccessibilityId_member_state)
+        val memberDesc = application.getString(R.string.AccessibilityId_contact)
+
+        with (composeTest) {
+
+            val state = EditGroupViewState(
+                "TestGroup",
+                "TestDesc",
+                listOf(
+                    oneMember
+                ),
+                // reinvite only shows for admin users
+                true
+            )
+
+            setContent {
+                AppTheme {
+                    EditGroupView(
+                        onBack = {},
+                        onInvite = {},
+                        onReinvite = {},
+                        onPromote = {},
+                        onRemove = {},
+                        onEditName = {},
+                        onMemberSelected = {},
+                        viewState = state
+                    )
+                }
+            }
+            onNodeWithContentDescription(reinviteDesc).assertDoesNotExist()
+            onNodeWithContentDescription(removeDesc).assertDoesNotExist()
+            onNodeWithContentDescription(promoteDesc).assertDoesNotExist()
+            onNodeWithContentDescription(stateDesc, useUnmergedTree = true).assertTextEquals("InviteSent")
+            onNodeWithContentDescription(memberDesc, useUnmergedTree = true).assertTextEquals("Test User")
+        }
+    }
+
 }

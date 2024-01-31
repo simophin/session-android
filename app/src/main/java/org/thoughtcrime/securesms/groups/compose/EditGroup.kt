@@ -2,8 +2,10 @@ package org.thoughtcrime.securesms.groups.compose
 
 import android.content.Context
 import android.widget.Toast
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -52,13 +54,13 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.result.NavResult
 import com.ramcosta.composedestinations.result.ResultBackNavigator
 import com.ramcosta.composedestinations.result.ResultRecipient
+import com.squareup.phrase.Phrase
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 import network.loki.messenger.R
 import network.loki.messenger.libsession_util.util.GroupMember
 import org.session.libsession.database.StorageProtocol
@@ -70,6 +72,7 @@ import org.thoughtcrime.securesms.dependencies.ConfigFactory
 import org.thoughtcrime.securesms.groups.ContactList
 import org.thoughtcrime.securesms.groups.destinations.EditClosedGroupInviteScreenDestination
 import org.thoughtcrime.securesms.groups.destinations.EditClosedGroupNameScreenDestination
+import org.thoughtcrime.securesms.showSessionDialog
 import org.thoughtcrime.securesms.ui.CellWithPaddingAndMargin
 import org.thoughtcrime.securesms.ui.NavigationBar
 import org.thoughtcrime.securesms.ui.PreviewTheme
@@ -115,7 +118,18 @@ fun EditClosedGroupScreen(
             eventSink(EditGroupEvent.PromoteContact(contact))
         },
         onRemove = { contact ->
-            eventSink(EditGroupEvent.RemoveContact(contact))
+            val string = Phrase.from(context, R.string.activity_edit_closed_group_remove_users_single)
+                .put("user", contact.memberName)
+                .put("group", viewState.groupName)
+                .format()
+            context.showSessionDialog {
+                title(R.string.activity_settings_remove)
+                text(string)
+                destructiveButton(R.string.activity_settings_remove) {
+                    eventSink(EditGroupEvent.RemoveContact(contact.memberSessionId))
+                }
+                cancelButton()
+            }
         },
         onEditName = {
             navigator.navigate(EditClosedGroupNameScreenDestination)
@@ -191,10 +205,6 @@ class EditGroupViewModel @AssistedInject constructor(
         val description = closedGroup.description
 
         val scope = rememberCoroutineScope()
-
-        scope.launch {
-            processingStream.chu
-        }
 
         EditGroupState(
             EditGroupViewState(
@@ -281,7 +291,7 @@ fun EditGroupView(
     onInvite: ()->Unit,
     onReinvite: (String)->Unit,
     onPromote: (String)->Unit,
-    onRemove: (String)->Unit,
+    onRemove: (MemberViewModel)->Unit,
     onEditName: ()->Unit,
     onMemberSelected: (MemberViewModel) -> Unit,
     viewState: EditGroupViewState,
@@ -386,21 +396,25 @@ fun EditGroupView(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MemberItem(modifier: Modifier = Modifier,
                isAdmin: Boolean,
                member: MemberViewModel,
                onReinvite: (String) -> Unit,
                onPromote: (String) -> Unit,
-               onRemove: (String) -> Unit,
+               onRemove: (MemberViewModel) -> Unit,
                onMemberSelected: (MemberViewModel) -> Unit) {
     Row(
         modifier
             .fillMaxWidth()
-            .clickable {
+            .combinedClickable(onLongClick = {
+                // long pressing should remove the member
+                onRemove(member)
+            }, onClick = {
                 // handle clicking the member
                 onMemberSelected(member)
-            }
+            })
             .padding(vertical = 8.dp, horizontal = 16.dp)) {
         ContactPhoto(member.memberSessionId)
         Column(modifier = Modifier
@@ -409,19 +423,28 @@ fun MemberItem(modifier: Modifier = Modifier,
             .padding(horizontal = 8.dp)
             .align(CenterVertically)) {
             // Member's name
+            val memberDesc = stringResource(R.string.AccessibilityId_contact)
             Text(
                 text = member.memberName ?: member.memberSessionId,
                 style = MemberNameStyle,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(1.dp)
+                    .semantics {
+                        contentDescription = memberDesc
+                    }
             )
             if (member.memberState !in listOf(MemberState.Member, MemberState.Admin)) {
+                // Display the current member state
+                val stateDesc = stringResource(R.string.AccessibilityId_member_state)
                 Text(
                     text = member.memberState.toString(),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(1.dp)
+                        .semantics {
+                            contentDescription = stateDesc
+                        }
                 )
             }
         }
@@ -462,21 +485,6 @@ fun MemberItem(modifier: Modifier = Modifier,
                     "Promote",
                     color = MaterialTheme.colors.onPrimary
                 )
-            }
-            // Removal button
-            val removeDesc = stringResource(R.string.AccessibilityId_remove_member)
-            TextButton(
-                onClick = {
-                    onRemove(member.memberSessionId)
-                },
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .controlHighlightBackground()
-                    .semantics {
-                        contentDescription = removeDesc
-                    }
-            ) {
-                Icon(painter = painterResource(id = R.drawable.ic_baseline_close_24), contentDescription = null)
             }
         }
     }

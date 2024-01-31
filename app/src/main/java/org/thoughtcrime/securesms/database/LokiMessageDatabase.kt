@@ -15,6 +15,10 @@ class LokiMessageDatabase(context: Context, helper: SQLCipherOpenHelper) : Datab
         private val messageHashTable = "loki_message_hash_database"
         private val smsHashTable = "loki_sms_hash_database"
         private val mmsHashTable = "loki_mms_hash_database"
+        private val groupInviteTable = "loki_group_invites"
+
+        private val groupInviteDeleteTrigger = "group_invite_delete_trigger"
+
         private val messageID = "message_id"
         private val serverID = "server_id"
         private val friendRequestStatus = "friend_request_status"
@@ -22,6 +26,8 @@ class LokiMessageDatabase(context: Context, helper: SQLCipherOpenHelper) : Datab
         private val errorMessage = "error_message"
         private val messageType = "message_type"
         private val serverHash = "server_hash"
+        private val invitingSessionId = "inviting_session_id"
+
         @JvmStatic
         val createMessageIDTableCommand = "CREATE TABLE $messageIDTable ($messageID INTEGER PRIMARY KEY, $serverID INTEGER DEFAULT 0, $friendRequestStatus INTEGER DEFAULT 0);"
         @JvmStatic
@@ -38,6 +44,10 @@ class LokiMessageDatabase(context: Context, helper: SQLCipherOpenHelper) : Datab
         val createMmsHashTableCommand = "CREATE TABLE IF NOT EXISTS $mmsHashTable ($messageID INTEGER PRIMARY KEY, $serverHash STRING);"
         @JvmStatic
         val createSmsHashTableCommand = "CREATE TABLE IF NOT EXISTS $smsHashTable ($messageID INTEGER PRIMARY KEY, $serverHash STRING);"
+        @JvmStatic
+        val createGroupInviteTableCommand = "CREATE TABLE IF NOT EXISTS $groupInviteTable ($threadID INTEGER PRIMARY KEY, $invitingSessionId STRING);"
+        @JvmStatic
+        val createThreadDeleteTrigger = "CREATE TRIGGER IF NOT EXISTS $groupInviteDeleteTrigger AFTER DELETE ON ${ThreadDatabase.TABLE_NAME} BEGIN DELETE FROM $groupInviteTable WHERE $threadID = OLD.${ThreadDatabase.ID}; END;"
 
         const val SMS_TYPE = 0
         const val MMS_TYPE = 1
@@ -249,6 +259,21 @@ class LokiMessageDatabase(context: Context, helper: SQLCipherOpenHelper) : Datab
         )
     }
 
+    fun addGroupInviteReferrer(groupThreadId: Long, referrerSessionId: String) {
+        val contentValues = ContentValues(2).apply {
+            put(threadID, groupThreadId)
+            put(invitingSessionId, referrerSessionId)
+        }
+        databaseHelper.writableDatabase.insertOrUpdate(
+            groupInviteTable, contentValues, "$threadID = ?", arrayOf(groupThreadId.toString())
+        )
+    }
+
+    fun deleteGroupInviteReferrer(groupThreadId: Long) {
+        databaseHelper.writableDatabase.delete(
+            groupInviteTable, "$threadID = ?", arrayOf(groupThreadId.toString())
+        )
+    }
     private fun getMessageTables(mms: Boolean) = sequenceOf(
         getMessageTable(mms),
         messageHashTable

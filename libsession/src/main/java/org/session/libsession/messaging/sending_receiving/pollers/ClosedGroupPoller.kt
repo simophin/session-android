@@ -156,7 +156,7 @@ class ClosedGroupPoller(private val scope: CoroutineScope,
 
             val requests = mutableListOf(keysPoll, infoPoll, membersPoll, messagePoll)
 
-            if (isAdmin && hashesToExtend.isNotEmpty()) {
+            if (hashesToExtend.isNotEmpty()) {
                 SnodeAPI.buildAuthenticatedAlterTtlBatchRequest(
                         messageHashes = hashesToExtend.toList(),
                         publicKey = closedGroupSessionId.hexString(),

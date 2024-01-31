@@ -80,7 +80,8 @@
     <string name="AccessibilityId_cancel_name_change">Cancel name change</string>
     <string name="AccessibilityId_apply_changes">Apply changes</string>
     <string name="AccessibilityId_add_members">Add members</string>
-    <string name="AccessibilityId_reinvite_member">Reinvite member</string>
+    <string name="AccessibilityId_reinvite_member">Resend invite</string>
+    <string name="AccessibilityId_member_state">Status</string>
     <string name="AccessibilityId_remove_member">Remove member</string>
     <string name="AccessibilityId_promote_member">Promote member</string>
     <string name="AccessibilityId_done">Done</string>
@@ -871,6 +872,7 @@
     <string name="menu_apply_button">Apply</string>
     <string name="menu_done_button">Done</string>
     <string name="activity_edit_closed_group_title">Edit Group</string>
+    <string name="activity_edit_closed_group_remove_users_single">Would you like to remove <b>{user}</b> from <b>{group}</b>?</string>
     <string name="activity_edit_closed_group_edit_text_hint">Enter a new group name</string>
     <string name="activity_edit_closed_group_edit_members">Members</string>
     <string name="activity_edit_closed_group_add_members">Add members</string>
@@ -1108,7 +1110,7 @@
     <string name="conversation_settings_leave_group">Leave Group</string>
     <string name="conversation_settings_group_members">Group Members</string>
     <string name="conversation_settings_delete_group">Delete Group</string>
-    <string name="dialog_clear_all_messages_title">Clear All Messages</string>
+    <string name="dialog_clear_all_messages_title">Clear All</string>
     <string name="dialog_clear_all_media_title">Clear All Media</string>
     <string name="dialog_clear_all_messages_message">Are you sure you want to clear all group messages?</string>
     <string name="dialog_clear_all_media_message">Are you sure you want to clear all media and files? This will also delete all messages with attachments.</string>
