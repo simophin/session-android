@@ -191,9 +191,10 @@ message DataMessage {
     // @required
     required Type   type               = 1;
     repeated string memberSessionIds   = 2;
+    optional bool historyShared        = 3;
     // @required
     // "MEMBER_CHANGE" || type || timestamp
-    required bytes adminSignature = 3;
+    required bytes adminSignature      = 4;
   }
 
   message GroupUpdateMemberLeftMessage {

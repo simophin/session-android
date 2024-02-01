@@ -1,12 +1,12 @@
 package org.thoughtcrime.securesms.repository
 
-import network.loki.messenger.libsession_util.util.ExpiryMode
 import android.content.ContentResolver
 import android.content.Context
 import app.cash.copper.flow.observeQuery
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import network.loki.messenger.libsession_util.util.ExpiryMode
 import org.session.libsession.database.MessageDataProvider
 import org.session.libsession.messaging.messages.Destination
 import org.session.libsession.messaging.messages.control.MessageRequestResponse
@@ -163,7 +163,7 @@ class DefaultConversationRepository @Inject constructor(
         }
     }
 
-    // This assumes that recipient.isContactRecipient is true
+    // This assumes that recipient.isContactRecipient or recipient.isClosedGroup is true
     override fun setBlocked(recipient: Recipient, blocked: Boolean) {
         storage.setBlocked(listOf(recipient), blocked)
     }
@@ -313,7 +313,7 @@ class DefaultConversationRepository @Inject constructor(
     override suspend fun acceptMessageRequest(threadId: Long, recipient: Recipient): ResultOf<Unit> = suspendCoroutine { continuation ->
         storage.setRecipientApproved(recipient, true)
         if (recipient.isClosedGroupRecipient) {
-            storage.respondToClosedGroupInvitation(recipient, true)
+            storage.respondToClosedGroupInvitation(threadId, recipient, true)
         } else {
             val message = MessageRequestResponse(true)
             MessageSender.send(message, Destination.from(recipient.address), isSyncMessage = recipient.isLocalNumber)
@@ -329,7 +329,7 @@ class DefaultConversationRepository @Inject constructor(
     override fun declineMessageRequest(threadId: Long, recipient: Recipient) {
         sessionJobDb.cancelPendingMessageSendJobs(threadId)
         if (recipient.isClosedGroupRecipient) {
-            storage.respondToClosedGroupInvitation(recipient, false)
+            storage.respondToClosedGroupInvitation(threadId, recipient, false)
         } else {
             storage.deleteConversation(threadId)
         }

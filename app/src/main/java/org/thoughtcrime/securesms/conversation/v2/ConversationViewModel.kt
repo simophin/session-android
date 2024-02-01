@@ -126,7 +126,7 @@ class ConversationViewModel(
 
     fun block() {
         val recipient = recipient ?: return Log.w("Loki", "Recipient was null for block action")
-        if (recipient.isContactRecipient) {
+        if (recipient.isContactRecipient || recipient.isClosedGroupRecipient) {
             repository.setBlocked(recipient, true)
         }
     }

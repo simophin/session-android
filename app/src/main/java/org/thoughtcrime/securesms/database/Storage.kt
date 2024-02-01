@@ -1261,13 +1261,20 @@ open class Storage(
     override fun getMembers(groupPublicKey: String): List<LibSessionGroupMember> =
         configFactory.getGroupMemberConfig(SessionId.from(groupPublicKey))?.use { it.all() }?.toList() ?: emptyList()
 
-    override fun respondToClosedGroupInvitation(groupRecipient: Recipient, approved: Boolean) {
+    override fun respondToClosedGroupInvitation(
+        threadId: Long,
+        groupRecipient: Recipient,
+        approved: Boolean
+    ) {
         val groups = configFactory.userGroups ?: return
         val groupSessionId = SessionId.from(groupRecipient.address.serialize())
+        // Whether approved or not, delete the invite
+        DatabaseComponent.get(context).lokiMessageDatabase().deleteGroupInviteReferrer(threadId)
         if (!approved) {
             groups.eraseClosedGroup(groupSessionId.hexString())
             configFactory.persist(groups, SnodeAPI.nowWithOffset)
             ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
+            deleteConversation(threadId)
             return
         } else {
             val closedGroupInfo = groups.getClosedGroup(groupSessionId.hexString())?.copy(
@@ -1296,6 +1303,7 @@ open class Storage(
         val recipient = Recipient.from(context, fromSerialized(groupId.hexString()), false)
         val profileManager = SSKEnvironment.shared.profileManager
         val groups = configFactory.userGroups ?: return
+        val inviteDb = DatabaseComponent.get(context).lokiMessageDatabase()
         val shouldAutoApprove = getRecipientApproved(fromSerialized(invitingAdmin.hexString()))
         val closedGroupInfo = GroupInfo.ClosedGroupInfo(
             groupId,
@@ -1307,10 +1315,12 @@ open class Storage(
         groups.set(closedGroupInfo)
         configFactory.persist(groups, SnodeAPI.nowWithOffset)
         profileManager.setName(context, recipient, name)
-        getOrCreateThreadIdFor(recipient.address)
+        val groupThreadId = getOrCreateThreadIdFor(recipient.address)
         setRecipientApprovedMe(recipient, true)
         setRecipientApproved(recipient, shouldAutoApprove)
         if (shouldAutoApprove) {
+            // clear any group invites for this session ID (just in case there's a re-invite from an approved member after an invite from non-approved)
+            inviteDb.deleteGroupInviteReferrer(groupThreadId)
             pollerFactory.pollerFor(groupId)?.start()
             val inviteResponse = GroupUpdateInviteResponseMessage.newBuilder()
                 .setIsApproved(true)
@@ -1319,6 +1329,8 @@ open class Storage(
             val responseMessage = GroupUpdated(responseData.build())
             // this will fail the first couple of times :)
             MessageSender.send(responseMessage, fromSerialized(groupId.hexString()))
+        } else {
+            inviteDb.addGroupInviteReferrer(groupThreadId, invitingAdmin.hexString())
         }
     }
 

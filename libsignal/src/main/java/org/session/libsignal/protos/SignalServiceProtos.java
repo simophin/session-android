@@ -15901,9 +15901,19 @@ public final class SignalServiceProtos {
       com.google.protobuf.ByteString
           getMemberSessionIdsBytes(int index);
 
-      // required bytes adminSignature = 3;
+      // optional bool historyShared = 3;
       /**
-       * <code>required bytes adminSignature = 3;</code>
+       * <code>optional bool historyShared = 3;</code>
+       */
+      boolean hasHistoryShared();
+      /**
+       * <code>optional bool historyShared = 3;</code>
+       */
+      boolean getHistoryShared();
+
+      // required bytes adminSignature = 4;
+      /**
+       * <code>required bytes adminSignature = 4;</code>
        *
        * <pre>
        * @required
@@ -15912,7 +15922,7 @@ public final class SignalServiceProtos {
        */
       boolean hasAdminSignature();
       /**
-       * <code>required bytes adminSignature = 3;</code>
+       * <code>required bytes adminSignature = 4;</code>
        *
        * <pre>
        * @required
@@ -15991,8 +16001,13 @@ public final class SignalServiceProtos {
                 memberSessionIds_.add(input.readBytes());
                 break;
               }
-              case 26: {
+              case 24: {
                 bitField0_ |= 0x00000002;
+                historyShared_ = input.readBool();
+                break;
+              }
+              case 34: {
+                bitField0_ |= 0x00000004;
                 adminSignature_ = input.readBytes();
                 break;
               }
@@ -16184,11 +16199,27 @@ public final class SignalServiceProtos {
         return memberSessionIds_.getByteString(index);
       }
 
-      // required bytes adminSignature = 3;
-      public static final int ADMINSIGNATURE_FIELD_NUMBER = 3;
+      // optional bool historyShared = 3;
+      public static final int HISTORYSHARED_FIELD_NUMBER = 3;
+      private boolean historyShared_;
+      /**
+       * <code>optional bool historyShared = 3;</code>
+       */
+      public boolean hasHistoryShared() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>optional bool historyShared = 3;</code>
+       */
+      public boolean getHistoryShared() {
+        return historyShared_;
+      }
+
+      // required bytes adminSignature = 4;
+      public static final int ADMINSIGNATURE_FIELD_NUMBER = 4;
       private com.google.protobuf.ByteString adminSignature_;
       /**
-       * <code>required bytes adminSignature = 3;</code>
+       * <code>required bytes adminSignature = 4;</code>
        *
        * <pre>
        * @required
@@ -16196,10 +16227,10 @@ public final class SignalServiceProtos {
        * </pre>
        */
       public boolean hasAdminSignature() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
+        return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       /**
-       * <code>required bytes adminSignature = 3;</code>
+       * <code>required bytes adminSignature = 4;</code>
        *
        * <pre>
        * @required
@@ -16213,6 +16244,7 @@ public final class SignalServiceProtos {
       private void initFields() {
         type_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage.Type.ADDED;
         memberSessionIds_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        historyShared_ = false;
         adminSignature_ = com.google.protobuf.ByteString.EMPTY;
       }
       private byte memoizedIsInitialized = -1;
@@ -16242,7 +16274,10 @@ public final class SignalServiceProtos {
           output.writeBytes(2, memberSessionIds_.getByteString(i));
         }
         if (((bitField0_ & 0x00000002) == 0x00000002)) {
-          output.writeBytes(3, adminSignature_);
+          output.writeBool(3, historyShared_);
+        }
+        if (((bitField0_ & 0x00000004) == 0x00000004)) {
+          output.writeBytes(4, adminSignature_);
         }
         getUnknownFields().writeTo(output);
       }
@@ -16268,7 +16303,11 @@ public final class SignalServiceProtos {
         }
         if (((bitField0_ & 0x00000002) == 0x00000002)) {
           size += com.google.protobuf.CodedOutputStream
-            .computeBytesSize(3, adminSignature_);
+            .computeBoolSize(3, historyShared_);
+        }
+        if (((bitField0_ & 0x00000004) == 0x00000004)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeBytesSize(4, adminSignature_);
         }
         size += getUnknownFields().getSerializedSize();
         memoizedSerializedSize = size;
@@ -16390,8 +16429,10 @@ public final class SignalServiceProtos {
           bitField0_ = (bitField0_ & ~0x00000001);
           memberSessionIds_ = com.google.protobuf.LazyStringArrayList.EMPTY;
           bitField0_ = (bitField0_ & ~0x00000002);
-          adminSignature_ = com.google.protobuf.ByteString.EMPTY;
+          historyShared_ = false;
           bitField0_ = (bitField0_ & ~0x00000004);
+          adminSignature_ = com.google.protobuf.ByteString.EMPTY;
+          bitField0_ = (bitField0_ & ~0x00000008);
           return this;
         }
 
@@ -16433,6 +16474,10 @@ public final class SignalServiceProtos {
           if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
             to_bitField0_ |= 0x00000002;
           }
+          result.historyShared_ = historyShared_;
+          if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+            to_bitField0_ |= 0x00000004;
+          }
           result.adminSignature_ = adminSignature_;
           result.bitField0_ = to_bitField0_;
           onBuilt();
@@ -16462,6 +16507,9 @@ public final class SignalServiceProtos {
               memberSessionIds_.addAll(other.memberSessionIds_);
             }
             onChanged();
+          }
+          if (other.hasHistoryShared()) {
+            setHistoryShared(other.getHistoryShared());
           }
           if (other.hasAdminSignature()) {
             setAdminSignature(other.getAdminSignature());
@@ -16646,10 +16694,43 @@ public final class SignalServiceProtos {
           return this;
         }
 
-        // required bytes adminSignature = 3;
+        // optional bool historyShared = 3;
+        private boolean historyShared_ ;
+        /**
+         * <code>optional bool historyShared = 3;</code>
+         */
+        public boolean hasHistoryShared() {
+          return ((bitField0_ & 0x00000004) == 0x00000004);
+        }
+        /**
+         * <code>optional bool historyShared = 3;</code>
+         */
+        public boolean getHistoryShared() {
+          return historyShared_;
+        }
+        /**
+         * <code>optional bool historyShared = 3;</code>
+         */
+        public Builder setHistoryShared(boolean value) {
+          bitField0_ |= 0x00000004;
+          historyShared_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>optional bool historyShared = 3;</code>
+         */
+        public Builder clearHistoryShared() {
+          bitField0_ = (bitField0_ & ~0x00000004);
+          historyShared_ = false;
+          onChanged();
+          return this;
+        }
+
+        // required bytes adminSignature = 4;
         private com.google.protobuf.ByteString adminSignature_ = com.google.protobuf.ByteString.EMPTY;
         /**
-         * <code>required bytes adminSignature = 3;</code>
+         * <code>required bytes adminSignature = 4;</code>
          *
          * <pre>
          * @required
@@ -16657,10 +16738,10 @@ public final class SignalServiceProtos {
          * </pre>
          */
         public boolean hasAdminSignature() {
-          return ((bitField0_ & 0x00000004) == 0x00000004);
+          return ((bitField0_ & 0x00000008) == 0x00000008);
         }
         /**
-         * <code>required bytes adminSignature = 3;</code>
+         * <code>required bytes adminSignature = 4;</code>
          *
          * <pre>
          * @required
@@ -16671,7 +16752,7 @@ public final class SignalServiceProtos {
           return adminSignature_;
         }
         /**
-         * <code>required bytes adminSignature = 3;</code>
+         * <code>required bytes adminSignature = 4;</code>
          *
          * <pre>
          * @required
@@ -16682,13 +16763,13 @@ public final class SignalServiceProtos {
           if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000004;
+  bitField0_ |= 0x00000008;
           adminSignature_ = value;
           onChanged();
           return this;
         }
         /**
-         * <code>required bytes adminSignature = 3;</code>
+         * <code>required bytes adminSignature = 4;</code>
          *
          * <pre>
          * @required
@@ -16696,7 +16777,7 @@ public final class SignalServiceProtos {
          * </pre>
          */
         public Builder clearAdminSignature() {
-          bitField0_ = (bitField0_ & ~0x00000004);
+          bitField0_ = (bitField0_ & ~0x00000008);
           adminSignature_ = getDefaultInstance().getAdminSignature();
           onChanged();
           return this;
@@ -36037,7 +36118,7 @@ public final class SignalServiceProtos {
       "\"\226\001\n\032DataExtractionNotification\022<\n\004type\030" +
       "\001 \002(\0162..signalservice.DataExtractionNoti" +
       "fication.Type\022\021\n\ttimestamp\030\002 \001(\004\"\'\n\004Type" +
-      "\022\016\n\nSCREENSHOT\020\001\022\017\n\013MEDIA_SAVED\020\002\"\361\033\n\013Da" +
+      "\022\016\n\nSCREENSHOT\020\001\022\017\n\013MEDIA_SAVED\020\002\"\210\034\n\013Da" +
       "taMessage\022\014\n\004body\030\001 \001(\t\0225\n\013attachments\030\002" +
       " \003(\0132 .signalservice.AttachmentPointer\022\r" +
       "\n\005flags\030\004 \001(\r\022\023\n\013expireTimer\030\005 \001(\r\022\022\n\npr" +
@@ -36096,83 +36177,84 @@ public final class SignalServiceProtos {
       "tedName\030\002 \001(\t\022\031\n\021updatedExpiration\030\003 \001(\r" +
       "\022\026\n\016adminSignature\030\004 \002(\014\"7\n\004Type\022\010\n\004NAME" +
       "\020\001\022\n\n\006AVATAR\020\002\022\031\n\025DISAPPEARING_MESSAGES\020" +
-      "\003\032\316\001\n\036GroupUpdateMemberChangeMessage\022L\n\004" +
+      "\003\032\345\001\n\036GroupUpdateMemberChangeMessage\022L\n\004" +
       "type\030\001 \002(\0162>.signalservice.DataMessage.G" +
       "roupUpdateMemberChangeMessage.Type\022\030\n\020me" +
-      "mberSessionIds\030\002 \003(\t\022\026\n\016adminSignature\030\003" +
-      " \002(\014\",\n\004Type\022\t\n\005ADDED\020\001\022\013\n\007REMOVED\020\002\022\014\n\010" +
-      "PROMOTED\020\003\032\036\n\034GroupUpdateMemberLeftMessa" +
-      "ge\0326\n GroupUpdateInviteResponseMessage\022\022",
-      "\n\nisApproved\030\001 \002(\010\032p\n%GroupUpdateDeleteM" +
-      "emberContentMessage\022\030\n\020memberSessionIds\030" +
-      "\001 \003(\t\022\025\n\rmessageHashes\030\002 \003(\t\022\026\n\016adminSig" +
-      "nature\030\003 \001(\014\032\203\005\n\031ClosedGroupControlMessa" +
-      "ge\022G\n\004type\030\001 \002(\01629.signalservice.DataMes" +
-      "sage.ClosedGroupControlMessage.Type\022\021\n\tp" +
-      "ublicKey\030\002 \001(\014\022\014\n\004name\030\003 \001(\t\0221\n\021encrypti" +
-      "onKeyPair\030\004 \001(\0132\026.signalservice.KeyPair\022" +
-      "\017\n\007members\030\005 \003(\014\022\016\n\006admins\030\006 \003(\014\022U\n\010wrap" +
-      "pers\030\007 \003(\0132C.signalservice.DataMessage.C",
-      "losedGroupControlMessage.KeyPairWrapper\022" +
-      "\027\n\017expirationTimer\030\010 \001(\r\022\030\n\020memberPrivat" +
-      "eKey\030\t \001(\014\022\022\n\nprivateKey\030\n \001(\014\032=\n\016KeyPai" +
-      "rWrapper\022\021\n\tpublicKey\030\001 \002(\014\022\030\n\020encrypted" +
-      "KeyPair\030\002 \002(\014\"\312\001\n\004Type\022\007\n\003NEW\020\001\022\027\n\023ENCRY" +
-      "PTION_KEY_PAIR\020\003\022\017\n\013NAME_CHANGE\020\004\022\021\n\rMEM" +
-      "BERS_ADDED\020\005\022\023\n\017MEMBERS_REMOVED\020\006\022\017\n\013MEM" +
-      "BER_LEFT\020\007\022\n\n\006INVITE\020\t\022\013\n\007PROMOTE\020\n\022\020\n\014D" +
-      "ELETE_GROUP\020\013\022\023\n\017DELETE_MESSAGES\020\014\022\026\n\022DE" +
-      "LETE_ATTACHMENTS\020\r\032\222\001\n\010Reaction\022\n\n\002id\030\001 ",
-      "\002(\004\022\016\n\006author\030\002 \002(\t\022\r\n\005emoji\030\003 \001(\t\022:\n\006ac" +
-      "tion\030\004 \002(\0162*.signalservice.DataMessage.R" +
-      "eaction.Action\"\037\n\006Action\022\t\n\005REACT\020\000\022\n\n\006R" +
-      "EMOVE\020\001\"$\n\005Flags\022\033\n\027EXPIRATION_TIMER_UPD" +
-      "ATE\020\002\"B\n\022GroupDeleteMessage\022\021\n\tpublicKey" +
-      "\030\001 \002(\014\022\031\n\021lastEncryptionKey\030\002 \002(\014\"\030\n\026Gro" +
-      "upMemberLeftMessage\"O\n\022GroupInviteMessag" +
-      "e\022\021\n\tpublicKey\030\001 \002(\014\022\014\n\004name\030\002 \002(\t\022\030\n\020me" +
-      "mberPrivateKey\030\003 \002(\014\"E\n\023GroupPromoteMess" +
-      "age\022\021\n\tpublicKey\030\001 \002(\014\022\033\n\023encryptedPriva",
-      "teKey\030\002 \002(\014\"\352\001\n\013CallMessage\022-\n\004type\030\001 \002(" +
-      "\0162\037.signalservice.CallMessage.Type\022\014\n\004sd" +
-      "ps\030\002 \003(\t\022\027\n\017sdpMLineIndexes\030\003 \003(\r\022\017\n\007sdp" +
-      "Mids\030\004 \003(\t\022\014\n\004uuid\030\005 \002(\t\"f\n\004Type\022\r\n\tPRE_" +
-      "OFFER\020\006\022\t\n\005OFFER\020\001\022\n\n\006ANSWER\020\002\022\026\n\022PROVIS" +
-      "IONAL_ANSWER\020\003\022\022\n\016ICE_CANDIDATES\020\004\022\014\n\010EN" +
-      "D_CALL\020\005\"\245\004\n\024ConfigurationMessage\022E\n\014clo" +
-      "sedGroups\030\001 \003(\0132/.signalservice.Configur" +
-      "ationMessage.ClosedGroup\022\022\n\nopenGroups\030\002" +
-      " \003(\t\022\023\n\013displayName\030\003 \001(\t\022\026\n\016profilePict",
-      "ure\030\004 \001(\t\022\022\n\nprofileKey\030\005 \001(\014\022=\n\010contact" +
-      "s\030\006 \003(\0132+.signalservice.ConfigurationMes" +
-      "sage.Contact\032\233\001\n\013ClosedGroup\022\021\n\tpublicKe" +
-      "y\030\001 \001(\014\022\014\n\004name\030\002 \001(\t\0221\n\021encryptionKeyPa" +
-      "ir\030\003 \001(\0132\026.signalservice.KeyPair\022\017\n\007memb" +
-      "ers\030\004 \003(\014\022\016\n\006admins\030\005 \003(\014\022\027\n\017expirationT" +
-      "imer\030\006 \001(\r\032\223\001\n\007Contact\022\021\n\tpublicKey\030\001 \002(" +
-      "\014\022\014\n\004name\030\002 \002(\t\022\026\n\016profilePicture\030\003 \001(\t\022" +
-      "\022\n\nprofileKey\030\004 \001(\014\022\022\n\nisApproved\030\005 \001(\010\022" +
-      "\021\n\tisBlocked\030\006 \001(\010\022\024\n\014didApproveMe\030\007 \001(\010",
-      "\"y\n\026MessageRequestResponse\022\022\n\nisApproved" +
-      "\030\001 \002(\010\022\022\n\nprofileKey\030\002 \001(\014\0227\n\007profile\030\003 " +
-      "\001(\0132&.signalservice.DataMessage.LokiProf" +
-      "ile\"\375\001\n\023SharedConfigMessage\0225\n\004kind\030\001 \002(" +
-      "\0162\'.signalservice.SharedConfigMessage.Ki" +
-      "nd\022\r\n\005seqno\030\002 \002(\003\022\014\n\004data\030\003 \002(\014\"\221\001\n\004Kind" +
-      "\022\020\n\014USER_PROFILE\020\001\022\014\n\010CONTACTS\020\002\022\027\n\023CONV" +
-      "O_INFO_VOLATILE\020\003\022\n\n\006GROUPS\020\004\022\025\n\021CLOSED_" +
-      "GROUP_INFO\020\005\022\030\n\024CLOSED_GROUP_MEMBERS\020\006\022\023" +
-      "\n\017ENCRYPTION_KEYS\020\007\"u\n\016ReceiptMessage\0220\n",
-      "\004type\030\001 \002(\0162\".signalservice.ReceiptMessa" +
-      "ge.Type\022\021\n\ttimestamp\030\002 \003(\004\"\036\n\004Type\022\014\n\010DE" +
-      "LIVERY\020\000\022\010\n\004READ\020\001\"\354\001\n\021AttachmentPointer" +
-      "\022\n\n\002id\030\001 \002(\006\022\023\n\013contentType\030\002 \001(\t\022\013\n\003key" +
-      "\030\003 \001(\014\022\014\n\004size\030\004 \001(\r\022\021\n\tthumbnail\030\005 \001(\014\022" +
-      "\016\n\006digest\030\006 \001(\014\022\020\n\010fileName\030\007 \001(\t\022\r\n\005fla" +
-      "gs\030\010 \001(\r\022\r\n\005width\030\t \001(\r\022\016\n\006height\030\n \001(\r\022" +
-      "\017\n\007caption\030\013 \001(\t\022\013\n\003url\030e \001(\t\"\032\n\005Flags\022\021" +
-      "\n\rVOICE_MESSAGE\020\001B3\n\034org.session.libsign" +
-      "al.protosB\023SignalServiceProtos"
+      "mberSessionIds\030\002 \003(\t\022\025\n\rhistoryShared\030\003 " +
+      "\001(\010\022\026\n\016adminSignature\030\004 \002(\014\",\n\004Type\022\t\n\005A" +
+      "DDED\020\001\022\013\n\007REMOVED\020\002\022\014\n\010PROMOTED\020\003\032\036\n\034Gro" +
+      "upUpdateMemberLeftMessage\0326\n GroupUpdate",
+      "InviteResponseMessage\022\022\n\nisApproved\030\001 \002(" +
+      "\010\032p\n%GroupUpdateDeleteMemberContentMessa" +
+      "ge\022\030\n\020memberSessionIds\030\001 \003(\t\022\025\n\rmessageH" +
+      "ashes\030\002 \003(\t\022\026\n\016adminSignature\030\003 \001(\014\032\203\005\n\031" +
+      "ClosedGroupControlMessage\022G\n\004type\030\001 \002(\0162" +
+      "9.signalservice.DataMessage.ClosedGroupC" +
+      "ontrolMessage.Type\022\021\n\tpublicKey\030\002 \001(\014\022\014\n" +
+      "\004name\030\003 \001(\t\0221\n\021encryptionKeyPair\030\004 \001(\0132\026" +
+      ".signalservice.KeyPair\022\017\n\007members\030\005 \003(\014\022" +
+      "\016\n\006admins\030\006 \003(\014\022U\n\010wrappers\030\007 \003(\0132C.sign",
+      "alservice.DataMessage.ClosedGroupControl" +
+      "Message.KeyPairWrapper\022\027\n\017expirationTime" +
+      "r\030\010 \001(\r\022\030\n\020memberPrivateKey\030\t \001(\014\022\022\n\npri" +
+      "vateKey\030\n \001(\014\032=\n\016KeyPairWrapper\022\021\n\tpubli" +
+      "cKey\030\001 \002(\014\022\030\n\020encryptedKeyPair\030\002 \002(\014\"\312\001\n" +
+      "\004Type\022\007\n\003NEW\020\001\022\027\n\023ENCRYPTION_KEY_PAIR\020\003\022" +
+      "\017\n\013NAME_CHANGE\020\004\022\021\n\rMEMBERS_ADDED\020\005\022\023\n\017M" +
+      "EMBERS_REMOVED\020\006\022\017\n\013MEMBER_LEFT\020\007\022\n\n\006INV" +
+      "ITE\020\t\022\013\n\007PROMOTE\020\n\022\020\n\014DELETE_GROUP\020\013\022\023\n\017" +
+      "DELETE_MESSAGES\020\014\022\026\n\022DELETE_ATTACHMENTS\020",
+      "\r\032\222\001\n\010Reaction\022\n\n\002id\030\001 \002(\004\022\016\n\006author\030\002 \002" +
+      "(\t\022\r\n\005emoji\030\003 \001(\t\022:\n\006action\030\004 \002(\0162*.sign" +
+      "alservice.DataMessage.Reaction.Action\"\037\n" +
+      "\006Action\022\t\n\005REACT\020\000\022\n\n\006REMOVE\020\001\"$\n\005Flags\022" +
+      "\033\n\027EXPIRATION_TIMER_UPDATE\020\002\"B\n\022GroupDel" +
+      "eteMessage\022\021\n\tpublicKey\030\001 \002(\014\022\031\n\021lastEnc" +
+      "ryptionKey\030\002 \002(\014\"\030\n\026GroupMemberLeftMessa" +
+      "ge\"O\n\022GroupInviteMessage\022\021\n\tpublicKey\030\001 " +
+      "\002(\014\022\014\n\004name\030\002 \002(\t\022\030\n\020memberPrivateKey\030\003 " +
+      "\002(\014\"E\n\023GroupPromoteMessage\022\021\n\tpublicKey\030",
+      "\001 \002(\014\022\033\n\023encryptedPrivateKey\030\002 \002(\014\"\352\001\n\013C" +
+      "allMessage\022-\n\004type\030\001 \002(\0162\037.signalservice" +
+      ".CallMessage.Type\022\014\n\004sdps\030\002 \003(\t\022\027\n\017sdpML" +
+      "ineIndexes\030\003 \003(\r\022\017\n\007sdpMids\030\004 \003(\t\022\014\n\004uui" +
+      "d\030\005 \002(\t\"f\n\004Type\022\r\n\tPRE_OFFER\020\006\022\t\n\005OFFER\020" +
+      "\001\022\n\n\006ANSWER\020\002\022\026\n\022PROVISIONAL_ANSWER\020\003\022\022\n" +
+      "\016ICE_CANDIDATES\020\004\022\014\n\010END_CALL\020\005\"\245\004\n\024Conf" +
+      "igurationMessage\022E\n\014closedGroups\030\001 \003(\0132/" +
+      ".signalservice.ConfigurationMessage.Clos" +
+      "edGroup\022\022\n\nopenGroups\030\002 \003(\t\022\023\n\013displayNa",
+      "me\030\003 \001(\t\022\026\n\016profilePicture\030\004 \001(\t\022\022\n\nprof" +
+      "ileKey\030\005 \001(\014\022=\n\010contacts\030\006 \003(\0132+.signals" +
+      "ervice.ConfigurationMessage.Contact\032\233\001\n\013" +
+      "ClosedGroup\022\021\n\tpublicKey\030\001 \001(\014\022\014\n\004name\030\002" +
+      " \001(\t\0221\n\021encryptionKeyPair\030\003 \001(\0132\026.signal" +
+      "service.KeyPair\022\017\n\007members\030\004 \003(\014\022\016\n\006admi" +
+      "ns\030\005 \003(\014\022\027\n\017expirationTimer\030\006 \001(\r\032\223\001\n\007Co" +
+      "ntact\022\021\n\tpublicKey\030\001 \002(\014\022\014\n\004name\030\002 \002(\t\022\026" +
+      "\n\016profilePicture\030\003 \001(\t\022\022\n\nprofileKey\030\004 \001" +
+      "(\014\022\022\n\nisApproved\030\005 \001(\010\022\021\n\tisBlocked\030\006 \001(",
+      "\010\022\024\n\014didApproveMe\030\007 \001(\010\"y\n\026MessageReques" +
+      "tResponse\022\022\n\nisApproved\030\001 \002(\010\022\022\n\nprofile" +
+      "Key\030\002 \001(\014\0227\n\007profile\030\003 \001(\0132&.signalservi" +
+      "ce.DataMessage.LokiProfile\"\375\001\n\023SharedCon" +
+      "figMessage\0225\n\004kind\030\001 \002(\0162\'.signalservice" +
+      ".SharedConfigMessage.Kind\022\r\n\005seqno\030\002 \002(\003" +
+      "\022\014\n\004data\030\003 \002(\014\"\221\001\n\004Kind\022\020\n\014USER_PROFILE\020" +
+      "\001\022\014\n\010CONTACTS\020\002\022\027\n\023CONVO_INFO_VOLATILE\020\003" +
+      "\022\n\n\006GROUPS\020\004\022\025\n\021CLOSED_GROUP_INFO\020\005\022\030\n\024C" +
+      "LOSED_GROUP_MEMBERS\020\006\022\023\n\017ENCRYPTION_KEYS",
+      "\020\007\"u\n\016ReceiptMessage\0220\n\004type\030\001 \002(\0162\".sig" +
+      "nalservice.ReceiptMessage.Type\022\021\n\ttimest" +
+      "amp\030\002 \003(\004\"\036\n\004Type\022\014\n\010DELIVERY\020\000\022\010\n\004READ\020" +
+      "\001\"\354\001\n\021AttachmentPointer\022\n\n\002id\030\001 \002(\006\022\023\n\013c" +
+      "ontentType\030\002 \001(\t\022\013\n\003key\030\003 \001(\014\022\014\n\004size\030\004 " +
+      "\001(\r\022\021\n\tthumbnail\030\005 \001(\014\022\016\n\006digest\030\006 \001(\014\022\020" +
+      "\n\010fileName\030\007 \001(\t\022\r\n\005flags\030\010 \001(\r\022\r\n\005width" +
+      "\030\t \001(\r\022\016\n\006height\030\n \001(\r\022\017\n\007caption\030\013 \001(\t\022" +
+      "\013\n\003url\030e \001(\t\"\032\n\005Flags\022\021\n\rVOICE_MESSAGE\020\001" +
+      "B3\n\034org.session.libsignal.protosB\023Signal",
+      "ServiceProtos"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -36286,7 +36368,7 @@ public final class SignalServiceProtos {
           internal_static_signalservice_DataMessage_GroupUpdateMemberChangeMessage_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_signalservice_DataMessage_GroupUpdateMemberChangeMessage_descriptor,
-              new java.lang.String[] { "Type", "MemberSessionIds", "AdminSignature", });
+              new java.lang.String[] { "Type", "MemberSessionIds", "HistoryShared", "AdminSignature", });
           internal_static_signalservice_DataMessage_GroupUpdateMemberLeftMessage_descriptor =
             internal_static_signalservice_DataMessage_descriptor.getNestedTypes().get(10);
           internal_static_signalservice_DataMessage_GroupUpdateMemberLeftMessage_fieldAccessorTable = new

@@ -163,7 +163,7 @@ interface StorageProtocol {
     // Closed Groups
     fun createNewGroup(groupName: String, groupDescription: String, members: Set<Contact>): Optional<Recipient>
     fun getMembers(groupPublicKey: String): List<LibSessionGroupMember>
-    fun respondToClosedGroupInvitation(groupRecipient: Recipient, approved: Boolean)
+    fun respondToClosedGroupInvitation(threadId: Long, groupRecipient: Recipient, approved: Boolean)
     fun addClosedGroupInvite(groupId: SessionId, name: String, authData: ByteArray, invitingAdmin: SessionId)
     fun setGroupInviteCompleteIfNeeded(approved: Boolean, invitee: String, closedGroup: SessionId)
     fun getLibSessionClosedGroup(groupSessionId: String): GroupInfo.ClosedGroupInfo?
