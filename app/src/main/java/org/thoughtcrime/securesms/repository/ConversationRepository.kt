@@ -50,7 +50,7 @@ interface ConversationRepository {
     fun getDraft(threadId: Long): String?
     fun clearDrafts(threadId: Long)
     fun inviteContacts(threadId: Long, contacts: List<Recipient>)
-    fun setBlocked(recipient: Recipient, blocked: Boolean)
+    fun setBlocked(threadId: Long, recipient: Recipient, blocked: Boolean)
     fun deleteLocally(recipient: Recipient, message: MessageRecord)
     fun setApproved(recipient: Recipient, isApproved: Boolean)
 
@@ -82,6 +82,7 @@ interface ConversationRepository {
     fun declineMessageRequest(threadId: Long, recipient: Recipient)
 
     fun hasReceived(threadId: Long): Boolean
+    fun getInvitingAdmin(threadId: Long, threadRecipient: Recipient): Recipient?
 
 }
 
@@ -163,9 +164,11 @@ class DefaultConversationRepository @Inject constructor(
         }
     }
 
-    // This assumes that recipient.isContactRecipient or recipient.isClosedGroup is true
-    override fun setBlocked(recipient: Recipient, blocked: Boolean) {
-        storage.setBlocked(listOf(recipient), blocked)
+    // This assumes that recipient.isContactRecipient is true
+    override fun setBlocked(threadId: Long, recipient: Recipient, blocked: Boolean) {
+        if (recipient.isContactRecipient) {
+            storage.setBlocked(listOf(recipient), blocked)
+        }
     }
 
     override fun deleteLocally(recipient: Recipient, message: MessageRecord) {
@@ -303,7 +306,7 @@ class DefaultConversationRepository @Inject constructor(
                 deleteMessageRequest(reader.current)
                 val recipient = reader.current.recipient
                 if (block && !recipient.isClosedGroupRecipient) {
-                    setBlocked(recipient, true)
+                    setBlocked(reader.current.threadId, recipient, true)
                 }
             }
         }
@@ -347,4 +350,9 @@ class DefaultConversationRepository @Inject constructor(
         return false
     }
 
+    override fun getInvitingAdmin(threadId: Long, threadRecipient: Recipient): Recipient? {
+        return if (threadRecipient.isClosedGroupRecipient) lokiMessageDb.groupInviteReferrer(threadId)?.let { id ->
+            Recipient.from(context, Address.fromSerialized(id), false)
+        } else null
+    }
 }

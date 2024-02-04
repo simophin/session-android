@@ -51,6 +51,7 @@ import androidx.loader.content.Loader
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.annimon.stream.Stream
+import com.squareup.phrase.Phrase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
@@ -149,6 +150,7 @@ import org.thoughtcrime.securesms.database.model.MmsMessageRecord
 import org.thoughtcrime.securesms.database.model.ReactionRecord
 import org.thoughtcrime.securesms.giph.ui.GiphyActivity
 import org.thoughtcrime.securesms.groups.OpenGroupManager
+import org.thoughtcrime.securesms.home.search.getSearchName
 import org.thoughtcrime.securesms.linkpreview.LinkPreviewRepository
 import org.thoughtcrime.securesms.linkpreview.LinkPreviewUtil
 import org.thoughtcrime.securesms.linkpreview.LinkPreviewViewModel
@@ -1165,9 +1167,25 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     override fun block(deleteThread: Boolean) {
+        val recipient = viewModel.recipient ?: return
+        val title: String
+        val body: String
+        val invitingAdmin = viewModel.invitingAdmin
+
+        if (recipient.isClosedGroupRecipient && invitingAdmin != null) {
+            // show the block user if we have them
+            title = getString(R.string.RecipientPreferenceActivity_block)
+            body = Phrase.from(this, R.string.RecipientPreferenceActivity_block_user_body)
+                .put("user", invitingAdmin.getSearchName())
+                .format().toString()
+        } else {
+            // show regular block user
+            title = getString(R.string.RecipientPreferenceActivity_block)
+            body = getString(R.string.RecipientPreferenceActivity_you_will_no_longer_receive_messages_and_calls_from_this_contact)
+        }
         showSessionDialog {
-            title(R.string.RecipientPreferenceActivity_block_this_contact_question)
-            text(R.string.RecipientPreferenceActivity_you_will_no_longer_receive_messages_and_calls_from_this_contact)
+            title(title)
+            text(body)
             destructiveButton(R.string.RecipientPreferenceActivity_block, R.string.AccessibilityId_block_confirm) {
                 viewModel.block()
                 if (deleteThread) {

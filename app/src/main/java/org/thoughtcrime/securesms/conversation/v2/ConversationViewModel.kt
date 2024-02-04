@@ -59,6 +59,14 @@ class ConversationViewModel(
             }
         }
 
+    val invitingAdmin: Recipient?
+        get() {
+            val recipient = recipient ?: return null
+            if (!recipient.isClosedGroupRecipient) return null
+
+            return repository.getInvitingAdmin(threadId, recipient)
+        }
+
     private var _openGroup: RetrieveOnce<OpenGroup> = RetrieveOnce {
         storage.getOpenGroup(threadId)
     }
@@ -125,16 +133,17 @@ class ConversationViewModel(
     }
 
     fun block() {
-        val recipient = recipient ?: return Log.w("Loki", "Recipient was null for block action")
+        // inviting admin will be true if this request is a closed group message request
+        val recipient = invitingAdmin ?: recipient ?: return Log.w("Loki", "Recipient was null for block action")
         if (recipient.isContactRecipient || recipient.isClosedGroupRecipient) {
-            repository.setBlocked(recipient, true)
+            repository.setBlocked(threadId, recipient, true)
         }
     }
 
     fun unblock() {
         val recipient = recipient ?: return Log.w("Loki", "Recipient was null for unblock action")
         if (recipient.isContactRecipient) {
-            repository.setBlocked(recipient, false)
+            repository.setBlocked(threadId, recipient, false)
         }
     }
 

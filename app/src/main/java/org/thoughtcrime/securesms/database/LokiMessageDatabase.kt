@@ -269,6 +269,12 @@ class LokiMessageDatabase(context: Context, helper: SQLCipherOpenHelper) : Datab
         )
     }
 
+    fun groupInviteReferrer(groupThreadId: Long): String? {
+        return databaseHelper.readableDatabase.get(groupInviteTable, "$threadID = ?", arrayOf(groupThreadId.toString())) {cursor ->
+            cursor.getString(invitingSessionId)
+        }
+    }
+
     fun deleteGroupInviteReferrer(groupThreadId: Long) {
         databaseHelper.writableDatabase.delete(
             groupInviteTable, "$threadID = ?", arrayOf(groupThreadId.toString())

@@ -13,6 +13,7 @@ import org.session.libsession.messaging.calls.CallMessageType.CALL_OUTGOING
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.messaging.messages.ExpirationConfiguration.Companion.isNewConfigEnabled
 import org.session.libsession.messaging.sending_receiving.data_extraction.DataExtractionNotificationInfoMessage
+import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.ExpirationUtil
 import org.session.libsession.utilities.getExpirationTypeDisplayValue
 import org.session.libsession.utilities.recipients.Recipient
@@ -180,7 +181,12 @@ object UpdateMessageBuilder {
                     null -> ""
                 }
             }
-            is UpdateMessageData.Kind.OpenGroupInvitation -> TODO()
+            is UpdateMessageData.Kind.GroupInvitation -> {
+                val invitingAdmin = Recipient.from(context, Address.fromSerialized(updateData.invitingAdmin), false)
+
+                ""
+            }
+            is UpdateMessageData.Kind.OpenGroupInvitation -> ""
         }
     }
 

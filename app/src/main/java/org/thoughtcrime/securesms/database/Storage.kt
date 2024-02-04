@@ -1298,7 +1298,8 @@ open class Storage(
         groupId: SessionId,
         name: String,
         authData: ByteArray,
-        invitingAdmin: SessionId
+        invitingAdmin: SessionId,
+        invitedTime: Long
     ) {
         val recipient = Recipient.from(context, fromSerialized(groupId.hexString()), false)
         val profileManager = SSKEnvironment.shared.profileManager
@@ -1331,6 +1332,7 @@ open class Storage(
             MessageSender.send(responseMessage, fromSerialized(groupId.hexString()))
         } else {
             inviteDb.addGroupInviteReferrer(groupThreadId, invitingAdmin.hexString())
+            insertGroupInviteControlMessage(invitedTime, invitingAdmin.hexString(), groupId)
         }
     }
 
@@ -1492,9 +1494,18 @@ open class Storage(
     override fun insertGroupInfoChange(message: GroupUpdated, closedGroup: SessionId) {
         val sentTimestamp = message.sentTimestamp ?: SnodeAPI.nowWithOffset
         val senderPublicKey = message.sender
-        val userPublicKey = getUserPublicKey()!!
-        val updateData = UpdateMessageData.buildGroupUpdate(message)?.toJSON() ?: return
+        val updateData = UpdateMessageData.buildGroupUpdate(message) ?: return
 
+        insertUpdateControlMessage(updateData, sentTimestamp, senderPublicKey, closedGroup)
+    }
+
+    private fun insertGroupInviteControlMessage(sentTimestamp: Long, senderPublicKey: String, closedGroup: SessionId) {
+        val updateData = UpdateMessageData(UpdateMessageData.Kind.GroupInvitation(senderPublicKey))
+        insertUpdateControlMessage(updateData, sentTimestamp, senderPublicKey, closedGroup)
+    }
+
+    private fun insertUpdateControlMessage(updateData: UpdateMessageData, sentTimestamp: Long, senderPublicKey: String?, closedGroup: SessionId) {
+        val userPublicKey = getUserPublicKey()!!
         val recipient = Recipient.from(context, fromSerialized(closedGroup.hexString()), false)
         val threadDb = DatabaseComponent.get(context).threadDatabase()
         val threadID = threadDb.getThreadIdIfExistsFor(recipient)
@@ -1502,12 +1513,13 @@ open class Storage(
         val expiryMode = expirationConfig?.expiryMode
         val expiresInMillis = expiryMode?.expiryMillis ?: 0
         val expireStartedAt = if (expiryMode is ExpiryMode.AfterSend) sentTimestamp else 0
+        val inviteJson = updateData.toJSON()
 
 
         if (senderPublicKey == null || senderPublicKey == userPublicKey) {
             val infoMessage = OutgoingGroupMediaMessage(
                 recipient,
-                updateData,
+                inviteJson,
                 closedGroup.hexString(),
                 null,
                 sentTimestamp,
@@ -1526,7 +1538,7 @@ open class Storage(
         } else {
             val group = SignalServiceGroup(Hex.fromStringCondensed(closedGroup.hexString()), SignalServiceGroup.GroupType.SIGNAL)
             val m = IncomingTextMessage(fromSerialized(senderPublicKey), 1, sentTimestamp, "", Optional.of(group), expiresInMillis, expireStartedAt, true, false)
-            val infoMessage = IncomingGroupMessage(m, updateData, true)
+            val infoMessage = IncomingGroupMessage(m, inviteJson, true)
             val smsDB = DatabaseComponent.get(context).smsDatabase()
             smsDB.insertMessageInbox(infoMessage,  true)
         }

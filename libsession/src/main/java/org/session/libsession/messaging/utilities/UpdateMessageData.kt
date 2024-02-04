@@ -27,7 +27,8 @@ class UpdateMessageData () {
         JsonSubTypes.Type(Kind.OpenGroupInvitation::class, name = "OpenGroupInvitation"),
         JsonSubTypes.Type(Kind.GroupAvatarUpdated::class, name = "GroupAvatarUpdated"),
         JsonSubTypes.Type(Kind.GroupMemberUpdated::class, name = "GroupMemberUpdated"),
-        JsonSubTypes.Type(Kind.GroupExpirationUpdated::class, name = "GroupExpirationUpdated")
+        JsonSubTypes.Type(Kind.GroupExpirationUpdated::class, name = "GroupExpirationUpdated"),
+        JsonSubTypes.Type(Kind.GroupInvitation::class, name = "GroupInvitation")
     )
     sealed class Kind {
         data object GroupCreation: Kind()
@@ -48,6 +49,9 @@ class UpdateMessageData () {
         data class GroupExpirationUpdated(val updatedExpiration: Int = 0): Kind()
         class OpenGroupInvitation(val groupUrl: String, val groupName: String): Kind() {
             constructor(): this("", "")
+        }
+        data class GroupInvitation(val invitingAdmin: String) : Kind() {
+            constructor(): this("")
         }
     }
 
