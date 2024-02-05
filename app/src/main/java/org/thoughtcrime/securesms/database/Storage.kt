@@ -324,7 +324,7 @@ open class Storage(
 
     override fun updateThread(threadId: Long, unarchive: Boolean) {
         val threadDb = DatabaseComponent.get(context).threadDatabase()
-        threadDb.update(threadId, unarchive, false)
+        threadDb.update(threadId, unarchive)
     }
 
     override fun persist(message: VisibleMessage,
@@ -1289,6 +1289,7 @@ open class Storage(
             val responseData = GroupUpdateMessage.newBuilder()
                 .setInviteResponse(inviteResponse)
             val responseMessage = GroupUpdated(responseData.build())
+            clearMessages(threadId)
             // this will fail the first couple of times :)
             MessageSender.send(responseMessage, fromSerialized(groupSessionId.hexString()))
         }
@@ -1298,14 +1299,13 @@ open class Storage(
         groupId: SessionId,
         name: String,
         authData: ByteArray,
-        invitingAdmin: SessionId,
-        invitedTime: Long
+        invitingAdmin: SessionId
     ) {
         val recipient = Recipient.from(context, fromSerialized(groupId.hexString()), false)
         val profileManager = SSKEnvironment.shared.profileManager
         val groups = configFactory.userGroups ?: return
         val inviteDb = DatabaseComponent.get(context).lokiMessageDatabase()
-        val shouldAutoApprove = getRecipientApproved(fromSerialized(invitingAdmin.hexString()))
+        val shouldAutoApprove = false // getRecipientApproved(fromSerialized(invitingAdmin.hexString()))
         val closedGroupInfo = GroupInfo.ClosedGroupInfo(
             groupId,
             byteArrayOf(),
@@ -1332,7 +1332,7 @@ open class Storage(
             MessageSender.send(responseMessage, fromSerialized(groupId.hexString()))
         } else {
             inviteDb.addGroupInviteReferrer(groupThreadId, invitingAdmin.hexString())
-            insertGroupInviteControlMessage(invitedTime, invitingAdmin.hexString(), groupId)
+            insertGroupInviteControlMessage(SnodeAPI.nowWithOffset, invitingAdmin.hexString(), groupId)
         }
     }
 
@@ -2232,12 +2232,14 @@ open class Storage(
         val mmsDb = DatabaseComponent.get(context).mmsDatabase()
         val threadDb = DatabaseComponent.get(context).threadDatabase()
         if (fromUser == null) {
+            // this deletes all *from* thread, not deleting the actual thread
             smsDb.deleteThread(threadID)
             mmsDb.deleteThread(threadID) // threadDB update called from within
         } else {
+            // this deletes all *from* thread, not deleting the actual thread
             smsDb.deleteMessagesFrom(threadID, fromUser.serialize())
             mmsDb.deleteMessagesFrom(threadID, fromUser.serialize())
-            threadDb.update(threadID, false, true)
+            threadDb.update(threadID, false)
         }
         return true
     }

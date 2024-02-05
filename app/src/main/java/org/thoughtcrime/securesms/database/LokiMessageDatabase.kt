@@ -15,7 +15,7 @@ class LokiMessageDatabase(context: Context, helper: SQLCipherOpenHelper) : Datab
         private val messageHashTable = "loki_message_hash_database"
         private val smsHashTable = "loki_sms_hash_database"
         private val mmsHashTable = "loki_mms_hash_database"
-        private val groupInviteTable = "loki_group_invites"
+        const val groupInviteTable = "loki_group_invites"
 
         private val groupInviteDeleteTrigger = "group_invite_delete_trigger"
 
@@ -26,7 +26,7 @@ class LokiMessageDatabase(context: Context, helper: SQLCipherOpenHelper) : Datab
         private val errorMessage = "error_message"
         private val messageType = "message_type"
         private val serverHash = "server_hash"
-        private val invitingSessionId = "inviting_session_id"
+        const val invitingSessionId = "inviting_session_id"
 
         @JvmStatic
         val createMessageIDTableCommand = "CREATE TABLE $messageIDTable ($messageID INTEGER PRIMARY KEY, $serverID INTEGER DEFAULT 0, $friendRequestStatus INTEGER DEFAULT 0);"
@@ -270,6 +270,7 @@ class LokiMessageDatabase(context: Context, helper: SQLCipherOpenHelper) : Datab
     }
 
     fun groupInviteReferrer(groupThreadId: Long): String? {
+        return null
         return databaseHelper.readableDatabase.get(groupInviteTable, "$threadID = ?", arrayOf(groupThreadId.toString())) {cursor ->
             cursor.getString(invitingSessionId)
         }

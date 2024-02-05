@@ -96,6 +96,8 @@
     <string name="ConversationItem_group_member_you_promoted_two">You and <b>{second}</b> were promoted to Admin.</string>
     <string name="ConversationItem_group_member_you_promoted_multiple">You and <b>{number_others} others</b> were promoted to Admin.</string>
     <string name="ConversationItem_group_member_admin_cannot_remove">Admins cannot be removed</string>
+    <string name="ConversationItem_group_member_invited_admin"><b>{admin}</b> invited you to join <b>{group}</b>.</string>
+    <string name="ConversationItem_group_member_invited">You were invited to join <b>{group}</b>.</string>
 
     <string name="ConversationItem_group_member_added_single_modal">New messages in this Group are shared with <b>{first}</b>.</string>
     <string name="ConversationItem_group_member_added_two_modal">New messages in this Group are shared with <b>{first}</b> and <b>{second}</b>.</string>

@@ -634,7 +634,7 @@ private fun MessageReceiver.handleNewLibSessionClosedGroupMessage(message: Group
     val sender = message.sender!!
     val adminId = SessionId.from(sender)
     // add the group
-    storage.addClosedGroupInvite(groupId, invite.name, invite.memberAuthData.toByteArray(), adminId, message.sentTimestamp!!)
+    storage.addClosedGroupInvite(groupId, invite.name, invite.memberAuthData.toByteArray(), adminId)
 }
 
 /**

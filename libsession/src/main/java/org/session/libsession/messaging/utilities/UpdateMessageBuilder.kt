@@ -26,6 +26,8 @@ object UpdateMessageBuilder {
     private const val FIRST = "first"
     private const val SECOND = "second"
     private const val NUM_OTHERS = "number_others"
+    private const val ADMIN = "admin"
+    private const val GROUP = "group"
 
     val storage = MessagingModuleConfiguration.shared.storage
 
@@ -33,6 +35,7 @@ object UpdateMessageBuilder {
         ?.displayName(Contact.ContactContext.REGULAR)
         ?: truncateIdForDisplay(senderId)
 
+    @JvmStatic
     fun buildGroupUpdateMessage(context: Context, updateMessageData: UpdateMessageData, senderId: String? = null, isOutgoing: Boolean = false): CharSequence {
         val updateData = updateMessageData.kind
         if (updateData == null || !isOutgoing && senderId == null) return ""
@@ -183,8 +186,16 @@ object UpdateMessageBuilder {
             }
             is UpdateMessageData.Kind.GroupInvitation -> {
                 val invitingAdmin = Recipient.from(context, Address.fromSerialized(updateData.invitingAdmin), false)
-
-                ""
+                return if (invitingAdmin.name != null) {
+                    Phrase.from(context, R.string.ConversationItem_group_member_invited_admin)
+                        .put(ADMIN, invitingAdmin.name)
+                        .put(GROUP, "Group")
+                        .format()
+                } else {
+                    Phrase.from(context, R.string.ConversationItem_group_member_invited)
+                        .put(GROUP, "Group")
+                        .format()
+                }
             }
             is UpdateMessageData.Kind.OpenGroupInvitation -> ""
         }

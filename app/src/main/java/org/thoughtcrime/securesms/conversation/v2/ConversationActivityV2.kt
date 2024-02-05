@@ -855,6 +855,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         binding.acceptMessageRequestButton.setOnClickListener {
             acceptMessageRequest()
         }
+        binding.messageRequestBlock.isVisible = recipient.isContactRecipient || (recipient.isClosedGroupRecipient && viewModel.invitingAdmin != null)
         binding.messageRequestBlock.setOnClickListener {
             block(deleteThread = true)
         }

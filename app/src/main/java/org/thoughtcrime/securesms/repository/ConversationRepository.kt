@@ -82,7 +82,7 @@ interface ConversationRepository {
     fun declineMessageRequest(threadId: Long, recipient: Recipient)
 
     fun hasReceived(threadId: Long): Boolean
-    fun getInvitingAdmin(threadId: Long, threadRecipient: Recipient): Recipient?
+    fun getInvitingAdmin(threadId: Long): Recipient?
 
 }
 
@@ -350,9 +350,10 @@ class DefaultConversationRepository @Inject constructor(
         return false
     }
 
-    override fun getInvitingAdmin(threadId: Long, threadRecipient: Recipient): Recipient? {
-        return if (threadRecipient.isClosedGroupRecipient) lokiMessageDb.groupInviteReferrer(threadId)?.let { id ->
+    // Only call this with a closed group thread ID
+    override fun getInvitingAdmin(threadId: Long): Recipient? {
+        return lokiMessageDb.groupInviteReferrer(threadId)?.let { id ->
             Recipient.from(context, Address.fromSerialized(id), false)
-        } else null
+        }
     }
 }

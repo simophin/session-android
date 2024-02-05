@@ -13,6 +13,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityMessageRequestsBinding
+import org.session.libsession.utilities.Address
+import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.database.ThreadDatabase
@@ -78,7 +80,10 @@ class MessageRequestsActivity : PassphraseRequiredActionBarActivity(), Conversat
 
     override fun onBlockConversationClick(thread: ThreadRecord) {
         fun doBlock() {
-            viewModel.blockMessageRequest(thread)
+            val recipient = thread.invitingAdminId?.let {
+                Recipient.from(this, Address.fromSerialized(it), false)
+            } ?: thread.recipient
+            viewModel.blockMessageRequest(thread, recipient)
             LoaderManager.getInstance(this).restartLoader(0, null, this)
         }
 

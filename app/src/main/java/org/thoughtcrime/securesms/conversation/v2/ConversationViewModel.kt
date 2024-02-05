@@ -64,7 +64,7 @@ class ConversationViewModel(
             val recipient = recipient ?: return null
             if (!recipient.isClosedGroupRecipient) return null
 
-            return repository.getInvitingAdmin(threadId, recipient)
+            return repository.getInvitingAdmin(threadId)
         }
 
     private var _openGroup: RetrieveOnce<OpenGroup> = RetrieveOnce {
