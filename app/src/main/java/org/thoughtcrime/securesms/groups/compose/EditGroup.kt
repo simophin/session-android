@@ -8,6 +8,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -460,10 +461,11 @@ fun MemberItem(modifier: Modifier = Modifier,
                     .controlHighlightBackground()
                     .semantics {
                         contentDescription = reinviteDesc
-                    }
+                    },
+                contentPadding = PaddingValues(8.dp,2.dp)
             ) {
                 Text(
-                    "Re-send",
+                    stringResource(id = R.string.EditGroup_resend_action),
                     color = MaterialTheme.colors.onPrimary
                 )
             }
@@ -479,10 +481,11 @@ fun MemberItem(modifier: Modifier = Modifier,
                     .controlHighlightBackground()
                     .semantics {
                         contentDescription = promoteDesc
-                    }
+                    },
+                contentPadding = PaddingValues(8.dp,2.dp)
             ) {
                 Text(
-                    "Promote",
+                    stringResource(R.string.EditGroup_promote_action),
                     color = MaterialTheme.colors.onPrimary
                 )
             }

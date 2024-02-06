@@ -1129,4 +1129,8 @@
     <string name="dialog_edit_group_information_message">Group name and description is visible to all group members.</string>
     <string name="dialog_edit_group_information_enter_group_name">Enter group name</string>
     <string name="dialog_edit_group_information_enter_group_description">Enter group description</string>
+    <string name="EditGroup_resend_action">Resend</string>
+    <string name="EditGroup_promote_action">Promote</string>
+    <string name="AccessibilityId_empty_conversation">Empty conversation</string>
+    <string name="AccessibilityId_outdated_group_banner">Legacy group banner</string>
 </resources>

@@ -224,6 +224,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/blockedBanner"
         android:background="@color/outdated_client_banner_background_color"
+        android:contentDescription="@string/AccessibilityId_outdated_group_banner"
         android:visibility="gone"
         tools:visibility="visible">
 
@@ -251,6 +252,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/blockedBanner"
         android:elevation="8dp"
+        android:contentDescription="@string/AccessibilityId_empty_conversation"
         tools:text="@string/activity_conversation_empty_state_default"
         />
 
