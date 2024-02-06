@@ -82,7 +82,6 @@
     <string name="AccessibilityId_add_members">Add members</string>
     <string name="AccessibilityId_reinvite_member">Resend invite</string>
     <string name="AccessibilityId_member_state">Status</string>
-    <string name="AccessibilityId_remove_member">Remove member</string>
     <string name="AccessibilityId_promote_member">Promote member</string>
     <string name="AccessibilityId_done">Done</string>
     <string name="AccessibilityId_mentions_list">Mentions list</string>

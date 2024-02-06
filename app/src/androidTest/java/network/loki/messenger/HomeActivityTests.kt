@@ -57,6 +57,7 @@ class HomeActivityTests {
         onView(withId(R.id.newConversationButton)).perform(ViewActions.click())
         onView(withId(R.id.createPrivateChatButton)).perform(ViewActions.click())
         // new chat
+        Thread.sleep(500)
         onView(withId(R.id.publicKeyEditText)).perform(ViewActions.closeSoftKeyboard())
         onView(withId(R.id.copyButton)).perform(ViewActions.click())
         val context = InstrumentationRegistry.getInstrumentation().targetContext

@@ -69,7 +69,7 @@ class ConversationSettingsViewModelTest: BaseViewModelTest() {
     @Test
     fun `it should call storage for if user is an admin`() {
         val groupAddress = Address.fromSerialized("__textsecure_group__!1234")
-        whenever(mockedRecipient.isClosedGroupRecipient).thenReturn(true)
+        whenever(mockedRecipient.isLegacyClosedGroupRecipient).thenReturn(true)
         whenever(mockedRecipient.address).thenReturn(groupAddress)
         whenever(mockedPrefs.getLocalNumber()).thenReturn(TEST_LOCAL_ID)
         val mockedGroup = mock(GroupRecord::class.java).apply {
@@ -82,7 +82,7 @@ class ConversationSettingsViewModelTest: BaseViewModelTest() {
 
     @Test
     fun `it should not call storage for group admin when we aren't in a group`() {
-        whenever(mockedRecipient.isClosedGroupRecipient).thenReturn(false)
+        whenever(mockedRecipient.isLegacyClosedGroupRecipient).thenReturn(false)
         val isUserAdmin = viewModel.isUserGroupAdmin()
         assertFalse(isUserAdmin)
     }

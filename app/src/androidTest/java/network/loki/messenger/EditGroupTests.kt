@@ -94,7 +94,6 @@ class EditGroupTests {
 
         // Accessibility IDs
         val reinviteDesc = application.getString(R.string.AccessibilityId_reinvite_member)
-        val removeDesc = application.getString(R.string.AccessibilityId_remove_member)
         val promoteDesc = application.getString(R.string.AccessibilityId_promote_member)
 
         var reinvited = false
@@ -126,7 +125,6 @@ class EditGroupTests {
                 }
             }
             onNodeWithContentDescription(reinviteDesc).assertIsDisplayed().performClick()
-            onNodeWithContentDescription(removeDesc).assertDoesNotExist()
             onNodeWithContentDescription(promoteDesc).assertDoesNotExist()
             assertThat(reinvited, equalTo(true))
         }
@@ -138,7 +136,6 @@ class EditGroupTests {
 
         // Accessibility IDs
         val reinviteDesc = application.getString(R.string.AccessibilityId_reinvite_member)
-        val removeDesc = application.getString(R.string.AccessibilityId_remove_member)
         val promoteDesc = application.getString(R.string.AccessibilityId_promote_member)
 
         var promoted = false
@@ -170,7 +167,6 @@ class EditGroupTests {
                 }
             }
             onNodeWithContentDescription(reinviteDesc).assertDoesNotExist()
-            onNodeWithContentDescription(removeDesc).assertIsDisplayed()
             onNodeWithContentDescription(promoteDesc).assertIsDisplayed().performClick()
             assertThat(promoted, equalTo(true))
         }
@@ -182,7 +178,6 @@ class EditGroupTests {
 
         // Accessibility IDs
         val reinviteDesc = application.getString(R.string.AccessibilityId_reinvite_member)
-        val removeDesc = application.getString(R.string.AccessibilityId_remove_member)
         val promoteDesc = application.getString(R.string.AccessibilityId_promote_member)
 
         with (composeTest) {
@@ -212,7 +207,6 @@ class EditGroupTests {
                 }
             }
             onNodeWithContentDescription(reinviteDesc).assertDoesNotExist()
-            onNodeWithContentDescription(removeDesc).assertDoesNotExist()
             onNodeWithContentDescription(promoteDesc).assertDoesNotExist()
         }
     }
@@ -223,7 +217,6 @@ class EditGroupTests {
 
         // Accessibility IDs
         val reinviteDesc = application.getString(R.string.AccessibilityId_reinvite_member)
-        val removeDesc = application.getString(R.string.AccessibilityId_remove_member)
         val promoteDesc = application.getString(R.string.AccessibilityId_promote_member)
         val stateDesc = application.getString(R.string.AccessibilityId_member_state)
         val memberDesc = application.getString(R.string.AccessibilityId_contact)
@@ -255,7 +248,6 @@ class EditGroupTests {
                 }
             }
             onNodeWithContentDescription(reinviteDesc).assertDoesNotExist()
-            onNodeWithContentDescription(removeDesc).assertDoesNotExist()
             onNodeWithContentDescription(promoteDesc).assertDoesNotExist()
             onNodeWithContentDescription(stateDesc, useUnmergedTree = true).assertTextEquals("InviteSent")
             onNodeWithContentDescription(memberDesc, useUnmergedTree = true).assertTextEquals("Test User")
