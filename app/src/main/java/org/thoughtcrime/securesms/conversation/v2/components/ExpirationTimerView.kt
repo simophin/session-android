@@ -30,6 +30,10 @@ class ExpirationTimerView @JvmOverloads constructor(
         R.drawable.timer60
     )
 
+    fun setTimerIcon() {
+        setExpirationTime(0L, 0L)
+    }
+
     fun setExpirationTime(startedAt: Long, expiresIn: Long) {
         if (expiresIn == 0L) {
             setImageResource(R.drawable.timer55)

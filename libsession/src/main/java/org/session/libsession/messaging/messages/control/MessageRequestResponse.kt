@@ -22,7 +22,7 @@ class MessageRequestResponse(val isApproved: Boolean, var profile: Profile? = nu
         profile?.profileKey?.let { messageRequestResponseProto.profileKey = ByteString.copyFrom(it) }
         return try {
             SignalServiceProtos.Content.newBuilder()
-                .setExpirationConfigurationIfNeeded(threadID)
+                .applyExpiryMode()
                 .setMessageRequestResponse(messageRequestResponseProto.build())
                 .build()
         } catch (e: Exception) {

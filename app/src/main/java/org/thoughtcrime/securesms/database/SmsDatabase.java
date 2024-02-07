@@ -253,6 +253,8 @@ public class SmsDatabase extends MessagingDatabase {
 
   @Override
   public void markExpireStarted(long id, long startedAtTimestamp) {
+    Log.d(TAG, "markExpireStarted() called with: id = [" + id + "], startedAtTimestamp = [" + startedAtTimestamp + "]");
+
     ContentValues contentValues = new ContentValues();
     contentValues.put(EXPIRE_STARTED, startedAtTimestamp);
 
@@ -446,9 +448,7 @@ public class SmsDatabase extends MessagingDatabase {
 
     CallMessageType callMessageType = message.getCallType();
     if (callMessageType != null) {
-      long callMessageTypeMask = getCallMessageTypeMask(callMessageType);
-      type |= callMessageTypeMask;
-      deleteInfoMessages(threadId, callMessageTypeMask);
+      type |= getCallMessageTypeMask(callMessageType);
     }
 
     ContentValues values = new ContentValues(6);
@@ -679,12 +679,6 @@ public class SmsDatabase extends MessagingDatabase {
   @Override
   public MessageRecord getMessageRecord(long messageId) throws NoSuchMessageException {
     return getMessage(messageId);
-  }
-
-  public void deleteInfoMessages(long threadId, long type) {
-    String where = THREAD_ID + " = ? AND (" + TYPE + " & " + type + ") <> 0";
-    int updated = getWritableDatabase().delete(TABLE_NAME, where, new String[] {threadId+""});
-    notifyConversationListeners(threadId);
   }
 
   private boolean isDuplicate(IncomingTextMessage message, long threadId) {

@@ -8,7 +8,6 @@ import org.session.libsession.messaging.messages.control.ExpirationTimerUpdate
 import org.session.libsession.messaging.messages.signal.IncomingMediaMessage
 import org.session.libsession.messaging.messages.signal.OutgoingExpirationUpdateMessage
 import org.session.libsession.snode.SnodeAPI.nowWithOffset
-import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.Address.Companion.fromSerialized
 import org.session.libsession.utilities.GroupUtil.doubleEncodeGroupID
 import org.session.libsession.utilities.GroupUtil.getDecodedGroupIDAsData
@@ -21,7 +20,6 @@ import org.session.libsignal.utilities.guava.Optional
 import org.thoughtcrime.securesms.database.MmsDatabase
 import org.thoughtcrime.securesms.database.MmsSmsDatabase
 import org.thoughtcrime.securesms.database.SmsDatabase
-import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent.Companion.get
 import org.thoughtcrime.securesms.mms.MmsException
 import java.io.IOException
@@ -51,6 +49,9 @@ class ExpiringMessageManager(context: Context) : MessageExpirationManagerProtoco
 
     fun scheduleDeletion(id: Long, mms: Boolean, startedAtTimestamp: Long, expiresInMillis: Long) {
         Log.d(TAG, "scheduleDeletion() called with: id = $id, mms = $mms, startedAtTimestamp = $startedAtTimestamp, expiresInMillis = $expiresInMillis")
+
+        if (startedAtTimestamp <= 0) return
+
         val expiresAtMillis = startedAtTimestamp + expiresInMillis
         synchronized(expiringMessageReferences) {
             expiringMessageReferences += ExpiringMessageReference(id, mms, expiresAtMillis)
@@ -149,15 +150,14 @@ class ExpiringMessageManager(context: Context) : MessageExpirationManagerProtoco
         }
     }
 
-    override fun setExpirationTimer(message: ExpirationTimerUpdate) {
+    override fun insertExpirationTimerMessage(message: ExpirationTimerUpdate) {
         val expiryMode: ExpiryMode = message.expiryMode
         Log.d(TAG, "setExpirationTimer() called with: message = $message, expiryMode = $expiryMode")
 
         val userPublicKey = getLocalNumber(context)
         val senderPublicKey = message.sender
         val sentTimestamp = if (message.sentTimestamp == null) 0 else message.sentTimestamp!!
-        val expireStartedAt =
-            if (expiryMode is AfterSend || message.isSenderSelf) sentTimestamp else 0
+        val expireStartedAt = if (expiryMode is AfterSend || message.isSenderSelf) sentTimestamp else 0
 
         // Notify the user
         if (senderPublicKey == null || userPublicKey == senderPublicKey) {
@@ -167,17 +167,16 @@ class ExpiringMessageManager(context: Context) : MessageExpirationManagerProtoco
             insertIncomingExpirationTimerMessage(message, expireStartedAt)
         }
 
-        if (expiryMode is AfterSend && expiryMode.expirySeconds > 0 && message.sentTimestamp != null && senderPublicKey != null) {
-            startAnyExpiration(message.sentTimestamp!!, senderPublicKey, expireStartedAt)
-        }
+        maybeStartExpiration(message)
     }
 
     override fun startAnyExpiration(timestamp: Long, author: String, expireStartedAt: Long) {
         Log.d(TAG, "startAnyExpiration() called with: timestamp = $timestamp, author = $author, expireStartedAt = $expireStartedAt")
-        val messageRecord = mmsSmsDatabase.getMessageFor(timestamp, author) ?: return
-        val mms = messageRecord.isMms()
-        getDatabase(mms).markExpireStarted(messageRecord.getId(), expireStartedAt)
-        scheduleDeletion(messageRecord.getId(), mms, expireStartedAt, messageRecord.expiresIn)
+
+        mmsSmsDatabase.getMessageFor(timestamp, author)?.run {
+            getDatabase(isMms()).markExpireStarted(getId(), expireStartedAt)
+            scheduleDeletion(getId(), isMms(), expireStartedAt, expiresIn)
+        } ?: Log.e(TAG, "no message record!!!")
     }
 
     private inner class LoadTask : Runnable {

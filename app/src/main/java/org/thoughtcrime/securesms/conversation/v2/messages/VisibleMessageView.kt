@@ -256,13 +256,14 @@ class VisibleMessageView : LinearLayout {
         binding.expirationTimerView.isGone = true
 
         if (message.isOutgoing || disappearing) {
-            val (iconID, iconColor, textId, contentDescription) = getMessageStatusImage(message)
+            val (iconID, iconColor, textId) = getMessageStatusImage(message)
             textId?.let(binding.messageStatusTextView::setText)
             iconColor?.let(binding.messageStatusTextView::setTextColor)
             iconID?.let { ContextCompat.getDrawable(context, it) }
                 ?.run { iconColor?.let { mutate().apply { setTint(it) } } ?: this }
                 ?.let(binding.messageStatusImageView::setImageDrawable)
-            binding.messageStatusImageView.contentDescription = contentDescription
+            binding.messageStatusTextView.contentDescription = context.getString(R.string.AccessibilityId_message_sent_status)
+            binding.messageStatusImageView.contentDescription = context.getString(R.string.AccessibilityId_message_sent_status)
 
             val lastMessageID = mmsSmsDb.getLastMessageID(message.threadId)
             val isLastMessage = message.id == lastMessageID
@@ -304,55 +305,47 @@ class VisibleMessageView : LinearLayout {
 
     data class MessageStatusInfo(@DrawableRes val iconId: Int?,
                                  @ColorInt val iconTint: Int?,
-                                 @StringRes val messageText: Int?,
-                                 val contentDescription: String?)
+                                 @StringRes val messageText: Int?)
 
     private fun getMessageStatusImage(message: MessageRecord): MessageStatusInfo = when {
         message.isFailed ->
             MessageStatusInfo(
                 R.drawable.ic_delivery_status_failed,
                 resources.getColor(R.color.destructive, context.theme),
-                R.string.delivery_status_failed,
-                null
+                R.string.delivery_status_failed
             )
         message.isSyncFailed ->
             MessageStatusInfo(
                 R.drawable.ic_delivery_status_failed,
                 context.getColor(R.color.accent_orange),
-                R.string.delivery_status_sync_failed,
-                null
+                R.string.delivery_status_sync_failed
             )
         message.isPending ->
             MessageStatusInfo(
                 R.drawable.ic_delivery_status_sending,
-                context.getColorFromAttr(R.attr.message_status_color), R.string.delivery_status_sending,
-                context.getString(R.string.AccessibilityId_message_sent_status_pending)
+                context.getColorFromAttr(R.attr.message_status_color), R.string.delivery_status_sending
             )
         message.isResyncing ->
             MessageStatusInfo(
                 R.drawable.ic_delivery_status_sending,
-                context.getColor(R.color.accent_orange), R.string.delivery_status_syncing,
-                context.getString(R.string.AccessibilityId_message_sent_status_syncing)
+                context.getColor(R.color.accent_orange), R.string.delivery_status_syncing
             )
         message.isRead || !message.isOutgoing ->
             MessageStatusInfo(
                 R.drawable.ic_delivery_status_read,
-                context.getColorFromAttr(R.attr.message_status_color), R.string.delivery_status_read,
-                null
+                context.getColorFromAttr(R.attr.message_status_color), R.string.delivery_status_read
             )
         else ->
             MessageStatusInfo(
                 R.drawable.ic_delivery_status_sent,
                 context.getColorFromAttr(R.attr.message_status_color),
-                R.string.delivery_status_sent,
-                context.getString(R.string.AccessibilityId_message_sent_status_tick)
+                R.string.delivery_status_sent
             )
     }
 
     private fun updateExpirationTimer(message: MessageRecord) {
         if (!message.isOutgoing) binding.messageStatusTextView.bringToFront()
-        val expireStarted = message.expireStarted.takeIf { it > 0 } ?: SnodeAPI.nowWithOffset
-        binding.expirationTimerView.setExpirationTime(expireStarted, message.expiresIn)
+        binding.expirationTimerView.setExpirationTime(message.expireStarted, message.expiresIn)
     }
 
     private fun handleIsSelectedChanged() {

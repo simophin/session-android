@@ -92,6 +92,7 @@
     <!--  Conversation icons -->
     <string name="AccessibilityId_call_button">Call button</string>
     <string name="AccessibilityId_settings">Settings</string>
+    <string name="AccessibilityId_confirm">Confirm</string>
     <string name="AccessibilityId_disappearing_messages_time_picker">Time selector</string>
     <string name="AccessibilityId_accept_message_request_button">Accept message request</string>
     <string name="AccessibilityId_decline_message_request_button">Decline message request</string>
@@ -123,9 +124,7 @@
     <string name="AccessibilityId_download_media">Download media</string>
     <string name="AccessibilityId_dont_download_media">Don\'t download media</string>
     <!-- Conversation View-->
-    <string name="AccessibilityId_message_sent_status_tick">Message sent status: Sent</string>
-    <string name="AccessibilityId_message_sent_status_pending">Message sent status pending</string>
-    <string name="AccessibilityId_message_sent_status_syncing">Message sent status syncing</string>
+    <string name="AccessibilityId_message_sent_status">Message sent status</string>
     <string name="AccessibilityId_message_request_config_message">Message request has been accepted</string>
     <string name="AccessibilityId_message_body">Message body</string>
     <string name="AccessibilityId_voice_message">Voice message</string>

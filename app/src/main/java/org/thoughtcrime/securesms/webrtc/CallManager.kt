@@ -16,6 +16,7 @@ import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.functional.bind
 import org.session.libsession.database.StorageProtocol
 import org.session.libsession.messaging.calls.CallMessageType
+import org.session.libsession.messaging.messages.applyExpiryMode
 import org.session.libsession.messaging.messages.control.CallMessage
 import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.snode.SnodeAPI
@@ -57,8 +58,12 @@ import java.util.ArrayDeque
 import java.util.UUID
 import org.thoughtcrime.securesms.webrtc.data.State as CallState
 
-class CallManager(context: Context, audioManager: AudioManagerCompat, private val storage: StorageProtocol): PeerConnection.Observer,
-        SignalAudioManager.EventListener, CameraEventListener, DataChannel.Observer {
+class CallManager(
+    private val context: Context,
+    audioManager: AudioManagerCompat,
+    private val storage: StorageProtocol
+): PeerConnection.Observer,
+    SignalAudioManager.EventListener, CameraEventListener, DataChannel.Observer {
 
     sealed class StateEvent {
         data class AudioEnabled(val isEnabled: Boolean): StateEvent()
@@ -293,17 +298,16 @@ class CallManager(context: Context, audioManager: AudioManagerCompat, private va
                 while (pendingOutgoingIceUpdates.isNotEmpty()) {
                     currentPendings.add(pendingOutgoingIceUpdates.pop())
                 }
-                val sdps = currentPendings.map { it.sdp }
-                val sdpMLineIndexes = currentPendings.map { it.sdpMLineIndex }
-                val sdpMids = currentPendings.map { it.sdpMid }
 
-                MessageSender.sendNonDurably(CallMessage(
-                        ICE_CANDIDATES,
-                        sdps = sdps,
-                        sdpMLineIndexes = sdpMLineIndexes,
-                        sdpMids = sdpMids,
-                        currentCallId
-                ), currentRecipient.address, isSyncMessage = currentRecipient.isLocalNumber)
+                CallMessage(
+                    ICE_CANDIDATES,
+                    sdps = currentPendings.map(IceCandidate::sdp),
+                    sdpMLineIndexes = currentPendings.map(IceCandidate::sdpMLineIndex),
+                    sdpMids = currentPendings.map(IceCandidate::sdpMid),
+                    currentCallId
+                )
+                    .applyExpiryMode()
+                    .also { MessageSender.sendNonDurably(it, currentRecipient.address, isSyncMessage = currentRecipient.isLocalNumber) }
             }
         }
     }

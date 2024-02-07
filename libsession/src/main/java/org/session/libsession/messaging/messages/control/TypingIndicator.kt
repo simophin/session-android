@@ -58,14 +58,11 @@ class TypingIndicator() : ControlMessage() {
             Log.w(TAG, "Couldn't construct typing indicator proto from: $this")
             return null
         }
-        val typingIndicatorProto = SignalServiceProtos.TypingMessage.newBuilder()
-        typingIndicatorProto.timestamp = timestamp
-        typingIndicatorProto.action = kind.toProto()
-        val contentProto = SignalServiceProtos.Content.newBuilder()
         return try {
-            contentProto.typingMessage = typingIndicatorProto.build()
-            contentProto.setExpirationConfigurationIfNeeded(threadID)
-            contentProto.build()
+            SignalServiceProtos.Content.newBuilder()
+                .setTypingMessage(SignalServiceProtos.TypingMessage.newBuilder().setTimestamp(timestamp).setAction(kind.toProto()).build())
+                .applyExpiryMode()
+                .build()
         } catch (e: Exception) {
             Log.w(TAG, "Couldn't construct typing indicator proto from: $this")
             null

@@ -69,6 +69,7 @@ internal fun MessageReceiver.isBlocked(publicKey: String): Boolean {
 }
 
 fun MessageReceiver.handle(message: Message, proto: SignalServiceProtos.Content, threadId: Long, openGroupID: String?, closedGroup: SessionId?) {
+    Log.d("MessageReceiver", "handle() called with: message = $message, proto = $proto, threadId = $threadId, openGroupID = $openGroupID")
     // Do nothing if the message was outdated
     if (MessageReceiver.messageIsOutdated(message, threadId, openGroupID)) { return }
 
@@ -158,9 +159,12 @@ fun MessageReceiver.cancelTypingIndicatorsIfNeeded(senderPublicKey: String) {
 }
 
 private fun MessageReceiver.handleExpirationTimerUpdate(message: ExpirationTimerUpdate) {
-    SSKEnvironment.shared.messageExpirationManager.setExpirationTimer(message)
+    SSKEnvironment.shared.messageExpirationManager.insertExpirationTimerMessage(message)
 
-    if (isNewConfigEnabled) return
+    // TODO (Groups V2 - FIXME)
+    val isGroupV1 = message.groupPublicKey != null
+
+    if (isNewConfigEnabled && !isGroupV1) return
 
     val module = MessagingModuleConfiguration.shared
     try {
@@ -219,7 +223,7 @@ private fun handleConfigurationMessage(message: ConfigurationMessage) {
         } else {
             // only handle new closed group if it's first time sync
             handleNewClosedGroup(message.sender!!, message.sentTimestamp!!, closedGroup.publicKey, closedGroup.name,
-                closedGroup.encryptionKeyPair!!, closedGroup.members, closedGroup.admins, message.sentTimestamp!!, closedGroup.expirationTimer)
+                    closedGroup.encryptionKeyPair!!, closedGroup.members, closedGroup.admins, message.sentTimestamp!!)
         }
     }
     val allV2OpenGroups = storage.getAllOpenGroups().map { it.value.joinURL }
@@ -290,6 +294,8 @@ fun MessageReceiver.handleVisibleMessage(
     runThreadUpdate: Boolean,
     runProfileUpdate: Boolean
 ): Long? {
+    Log.d("ReceivedMessageHandler", "handleVisibleMessage() called with: message = $message, proto = $proto, openGroupID = $openGroupID, threadId = $threadId, runThreadUpdate = $runThreadUpdate, runProfileUpdate = $runProfileUpdate")
+
     val storage = MessagingModuleConfiguration.shared.storage
     val context = MessagingModuleConfiguration.shared.context
     val userPublicKey = storage.getUserPublicKey()
@@ -399,14 +405,7 @@ fun MessageReceiver.handleVisibleMessage(
         }
     }
     // Parse attachments if needed
-    val attachments = proto.dataMessage.attachmentsList.mapNotNull { attachmentProto ->
-        val attachment = Attachment.fromProto(attachmentProto)
-        if (!attachment.isValid()) {
-            return@mapNotNull null
-        } else {
-            return@mapNotNull attachment
-        }
-    }
+    val attachments = proto.dataMessage.attachmentsList.map(Attachment::fromProto).filter { it.isValid() }
     // Cancel any typing indicators if needed
     cancelTypingIndicatorsIfNeeded(message.sender!!)
     // Parse reaction if needed
@@ -452,6 +451,7 @@ fun MessageReceiver.handleVisibleMessage(
             val isSms = !message.isMediaMessage() && attachments.isEmpty()
             storage.setOpenGroupServerMessageID(messageID, it, threadID, isSms)
         }
+        SSKEnvironment.shared.messageExpirationManager.maybeStartExpiration(message)
         return messageID
     }
     return null
@@ -660,10 +660,10 @@ private fun MessageReceiver.handleNewClosedGroup(message: ClosedGroupControlMess
     val members = kind.members.map { it.toByteArray().toHexString() }
     val admins = kind.admins.map { it.toByteArray().toHexString() }
     val expirationTimer = kind.expirationTimer
-    handleNewClosedGroup(message.sender!!, message.sentTimestamp!!, groupPublicKey, kind.name, kind.encryptionKeyPair!!, members, admins, message.sentTimestamp!!, expirationTimer)
+    handleNewClosedGroup(message.sender!!, message.sentTimestamp!!, groupPublicKey, kind.name, kind.encryptionKeyPair!!, members, admins, message.sentTimestamp!!)
 }
 
-private fun handleNewClosedGroup(sender: String, sentTimestamp: Long, groupPublicKey: String, name: String, encryptionKeyPair: ECKeyPair, members: List<String>, admins: List<String>, formationTimestamp: Long, expireTimer: Int) {
+private fun handleNewClosedGroup(sender: String, sentTimestamp: Long, groupPublicKey: String, name: String, encryptionKeyPair: ECKeyPair, members: List<String>, admins: List<String>, formationTimestamp: Long) {
     val context = MessagingModuleConfiguration.shared.context
     val storage = MessagingModuleConfiguration.shared.storage
     val userPublicKey = storage.getUserPublicKey()!!

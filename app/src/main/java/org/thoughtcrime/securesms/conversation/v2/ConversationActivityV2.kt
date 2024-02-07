@@ -44,6 +44,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.loader.app.LoaderManager
@@ -59,6 +60,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import network.loki.messenger.R
@@ -74,6 +76,7 @@ import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.messaging.mentions.Mention
 import org.session.libsession.messaging.mentions.MentionsManager
 import org.session.libsession.messaging.messages.ExpirationConfiguration
+import org.session.libsession.messaging.messages.applyExpiryMode
 import org.session.libsession.messaging.messages.control.DataExtractionNotification
 import org.session.libsession.messaging.messages.signal.OutgoingMediaMessage
 import org.session.libsession.messaging.messages.signal.OutgoingTextMessage
@@ -180,6 +183,8 @@ import org.thoughtcrime.securesms.util.push
 import org.thoughtcrime.securesms.util.show
 import org.thoughtcrime.securesms.util.toPx
 import java.lang.ref.WeakReference
+import java.time.Instant
+import java.util.Date
 import java.util.Locale
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.atomic.AtomicBoolean
@@ -190,6 +195,10 @@ import kotlin.math.abs
 import kotlin.math.min
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
+
+private const val TAG = "ConversationActivityV2"
 
 // Some things that seemingly belong to the input bar (e.g. the voice message recording UI) are actually
 // part of the conversation activity layout. This is just because it makes the layout a lot simpler. The
@@ -462,18 +471,21 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         reactionDelegate = ConversationReactionDelegate(reactionOverlayStub)
         reactionDelegate.setOnReactionSelectedListener(this)
         lifecycleScope.launch {
-            lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 // only update the conversation every 3 seconds maximum
                 // channel is rendezvous and shouldn't block on try send calls as often as we want
-                val bufferedFlow = bufferedLastSeenChannel.consumeAsFlow()
-                bufferedFlow.filter {
-                    it > storage.getLastSeen(viewModel.threadId)
-                }.collectLatest { latestMessageRead ->
-                    withContext(Dispatchers.IO) {
-                        storage.markConversationAsRead(viewModel.threadId, latestMessageRead)
+                bufferedLastSeenChannel.receiveAsFlow()
+                    .flowWithLifecycle(lifecycle, Lifecycle.State.RESUMED)
+                    .collectLatest {
+                        withContext(Dispatchers.IO) {
+                            try {
+                                if (it > storage.getLastSeen(viewModel.threadId)) {
+                                    storage.markConversationAsRead(viewModel.threadId, it)
+                                }
+                            } catch (e: Exception) {
+                                Log.d(TAG, "bufferedLastSeenChannel collectLatest", e)
+                            }
+                        }
                     }
-                }
-            }
         }
     }
 
@@ -537,12 +549,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
             if (author != null && messageTimestamp >= 0) {
                 jumpToMessage(author, messageTimestamp, firstLoad.get(), null)
-            }
-            else if (firstLoad.getAndSet(false)) {
-                scrollToFirstUnreadMessageIfNeeded(true)
-                handleRecyclerViewScrolled()
-            }
-            else if (oldCount != newCount) {
+            } else {
+                if (firstLoad.getAndSet(false)) scrollToFirstUnreadMessageIfNeeded(true)
                 handleRecyclerViewScrolled()
             }
         }
@@ -1081,16 +1089,16 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val maybeTargetVisiblePosition = if (reverseMessageList) layoutManager?.findFirstVisibleItemPosition() else layoutManager?.findLastVisibleItemPosition()
         val targetVisiblePosition = maybeTargetVisiblePosition ?: RecyclerView.NO_POSITION
         if (!firstLoad.get() && targetVisiblePosition != RecyclerView.NO_POSITION) {
-            val visibleItemTimestamp = adapter.getTimestampForItemAt(targetVisiblePosition)
-            if (visibleItemTimestamp != null) {
-                bufferedLastSeenChannel.trySend(visibleItemTimestamp)
+            adapter.getTimestampForItemAt(targetVisiblePosition)?.let { visibleItemTimestamp ->
+                bufferedLastSeenChannel.trySend(visibleItemTimestamp).apply {
+                    if (isFailure) Log.e(TAG, "trySend failed", exceptionOrNull())
+                }
             }
         }
 
         if (reverseMessageList) {
             unreadCount = min(unreadCount, targetVisiblePosition).coerceAtLeast(0)
-        }
-        else {
+        } else {
             val layoutUnreadCount = layoutManager?.let { (it.itemCount - 1) - it.findLastVisibleItemPosition() }
                 ?: RecyclerView.NO_POSITION
             unreadCount = min(unreadCount, layoutUnreadCount).coerceAtLeast(0)
@@ -1621,7 +1629,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             return null
         }
         // Create the message
-        val message = VisibleMessage()
+        val message = VisibleMessage().applyExpiryMode(viewModel.threadId)
         message.sentTimestamp = sentTimestamp
         message.text = text
         val expiresInMillis = viewModel.expirationConfiguration?.expiryMode?.expiryMillis ?: 0
@@ -1656,7 +1664,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val sentTimestamp = SnodeAPI.nowWithOffset
         processMessageRequestApproval()
         // Create the message
-        val message = VisibleMessage()
+        val message = VisibleMessage().applyExpiryMode()
         message.sentTimestamp = sentTimestamp
         message.text = body
         val quote = quotedMessage?.let {

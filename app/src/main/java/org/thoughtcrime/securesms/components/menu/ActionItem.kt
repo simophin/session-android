@@ -9,5 +9,6 @@ data class ActionItem @JvmOverloads constructor(
   @AttrRes val iconRes: Int,
   val title: CharSequence,
   val action: Runnable,
-  val contentDescription: String? = null
+  val contentDescription: String? = null,
+  val subtitle: String? = null
 )

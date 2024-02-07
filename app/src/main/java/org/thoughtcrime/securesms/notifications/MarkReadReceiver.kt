@@ -11,6 +11,7 @@ import org.session.libsession.messaging.messages.control.ReadReceipt
 import org.session.libsession.messaging.sending_receiving.MessageSender.send
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.snode.SnodeAPI.nowWithOffset
+import org.session.libsession.utilities.SSKEnvironment
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.TextSecurePreferences.Companion.isReadReceiptsEnabled
 import org.session.libsession.utilities.associateByNotNull
@@ -51,18 +52,27 @@ class MarkReadReceiver : BroadcastReceiver() {
         const val THREAD_IDS_EXTRA = "thread_ids"
         const val NOTIFICATION_ID_EXTRA = "notification_id"
 
+        val messageExpirationManager = SSKEnvironment.shared.messageExpirationManager
+
         @JvmStatic
         fun process(
             context: Context,
             markedReadMessages: List<MarkedMessageInfo>
         ) {
-            if (markedReadMessages.isEmpty()) return
-
             Log.d(TAG, "process() called with: markedReadMessages = $markedReadMessages")
+
+            if (markedReadMessages.isEmpty()) return
 
             sendReadReceipts(context, markedReadMessages)
 
-            markedReadMessages.forEach { scheduleDeletion(context, it.expirationInfo) }
+            val mmsSmsDatabase = DatabaseComponent.get(context).mmsSmsDatabase()
+
+            // start disappear after read messages except TimerUpdates in groups.
+            markedReadMessages
+                .filter { it.expiryType == ExpiryType.AFTER_READ }
+                .map { it.syncMessageId }
+                .filter { mmsSmsDatabase.getMessageForTimestamp(it.timetamp)?.run { isExpirationTimerUpdate && recipient.isClosedGroupRecipient } == false }
+                .forEach { messageExpirationManager.startDisappearAfterRead(it.timetamp, it.address.serialize()) }
 
             hashToDisappearAfterReadMessage(context, markedReadMessages)?.let {
                 fetchUpdatedExpiriesAndScheduleDeletion(context, it)
@@ -77,7 +87,7 @@ class MarkReadReceiver : BroadcastReceiver() {
             val loki = DatabaseComponent.get(context).lokiMessageDatabase()
 
             return markedReadMessages
-                .filter { it.guessExpiryType() == ExpiryType.AFTER_READ }
+                .filter { it.expiryType == ExpiryType.AFTER_READ }
                 .associateByNotNull { it.expirationInfo.run { loki.getMessageServerHash(id, isMms) } }
                 .takeIf { it.isNotEmpty() }
         }

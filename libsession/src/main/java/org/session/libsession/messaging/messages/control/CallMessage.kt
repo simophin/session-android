@@ -1,5 +1,6 @@
 package org.session.libsession.messaging.messages.control
 
+import org.session.libsession.messaging.messages.applyExpiryMode
 import org.session.libsession.messaging.messages.copyExpiration
 import org.session.libsignal.protos.SignalServiceProtos
 import org.session.libsignal.protos.SignalServiceProtos.CallMessage.Type.ANSWER
@@ -18,6 +19,7 @@ class CallMessage(): ControlMessage() {
 
     override fun shouldDiscardIfBlocked(): Boolean = true
 
+    override val coerceDisappearAfterSendToRead = true
     override val isSelfSendValid: Boolean get() = type in arrayOf(ANSWER, END_CALL)
 
     override val defaultTtl: Long = 300000L // 5m
@@ -45,21 +47,21 @@ class CallMessage(): ControlMessage() {
                 listOf(),
                 listOf(),
                 callId
-        )
+        ).applyExpiryMode()
 
         fun preOffer(callId: UUID) = CallMessage(PRE_OFFER,
                 listOf(),
                 listOf(),
                 listOf(),
                 callId
-        )
+        ).applyExpiryMode()
 
         fun offer(sdp: String, callId: UUID) = CallMessage(OFFER,
                 listOf(sdp),
                 listOf(),
                 listOf(),
                 callId
-        )
+        ).applyExpiryMode()
 
         fun endCall(callId: UUID) = CallMessage(END_CALL, emptyList(), emptyList(), emptyList(), callId)
 
@@ -88,9 +90,8 @@ class CallMessage(): ControlMessage() {
             .addAllSdpMids(sdpMids)
             .setUuid(callId!!.toString())
 
-        val content = SignalServiceProtos.Content.newBuilder()
-        content.setExpirationConfigurationIfNeeded(threadID, true)
-        return content
+        return SignalServiceProtos.Content.newBuilder()
+            .applyExpiryMode()
             .setCallMessage(callMessage)
             .build()
     }

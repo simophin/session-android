@@ -39,14 +39,15 @@ class ReadReceipt() : ControlMessage() {
             Log.w(TAG, "Couldn't construct read receipt proto from: $this")
             return null
         }
-        val receiptProto = SignalServiceProtos.ReceiptMessage.newBuilder()
-        receiptProto.type = SignalServiceProtos.ReceiptMessage.Type.READ
-        receiptProto.addAllTimestamp(timestamps.asIterable())
-        val contentProto = SignalServiceProtos.Content.newBuilder()
+
         return try {
-            contentProto.receiptMessage = receiptProto.build()
-            contentProto.setExpirationConfigurationIfNeeded(threadID)
-            contentProto.build()
+            SignalServiceProtos.Content.newBuilder()
+                .setReceiptMessage(
+                    SignalServiceProtos.ReceiptMessage.newBuilder()
+                        .setType(SignalServiceProtos.ReceiptMessage.Type.READ)
+                        .addAllTimestamp(timestamps.asIterable()).build()
+                ).applyExpiryMode()
+                .build()
         } catch (e: Exception) {
             Log.w(TAG, "Couldn't construct read receipt proto from: $this")
             null

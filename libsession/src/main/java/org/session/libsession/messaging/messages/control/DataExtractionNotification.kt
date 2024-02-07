@@ -7,6 +7,8 @@ import org.session.libsignal.utilities.Log
 class DataExtractionNotification() : ControlMessage() {
     var kind: Kind? = null
 
+    override val coerceDisappearAfterSendToRead = true
+
     sealed class Kind {
         class Screenshot() : Kind()
         class MediaSaved(val timestamp: Long) : Kind()
@@ -66,10 +68,10 @@ class DataExtractionNotification() : ControlMessage() {
                     dataExtractionNotification.timestamp = kind.timestamp
                 }
             }
-            val contentProto = SignalServiceProtos.Content.newBuilder()
-            contentProto.dataExtractionNotification = dataExtractionNotification.build()
-            contentProto.setExpirationConfigurationIfNeeded(threadID, true)
-            return contentProto.build()
+            return SignalServiceProtos.Content.newBuilder()
+                .setDataExtractionNotification(dataExtractionNotification.build())
+                .applyExpiryMode()
+                .build()
         } catch (e: Exception) {
             Log.w(TAG, "Couldn't construct data extraction notification proto from: $this")
             return null

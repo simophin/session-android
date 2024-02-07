@@ -153,9 +153,7 @@ object MessageReceiver {
             CallMessage.fromProto(proto) ?:
             SharedConfigurationMessage.fromProto(proto) ?:
             GroupUpdated.fromProto(proto) ?:
-            VisibleMessage.fromProto(proto) ?: run {
-            throw Error.UnknownMessage
-        }
+            VisibleMessage.fromProto(proto) ?: throw Error.UnknownMessage
         // Don't process the envelope any further if the sender is blocked
         if (isBlocked(sender!!) && message.shouldDiscardIfBlocked()) {
             throw Error.SenderBlocked

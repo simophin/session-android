@@ -43,14 +43,11 @@ class UnsendRequest(): ControlMessage() {
             Log.w(TAG, "Couldn't construct unsend request proto from: $this")
             return null
         }
-        val unsendRequestProto = SignalServiceProtos.UnsendRequest.newBuilder()
-        unsendRequestProto.timestamp = timestamp
-        unsendRequestProto.author = author
-        val contentProto = SignalServiceProtos.Content.newBuilder()
         return try {
-            contentProto.unsendRequest = unsendRequestProto.build()
-            contentProto.setExpirationConfigurationIfNeeded(threadID)
-            contentProto.build()
+            SignalServiceProtos.Content.newBuilder()
+                .setUnsendRequest(SignalServiceProtos.UnsendRequest.newBuilder().setTimestamp(timestamp).setAuthor(author).build())
+                .applyExpiryMode()
+                .build()
         } catch (e: Exception) {
             Log.w(TAG, "Couldn't construct unsend request proto from: $this")
             null

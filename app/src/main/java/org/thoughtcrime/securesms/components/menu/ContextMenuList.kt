@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import network.loki.messenger.R
@@ -70,6 +71,7 @@ class ContextMenuList(recyclerView: RecyclerView, onItemClick: () -> Unit) {
   ) : MappingViewHolder<DisplayItem>(itemView) {
     val icon: ImageView = itemView.findViewById(R.id.context_menu_item_icon)
     val title: TextView = itemView.findViewById(R.id.context_menu_item_title)
+    val subtitle: TextView = itemView.findViewById(R.id.context_menu_item_subtitle)
 
     override fun bind(model: DisplayItem) {
       if (model.item.iconRes > 0) {
@@ -79,6 +81,8 @@ class ContextMenuList(recyclerView: RecyclerView, onItemClick: () -> Unit) {
       }
       itemView.contentDescription = model.item.contentDescription
       title.text = model.item.title
+      subtitle.text = model.item.subtitle
+      subtitle.isVisible = model.item.subtitle != null
       itemView.setOnClickListener {
         model.item.action.run()
         onItemClick()

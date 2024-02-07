@@ -19,9 +19,6 @@ import kotlinx.coroutines.launch
 import network.loki.messenger.BuildConfig
 import network.loki.messenger.libsession_util.util.ExpiryMode
 import org.session.libsession.messaging.messages.ExpirationConfiguration
-import org.session.libsession.messaging.messages.control.ExpirationTimerUpdate
-import org.session.libsession.messaging.sending_receiving.MessageSender
-import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.SSKEnvironment.MessageExpirationManagerProtocol
 import org.session.libsession.utilities.TextSecurePreferences
 import org.thoughtcrime.securesms.conversation.disappearingmessages.ui.ExpiryCallbacks
@@ -30,13 +27,13 @@ import org.thoughtcrime.securesms.conversation.disappearingmessages.ui.toUiState
 import org.thoughtcrime.securesms.database.GroupDatabase
 import org.thoughtcrime.securesms.database.Storage
 import org.thoughtcrime.securesms.database.ThreadDatabase
-import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 
 class DisappearingMessagesViewModel(
     private val threadId: Long,
     private val application: Application,
     private val textSecurePreferences: TextSecurePreferences,
     private val messageExpirationManager: MessageExpirationManagerProtocol,
+    private val disappearingMessages: DisappearingMessages,
     private val threadDb: ThreadDatabase,
     private val groupDb: GroupDatabase,
     private val storage: Storage,
@@ -90,20 +87,7 @@ class DisappearingMessagesViewModel(
             return@launch
         }
 
-        val expiryChangeTimestampMs = SnodeAPI.nowWithOffset
-        storage.setExpirationConfiguration(ExpirationConfiguration(threadId, mode, expiryChangeTimestampMs))
-
-        val message = ExpirationTimerUpdate().apply {
-            expiryMode = mode
-            sender = textSecurePreferences.getLocalNumber()
-            isSenderSelf = true
-            recipient = address.serialize()
-            sentTimestamp = expiryChangeTimestampMs
-        }
-        messageExpirationManager.setExpirationTimer(message)
-        MessageSender.send(message, address)
-
-        ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(application)
+        disappearingMessages.set(threadId, address, mode, state.isGroup)
 
         _event.send(Event.SUCCESS)
     }
@@ -121,6 +105,7 @@ class DisappearingMessagesViewModel(
         private val application: Application,
         private val textSecurePreferences: TextSecurePreferences,
         private val messageExpirationManager: MessageExpirationManagerProtocol,
+        private val disappearingMessages: DisappearingMessages,
         private val threadDb: ThreadDatabase,
         private val groupDb: GroupDatabase,
         private val storage: Storage
@@ -131,6 +116,7 @@ class DisappearingMessagesViewModel(
             application,
             textSecurePreferences,
             messageExpirationManager,
+            disappearingMessages,
             threadDb,
             groupDb,
             storage,

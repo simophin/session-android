@@ -14,6 +14,7 @@ import org.session.libsession.utilities.ExpirationUtil
 import org.session.libsession.utilities.SSKEnvironment.MessageExpirationManagerProtocol
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.getExpirationTypeDisplayValue
+import org.thoughtcrime.securesms.database.ThreadDatabase
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.showSessionDialog
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
@@ -25,11 +26,11 @@ class DisappearingMessages @Inject constructor(
     private val textSecurePreferences: TextSecurePreferences,
     private val messageExpirationManager: MessageExpirationManagerProtocol,
 ) {
-    fun set(threadId: Long, address: Address, mode: ExpiryMode) {
+    fun set(threadId: Long, address: Address, mode: ExpiryMode, isGroup: Boolean) {
         val expiryChangeTimestampMs = SnodeAPI.nowWithOffset
         MessagingModuleConfiguration.shared.storage.setExpirationConfiguration(ExpirationConfiguration(threadId, mode, expiryChangeTimestampMs))
 
-        val message = ExpirationTimerUpdate().apply {
+        val message = ExpirationTimerUpdate(isGroup = isGroup).apply {
             expiryMode = mode
             sender = textSecurePreferences.getLocalNumber()
             isSenderSelf = true
@@ -37,7 +38,7 @@ class DisappearingMessages @Inject constructor(
             sentTimestamp = expiryChangeTimestampMs
         }
 
-        messageExpirationManager.setExpirationTimer(message)
+        messageExpirationManager.insertExpirationTimerMessage(message)
         MessageSender.send(message, address)
         ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
     }
@@ -58,8 +59,11 @@ class DisappearingMessages @Inject constructor(
                 )
             )
         }
-        destructiveButton(if (message.expiresIn == 0L) R.string.dialog_disappearing_messages_follow_setting_confirm else R.string.dialog_disappearing_messages_follow_setting_set) {
-            set(message.threadId, message.recipient.address, message.expiryMode)
+        destructiveButton(
+                text = if (message.expiresIn == 0L) R.string.dialog_disappearing_messages_follow_setting_confirm else R.string.dialog_disappearing_messages_follow_setting_set,
+                contentDescription = if (message.expiresIn == 0L) R.string.AccessibilityId_confirm else R.string.AccessibilityId_set_button
+        ) {
+            set(message.threadId, message.recipient.address, message.expiryMode, message.recipient.isClosedGroupRecipient)
         }
         cancelButton()
     }

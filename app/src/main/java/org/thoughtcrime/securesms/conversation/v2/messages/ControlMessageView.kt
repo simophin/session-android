@@ -2,7 +2,6 @@ package org.thoughtcrime.securesms.conversation.v2.messages
 
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import androidx.core.content.res.ResourcesCompat
@@ -47,19 +46,24 @@ class ControlMessageView : LinearLayout {
         var messageBody: CharSequence = message.getDisplayBody(context)
 
         binding.root.contentDescription = null
+        binding.textView.text = messageBody
         when {
             message.isExpirationTimerUpdate -> {
                 binding.apply {
                     expirationTimerView.isVisible = true
 
-                    Log.d(TAG, "bind() called, messageBody = $messageBody")
+                    val threadRecipient = DatabaseComponent.get(context).threadDatabase().getRecipientForThreadId(message.threadId)
 
-                    expirationTimerView.setExpirationTime(message.expireStarted, message.expiresIn)
+                    if (threadRecipient?.isClosedGroupRecipient == true) {
+                        expirationTimerView.setTimerIcon()
+                    } else {
+                        expirationTimerView.setExpirationTime(message.expireStarted, message.expiresIn)
+                    }
 
                     followSetting.isVisible = ExpirationConfiguration.isNewConfigEnabled
                         && !message.isOutgoing
                         && message.expiryMode != (MessagingModuleConfiguration.shared.storage.getExpirationConfiguration(message.threadId)?.expiryMode ?: ExpiryMode.NONE)
-                        && DatabaseComponent.get(context).threadDatabase().getRecipientForThreadId(message.threadId)?.isGroupRecipient != true
+                        && threadRecipient?.isGroupRecipient != true
 
                     followSetting.setOnClickListener { disappearingMessages.showFollowSettingDialog(context, message) }
                 }
@@ -73,7 +77,7 @@ class ControlMessageView : LinearLayout {
                 }
             }
             message.isMessageRequestResponse -> {
-                messageBody = context.getString(R.string.message_requests_accepted)
+                binding.textView.text =  context.getString(R.string.message_requests_accepted)
                 binding.root.contentDescription=context.getString(R.string.AccessibilityId_message_request_config_message)
             }
             message.isCallLog -> {
@@ -83,14 +87,19 @@ class ControlMessageView : LinearLayout {
                     message.isFirstMissedCall -> R.drawable.ic_info_outline_light
                     else -> R.drawable.ic_missed_call
                 }
-                binding.iconImageView.apply {
-                    setImageDrawable(ResourcesCompat.getDrawable(resources, drawable, context.theme))
-                    isVisible = true
+                binding.textView.isVisible = false
+                binding.callTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(ResourcesCompat.getDrawable(resources, drawable, context.theme), null, null, null)
+                binding.callTextView.text = messageBody
+
+                if (message.expireStarted > 0 && message.expiresIn > 0) {
+                    binding.expirationTimerView.isVisible = true
+                    binding.expirationTimerView.setExpirationTime(message.expireStarted, message.expiresIn)
                 }
             }
         }
 
-        binding.textView.text = messageBody
+        binding.textView.isGone = message.isCallLog
+        binding.callView.isVisible = message.isCallLog
     }
 
     fun recycle() {

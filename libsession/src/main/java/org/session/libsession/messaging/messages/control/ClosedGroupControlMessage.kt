@@ -183,7 +183,7 @@ class ClosedGroupControlMessage() : ControlMessage() {
             contentProto.dataMessage = dataMessageProto.build()
             // Expiration timer
             val threadId = groupID?.let { MessagingModuleConfiguration.shared.storage.getOrCreateThreadIdFor(Address.fromSerialized(it)) }
-            contentProto.setExpirationConfigurationIfNeeded(threadId)
+            contentProto.applyExpiryMode()
             return contentProto.build()
         } catch (e: Exception) {
             Log.w(TAG, "Couldn't construct closed group control message proto from: $this.")

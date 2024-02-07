@@ -10,6 +10,7 @@ import org.session.libsession.messaging.jobs.MessageSendJob
 import org.session.libsession.messaging.jobs.NotifyPNServerJob
 import org.session.libsession.messaging.messages.Destination
 import org.session.libsession.messaging.messages.Message
+import org.session.libsession.messaging.messages.applyExpiryMode
 import org.session.libsession.messaging.messages.control.CallMessage
 import org.session.libsession.messaging.messages.control.ClosedGroupControlMessage
 import org.session.libsession.messaging.messages.control.ConfigurationMessage
@@ -467,11 +468,7 @@ object MessageSender {
             storage.markUnidentified(timestamp, userPublicKey)
             // Start the disappearing messages timer if needed
             Log.d("MessageSender", "Start the disappearing messages timer if needed message.recipient = ${message.recipient}, userPublicKey = $userPublicKey, isSyncMessage = $isSyncMessage")
-            message.threadID?.let(storage::getExpirationConfiguration)?.takeIf { it.expiryMode.expirySeconds > 0 }?.let { config ->
-                if (message.recipient == userPublicKey || !isSyncMessage) {
-                    SSKEnvironment.shared.messageExpirationManager.startAnyExpiration(timestamp, userPublicKey, timestamp)
-                }
-            }
+            SSKEnvironment.shared.messageExpirationManager.maybeStartExpiration(message, startDisappearAfterRead = true)
         } ?: run {
             storage.updateReactionIfNeeded(message, message.sender?:userPublicKey, openGroupSentTimestamp)
         }
@@ -520,6 +517,7 @@ object MessageSender {
 
     @JvmStatic
     fun send(message: Message, address: Address) {
+        message.applyExpiryMode()
         val threadID = MessagingModuleConfiguration.shared.storage.getThreadId(address)
         message.threadID = threadID
         val destination = Destination.from(address)
