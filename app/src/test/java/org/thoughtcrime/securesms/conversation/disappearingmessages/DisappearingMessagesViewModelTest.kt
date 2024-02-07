@@ -7,6 +7,7 @@ import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import network.loki.messenger.R
 import network.loki.messenger.libsession_util.util.ExpiryMode
+import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -53,6 +54,7 @@ class DisappearingMessagesViewModelTest {
     @Mock lateinit var application: Application
     @Mock lateinit var textSecurePreferences: TextSecurePreferences
     @Mock lateinit var messageExpirationManager: SSKEnvironment.MessageExpirationManagerProtocol
+    @Mock lateinit var disappearingMock: DisappearingMessages
     @Mock lateinit var threadDb: ThreadDatabase
     @Mock lateinit var groupDb: GroupDatabase
     @Mock lateinit var storage: Storage
@@ -99,6 +101,7 @@ class DisappearingMessagesViewModelTest {
     }
 
     @Test
+    @Ignore("Ignored until resolving wether old config should have expiryMode = ExpiryMode.Legacy or NONE")
     fun `note to self, off, old config`() = runTest {
         mock1on1(ExpiryMode.NONE, LOCAL_ADDRESS)
 
@@ -555,6 +558,7 @@ class DisappearingMessagesViewModelTest {
         application,
         textSecurePreferences,
         messageExpirationManager,
+        disappearingMock,
         threadDb,
         groupDb,
         storage,

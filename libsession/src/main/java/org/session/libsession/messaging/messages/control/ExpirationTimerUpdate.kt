@@ -19,9 +19,9 @@ data class ExpirationTimerUpdate(var syncTarget: String? = null, val isGroup: Bo
         const val TAG = "ExpirationTimerUpdate"
         private val storage = MessagingModuleConfiguration.shared.storage
 
-        fun fromProto(proto: SignalServiceProtos.Content): ExpirationTimerUpdate? =
+        fun fromProto(proto: SignalServiceProtos.Content, isGroup: Boolean): ExpirationTimerUpdate? =
             proto.dataMessage?.takeIf { it.flags and EXPIRATION_TIMER_UPDATE_VALUE != 0 }?.run {
-                ExpirationTimerUpdate(takeIf { hasSyncTarget() }?.syncTarget, hasGroup()).copyExpiration(proto)
+                ExpirationTimerUpdate(takeIf { hasSyncTarget() }?.syncTarget, isGroup).copyExpiration(proto)
             }
     }
 

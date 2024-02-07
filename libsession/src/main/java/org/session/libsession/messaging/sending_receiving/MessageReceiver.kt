@@ -146,7 +146,7 @@ object MessageReceiver {
             TypingIndicator.fromProto(proto) ?:
             ClosedGroupControlMessage.fromProto(proto) ?:
             DataExtractionNotification.fromProto(proto) ?:
-            ExpirationTimerUpdate.fromProto(proto) ?:
+            ExpirationTimerUpdate.fromProto(proto, closedGroupSessionId != null) ?:
             ConfigurationMessage.fromProto(proto) ?:
             UnsendRequest.fromProto(proto) ?:
             MessageRequestResponse.fromProto(proto) ?:
