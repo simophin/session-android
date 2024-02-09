@@ -7,6 +7,7 @@ import com.goterl.lazysodium.utils.KeyPair
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
+import network.loki.messenger.libsession_util.GroupKeysConfig
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.functional.map
 import okhttp3.MediaType
@@ -92,6 +93,39 @@ class PushRegistryV2 @Inject constructor(private val pushReceiver: PushReceiver)
             Log.d(TAG, "unregisterV2 success")
         }
     }
+
+    fun registerGroup(
+        device: Device,
+        token: String,
+        groupSessionId: String,
+        authData: ByteArray,
+        groupKeysConfig: GroupKeysConfig,
+    ): Promise<SubscriptionResponse, Exception> {
+        val pnKey = pushReceiver.getOrCreateNotificationKey()
+
+        val timestamp = SnodeAPI.nowWithOffset / 1000 // get timestamp in ms -> s
+        val namespaces = listOf<Int>() // Add closed group namespaces here
+        val sigData = "MONITOR${groupSessionId}${timestamp}1${namespaces.joinToString(separator = ",")}".encodeToByteArray()
+        val (subaccount, subaccountSig, sig) = groupKeysConfig.subAccountSign(sigData, authData)
+        TODO()
+    }
+
+    fun unregisterGroup(
+        device: Device,
+        token: String,
+        groupSessionId: String,
+        authData: ByteArray,
+        groupKeysConfig: GroupKeysConfig
+    ): Promise<UnsubscribeResponse, Exception> {
+        val pnKey = pushReceiver.getOrCreateNotificationKey()
+
+        val timestamp = SnodeAPI.nowWithOffset / 1000 // get timestamp in ms -> s
+        val namespaces = listOf<Int>() // Add closed group namespaces here
+        val sigData = "MONITOR${groupSessionId}${timestamp}1${namespaces.joinToString(separator = ",")}".encodeToByteArray()
+        val (subaccount, subaccountSig, sig) = groupKeysConfig.subAccountSign(sigData, authData)
+        TODO()
+    }
+
 
     private inline fun <reified T: Response> retryResponseBody(path: String, requestParameters: String): Promise<T, Exception> =
         retryIfNeeded(maxRetryCount) { getResponseBody(path, requestParameters) }

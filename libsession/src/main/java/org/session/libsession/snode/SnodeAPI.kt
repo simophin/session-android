@@ -1195,6 +1195,9 @@ object SnodeAPI {
     }
 }
 
+/**
+ * (String: message to sign, Long?: timestamp (optional), Int?: namespace (optional)
+ */
 typealias SignCallback = (String, Long?, Int?)->Map<String,Any>
 
 // Type Aliases
