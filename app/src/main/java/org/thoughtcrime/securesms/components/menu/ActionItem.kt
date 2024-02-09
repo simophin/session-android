@@ -1,14 +1,15 @@
 package org.thoughtcrime.securesms.components.menu
 
+import android.content.Context
 import androidx.annotation.AttrRes
 
 /**
  * Represents an action to be rendered
  */
-data class ActionItem @JvmOverloads constructor(
+data class ActionItem(
   @AttrRes val iconRes: Int,
-  val title: CharSequence,
+  val title: Int,
   val action: Runnable,
-  val contentDescription: String? = null,
-  val subtitle: String? = null
+  val contentDescription: Int? = null,
+  val subtitle: ((Context) -> CharSequence?)? = null
 )

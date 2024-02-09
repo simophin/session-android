@@ -517,8 +517,8 @@ object MessageSender {
 
     @JvmStatic
     fun send(message: Message, address: Address) {
-        message.applyExpiryMode()
         val threadID = MessagingModuleConfiguration.shared.storage.getThreadId(address)
+        threadID?.let(message::applyExpiryMode)
         message.threadID = threadID
         val destination = Destination.from(address)
         val job = MessageSendJob(message, destination)

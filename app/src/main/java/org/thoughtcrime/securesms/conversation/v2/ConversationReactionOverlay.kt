@@ -22,7 +22,15 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.doOnLayout
 import androidx.vectordrawable.graphics.drawable.AnimatorInflaterCompat
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import network.loki.messenger.R
+import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.TextSecurePreferences.Companion.getLocalNumber
 import org.session.libsession.utilities.ThemeUtil
 import org.thoughtcrime.securesms.components.emoji.EmojiImageView
@@ -30,15 +38,25 @@ import org.thoughtcrime.securesms.components.emoji.RecentEmojiPageModel
 import org.thoughtcrime.securesms.components.menu.ActionItem
 import org.thoughtcrime.securesms.conversation.v2.menus.ConversationMenuItemHelper.userCanBanSelectedUsers
 import org.thoughtcrime.securesms.conversation.v2.menus.ConversationMenuItemHelper.userCanDeleteSelectedItems
+import org.thoughtcrime.securesms.database.MmsSmsDatabase
+import org.thoughtcrime.securesms.database.SessionContactDatabase
 import org.thoughtcrime.securesms.database.model.MediaMmsMessageRecord
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.database.model.ReactionRecord
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent.Companion.get
+import org.thoughtcrime.securesms.repository.ConversationRepository
 import org.thoughtcrime.securesms.util.AnimationCompleteListener
 import org.thoughtcrime.securesms.util.DateUtils
 import java.util.Locale
+import javax.inject.Inject
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.days
+import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 
+@AndroidEntryPoint
 class ConversationReactionOverlay : FrameLayout {
     private val emojiViewGlobalRect = Rect()
     private val emojiStripViewBounds = Rect()
@@ -78,6 +96,11 @@ class ConversationReactionOverlay : FrameLayout {
     private val revealAnimatorSet = AnimatorSet()
     private var hideAnimatorSet = AnimatorSet()
 
+    @Inject lateinit var mmsSmsDatabase: MmsSmsDatabase
+    @Inject lateinit var repository: ConversationRepository
+    private val scope = CoroutineScope(Dispatchers.Default)
+    private var job: Job? = null
+
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
 
@@ -105,6 +128,8 @@ class ConversationReactionOverlay : FrameLayout {
              lastSeenDownPoint: PointF,
              selectedConversationModel: SelectedConversationModel,
              blindedPublicKey: String?) {
+        job?.cancel()
+
         if (overlayState != OverlayState.HIDDEN) {
             return
         }
@@ -129,6 +154,12 @@ class ConversationReactionOverlay : FrameLayout {
         this.activity = activity
         updateSystemUiOnShow(activity)
         doOnLayout { showAfterLayout(messageRecord, lastSeenDownPoint, isMessageOnLeft) }
+
+        job = scope.launch(Dispatchers.IO) {
+            repository.changes(messageRecord.threadId)
+                .filter { mmsSmsDatabase.getMessageForTimestamp(messageRecord.timestamp) == null }
+                .collect { withContext(Dispatchers.Main) { hide() } }
+        }
     }
 
     private fun updateConversationTimestamp(message: MessageRecord) {
@@ -304,6 +335,7 @@ class ConversationReactionOverlay : FrameLayout {
     }
 
     private fun hideInternal(onHideListener: OnHideListener?) {
+        job?.cancel()
         overlayState = OverlayState.HIDDEN
         val animatorSet = newHideAnimatorSet()
         hideAnimatorSet = animatorSet
@@ -501,54 +533,45 @@ class ConversationReactionOverlay : FrameLayout {
                 ?: return emptyList()
         val userPublicKey = getLocalNumber(context)!!
         // Select message
-        items += ActionItem(R.attr.menu_select_icon, context.resources.getString(R.string.conversation_context__menu_select), { handleActionItemClicked(Action.SELECT) },
-                context.resources.getString(R.string.AccessibilityId_select))
+        items += ActionItem(R.attr.menu_select_icon, R.string.conversation_context__menu_select, { handleActionItemClicked(Action.SELECT) }, R.string.AccessibilityId_select)
         // Reply
         val canWrite = openGroup == null || openGroup.canWrite
         if (canWrite && !message.isPending && !message.isFailed) {
-            items += ActionItem(R.attr.menu_reply_icon, context.resources.getString(R.string.conversation_context__menu_reply), { handleActionItemClicked(Action.REPLY) },
-                    context.resources.getString(R.string.AccessibilityId_reply_message))
+            items += ActionItem(R.attr.menu_reply_icon, R.string.conversation_context__menu_reply, { handleActionItemClicked(Action.REPLY) }, R.string.AccessibilityId_reply_message)
         }
         // Copy message text
         if (!containsControlMessage && hasText) {
-            items += ActionItem(R.attr.menu_copy_icon, context.resources.getString(R.string.copy), { handleActionItemClicked(Action.COPY_MESSAGE) })
+            items += ActionItem(R.attr.menu_copy_icon, R.string.copy, { handleActionItemClicked(Action.COPY_MESSAGE) })
         }
         // Copy Session ID
         if (recipient.isGroupRecipient && !recipient.isOpenGroupRecipient && message.recipient.address.toString() != userPublicKey) {
-            items += ActionItem(R.attr.menu_copy_icon, context.resources.getString(R.string.activity_conversation_menu_copy_session_id), { handleActionItemClicked(Action.COPY_SESSION_ID) })
+            items += ActionItem(R.attr.menu_copy_icon, R.string.activity_conversation_menu_copy_session_id, { handleActionItemClicked(Action.COPY_SESSION_ID) })
         }
         // Delete message
         if (userCanDeleteSelectedItems(context, message, openGroup, userPublicKey, blindedPublicKey)) {
-            items += ActionItem(
-                R.attr.menu_trash_icon,
-                context.resources.getString(R.string.delete),
-                { handleActionItemClicked(Action.DELETE) },
-                context.resources.getString(R.string.AccessibilityId_delete_message),
-                message.takeIf { it.expireStarted > 0 }?.run { expiresIn.milliseconds }?.let { "Auto-deletes in $it" }
-            )
+            items += ActionItem(R.attr.menu_trash_icon, R.string.delete, { handleActionItemClicked(Action.DELETE) }, R.string.AccessibilityId_delete_message, message.subtitle)
         }
         // Ban user
         if (userCanBanSelectedUsers(context, message, openGroup, userPublicKey, blindedPublicKey)) {
-            items += ActionItem(R.attr.menu_block_icon, context.resources.getString(R.string.conversation_context__menu_ban_user), { handleActionItemClicked(Action.BAN_USER) })
+            items += ActionItem(R.attr.menu_block_icon, R.string.conversation_context__menu_ban_user, { handleActionItemClicked(Action.BAN_USER) })
         }
         // Ban and delete all
         if (userCanBanSelectedUsers(context, message, openGroup, userPublicKey, blindedPublicKey)) {
-            items += ActionItem(R.attr.menu_trash_icon, context.resources.getString(R.string.conversation_context__menu_ban_and_delete_all), { handleActionItemClicked(Action.BAN_AND_DELETE_ALL) })
+            items += ActionItem(R.attr.menu_trash_icon, R.string.conversation_context__menu_ban_and_delete_all, { handleActionItemClicked(Action.BAN_AND_DELETE_ALL) })
         }
         // Message detail
-        items += ActionItem(R.attr.menu_info_icon, context.resources.getString(R.string.conversation_context__menu_message_details), { handleActionItemClicked(Action.VIEW_INFO) })
+        items += ActionItem(R.attr.menu_info_icon, R.string.conversation_context__menu_message_details, { handleActionItemClicked(Action.VIEW_INFO) })
         // Resend
         if (message.isFailed) {
-            items += ActionItem(R.attr.menu_reply_icon, context.resources.getString(R.string.conversation_context__menu_resend_message), { handleActionItemClicked(Action.RESEND) })
+            items += ActionItem(R.attr.menu_reply_icon, R.string.conversation_context__menu_resend_message, { handleActionItemClicked(Action.RESEND) })
         }
         // Resync
         if (message.isSyncFailed) {
-            items += ActionItem(R.attr.menu_reply_icon, context.resources.getString(R.string.conversation_context__menu_resync_message), { handleActionItemClicked(Action.RESYNC) })
+            items += ActionItem(R.attr.menu_reply_icon, R.string.conversation_context__menu_resync_message, { handleActionItemClicked(Action.RESYNC) })
         }
         // Save media
         if (message.isMms && (message as MediaMmsMessageRecord).containsMediaSlide()) {
-            items += ActionItem(R.attr.menu_save_icon, context.resources.getString(R.string.conversation_context_image__save_attachment), { handleActionItemClicked(Action.DOWNLOAD) },
-                context.resources.getString(R.string.AccessibilityId_save_attachment))
+            items += ActionItem(R.attr.menu_save_icon, R.string.conversation_context_image__save_attachment, { handleActionItemClicked(Action.DOWNLOAD) }, R.string.AccessibilityId_save_attachment)
         }
         backgroundView.visibility = VISIBLE
         foregroundView.visibility = VISIBLE
@@ -585,16 +608,14 @@ class ConversationReactionOverlay : FrameLayout {
         revealAnimatorSet.playTogether(reveals)
     }
 
-    private fun newHideAnimatorSet(): AnimatorSet {
-        val set = AnimatorSet()
-        set.addListener(object : AnimationCompleteListener() {
+    private fun newHideAnimatorSet() = AnimatorSet().apply {
+        addListener(object : AnimationCompleteListener() {
             override fun onAnimationEnd(animation: Animator) {
                 visibility = GONE
             }
         })
-        set.interpolator = INTERPOLATOR
-        set.playTogether(newHideAnimators())
-        return set
+        interpolator = INTERPOLATOR
+        playTogether(newHideAnimators())
     }
 
     private fun newHideAnimators(): List<Animator> {
@@ -644,26 +665,17 @@ class ConversationReactionOverlay : FrameLayout {
         fun onActionSelected(action: Action)
     }
 
-    private class Boundary {
-        private var min = 0f
-        private var max = 0f
-
-        internal constructor()
-        internal constructor(min: Float, max: Float) {
-            update(min, max)
-        }
+    private class Boundary(private var min: Float = 0f, private var max: Float = 0f) {
 
         fun update(min: Float, max: Float) {
             this.min = min
             this.max = max
         }
 
-        operator fun contains(value: Float): Boolean {
-            return if (min < max) {
-                min < value && max > value
-            } else {
-                min > value && max < value
-            }
+        operator fun contains(value: Float) = if (min < max) {
+            min < value && max > value
+        } else {
+            min > value && max < value
         }
     }
 
@@ -694,3 +706,18 @@ class ConversationReactionOverlay : FrameLayout {
         private val INTERPOLATOR: Interpolator = DecelerateInterpolator()
     }
 }
+
+private fun Duration.to2partString(): String? =
+    toComponents { days, hours, minutes, seconds, nanoseconds -> listOf(days.days, hours.hours, minutes.minutes, seconds.seconds) }
+        .filter { it.inWholeSeconds > 0L }.take(2).takeIf { it.isNotEmpty() }?.joinToString(" ")
+
+private val MessageRecord.subtitle: ((Context) -> CharSequence?)?
+    get() = if (expiresIn <= 0) {
+        null
+    } else { context ->
+        (expiresIn - (SnodeAPI.nowWithOffset - (expireStarted.takeIf { it > 0 } ?: timestamp)))
+            .coerceAtLeast(0L)
+            .milliseconds
+            .to2partString()
+            ?.let { context.getString(R.string.auto_deletes_in, it) }
+    }

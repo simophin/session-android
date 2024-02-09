@@ -124,7 +124,7 @@
     <string name="AccessibilityId_download_media">Download media</string>
     <string name="AccessibilityId_dont_download_media">Don\'t download media</string>
     <!-- Conversation View-->
-    <string name="AccessibilityId_message_sent_status">Message sent status</string>
+    <string name="AccessibilityId_message_sent_status">Message sent status: Sent</string>
     <string name="AccessibilityId_message_request_config_message">Message request has been accepted</string>
     <string name="AccessibilityId_message_body">Message body</string>
     <string name="AccessibilityId_voice_message">Voice message</string>
@@ -487,6 +487,7 @@
     <string name="conversation_activity__quick_attachment_drawer_record_and_send_audio_description">Record and send audio attachment</string>
     <string name="conversation_activity__quick_attachment_drawer_lock_record_description">Lock recording of audio attachment</string>
     <string name="conversation_activity__enable_signal_for_sms">Enable Session for SMS</string>
+    <string name="conversation_activity__wait_until_attachment_has_finished_downloading">Please wait until attachment has finished downloading</string>
     <!-- conversation_input_panel -->
     <string name="conversation_input_panel__slide_to_cancel">Slide to cancel</string>
     <string name="conversation_input_panel__cancel">Cancel</string>
@@ -1056,7 +1057,6 @@
     <string name="search_contacts_hint">Search contacts</string>
     <string name="activity_join_public_chat_enter_community_url_tab_title">Community URL</string>
     <string name="fragment_enter_community_url_edit_text_hint">Enter Community URL</string>
-    <string name="AccessibilityId_community_input_box">Community input box</string>
     <string name="fragment_enter_community_url_join_button_title">Join</string>
     <string name="new_conversation_dialog_back_button_content_description">Navigate Back</string>
     <string name="new_conversation_dialog_close_button_content_description">Close Dialog</string>
@@ -1093,6 +1093,7 @@
     <string name="activity_conversation_empty_state_default">You have no messages from <b>%s</b>.\nSend a message to start the conversation!</string>
 
     <string name="unread_marker">Unread Messages</string>
+    <string name="auto_deletes_in">Auto-deletes in %1$s</string>
 
     <string name="conversation_settings_search">Search Conversation</string>
     <string name="conversation_settings_all_media">All Media</string>

@@ -340,4 +340,5 @@ class VisibleMessageContentView : ConstraintLayout {
         }
     }
     // endregion
+
 }

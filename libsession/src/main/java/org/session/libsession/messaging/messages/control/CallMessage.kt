@@ -47,21 +47,21 @@ class CallMessage(): ControlMessage() {
                 listOf(),
                 listOf(),
                 callId
-        ).applyExpiryMode()
+        )
 
         fun preOffer(callId: UUID) = CallMessage(PRE_OFFER,
                 listOf(),
                 listOf(),
                 listOf(),
                 callId
-        ).applyExpiryMode()
+        )
 
         fun offer(sdp: String, callId: UUID) = CallMessage(OFFER,
                 listOf(sdp),
                 listOf(),
                 listOf(),
                 callId
-        ).applyExpiryMode()
+        )
 
         fun endCall(callId: UUID) = CallMessage(END_CALL, emptyList(), emptyList(), emptyList(), callId)
 

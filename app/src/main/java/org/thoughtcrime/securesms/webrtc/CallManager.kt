@@ -26,6 +26,7 @@ import org.session.libsession.utilities.Util
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.protos.SignalServiceProtos.CallMessage.Type.ICE_CANDIDATES
 import org.session.libsignal.utilities.Log
+import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.webrtc.CallManager.StateEvent.AudioDeviceUpdate
 import org.thoughtcrime.securesms.webrtc.CallManager.StateEvent.AudioEnabled
 import org.thoughtcrime.securesms.webrtc.CallManager.StateEvent.RecipientUpdate
@@ -299,6 +300,7 @@ class CallManager(
                     currentPendings.add(pendingOutgoingIceUpdates.pop())
                 }
 
+                val thread = DatabaseComponent.get(context).threadDatabase().getOrCreateThreadIdFor(expectedRecipient)
                 CallMessage(
                     ICE_CANDIDATES,
                     sdps = currentPendings.map(IceCandidate::sdp),
@@ -306,7 +308,7 @@ class CallManager(
                     sdpMids = currentPendings.map(IceCandidate::sdpMid),
                     currentCallId
                 )
-                    .applyExpiryMode()
+                    .applyExpiryMode(thread)
                     .also { MessageSender.sendNonDurably(it, currentRecipient.address, isSyncMessage = currentRecipient.isLocalNumber) }
             }
         }
@@ -423,6 +425,7 @@ class CallManager(
     fun onNewOffer(offer: String, callId: UUID, recipient: Recipient): Promise<Unit, Exception> {
         if (callId != this.callId) return Promise.ofFail(NullPointerException("No callId"))
         if (recipient != this.recipient) return Promise.ofFail(NullPointerException("No recipient"))
+        val thread = DatabaseComponent.get(context).threadDatabase().getOrCreateThreadIdFor(recipient)
 
         val connection = peerConnection ?: return Promise.ofFail(NullPointerException("No peer connection wrapper"))
 
@@ -435,11 +438,9 @@ class CallManager(
                 mandatory.add(MediaConstraints.KeyValuePair("IceRestart", "true"))
             })
             connection.setLocalDescription(answer)
-            pendingIncomingIceUpdates.toList().forEach { update ->
-                connection.addIceCandidate(update)
-            }
+            pendingIncomingIceUpdates.toList().forEach(connection::addIceCandidate)
             pendingIncomingIceUpdates.clear()
-            val answerMessage = CallMessage.answer(answer.description, callId)
+            val answerMessage = CallMessage.answer(answer.description, callId).applyExpiryMode(thread)
             Log.i("Loki", "Posting new answer")
             MessageSender.sendNonDurably(answerMessage, recipient.address, isSyncMessage = recipient.isLocalNumber)
         } else {
@@ -483,13 +484,14 @@ class CallManager(
         connection.setRemoteDescription(SessionDescription(SessionDescription.Type.OFFER, offer))
         val answer = connection.createAnswer(MediaConstraints())
         connection.setLocalDescription(answer)
-        val answerMessage = CallMessage.answer(answer.description, callId)
+        val thread = DatabaseComponent.get(context).threadDatabase().getOrCreateThreadIdFor(recipient)
+        val answerMessage = CallMessage.answer(answer.description, callId).applyExpiryMode(thread)
         val userAddress = storage.getUserPublicKey() ?: return Promise.ofFail(NullPointerException("No user public key"))
         MessageSender.sendNonDurably(answerMessage, Address.fromSerialized(userAddress), isSyncMessage = true)
         val sendAnswerMessage = MessageSender.sendNonDurably(CallMessage.answer(
                 answer.description,
                 callId
-        ), recipient.address, isSyncMessage = recipient.isLocalNumber)
+        ).applyExpiryMode(thread), recipient.address, isSyncMessage = recipient.isLocalNumber)
 
         insertCallMessage(recipient.address.serialize(), CallMessageType.CALL_INCOMING, false)
 
@@ -537,15 +539,16 @@ class CallManager(
             connection.setLocalDescription(offer)
 
             Log.d("Loki", "Sending pre-offer")
+            val thread = DatabaseComponent.get(context).threadDatabase().getOrCreateThreadIdFor(recipient)
             return MessageSender.sendNonDurably(CallMessage.preOffer(
                 callId
-            ), recipient.address, isSyncMessage = recipient.isLocalNumber).bind {
+            ).applyExpiryMode(thread), recipient.address, isSyncMessage = recipient.isLocalNumber).bind {
                 Log.d("Loki", "Sent pre-offer")
                 Log.d("Loki", "Sending offer")
                 MessageSender.sendNonDurably(CallMessage.offer(
                     offer.description,
                     callId
-                ), recipient.address, isSyncMessage = recipient.isLocalNumber).success {
+                ).applyExpiryMode(thread), recipient.address, isSyncMessage = recipient.isLocalNumber).success {
                     Log.d("Loki", "Sent offer")
                 }.fail {
                     Log.e("Loki", "Failed to send offer", it)
@@ -559,8 +562,9 @@ class CallManager(
         val recipient = recipient ?: return
         val userAddress = storage.getUserPublicKey() ?: return
         stateProcessor.processEvent(Event.DeclineCall) {
-            MessageSender.sendNonDurably(CallMessage.endCall(callId), Address.fromSerialized(userAddress), isSyncMessage = true)
-            MessageSender.sendNonDurably(CallMessage.endCall(callId), recipient.address, isSyncMessage = recipient.isLocalNumber)
+            val thread = DatabaseComponent.get(context).threadDatabase().getOrCreateThreadIdFor(recipient)
+            MessageSender.sendNonDurably(CallMessage.endCall(callId).applyExpiryMode(thread), Address.fromSerialized(userAddress), isSyncMessage = true)
+            MessageSender.sendNonDurably(CallMessage.endCall(callId).applyExpiryMode(thread), recipient.address, isSyncMessage = recipient.isLocalNumber)
             insertCallMessage(recipient.address.serialize(), CallMessageType.CALL_MISSED)
         }
     }
@@ -579,7 +583,9 @@ class CallManager(
                 val buffer = DataChannel.Buffer(ByteBuffer.wrap(HANGUP_JSON.toString().encodeToByteArray()), false)
                 channel.send(buffer)
             }
-            MessageSender.sendNonDurably(CallMessage.endCall(callId), recipient.address, isSyncMessage = recipient.isLocalNumber)
+
+            val thread = DatabaseComponent.get(context).threadDatabase().getOrCreateThreadIdFor(recipient)
+            MessageSender.sendNonDurably(CallMessage.endCall(callId).applyExpiryMode(thread), recipient.address, isSyncMessage = recipient.isLocalNumber)
         }
     }
 
@@ -729,8 +735,8 @@ class CallManager(
                 mandatory.add(MediaConstraints.KeyValuePair("IceRestart", "true"))
             })
             connection.setLocalDescription(offer)
-
-            MessageSender.sendNonDurably(CallMessage.offer(offer.description, callId), recipient.address, isSyncMessage = recipient.isLocalNumber)
+            val thread = DatabaseComponent.get(context).threadDatabase().getOrCreateThreadIdFor(recipient)
+            MessageSender.sendNonDurably(CallMessage.offer(offer.description, callId).applyExpiryMode(thread), recipient.address, isSyncMessage = recipient.isLocalNumber)
         }
     }
 

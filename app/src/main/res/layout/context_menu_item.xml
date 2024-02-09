@@ -34,7 +34,7 @@
 
         <TextView
             android:id="@+id/context_menu_item_subtitle"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textSize="@dimen/tiny_font_size"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"

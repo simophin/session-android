@@ -89,12 +89,6 @@ fun SignalServiceProtos.Content.expiryMode(): ExpiryMode =
 /**
  * Apply ExpiryMode from the current setting.
  */
-inline fun <reified M: Message> M.applyExpiryMode(): M {
-    val address = Address.fromSerialized(sender ?: return this)
-    MessagingModuleConfiguration.shared.storage.getThreadId(address)?.let(::applyExpiryMode)
-    return this
-}
-
 inline fun <reified M: Message> M.applyExpiryMode(thread: Long): M {
     val storage = MessagingModuleConfiguration.shared.storage
     expiryMode = storage.getExpirationConfiguration(thread)?.expiryMode?.coerceSendToRead(coerceDisappearAfterSendToRead) ?: ExpiryMode.NONE
