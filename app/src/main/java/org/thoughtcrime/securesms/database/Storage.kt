@@ -110,6 +110,7 @@ import org.thoughtcrime.securesms.groups.ClosedGroupManager
 import org.thoughtcrime.securesms.groups.GroupManager
 import org.thoughtcrime.securesms.groups.OpenGroupManager
 import org.thoughtcrime.securesms.mms.PartAuthority
+import org.thoughtcrime.securesms.notifications.PushRegistry
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 import org.thoughtcrime.securesms.util.SessionMetaProtocol
 import java.security.MessageDigest
@@ -123,6 +124,7 @@ open class Storage(
     helper: SQLCipherOpenHelper,
     private val configFactory: ConfigFactory,
     private val pollerFactory: PollerFactory,
+    private val pushRegistry: PushRegistry,
 ) : Database(context, helper), StorageProtocol,
     ThreadDatabase.ConversationThreadUpdateListener {
 
@@ -676,10 +678,14 @@ open class Storage(
             val recipient = Recipient.from(context, Address.fromSerialized(closedGroup.groupSessionId.hexString()), false)
             setRecipientApprovedMe(recipient, true)
             setRecipientApproved(recipient, !closedGroup.invited)
+            val createThread = getThreadId(recipient) == null
             val threadId = getOrCreateThreadIdFor(recipient.address)
             setPinned(threadId, closedGroup.priority == PRIORITY_PINNED)
             if (!closedGroup.invited) {
                 pollerFactory.pollerFor(closedGroup.groupSessionId)?.start()
+            }
+            if (createThread) {
+                pushRegistry.registerForGroup(closedGroup.groupSessionId)
             }
         }
         // TODO: add in removing legacy closed groups via config update
@@ -1316,6 +1322,7 @@ open class Storage(
             // clear any group invites for this session ID (just in case there's a re-invite from an approved member after an invite from non-approved)
             inviteDb.deleteGroupInviteReferrer(groupThreadId)
             pollerFactory.pollerFor(groupId)?.start()
+            pushRegistry.registerForGroup(groupId)
             val inviteResponse = GroupUpdateInviteResponseMessage.newBuilder()
                 .setIsApproved(true)
             val responseData = GroupUpdateMessage.newBuilder()
@@ -1784,6 +1791,7 @@ open class Storage(
                 // if the leaving member is an admin, disable the group and remove it
                 if (memberConfig.get(message.sender!!)?.admin == true) {
                     pollerFactory.pollerFor(closedGroupId)?.stop()
+                    pushRegistry.unregisterForGroup(closedGroupId)
                     getThreadId(fromSerialized(closedGroupHexString))?.let { threadId ->
                         deleteConversation(threadId)
                     }
@@ -1808,7 +1816,7 @@ open class Storage(
         try {
             MessageSender.sendNonDurably(message, fromSerialized(groupSessionId), false).get()
             pollerFactory.pollerFor(closedGroupId)?.stop()
-            // TODO: unsub from pushes
+            pushRegistry.unregisterForGroup(closedGroupId)
             // TODO: set "deleted" and post to -10 group namespace?
             getThreadId(fromSerialized(groupSessionId))?.let { threadId ->
                 deleteConversation(threadId)

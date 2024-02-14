@@ -2,6 +2,7 @@ package org.thoughtcrime.securesms.groups.compose
 
 import android.content.Context
 import android.widget.Toast
+import androidx.annotation.StringRes
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -439,7 +440,7 @@ fun MemberItem(modifier: Modifier = Modifier,
                 // Display the current member state
                 val stateDesc = stringResource(R.string.AccessibilityId_member_state)
                 Text(
-                    text = member.memberState.toString(),
+                    text = stringResource(member.memberState.toDisplayString()),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(1.dp)
@@ -531,6 +532,9 @@ enum class MemberState {
     Admin,
     Member
 }
+
+@StringRes
+fun MemberState.toDisplayString(): Int = TODO()
 
 fun memberStateOf(member: GroupMember): MemberState = when {
     member.inviteFailed -> MemberState.InviteFailed

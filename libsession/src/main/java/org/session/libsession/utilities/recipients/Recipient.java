@@ -60,8 +60,6 @@ import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.ExecutionException;
 
-import network.loki.messenger.libsession_util.util.GroupDisplayInfo;
-
 public class Recipient implements RecipientModifiedListener {
 
   private static final String            TAG      = Recipient.class.getSimpleName();
@@ -968,7 +966,6 @@ public class Recipient implements RecipientModifiedListener {
     private final Uri                    callRingtone;
     private final MaterialColor          color;
     private final int                    defaultSubscriptionId;
-    private final int                    expireMessages;
     private final RegisteredState        registered;
     private final byte[]                 profileKey;
     private final String                 systemDisplayName;
@@ -1024,7 +1021,6 @@ public class Recipient implements RecipientModifiedListener {
       this.callRingtone            = callRingtone;
       this.color                   = color;
       this.defaultSubscriptionId   = defaultSubscriptionId;
-      this.expireMessages          = expireMessages;
       this.registered              = registered;
       this.profileKey              = profileKey;
       this.systemDisplayName       = systemDisplayName;

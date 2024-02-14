@@ -14,6 +14,7 @@ import org.thoughtcrime.securesms.crypto.AttachmentSecretProvider
 import org.thoughtcrime.securesms.crypto.DatabaseSecretProvider
 import org.thoughtcrime.securesms.database.*
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper
+import org.thoughtcrime.securesms.notifications.PushRegistry
 import org.thoughtcrime.securesms.service.ExpiringMessageManager
 import javax.inject.Singleton
 
@@ -145,9 +146,10 @@ object DatabaseModule {
                        openHelper: SQLCipherOpenHelper,
                        configFactory: ConfigFactory,
                        threadDatabase: ThreadDatabase,
-                       pollerFactory: PollerFactory
+                       pollerFactory: PollerFactory,
+                       pushRegistry: PushRegistry,
     ): Storage {
-        val storage = Storage(context, openHelper, configFactory, pollerFactory)
+        val storage = Storage(context, openHelper, configFactory, pollerFactory, pushRegistry)
         threadDatabase.setUpdateListener(storage)
         return storage
     }

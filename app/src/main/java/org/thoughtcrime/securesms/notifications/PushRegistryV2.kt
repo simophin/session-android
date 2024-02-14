@@ -106,8 +106,23 @@ class PushRegistryV2 @Inject constructor(private val pushReceiver: PushReceiver)
         val timestamp = SnodeAPI.nowWithOffset / 1000 // get timestamp in ms -> s
         val namespaces = listOf<Int>() // Add closed group namespaces here
         val sigData = "MONITOR${groupSessionId}${timestamp}1${namespaces.joinToString(separator = ",")}".encodeToByteArray()
-        val (subaccount, subaccountSig, sig) = groupKeysConfig.subAccountSign(sigData, authData)
-        TODO()
+        val (subaccount, _, sig) = groupKeysConfig.subAccountSign(sigData, authData)
+        val requestParameters = SubscriptionRequest(
+            pubkey = groupSessionId,
+            session_ed25519 = null,
+            subkey_tag = subaccount,
+            namespaces = listOf(Namespace.DEFAULT()),
+            data = true, // only permit data subscription for now (?)
+            service = device.service,
+            sig_ts = timestamp,
+            signature = sig,
+            service_info = mapOf("token" to token),
+            enc_key = pnKey.asHexString,
+        ).let(Json::encodeToString)
+
+        return retryResponseBody<SubscriptionResponse>("subscribe", requestParameters) success {
+            Log.d(TAG, "registerV2 for group success")
+        }
     }
 
     fun unregisterGroup(
@@ -117,13 +132,23 @@ class PushRegistryV2 @Inject constructor(private val pushReceiver: PushReceiver)
         authData: ByteArray,
         groupKeysConfig: GroupKeysConfig
     ): Promise<UnsubscribeResponse, Exception> {
-        val pnKey = pushReceiver.getOrCreateNotificationKey()
-
         val timestamp = SnodeAPI.nowWithOffset / 1000 // get timestamp in ms -> s
         val namespaces = listOf<Int>() // Add closed group namespaces here
         val sigData = "MONITOR${groupSessionId}${timestamp}1${namespaces.joinToString(separator = ",")}".encodeToByteArray()
-        val (subaccount, subaccountSig, sig) = groupKeysConfig.subAccountSign(sigData, authData)
-        TODO()
+        val (subaccount, _, sig) = groupKeysConfig.subAccountSign(sigData, authData)
+        val requestParameters = UnsubscriptionRequest(
+            pubkey = groupSessionId,
+            session_ed25519 = null,
+            subkey_tag = subaccount,
+            service = device.service,
+            sig_ts = timestamp,
+            signature = sig,
+            service_info = mapOf("token" to token),
+        ).let(Json::encodeToString)
+
+        return retryResponseBody<UnsubscribeResponse>("unsubscribe", requestParameters) success {
+            Log.d(TAG, "unregisterV2 for group success")
+        }
     }
 
 
