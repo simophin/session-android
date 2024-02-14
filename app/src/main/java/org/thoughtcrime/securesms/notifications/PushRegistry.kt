@@ -86,7 +86,7 @@ class PushRegistry @Inject constructor(
                     groupHexString,
                     authData,
                     keysConfig
-                )
+                ).get()
             } catch (e: Exception) {
                 Log.e(TAG, "register group failed", e)
             }

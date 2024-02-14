@@ -1304,7 +1304,7 @@ open class Storage(
         val profileManager = SSKEnvironment.shared.profileManager
         val groups = configFactory.userGroups ?: return
         val inviteDb = DatabaseComponent.get(context).lokiMessageDatabase()
-        val shouldAutoApprove = false // getRecipientApproved(fromSerialized(invitingAdmin.hexString()))
+        val shouldAutoApprove = getRecipientApproved(fromSerialized(invitingAdmin.hexString()))
         val closedGroupInfo = GroupInfo.ClosedGroupInfo(
             groupId,
             byteArrayOf(),
