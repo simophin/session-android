@@ -27,6 +27,7 @@ import org.session.libsignal.utilities.Base64
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.Namespace
 import org.session.libsignal.utilities.retryIfNeeded
+import org.session.libsignal.utilities.toHexString
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -109,7 +110,7 @@ class PushRegistryV2 @Inject constructor(private val pushReceiver: PushReceiver)
         val subkeyAuth = groupKeysConfig.subAccountSign(sigData, authData)
         val requestParameters = SubscriptionRequest(
             pubkey = groupSessionId,
-            subaccount = subkeyAuth.subAccount,
+            subaccount = Base64.decode(subkeyAuth.subAccount).toHexString(),
             namespaces = namespaces,
             data = true, // only permit data subscription for now (?)
             service = device.service,

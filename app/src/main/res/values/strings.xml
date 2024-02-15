@@ -1132,4 +1132,5 @@
     <string name="EditGroup_promote_action">Promote</string>
     <string name="AccessibilityId_empty_conversation">Empty conversation</string>
     <string name="AccessibilityId_outdated_group_banner">Legacy group banner</string>
+    <string name="LegacyGroup_info_banner">Groups have been upgraded, create a new group to upgrade. Old group functionality will be degraded from [Date].</string>
 </resources>
