@@ -104,18 +104,18 @@ class PushRegistryV2 @Inject constructor(private val pushReceiver: PushReceiver)
         val pnKey = pushReceiver.getOrCreateNotificationKey()
 
         val timestamp = SnodeAPI.nowWithOffset / 1000 // get timestamp in ms -> s
-        val namespaces = listOf<Int>() // Add closed group namespaces here
+        val namespaces = listOf(Namespace.CLOSED_GROUP_MESSAGES(),Namespace.CLOSED_GROUP_INFO(), Namespace.CLOSED_GROUP_MEMBERS())
         val sigData = "MONITOR${groupSessionId}${timestamp}1${namespaces.joinToString(separator = ",")}".encodeToByteArray()
-        val (subaccount, _, sig) = groupKeysConfig.subAccountSign(sigData, authData)
+        val subkeyAuth = groupKeysConfig.subAccountSign(sigData, authData)
         val requestParameters = SubscriptionRequest(
             pubkey = groupSessionId,
-            session_ed25519 = null,
-            subkey_tag = subaccount,
-            namespaces = listOf(Namespace.DEFAULT()),
+            subaccount = subkeyAuth.subAccount,
+            namespaces = namespaces,
             data = true, // only permit data subscription for now (?)
             service = device.service,
             sig_ts = timestamp,
-            signature = sig,
+            subaccount_sig = subkeyAuth.subAccountSig,
+            signature = subkeyAuth.signature,
             service_info = mapOf("token" to token),
             enc_key = pnKey.asHexString,
         ).let(Json::encodeToString)
@@ -133,7 +133,7 @@ class PushRegistryV2 @Inject constructor(private val pushReceiver: PushReceiver)
         groupKeysConfig: GroupKeysConfig
     ): Promise<UnsubscribeResponse, Exception> {
         val timestamp = SnodeAPI.nowWithOffset / 1000 // get timestamp in ms -> s
-        val namespaces = listOf<Int>() // Add closed group namespaces here
+        val namespaces = listOf(Namespace.CLOSED_GROUP_MESSAGES(),Namespace.CLOSED_GROUP_INFO(), Namespace.CLOSED_GROUP_MEMBERS())
         val sigData = "MONITOR${groupSessionId}${timestamp}1${namespaces.joinToString(separator = ",")}".encodeToByteArray()
         val (subaccount, _, sig) = groupKeysConfig.subAccountSign(sigData, authData)
         val requestParameters = UnsubscriptionRequest(
