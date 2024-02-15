@@ -224,6 +224,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/blockedBanner"
         android:background="@color/outdated_client_banner_background_color"
+        android:paddingHorizontal="2dp"
         android:contentDescription="@string/AccessibilityId_outdated_group_banner"
         android:visibility="gone"
         tools:visibility="visible">
