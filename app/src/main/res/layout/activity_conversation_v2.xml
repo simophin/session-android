@@ -218,6 +218,30 @@
 
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/outdatedDisappearingBanner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/blockedBanner"
+        android:background="@color/outdated_client_banner_background_color"
+        android:contentDescription="@string/AccessibilityId_outdated_group_banner"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <TextView
+            android:id="@+id/outdatedDisappearingBannerTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_centerInParent="true"
+            android:layout_marginVertical="@dimen/very_small_spacing"
+            android:layout_marginHorizontal="@dimen/medium_spacing"
+            android:textColor="@color/black"
+            android:textSize="@dimen/tiny_font_size"
+            tools:text="This user's client is outdated, things may not work as expected" />
+
+    </RelativeLayout>
+
     <FrameLayout
         android:id="@+id/outdatedGroupBanner"
         android:layout_width="match_parent"
@@ -226,8 +250,7 @@
         android:background="@color/outdated_client_banner_background_color"
         android:paddingHorizontal="2dp"
         android:contentDescription="@string/AccessibilityId_outdated_group_banner"
-        android:visibility="gone"
-        tools:visibility="visible">
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/outdatedBannerTextView"

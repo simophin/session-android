@@ -46,7 +46,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -58,8 +57,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.consumeAsFlow
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -183,8 +180,6 @@ import org.thoughtcrime.securesms.util.push
 import org.thoughtcrime.securesms.util.show
 import org.thoughtcrime.securesms.util.toPx
 import java.lang.ref.WeakReference
-import java.time.Instant
-import java.util.Date
 import java.util.Locale
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.atomic.AtomicBoolean
@@ -195,8 +190,6 @@ import kotlin.math.abs
 import kotlin.math.min
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
-import kotlin.time.Duration
-import kotlin.time.Duration.Companion.milliseconds
 
 private const val TAG = "ConversationActivityV2"
 
@@ -456,6 +449,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 setUpSearchResultObserver()
                 scrollToFirstUnreadMessageIfNeeded()
                 setUpOutdatedClientBanner()
+                setUpLegacyGroupBanner()
 
                 if (author != null && messageTimestamp >= 0 && targetPosition >= 0) {
                     binding?.conversationRecyclerView?.scrollToPosition(targetPosition)
@@ -722,10 +716,29 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val shouldShowLegacy = ExpirationConfiguration.isNewConfigEnabled &&
                 legacyRecipient != null
 
-        binding?.outdatedBanner?.isVisible = shouldShowLegacy
+        binding?.outdatedDisappearingBanner?.isVisible = shouldShowLegacy
         if (shouldShowLegacy) {
-            binding?.outdatedBannerTextView?.text =
+            binding?.outdatedDisappearingBannerTextView?.text =
                 resources.getString(R.string.activity_conversation_outdated_client_banner_text, legacyRecipient!!.name)
+        }
+    }
+
+    private fun setUpLegacyGroupBanner() {
+        val shouldDisplayBanner = viewModel.recipient?.isLegacyClosedGroupRecipient ?: return
+        val binding = binding ?: return
+
+        with(binding) {
+            outdatedGroupBanner.isVisible = shouldDisplayBanner
+            outdatedGroupBanner.setOnClickListener {
+                showSessionDialog {
+                    title(R.string.dialog_open_url_title)
+                    text(R.string.dialog_open_url_explanation)
+                    cancelButton()
+                    destructiveButton(R.string.open) {
+                        // open the URL (tbc)
+                    }
+                }
+            }
         }
     }
 
