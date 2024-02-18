@@ -227,6 +227,7 @@ interface StorageProtocol {
     fun persist(message: VisibleMessage, quotes: QuoteModel?, linkPreview: List<LinkPreview?>, groupPublicKey: String?, openGroupID: String?, attachments: List<Attachment>, runThreadUpdate: Boolean): Long?
     fun markConversationAsRead(threadId: Long, lastSeenTime: Long, force: Boolean = false)
     fun getLastSeen(threadId: Long): Long
+    fun ensureMessageHashesAreSender(hashes: List<String>, sender: String): Boolean
     fun updateThread(threadId: Long, unarchive: Boolean)
     fun insertDataExtractionNotificationMessage(senderPublicKey: String, message: DataExtractionNotificationInfoMessage, sentTimestamp: Long)
     fun insertMessageRequestResponse(response: MessageRequestResponse)

@@ -280,6 +280,12 @@ open class Storage(
         return threadDb.getLastSeenAndHasSent(threadId)?.first() ?: 0L
     }
 
+    override fun ensureMessageHashesAreSender(hashes: List<String>, sender: String): Boolean {
+        val lokiAPIDatabase = DatabaseComponent.get(context).lokiAPIDatabase().
+        val mmsSmsDatabase = DatabaseComponent.get(context).mmsSmsDatabase()
+        mmsSmsDatabase.getSendersFor(hashes)
+    }
+
     override fun markConversationAsRead(threadId: Long, lastSeenTime: Long, force: Boolean) {
         Log.d(TAG, "markConversationAsRead() called with: threadId = $threadId, lastSeenTime = $lastSeenTime, force = $force")
         val threadDb = DatabaseComponent.get(context).threadDatabase()

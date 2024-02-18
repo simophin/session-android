@@ -575,6 +575,21 @@ private fun MessageReceiver.handleGroupUpdated(message: GroupUpdated, closedGrou
         inner.hasInfoChangeMessage() -> handleGroupInfoChange(message, closedGroup!!)
         inner.hasMemberChangeMessage() -> handleMemberChange(message, closedGroup!!)
         inner.hasMemberLeftMessage() -> handleMemberLeft(message, closedGroup!!)
+        inner.hasDeleteMemberContent() -> handleDeleteMemberContent(message, closedGroup!!)
+    }
+}
+
+private fun handleDeleteMemberContent(message: GroupUpdated, closedGroup: SessionId) {
+    val storage = MessagingModuleConfiguration.shared.storage
+    val deleteMemberContent = message.inner.deleteMemberContent
+    val adminSig = if (deleteMemberContent.hasAdminSignature()) deleteMemberContent.adminSignature.toByteArray() else null
+    val hashes = deleteMemberContent.messageHashesList
+
+
+    if (storage.ensureMessageHashesAreSender(hashes, message.sender!!) || verifyAdminSignature(closedGroup,
+
+    )) {
+        // ensure that all message hashes belong to user
     }
 }
 
