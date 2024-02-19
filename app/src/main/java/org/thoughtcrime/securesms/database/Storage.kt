@@ -280,8 +280,14 @@ open class Storage(
         return threadDb.getLastSeenAndHasSent(threadId)?.first() ?: 0L
     }
 
-    override fun ensureMessageHashesAreSender(hashes: List<String>, sender: String): Boolean {
-        val lokiAPIDatabase = DatabaseComponent.get(context).lokiAPIDatabase().
+    override fun ensureMessageHashesAreSender(
+        hashes: List<String>,
+        sender: String,
+        closedGroupId: String
+    ): Boolean {
+        val dbComponent = DatabaseComponent.get(context)
+        val lokiAPIDatabase = dbComponent.lokiAPIDatabase()
+        val threadId = getThreadId(Address.fromSerialized(closedGroupId))!!
         val mmsSmsDatabase = DatabaseComponent.get(context).mmsSmsDatabase()
         mmsSmsDatabase.getSendersFor(hashes)
     }
