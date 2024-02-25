@@ -587,7 +587,7 @@ private fun handleDeleteMemberContent(message: GroupUpdated, closedGroup: Sessio
     val memberIds = deleteMemberContent.memberSessionIdsList
     val hashes = deleteMemberContent.messageHashesList
 
-    if (storage.ensureMessageHashesAreSender(hashes, message.sender!!, closedGroup.hexString())) {
+    if (storage.ensureMessageHashesAreSender(hashes.toSet(), message.sender!!, closedGroup.hexString())) {
         // ensure that all message hashes belong to user
         // storage delete
     } else {

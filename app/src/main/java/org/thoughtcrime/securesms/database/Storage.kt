@@ -281,15 +281,15 @@ open class Storage(
     }
 
     override fun ensureMessageHashesAreSender(
-        hashes: List<String>,
+        hashes: Set<String>,
         sender: String,
         closedGroupId: String
     ): Boolean {
         val dbComponent = DatabaseComponent.get(context)
-        val lokiAPIDatabase = dbComponent.lokiAPIDatabase()
+        val lokiMessageDatabase = dbComponent.lokiMessageDatabase()
         val threadId = getThreadId(Address.fromSerialized(closedGroupId))!!
-        val mmsSmsDatabase = DatabaseComponent.get(context).mmsSmsDatabase()
-        mmsSmsDatabase.getSendersFor(hashes)
+        val senders = lokiMessageDatabase.getSendersForHashes(threadId, hashes)
+        return senders.all { it == sender }
     }
 
     override fun markConversationAsRead(threadId: Long, lastSeenTime: Long, force: Boolean) {

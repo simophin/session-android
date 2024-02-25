@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import net.zetetic.database.sqlcipher.SQLiteDatabase.CONFLICT_REPLACE
 import org.session.libsignal.database.LokiMessageDatabaseProtocol
+import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper
 
 class LokiMessageDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(context, helper), LokiMessageDatabaseProtocol {
@@ -226,6 +227,20 @@ class LokiMessageDatabase(context: Context, helper: SQLCipherOpenHelper) : Datab
         } finally {
             database.endTransaction()
         }
+    }
+
+    fun getSendersForHashes(threadId: Long, hashes: Set<String>): Set<String> {
+        val smsQuery = "SELECT ${SmsDatabase.TABLE_NAME}.${MmsSmsColumns.ADDRESS} FROM $smsHashTable LEFT OUTER JOIN ${SmsDatabase.TABLE_NAME} " +
+                "ON ${SmsDatabase.TABLE_NAME}.${MmsSmsColumns.ID} = $smsHashTable.$messageID WHERE $smsHashTable.$serverHash IN ? AND ${SmsDatabase.TABLE_NAME}.${MmsSmsColumns.THREAD_ID} = ?"
+        val mmsQuery = "SELECT ${MmsDatabase.TABLE_NAME}.${MmsSmsColumns.ADDRESS} FROM $mmsHashTable LEFT OUTER JOIN ${MmsDatabase.TABLE_NAME} " +
+                "ON ${MmsDatabase.TABLE_NAME}.${MmsSmsColumns.ID} = $mmsHashTable.$messageID WHERE $mmsHashTable.$serverHash IN ? AND ${MmsDatabase.TABLE_NAME}.${MmsSmsColumns.THREAD_ID} = ?"
+        val smsCursor = databaseHelper.readableDatabase.query(smsQuery, arrayOf(hashes.toTypedArray(), threadId))
+        val mmsCursor = databaseHelper.readableDatabase.query(mmsQuery, arrayOf(hashes.toTypedArray(), threadId))
+
+        Log.d("Hashes", "sms count = ${smsCursor.count}")
+        Log.d("Hashes", "mms count = ${mmsCursor.count}")
+
+        return emptySet()
     }
 
     fun getMessageServerHash(messageID: Long, mms: Boolean): String? = getMessageTables(mms).firstNotNullOfOrNull {
