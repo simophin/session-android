@@ -586,18 +586,34 @@ private fun handleDeleteMemberContent(message: GroupUpdated, closedGroup: Sessio
 
     val memberIds = deleteMemberContent.memberSessionIdsList
     val hashes = deleteMemberContent.messageHashesList
+    val threadId = storage.getThreadId(Address.fromSerialized(closedGroup.hexString()))!!
 
-    if (storage.ensureMessageHashesAreSender(hashes.toSet(), message.sender!!, closedGroup.hexString())) {
-        // ensure that all message hashes belong to user
-        // storage delete
-    } else {
-        // otherwise assert a valid admin sig exists
+    if (hashes.isNotEmpty()) {
+        // Delete all hashes conditionally
+        if (storage.ensureMessageHashesAreSender(hashes.toSet(), message.sender!!, closedGroup.hexString())) {
+            // ensure that all message hashes belong to user
+            // storage delete
+            storage.deleteMessagesByHash(threadId, hashes)
+        } else {
+            // otherwise assert a valid admin sig exists
+            verifyAdminSignature(
+                closedGroup,
+                adminSig,
+                "DELETE_CONTENT${message.sentTimestamp!!}${memberIds.joinToString(",")}${hashes.joinToString(",")}"
+            )
+            // storage delete
+            storage.deleteMessagesByHash(threadId, hashes)
+        }
+    } else if (memberIds.isNotEmpty()) {
+        // Delete all from member Ids, and require admin sig?
         verifyAdminSignature(
             closedGroup,
             adminSig,
             "DELETE_CONTENT${message.sentTimestamp!!}${memberIds.joinToString(",")}${hashes.joinToString(",")}"
         )
-        // storage delete
+        for (member in memberIds) {
+            storage.deleteMessagesByUser(threadId, member)
+        }
     }
 }
 

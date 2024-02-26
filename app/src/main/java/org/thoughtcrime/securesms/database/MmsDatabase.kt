@@ -876,7 +876,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         val groupReceiptDatabase = get(context).groupReceiptDatabase()
         groupReceiptDatabase.deleteRowsForMessage(messageId)
         val database = databaseHelper.writableDatabase
-        database!!.delete(TABLE_NAME, ID_WHERE, arrayOf(messageId.toString()))
+        database.delete(TABLE_NAME, ID_WHERE, arrayOf(messageId.toString()))
         val threadDeleted = get(context).threadDatabase().update(threadId, false)
         notifyConversationListeners(threadId)
         notifyStickerListeners()
@@ -892,7 +892,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         groupReceiptDatabase.deleteRowsForMessages(messageIds)
 
         val database = databaseHelper.writableDatabase
-        database!!.delete(TABLE_NAME, ID_IN, arrayOf(messageIds.joinToString(",")))
+        database.delete(TABLE_NAME, ID_IN, arrayOf(messageIds.joinToString(",")))
 
         val threadDeleted = get(context).threadDatabase().update(threadId, false)
         notifyConversationListeners(threadId)

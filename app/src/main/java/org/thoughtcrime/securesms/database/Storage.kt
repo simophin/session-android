@@ -25,6 +25,7 @@ import nl.komponents.kovenant.functional.bind
 import org.session.libsession.avatars.AvatarHelper
 import org.session.libsession.database.StorageProtocol
 import org.session.libsession.messaging.BlindedIdMapping
+import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.calls.CallMessageType
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.messaging.jobs.AttachmentUploadJob
@@ -102,6 +103,7 @@ import org.session.libsignal.utilities.guava.Optional
 import org.session.libsignal.utilities.toHexString
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper
 import org.thoughtcrime.securesms.database.model.MessageId
+import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.database.model.ReactionRecord
 import org.thoughtcrime.securesms.dependencies.ConfigFactory
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
@@ -288,8 +290,33 @@ open class Storage(
         val dbComponent = DatabaseComponent.get(context)
         val lokiMessageDatabase = dbComponent.lokiMessageDatabase()
         val threadId = getThreadId(Address.fromSerialized(closedGroupId))!!
-        val senders = lokiMessageDatabase.getSendersForHashes(threadId, hashes)
-        return senders.all { it == sender }
+        val info = lokiMessageDatabase.getSendersForHashes(threadId, hashes)
+        return info.all { it.sender == sender }
+    }
+
+    override fun deleteMessagesByHash(threadId: Long, hashes: List<String>) {
+        val messageDataProvider = MessagingModuleConfiguration.shared.messageDataProvider
+        val lokiMessageDatabase = DatabaseComponent.get(context).lokiMessageDatabase()
+        val info = lokiMessageDatabase.getSendersForHashes(threadId, hashes.toSet())
+        // TODO: no idea if we need to server delete this
+        for ((serverHash, sender, messageIdToDelete, isSms) in info) {
+            messageDataProvider.deleteMessage(messageIdToDelete, isSms)
+            if (!messageDataProvider.isOutgoingMessage(messageIdToDelete)) {
+                SSKEnvironment.shared.notificationManager.updateNotification(context)
+            }
+        }
+    }
+
+    override fun deleteMessagesByUser(threadId: Long, userSessionId: String) {
+        val messageDataProvider = MessagingModuleConfiguration.shared.messageDataProvider
+        val userMessages = DatabaseComponent.get(context).mmsSmsDatabase().getUserMessages(threadId, userSessionId)
+        val (mmsMessages, smsMessages) = userMessages.partition { it.isMms }
+        if (mmsMessages.isNotEmpty()) {
+            messageDataProvider.deleteMessages(mmsMessages.map(MessageRecord::id), threadId, isSms = false)
+        }
+        if (smsMessages.isNotEmpty()) {
+            messageDataProvider.deleteMessages(smsMessages.map(MessageRecord::id), threadId, isSms = true)
+        }
     }
 
     override fun markConversationAsRead(threadId: Long, lastSeenTime: Long, force: Boolean) {

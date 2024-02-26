@@ -212,7 +212,7 @@ class DefaultConversationRepository @Inject constructor(
             messageDataProvider.deleteMessage(message.id, !message.isMms)
             messageDataProvider.getServerHashForMessage(message.id, message.isMms)?.let { serverHash ->
                 var publicKey = recipient.address.serialize()
-                if (recipient.isClosedGroupRecipient) {
+                if (recipient.isLegacyClosedGroupRecipient) {
                     publicKey = GroupUtil.doubleDecodeGroupID(publicKey).toHexString()
                 }
                 SnodeAPI.deleteMessage(publicKey, listOf(serverHash))

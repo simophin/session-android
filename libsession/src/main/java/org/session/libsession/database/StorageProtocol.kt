@@ -236,6 +236,8 @@ interface StorageProtocol {
     fun setRecipientApprovedMe(recipient: Recipient, approvedMe: Boolean)
     fun insertCallMessage(senderPublicKey: String, callMessageType: CallMessageType, sentTimestamp: Long)
     fun conversationHasOutgoing(userPublicKey: String): Boolean
+    fun deleteMessagesByHash(threadId: Long, hashes: List<String>)
+    fun deleteMessagesByUser(threadId: Long, userSessionId: String)
 
     // Last Inbox Message Id
     fun getLastInboxMessageId(server: String): Long?
