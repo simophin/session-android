@@ -66,17 +66,17 @@ Java_network_loki_messenger_libsession_1util_GroupInfoConfig_getDeleteBefore(JNI
 }
 
 extern "C"
-JNIEXPORT jobject JNICALL
+JNIEXPORT jlong JNICALL
 Java_network_loki_messenger_libsession_1util_GroupInfoConfig_getExpiryTimer(JNIEnv *env,
                                                                             jobject thiz) {
     std::lock_guard guard{util::util_mutex_};
     auto group_info = ptrToInfo(env, thiz);
     auto timer = group_info->get_expiry_timer();
     if (!timer) {
-        return nullptr;
+        return 0;
     }
     long long in_seconds = timer->count();
-    return util::jlongFromOptional(env, std::optional{in_seconds});
+    return in_seconds;
 }
 
 extern "C"

@@ -899,7 +899,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     } ?: false
 
     private fun isIncomingMessageRequestThread(): Boolean = viewModel.recipient?.run {
-        !isLegacyGroupRecipient && !isApproved && !isLocalNumber &&
+        !isLegacyClosedGroupRecipient && !isApproved && !isLocalNumber &&
         !threadDb.getLastSeenAndHasSent(viewModel.threadId).second() &&
                         (threadDb.getMessageCount(viewModel.threadId) > 0 || isClosedGroupRecipient)
     } ?: false

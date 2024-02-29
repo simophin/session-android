@@ -132,10 +132,9 @@ inline jobject serialize_closed_group_info(JNIEnv* env, session::config::group_i
     jbyteArray auth_bytes = util::bytes_from_ustring(env, info.auth_data);
 
     jclass group_info_class = env->FindClass("network/loki/messenger/libsession_util/util/GroupInfo$ClosedGroupInfo");
-    jmethodID constructor = env->GetMethodID(group_info_class, "<init>",
-                                             "(Lorg/session/libsignal/utilities/SessionId;[B[BJZ)V");
+    jmethodID constructor = env->GetMethodID(group_info_class, "<init>", "(Lorg/session/libsignal/utilities/SessionId;[B[BJZJ)V");
     jobject return_object = env->NewObject(group_info_class,constructor,
-                                           session_id, admin_bytes, auth_bytes, (jlong)info.priority, info.invited);
+                                           session_id, admin_bytes, auth_bytes, (jlong)info.priority, info.invited, info.disappearing_timer.count());
     return return_object;
 }
 

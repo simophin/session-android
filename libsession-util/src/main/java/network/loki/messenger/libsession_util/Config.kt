@@ -253,7 +253,7 @@ class GroupInfoConfig(pointer: Long): ConfigBase(pointer), Closeable {
     external fun getCreated(): Long?
     external fun getDeleteAttachmentsBefore(): Long?
     external fun getDeleteBefore(): Long?
-    external fun getExpiryTimer(): Long? // TODO: maybe refactor this to new type when disappearing messages merged
+    external fun getExpiryTimer(): Long
     external fun getName(): String
     external fun getProfilePic(): UserPic
     external fun isDestroyed(): Boolean

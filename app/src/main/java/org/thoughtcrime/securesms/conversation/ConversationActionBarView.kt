@@ -49,6 +49,9 @@ class ConversationActionBarView @JvmOverloads constructor(
         }
     }
 
+    val profilePictureView
+        get() = binding.profilePictureView
+
     init {
         var previousState: Int
         var currentState = 0

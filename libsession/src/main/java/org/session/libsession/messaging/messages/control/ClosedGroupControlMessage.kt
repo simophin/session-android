@@ -156,7 +156,6 @@ class ClosedGroupControlMessage() : ControlMessage() {
             return SignalServiceProtos.Content.newBuilder().apply {
                 dataMessage = DataMessage.newBuilder().also {
                     it.closedGroupControlMessage = closedGroupControlMessage.build()
-                    it.setGroupContext()
                 }.build()
             }.build()
         } catch (e: Exception) {

@@ -1274,6 +1274,9 @@ open class Storage(
             .updateTimestampUpdated(groupID, updatedTimestamp)
     }
 
+    /**
+     * For new closed groups
+     */
     override fun getMembers(groupPublicKey: String): List<LibSessionGroupMember> =
         configFactory.getGroupMemberConfig(SessionId.from(groupPublicKey))?.use { it.all() }?.toList() ?: emptyList()
 
@@ -2603,12 +2606,17 @@ open class Storage(
             DatabaseComponent.get(context).lokiAPIDatabase().setLastLegacySenderAddress(recipient.address.serialize(), null)
         }
 
-        if (recipient.isClosedGroupRecipient) {
+        if (recipient.isLegacyClosedGroupRecipient) {
             val userGroups = configFactory.userGroups ?: return
             val groupPublicKey = GroupUtil.addressToGroupSessionId(recipient.address)
             val groupInfo = userGroups.getLegacyGroupInfo(groupPublicKey)
                 ?.copy(disappearingTimer = expiryMode.expirySeconds) ?: return
             userGroups.set(groupInfo)
+        } else if (recipient.isClosedGroupRecipient) {
+            val userGroups = configFactory.userGroups ?: return
+            val groupInfo = userGroups.getClosedGroup(recipient.address.serialize())
+                ?.copy(disappearingTimer = expiryMode.expirySeconds) ?: return
+            userGroups.set()
         } else if (recipient.isLocalNumber) {
             val user = configFactory.user ?: return
             user.setNtsExpiry(expiryMode)
