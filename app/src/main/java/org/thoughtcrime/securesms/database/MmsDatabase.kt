@@ -304,8 +304,6 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
     }
 
     override fun markExpireStarted(messageId: Long, startedTimestamp: Long) {
-        Log.d(TAG, "markExpireStarted() called with: messageId = $messageId, startedTimestamp = $startedTimestamp")
-
         val contentValues = ContentValues()
         contentValues.put(EXPIRE_STARTED, startedTimestamp)
         val db = databaseHelper.writableDatabase
@@ -558,7 +556,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         runThreadUpdate: Boolean
     ): Optional<InsertResult> {
         if (threadId < 0 ) throw MmsException("No thread ID supplied!")
-        deleteExpirationTimerMessages(threadId, false.takeUnless { retrieved.groupId != null })
+        if (retrieved.isExpirationUpdate) deleteExpirationTimerMessages(threadId, false.takeUnless { retrieved.groupId != null })
         val contentValues = ContentValues()
         contentValues.put(DATE_SENT, retrieved.sentTimeMillis)
         contentValues.put(ADDRESS, retrieved.from.serialize())
@@ -628,7 +626,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         runThreadUpdate: Boolean
     ): Optional<InsertResult> {
         if (threadId < 0 ) throw MmsException("No thread ID supplied!")
-        deleteExpirationTimerMessages(threadId, true.takeUnless { retrieved.isGroup })
+        if (retrieved.isExpirationUpdate) deleteExpirationTimerMessages(threadId, true.takeUnless { retrieved.isGroup })
         val messageId = insertMessageOutbox(retrieved, threadId, false, null, serverTimestamp, runThreadUpdate)
         if (messageId == -1L) {
             return Optional.absent()
@@ -868,8 +866,6 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
     }
 
     override fun deleteMessage(messageId: Long): Boolean {
-        Log.d(TAG, "deleteMessage() called with: messageId = $messageId")
-
         val threadId = getThreadIdForMessage(messageId)
         val attachmentDatabase = get(context).attachmentDatabase()
         queue(Runnable { attachmentDatabase.deleteAttachmentsForMessage(messageId) })
@@ -1442,8 +1438,6 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
     }
 
     companion object {
-
-
         private val TAG = MmsDatabase::class.java.simpleName
         const val TABLE_NAME: String = "mms"
         const val DATE_SENT: String = "date"

@@ -153,7 +153,6 @@ class BatchMessageReceiveJob(
             runBlocking(Dispatchers.IO) {
 
                 fun processMessages(threadId: Long, messages: List<ParsedMessage>) = async {
-                    Log.d(TAG, "processMessages() threadId = $threadId, messages = $messages")
                     // The LinkedHashMap should preserve insertion order
                     val messageIds = linkedMapOf<Long, Pair<Boolean, Boolean>>()
                     val myLastSeen = storage.getLastSeen(threadId)

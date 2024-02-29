@@ -48,8 +48,6 @@ class ExpiringMessageManager(context: Context) : MessageExpirationManagerProtoco
     private fun getDatabase(mms: Boolean) = if (mms) mmsDatabase else smsDatabase
 
     fun scheduleDeletion(id: Long, mms: Boolean, startedAtTimestamp: Long, expiresInMillis: Long) {
-        Log.d(TAG, "scheduleDeletion() called with: id = $id, mms = $mms, startedAtTimestamp = $startedAtTimestamp, expiresInMillis = $expiresInMillis")
-
         if (startedAtTimestamp <= 0) return
 
         val expiresAtMillis = startedAtTimestamp + expiresInMillis
@@ -67,7 +65,6 @@ class ExpiringMessageManager(context: Context) : MessageExpirationManagerProtoco
         message: ExpirationTimerUpdate,
         expireStartedAt: Long
     ) {
-        Log.d(TAG, "insertIncomingExpirationTimerMessage() called with: message = $message, expireStartedAt = $expireStartedAt")
         val senderPublicKey = message.sender
         val sentTimestamp = message.sentTimestamp
         val groupId = message.groupPublicKey
@@ -118,7 +115,6 @@ class ExpiringMessageManager(context: Context) : MessageExpirationManagerProtoco
         message: ExpirationTimerUpdate,
         expireStartedAt: Long
     ) {
-        Log.d(TAG, "insertOutgoingExpirationTimerMessage() called with: message = $message, expireStartedAt = $expireStartedAt")
         val sentTimestamp = message.sentTimestamp
         val groupId = message.groupPublicKey
         val duration = message.expiryMode.expiryMillis
@@ -152,7 +148,6 @@ class ExpiringMessageManager(context: Context) : MessageExpirationManagerProtoco
 
     override fun insertExpirationTimerMessage(message: ExpirationTimerUpdate) {
         val expiryMode: ExpiryMode = message.expiryMode
-        Log.d(TAG, "setExpirationTimer() called with: message = $message, expiryMode = $expiryMode")
 
         val userPublicKey = getLocalNumber(context)
         val senderPublicKey = message.sender
@@ -171,12 +166,10 @@ class ExpiringMessageManager(context: Context) : MessageExpirationManagerProtoco
     }
 
     override fun startAnyExpiration(timestamp: Long, author: String, expireStartedAt: Long) {
-        Log.d(TAG, "startAnyExpiration() called with: timestamp = $timestamp, author = $author, expireStartedAt = $expireStartedAt")
-
         mmsSmsDatabase.getMessageFor(timestamp, author)?.run {
             getDatabase(isMms()).markExpireStarted(getId(), expireStartedAt)
             scheduleDeletion(getId(), isMms(), expireStartedAt, expiresIn)
-        } ?: Log.e(TAG, "no message record!!!")
+        } ?: Log.e(TAG, "no message record!")
     }
 
     private inner class LoadTask : Runnable {

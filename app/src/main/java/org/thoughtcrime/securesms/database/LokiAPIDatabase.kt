@@ -425,12 +425,10 @@ class LokiAPIDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(
         database.endTransaction()
     }
 
-    override fun getLastLegacySenderAddress(threadRecipientAddress: String): String? {
-        val database = databaseHelper.readableDatabase
-        return database.get(LAST_LEGACY_MESSAGE_TABLE, LEGACY_THREAD_RECIPIENT_QUERY, wrap(threadRecipientAddress)) { cursor ->
+    override fun getLastLegacySenderAddress(threadRecipientAddress: String): String? =
+        databaseHelper.readableDatabase.get(LAST_LEGACY_MESSAGE_TABLE, LEGACY_THREAD_RECIPIENT_QUERY, wrap(threadRecipientAddress)) { cursor ->
             cursor.getString(LAST_LEGACY_SENDER_RECIPIENT)
         }
-    }
 
     override fun setLastLegacySenderAddress(
         threadRecipientAddress: String,

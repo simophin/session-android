@@ -3,10 +3,8 @@ package org.thoughtcrime.securesms.conversation
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import androidx.annotation.DimenRes
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -21,6 +19,7 @@ import network.loki.messenger.libsession_util.util.ExpiryMode
 import org.session.libsession.messaging.messages.ExpirationConfiguration
 import org.session.libsession.messaging.open_groups.OpenGroup
 import org.session.libsession.utilities.ExpirationUtil
+import org.session.libsession.utilities.modifyLayoutParams
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.conversation.v2.utilities.MentionManagerUtilities
 import org.thoughtcrime.securesms.database.GroupDatabase
@@ -29,12 +28,14 @@ import org.thoughtcrime.securesms.database.Storage
 import org.thoughtcrime.securesms.util.DateUtils
 import java.util.Locale
 import javax.inject.Inject
-import kotlin.math.roundToInt
 
 @AndroidEntryPoint
-class ConversationActionBarView : LinearLayout {
-
-    private lateinit var binding: ViewConversationActionBarBinding
+class ConversationActionBarView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : LinearLayout(context, attrs, defStyleAttr) {
+    private val binding = ViewConversationActionBarBinding.inflate(LayoutInflater.from(context), this, true)
 
     @Inject lateinit var lokiApiDb: LokiAPIDatabase
     @Inject lateinit var groupDb: GroupDatabase
@@ -48,15 +49,7 @@ class ConversationActionBarView : LinearLayout {
         }
     }
 
-    constructor(context: Context) : super(context) { initialize() }
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) { initialize() }
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) { initialize() }
-
-    val profilePictureView: View
-        get() = binding.profilePictureView
-
-    private fun initialize() {
-        binding = ViewConversationActionBarBinding.inflate(LayoutInflater.from(context), this, true)
+    init {
         var previousState: Int
         var currentState = 0
         binding.settingsPager.registerOnPageChangeCallback(object : OnPageChangeCallback() {
@@ -73,8 +66,7 @@ class ConversationActionBarView : LinearLayout {
             }
         })
         binding.settingsPager.adapter = settingsAdapter
-        val mediator = TabLayoutMediator(binding.settingsTabLayout, binding.settingsPager) { _, _ -> }
-        mediator.attach()
+        TabLayoutMediator(binding.settingsTabLayout, binding.settingsPager) { _, _ -> }.attach()
     }
 
     fun bind(
@@ -85,63 +77,44 @@ class ConversationActionBarView : LinearLayout {
         openGroup: OpenGroup? = null
     ) {
         this.delegate = delegate
-        @DimenRes val sizeID: Int = if (recipient.isClosedGroupRecipient) {
-            R.dimen.medium_profile_picture_size
-        } else {
-            R.dimen.small_profile_picture_size
-        }
-        val size = resources.getDimension(sizeID).roundToInt()
-        binding.profilePictureView.layoutParams = LayoutParams(size, size)
+        binding.profilePictureView.layoutParams = resources.getDimensionPixelSize(
+            if (recipient.isClosedGroupRecipient) R.dimen.medium_profile_picture_size else R.dimen.small_profile_picture_size
+        ).let { LayoutParams(it, it) }
         MentionManagerUtilities.populateUserPublicKeyCacheIfNeeded(threadId, context)
         update(recipient, openGroup, config)
     }
 
     fun update(recipient: Recipient, openGroup: OpenGroup? = null, config: ExpirationConfiguration? = null) {
         binding.profilePictureView.update(recipient)
-        binding.conversationTitleView.text = when {
-            recipient.isLocalNumber -> context.getString(R.string.note_to_self)
-            else -> recipient.toShortString()
-        }
+        binding.conversationTitleView.text = recipient.takeUnless { it.isLocalNumber }?.toShortString() ?: context.getString(R.string.note_to_self)
         updateSubtitle(recipient, openGroup, config)
 
-        val marginEnd = if (recipient.showCallMenu()) {
-            0
-        } else {
-            binding.profilePictureView.width
+        binding.conversationTitleContainer.modifyLayoutParams<MarginLayoutParams> {
+            marginEnd = if (recipient.showCallMenu()) 0 else binding.profilePictureView.width
         }
-        val lp = binding.conversationTitleContainer.layoutParams as MarginLayoutParams
-        lp.marginEnd = marginEnd
-        binding.conversationTitleContainer.layoutParams = lp
     }
 
     fun updateSubtitle(recipient: Recipient, openGroup: OpenGroup? = null, config: ExpirationConfiguration? = null) {
         val settings = mutableListOf<ConversationSetting>()
         if (config?.isEnabled == true) {
-            val prefix = if (config.expiryMode is ExpiryMode.AfterRead) {
-                context.getString(R.string.expiration_type_disappear_after_read)
-            } else {
-                context.getString(R.string.expiration_type_disappear_after_send)
-            }
-            settings.add(
-                ConversationSetting(
-                    "$prefix - ${ExpirationUtil.getExpirationAbbreviatedDisplayValue(context, config.expiryMode.expirySeconds)}",
-                    ConversationSettingType.EXPIRATION,
-                    R.drawable.ic_timer,
-                    resources.getString(R.string.AccessibilityId_disappearing_messages_type_and_time)
-                )
+            val prefix = when (config.expiryMode) {
+                is ExpiryMode.AfterRead -> R.string.expiration_type_disappear_after_read
+                else -> R.string.expiration_type_disappear_after_send
+            }.let(context::getString)
+            settings += ConversationSetting(
+                "$prefix - ${ExpirationUtil.getExpirationAbbreviatedDisplayValue(context, config.expiryMode.expirySeconds)}",
+                ConversationSettingType.EXPIRATION,
+                R.drawable.ic_timer,
+                resources.getString(R.string.AccessibilityId_disappearing_messages_type_and_time)
             )
         }
         if (recipient.isMuted) {
-            settings.add(
-                ConversationSetting(
-                    if (recipient.mutedUntil != Long.MAX_VALUE) {
-                        context.getString(R.string.ConversationActivity_muted_until_date, DateUtils.getFormattedDateTime(recipient.mutedUntil, "EEE, MMM d, yyyy HH:mm", Locale.getDefault()))
-                    } else {
-                        context.getString(R.string.ConversationActivity_muted_forever)
-                    },
-                    ConversationSettingType.NOTIFICATION,
-                    R.drawable.ic_outline_notifications_off_24
-                )
+            settings += ConversationSetting(
+                recipient.mutedUntil.takeUnless { it == Long.MAX_VALUE }
+                    ?.let { context.getString(R.string.ConversationActivity_muted_until_date, DateUtils.getFormattedDateTime(it, "EEE, MMM d, yyyy HH:mm", Locale.getDefault())) }
+                    ?: context.getString(R.string.ConversationActivity_muted_forever),
+                ConversationSettingType.NOTIFICATION,
+                R.drawable.ic_outline_notifications_off_24
             )
         }
         if (recipient.isGroupRecipient) {
@@ -156,12 +129,7 @@ class ConversationActionBarView : LinearLayout {
                 }
                 context.getString(R.string.ConversationActivity_member_count, userCount)
             }
-            settings.add(
-                ConversationSetting(
-                    title,
-                    ConversationSettingType.MEMBER_COUNT,
-                )
-            )
+            settings += ConversationSetting(title, ConversationSettingType.MEMBER_COUNT)
         }
         settingsAdapter.submitList(settings)
         binding.settingsTabLayout.isVisible = settings.size > 1
@@ -195,22 +163,14 @@ class ConversationActionBarView : LinearLayout {
                 binding.leftArrowImageView.isVisible = itemCount > 1
                 binding.rightArrowImageView.isVisible = itemCount > 1
             }
-
         }
 
         class SettingsDiffer: DiffUtil.ItemCallback<ConversationSetting>() {
-            override fun areItemsTheSame(oldItem: ConversationSetting, newItem: ConversationSetting): Boolean {
-                return oldItem.settingType === newItem.settingType
-            }
-            override fun areContentsTheSame(oldItem: ConversationSetting, newItem: ConversationSetting): Boolean {
-                return oldItem == newItem
-            }
+            override fun areItemsTheSame(oldItem: ConversationSetting, newItem: ConversationSetting): Boolean = oldItem.settingType === newItem.settingType
+            override fun areContentsTheSame(oldItem: ConversationSetting, newItem: ConversationSetting): Boolean = oldItem == newItem
         }
-
     }
-
 }
-
 
 fun interface ConversationActionBarDelegate {
     fun onDisappearingMessagesClicked()

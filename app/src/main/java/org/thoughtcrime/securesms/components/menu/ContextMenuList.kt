@@ -1,13 +1,13 @@
 package org.thoughtcrime.securesms.components.menu
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.util.TypedValue
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.CoroutineScope
@@ -42,18 +42,15 @@ class ContextMenuList(recyclerView: RecyclerView, onItemClick: () -> Unit) {
     mappingAdapter.submitList(items.toAdapterItems())
   }
 
-  private fun List<ActionItem>.toAdapterItems(): List<DisplayItem> {
-    return this.mapIndexed { index, item ->
-      val displayType: DisplayType = when {
-        this.size == 1 -> DisplayType.ONLY
+  private fun List<ActionItem>.toAdapterItems(): List<DisplayItem> =
+    mapIndexed { index, item ->
+      when {
+        size == 1 -> DisplayType.ONLY
         index == 0 -> DisplayType.TOP
-        index == this.size - 1 -> DisplayType.BOTTOM
+        index == size - 1 -> DisplayType.BOTTOM
         else -> DisplayType.MIDDLE
-      }
-
-      DisplayItem(item, displayType)
+      }.let { DisplayItem(item, it) }
     }
-  }
 
   private data class DisplayItem(
     val item: ActionItem,
@@ -78,19 +75,24 @@ class ContextMenuList(recyclerView: RecyclerView, onItemClick: () -> Unit) {
     val subtitle: TextView = itemView.findViewById(R.id.context_menu_item_subtitle)
 
     override fun bind(model: DisplayItem) {
-      if (model.item.iconRes > 0) {
+      val item = model.item
+      val color = item.color?.let { ContextCompat.getColor(context, it) }
+
+      if (item.iconRes > 0) {
         val typedValue = TypedValue()
-        context.theme.resolveAttribute(model.item.iconRes, typedValue, true)
+        context.theme.resolveAttribute(item.iconRes, typedValue, true)
         icon.setImageDrawable(ContextCompat.getDrawable(context, typedValue.resourceId))
+
+        icon.imageTintList = color?.let(ColorStateList::valueOf)
       }
-      model.item.contentDescription?.let(context.resources::getString)?.let { itemView.contentDescription = it }
-      title.setText(model.item.title)
+      item.contentDescription?.let(context.resources::getString)?.let { itemView.contentDescription = it }
+      title.setText(item.title)
+      color?.let(title::setTextColor)
+      color?.let(subtitle::setTextColor)
       subtitle.isGone = true
-      model.item.subtitle?.let {
-        startSubtitleJob(subtitle, it)
-      }
+      item.subtitle?.let { startSubtitleJob(subtitle, it) }
       itemView.setOnClickListener {
-        model.item.action.run()
+        item.action.run()
         onItemClick()
       }
 

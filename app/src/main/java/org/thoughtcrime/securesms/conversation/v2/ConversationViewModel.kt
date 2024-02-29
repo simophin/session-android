@@ -240,13 +240,11 @@ class ConversationViewModel(
     }
 
     fun hidesInputBar(): Boolean = openGroup?.canWrite != true &&
-                blindedRecipient?.blocksCommunityMessageRequests == true
+        blindedRecipient?.blocksCommunityMessageRequests == true
 
-    fun legacyBannerRecipient(context: Context): Recipient? = recipient?.let { recipient ->
-        val legacyAddress = storage.getLastLegacyRecipient(recipient.address.serialize()) ?: return@let null
-        return Recipient.from(context, Address.fromSerialized(legacyAddress), false)
+    fun legacyBannerRecipient(context: Context): Recipient? = recipient?.run {
+        storage.getLastLegacyRecipient(address.serialize())?.let { Recipient.from(context, Address.fromSerialized(it), false) }
     }
-
 
     @dagger.assisted.AssistedFactory
     interface AssistedFactory {

@@ -8,7 +8,6 @@ import org.session.libsession.messaging.sending_receiving.pollers.LegacyClosedGr
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupRecord
 import org.session.libsession.utilities.GroupUtil
-import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.crypto.ecc.DjbECPublicKey
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.dependencies.ConfigFactory
@@ -34,7 +33,7 @@ object ClosedGroupManager {
         }
     }
 
-    fun ConfigFactory.updateLegacyGroup(groupRecipientSettings: Recipient.RecipientSettings, group: GroupRecord) {
+    fun ConfigFactory.updateLegacyGroup(group: GroupRecord) {
         val groups = userGroups ?: return
         if (!group.isLegacyClosedGroup) return
         val storage = MessagingModuleConfiguration.shared.storage
@@ -46,7 +45,6 @@ object ClosedGroupManager {
         val toSet = legacyInfo.copy(
             members = latestMemberMap,
             name = group.title,
-            disappearingTimer = groupRecipientSettings.expireMessages.toLong(),
             priority = if (storage.isPinned(threadId)) ConfigBase.PRIORITY_PINNED else ConfigBase.PRIORITY_VISIBLE,
             encPubKey = (latestKeyPair.publicKey as DjbECPublicKey).publicKey,  // 'serialize()' inserts an extra byte
             encSecKey = latestKeyPair.privateKey.serialize()

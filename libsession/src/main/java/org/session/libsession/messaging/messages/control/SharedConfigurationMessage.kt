@@ -1,7 +1,6 @@
 package org.session.libsession.messaging.messages.control
 
 import com.google.protobuf.ByteString
-import org.session.libsession.messaging.messages.copyExpiration
 import org.session.libsignal.protos.SignalServiceProtos
 import org.session.libsignal.protos.SignalServiceProtos.SharedConfigMessage
 
@@ -12,13 +11,10 @@ class SharedConfigurationMessage(val kind: SharedConfigMessage.Kind, val data: B
     override fun shouldDiscardIfBlocked(): Boolean = true // should only be called with our own user which shouldn't be blocked...
 
     companion object {
-        fun fromProto(proto: SignalServiceProtos.Content): SharedConfigurationMessage? {
-            if (!proto.hasSharedConfigMessage()) return null
-            val sharedConfig = proto.sharedConfigMessage
-            if (!sharedConfig.hasKind() || !sharedConfig.hasData()) return null
-            return SharedConfigurationMessage(sharedConfig.kind, sharedConfig.data.toByteArray(), sharedConfig.seqno)
-                    .copyExpiration(proto)
-        }
+        fun fromProto(proto: SignalServiceProtos.Content): SharedConfigurationMessage? =
+            proto.takeIf { it.hasSharedConfigMessage() }?.sharedConfigMessage
+                ?.takeIf { it.hasKind() && it.hasData() }
+                ?.run { SharedConfigurationMessage(kind, data.toByteArray(), seqno) }
     }
 
     override fun isValid(): Boolean {

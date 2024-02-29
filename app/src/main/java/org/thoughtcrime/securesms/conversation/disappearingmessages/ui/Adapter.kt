@@ -65,7 +65,7 @@ private fun State.typeOption(
     enabled = enabled
 )
 
-private fun debugTimes(isDebug: Boolean) = if (isDebug) listOf(10.seconds, 1.minutes) else emptyList()
+private fun debugTimes(isDebug: Boolean) = if (isDebug) listOf(10.seconds, 30.seconds, 1.minutes) else emptyList()
 private fun debugModes(isDebug: Boolean, type: ExpiryType) =
     debugTimes(isDebug).map { type.mode(it.inWholeSeconds) }
 private fun State.debugOptions(): List<ExpiryRadioOption> =

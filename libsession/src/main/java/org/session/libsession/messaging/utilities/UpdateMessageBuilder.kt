@@ -1,7 +1,6 @@
 package org.session.libsession.messaging.utilities
 
 import android.content.Context
-import android.util.Log
 import com.squareup.phrase.Phrase
 import org.session.libsession.R
 import org.session.libsession.messaging.MessagingModuleConfiguration
@@ -212,8 +211,6 @@ object UpdateMessageBuilder {
         timestamp: Long,
         expireStarted: Long
     ): String {
-        Log.d(TAG, "buildExpirationTimerMessage() called with: duration = $duration, senderId = $senderId, isOutgoing = $isOutgoing, timestamp = $timestamp, expireStarted = $expireStarted")
-
         if (!isOutgoing && senderId == null) return ""
         val senderName = if (isOutgoing) context.getString(R.string.MessageRecord_you) else getSenderName(senderId!!)
         return if (duration <= 0) {
@@ -227,7 +224,6 @@ object UpdateMessageBuilder {
         } else {
             val time = ExpirationUtil.getExpirationDisplayValue(context, duration.toInt())
             val action = context.getExpirationTypeDisplayValue(timestamp == expireStarted)
-            Log.d(TAG, "action = $action because timestamp = $timestamp and expireStarted = $expireStarted equal = ${timestamp == expireStarted}")
             if (isOutgoing) {
                 if (!isNewConfigEnabled) context.getString(R.string.MessageRecord_you_set_disappearing_message_time_to_s, time)
                 else context.getString(
@@ -244,7 +240,7 @@ object UpdateMessageBuilder {
                     action
                 )
             }
-        }.also { Log.d(TAG, "display: $it") }
+        }
     }
 
     fun buildDataExtractionMessage(context: Context, kind: DataExtractionNotificationInfoMessage.Kind, senderId: String? = null): String {

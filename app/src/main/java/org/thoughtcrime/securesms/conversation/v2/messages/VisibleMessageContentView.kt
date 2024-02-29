@@ -27,6 +27,7 @@ import org.session.libsession.messaging.sending_receiving.attachments.Attachment
 import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAttachment
 import org.session.libsession.utilities.ThemeUtil
 import org.session.libsession.utilities.getColorFromAttr
+import org.session.libsession.utilities.modifyLayoutParams
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.conversation.v2.ModalUrlBottomSheet
@@ -35,7 +36,6 @@ import org.thoughtcrime.securesms.conversation.v2.utilities.ModalURLSpan
 import org.thoughtcrime.securesms.conversation.v2.utilities.TextUtilities.getIntersectedModalSpans
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.database.model.MmsMessageRecord
-import org.thoughtcrime.securesms.database.model.SmsMessageRecord
 import org.thoughtcrime.securesms.mms.GlideApp
 import org.thoughtcrime.securesms.mms.GlideRequests
 import org.thoughtcrime.securesms.util.GlowViewUtilities
@@ -211,9 +211,9 @@ class VisibleMessageContentView : ConstraintLayout {
                         isStart = isStartOfMessageCluster,
                         isEnd = isEndOfMessageCluster
                     )
-                    val layoutParams = binding.albumThumbnailView.root.layoutParams as ConstraintLayout.LayoutParams
-                    layoutParams.horizontalBias = if (message.isOutgoing) 1f else 0f
-                    binding.albumThumbnailView.root.layoutParams = layoutParams
+                    binding.albumThumbnailView.root.modifyLayoutParams<ConstraintLayout.LayoutParams> {
+                        horizontalBias = if (message.isOutgoing) 1f else 0f
+                    }
                     onContentClick.add { event ->
                         binding.albumThumbnailView.root.calculateHitObject(event, message, thread, onAttachmentNeedsDownload)
                     }
@@ -255,9 +255,9 @@ class VisibleMessageContentView : ConstraintLayout {
                 }
             }
         }
-        val layoutParams = binding.contentParent.layoutParams as ConstraintLayout.LayoutParams
-        layoutParams.horizontalBias = if (message.isOutgoing) 1f else 0f
-        binding.contentParent.layoutParams = layoutParams
+        binding.contentParent.modifyLayoutParams<ConstraintLayout.LayoutParams> {
+            horizontalBias = if (message.isOutgoing) 1f else 0f
+        }
     }
 
     private val onContentClick: MutableList<((event: MotionEvent) -> Unit)> = mutableListOf()
@@ -328,17 +328,9 @@ class VisibleMessageContentView : ConstraintLayout {
         }
 
         @ColorInt
-        fun getTextColor(context: Context, message: MessageRecord): Int {
-            val colorAttribute = if (message.isOutgoing) {
-                // sent
-                R.attr.message_sent_text_color
-            } else {
-                // received
-                R.attr.message_received_text_color
-            }
-            return context.getColorFromAttr(colorAttribute)
-        }
+        fun getTextColor(context: Context, message: MessageRecord): Int = context.getColorFromAttr(
+            if (message.isOutgoing) R.attr.message_sent_text_color else R.attr.message_received_text_color
+        )
     }
     // endregion
-
 }

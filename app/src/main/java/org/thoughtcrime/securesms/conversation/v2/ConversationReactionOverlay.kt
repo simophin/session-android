@@ -39,7 +39,6 @@ import org.thoughtcrime.securesms.components.menu.ActionItem
 import org.thoughtcrime.securesms.conversation.v2.menus.ConversationMenuItemHelper.userCanBanSelectedUsers
 import org.thoughtcrime.securesms.conversation.v2.menus.ConversationMenuItemHelper.userCanDeleteSelectedItems
 import org.thoughtcrime.securesms.database.MmsSmsDatabase
-import org.thoughtcrime.securesms.database.SessionContactDatabase
 import org.thoughtcrime.securesms.database.model.MediaMmsMessageRecord
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.database.model.ReactionRecord
@@ -129,10 +128,7 @@ class ConversationReactionOverlay : FrameLayout {
              selectedConversationModel: SelectedConversationModel,
              blindedPublicKey: String?) {
         job?.cancel()
-
-        if (overlayState != OverlayState.HIDDEN) {
-            return
-        }
+        if (overlayState != OverlayState.HIDDEN) return
         this.messageRecord = messageRecord
         this.selectedConversationModel = selectedConversationModel
         this.blindedPublicKey = blindedPublicKey
@@ -549,7 +545,7 @@ class ConversationReactionOverlay : FrameLayout {
         }
         // Delete message
         if (userCanDeleteSelectedItems(context, message, openGroup, userPublicKey, blindedPublicKey)) {
-            items += ActionItem(R.attr.menu_trash_icon, R.string.delete, { handleActionItemClicked(Action.DELETE) }, R.string.AccessibilityId_delete_message, message.subtitle)
+            items += ActionItem(R.attr.menu_trash_icon, R.string.delete, { handleActionItemClicked(Action.DELETE) }, R.string.AccessibilityId_delete_message, message.subtitle, R.color.destructive)
         }
         // Ban user
         if (userCanBanSelectedUsers(context, message, openGroup, userPublicKey, blindedPublicKey)) {

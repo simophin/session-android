@@ -63,8 +63,8 @@ class DisappearingMessagesViewModel(
             val groupRecord = recipient?.takeIf { it.isClosedGroupRecipient }
                 ?.run { groupDb.getGroup(address.toGroupString()).orNull() }
 
-            _state.update { state ->
-                state.copy(
+            _state.update {
+                it.copy(
                     address = recipient?.address,
                     isGroup = groupRecord != null,
                     isNoteToSelf = recipient?.address?.serialize() == textSecurePreferences.getLocalNumber(),

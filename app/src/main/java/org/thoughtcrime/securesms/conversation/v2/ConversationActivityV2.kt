@@ -476,7 +476,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                                     storage.markConversationAsRead(viewModel.threadId, it)
                                 }
                             } catch (e: Exception) {
-                                Log.d(TAG, "bufferedLastSeenChannel collectLatest", e)
+                                Log.e(TAG, "bufferedLastSeenChannel collectLatest", e)
                             }
                         }
                     }
@@ -492,8 +492,9 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             true,
             screenshotObserver
         )
-        val recipient = viewModel.recipient ?: return
-        binding?.toolbarContent?.update(recipient, viewModel.openGroup, viewModel.expirationConfiguration)
+        viewModel.run {
+            binding?.toolbarContent?.update(recipient ?: return, openGroup, expirationConfiguration)
+        }
     }
 
     override fun onPause() {
@@ -510,8 +511,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     override fun dispatchIntent(body: (Context) -> Intent?) {
-        val intent = body(this) ?: return
-        push(intent, false)
+        body(this)?.let { push(it, false) }
     }
 
     override fun showDialog(dialogFragment: DialogFragment, tag: String?) {
@@ -690,21 +690,18 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     private fun getLatestOpenGroupInfoIfNeeded() {
-        viewModel.openGroup?.let { openGroup ->
-            OpenGroupApi.getMemberCount(openGroup.room, openGroup.server).successUi {
-                binding?.toolbarContent?.updateSubtitle(viewModel.recipient!!, openGroup, viewModel.expirationConfiguration)
-                maybeUpdateToolbar(viewModel.recipient!!)
-            }
+        val openGroup = viewModel.openGroup ?: return
+        OpenGroupApi.getMemberCount(openGroup.room, openGroup.server) successUi {
+            binding?.toolbarContent?.updateSubtitle(viewModel.recipient!!, openGroup, viewModel.expirationConfiguration)
+            maybeUpdateToolbar(viewModel.recipient!!)
         }
     }
 
     // called from onCreate
     private fun setUpBlockedBanner() {
-        val recipient = viewModel.recipient ?: return
-        if (recipient.isGroupRecipient) { return }
+        val recipient = viewModel.recipient?.takeUnless { it.isGroupRecipient } ?: return
         val sessionID = recipient.address.toString()
-        val contact = sessionContactDb.getContactWithSessionID(sessionID)
-        val name = contact?.displayName(Contact.ContactContext.REGULAR) ?: sessionID
+        val name = sessionContactDb.getContactWithSessionID(sessionID)?.displayName(Contact.ContactContext.REGULAR) ?: sessionID
         binding?.blockedBannerTextView?.text = resources.getString(R.string.activity_conversation_blocked_banner_text, name)
         binding?.blockedBanner?.isVisible = recipient.isBlocked
         binding?.blockedBanner?.setOnClickListener { viewModel.unblock() }
@@ -815,7 +812,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 this
             )
         }
-        viewModel.recipient?.let { maybeUpdateToolbar(it) }
+        maybeUpdateToolbar(recipient)
         return true
     }
 
@@ -854,14 +851,9 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     private fun showOrHideInputIfNeeded() {
-        val recipient = viewModel.recipient ?: return
-        if (recipient.isLegacyClosedGroupRecipient) {
-            val group = groupDb.getGroup(recipient.address.toGroupString()).orNull()
-            val isActive = (group?.isActive == true)
-            binding?.inputBar?.showInput = isActive
-        } else {
-            binding?.inputBar?.showInput = true
-        }
+        binding?.inputBar?.showInput = viewModel.recipient?.takeIf { it.isLegacyClosedGroupRecipient }
+            ?.run { address.toGroupString().let(groupDb::getGroup).orNull()?.isActive == true }
+            ?: true
     }
 
     private fun setUpMessageRequestsBar() {
@@ -901,28 +893,16 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         }
     }
 
-    private fun isMessageRequestThread(): Boolean {
-        val recipient = viewModel.recipient ?: return false
-        if (recipient.isLocalNumber) return false
-        return !recipient.isGroupRecipient && !recipient.isApproved
-    }
+    private fun isOutgoingMessageRequestThread(): Boolean = viewModel.recipient?.run {
+        !isGroupRecipient && !isLocalNumber &&
+        !(hasApprovedMe() || viewModel.hasReceived())
+    } ?: false
 
-    private fun isOutgoingMessageRequestThread(): Boolean {
-        val recipient = viewModel.recipient ?: return false
-        return !recipient.isGroupRecipient &&
-                !recipient.isLocalNumber &&
-                !(recipient.hasApprovedMe() || viewModel.hasReceived())
-    }
-
-    private fun isIncomingMessageRequestThread(): Boolean {
-        val recipient = viewModel.recipient ?: return false
-        return !recipient.isLegacyClosedGroupRecipient &&
-                !recipient.isOpenGroupRecipient &&
-                !recipient.isApproved &&
-                !recipient.isLocalNumber &&
-                !threadDb.getLastSeenAndHasSent(viewModel.threadId).second() &&
-                (threadDb.getMessageCount(viewModel.threadId) > 0 || recipient.isClosedGroupRecipient)
-    }
+    private fun isIncomingMessageRequestThread(): Boolean = viewModel.recipient?.run {
+        !isLegacyGroupRecipient && !isApproved && !isLocalNumber &&
+        !threadDb.getLastSeenAndHasSent(viewModel.threadId).second() &&
+                        (threadDb.getMessageCount(viewModel.threadId) > 0 || isClosedGroupRecipient)
+    } ?: false
 
     override fun inputBarEditTextContentChanged(newContent: CharSequence) {
         val inputBarText = binding?.inputBar?.text ?: return // TODO check if we should be referencing newContent here instead

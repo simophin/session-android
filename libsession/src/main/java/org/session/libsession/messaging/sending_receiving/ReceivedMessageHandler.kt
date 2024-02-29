@@ -69,7 +69,6 @@ internal fun MessageReceiver.isBlocked(publicKey: String): Boolean {
 }
 
 fun MessageReceiver.handle(message: Message, proto: SignalServiceProtos.Content, threadId: Long, openGroupID: String?, closedGroup: SessionId?) {
-    Log.d("MessageReceiver", "handle() called with: message = $message, proto = $proto, threadId = $threadId, openGroupID = $openGroupID")
     // Do nothing if the message was outdated
     if (MessageReceiver.messageIsOutdated(message, threadId, openGroupID)) { return }
 
@@ -223,7 +222,7 @@ private fun handleConfigurationMessage(message: ConfigurationMessage) {
         } else {
             // only handle new closed group if it's first time sync
             handleNewClosedGroup(message.sender!!, message.sentTimestamp!!, closedGroup.publicKey, closedGroup.name,
-                    closedGroup.encryptionKeyPair!!, closedGroup.members, closedGroup.admins, message.sentTimestamp!!)
+                    closedGroup.encryptionKeyPair!!, closedGroup.members, closedGroup.admins, message.sentTimestamp!!, -1)
         }
     }
     val allV2OpenGroups = storage.getAllOpenGroups().map { it.value.joinURL }
@@ -294,8 +293,6 @@ fun MessageReceiver.handleVisibleMessage(
     runThreadUpdate: Boolean,
     runProfileUpdate: Boolean
 ): Long? {
-    Log.d("ReceivedMessageHandler", "handleVisibleMessage() called with: message = $message, proto = $proto, openGroupID = $openGroupID, threadId = $threadId, runThreadUpdate = $runThreadUpdate, runProfileUpdate = $runProfileUpdate")
-
     val storage = MessagingModuleConfiguration.shared.storage
     val context = MessagingModuleConfiguration.shared.context
     val userPublicKey = storage.getUserPublicKey()
@@ -692,17 +689,20 @@ private fun verifyAdminSignature(groupSessionId: SessionId, signatureData: ByteA
 }
 
 private fun MessageReceiver.handleNewClosedGroup(message: ClosedGroupControlMessage) {
+    val storage = MessagingModuleConfiguration.shared.storage
     val kind = message.kind!! as? ClosedGroupControlMessage.Kind.New ?: return
     val recipient = Recipient.from(MessagingModuleConfiguration.shared.context, Address.fromSerialized(message.sender!!), false)
     if (!recipient.isApproved && !recipient.isLocalNumber) return Log.e("Loki", "not accepting new closed group from unapproved recipient")
     val groupPublicKey = kind.publicKey.toByteArray().toHexString()
+    // hard code check by group public key in the big function because I can't be bothered to do group double decode re-encodej
+    if ((storage.getThreadIdFor(message.sender!!, groupPublicKey, null, false) ?: -1L) >= 0L) return
     val members = kind.members.map { it.toByteArray().toHexString() }
     val admins = kind.admins.map { it.toByteArray().toHexString() }
     val expirationTimer = kind.expirationTimer
-    handleNewClosedGroup(message.sender!!, message.sentTimestamp!!, groupPublicKey, kind.name, kind.encryptionKeyPair!!, members, admins, message.sentTimestamp!!)
+    handleNewClosedGroup(message.sender!!, message.sentTimestamp!!, groupPublicKey, kind.name, kind.encryptionKeyPair!!, members, admins, message.sentTimestamp!!, expirationTimer)
 }
 
-private fun handleNewClosedGroup(sender: String, sentTimestamp: Long, groupPublicKey: String, name: String, encryptionKeyPair: ECKeyPair, members: List<String>, admins: List<String>, formationTimestamp: Long) {
+private fun handleNewClosedGroup(sender: String, sentTimestamp: Long, groupPublicKey: String, name: String, encryptionKeyPair: ECKeyPair, members: List<String>, admins: List<String>, formationTimestamp: Long, expirationTimer: Int) {
     val context = MessagingModuleConfiguration.shared.context
     val storage = MessagingModuleConfiguration.shared.storage
     val userPublicKey = storage.getUserPublicKey()!!
@@ -742,7 +742,7 @@ private fun handleNewClosedGroup(sender: String, sentTimestamp: Long, groupPubli
     storage.addClosedGroupPublicKey(groupPublicKey)
     // Store the encryption key pair
     storage.addClosedGroupEncryptionKeyPair(encryptionKeyPair, groupPublicKey, sentTimestamp)
-    storage.createInitialConfigGroup(groupPublicKey, name, GroupUtil.createConfigMemberMap(members, admins), formationTimestamp, encryptionKeyPair)
+    storage.createInitialConfigGroup(groupPublicKey, name, GroupUtil.createConfigMemberMap(members, admins), formationTimestamp, encryptionKeyPair, expirationTimer)
     // Notify the PN server
     PushRegistryV1.register(device = MessagingModuleConfiguration.shared.device, publicKey = userPublicKey)
     // Notify the user

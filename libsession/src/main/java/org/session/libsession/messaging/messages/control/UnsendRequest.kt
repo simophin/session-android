@@ -4,9 +4,7 @@ import org.session.libsession.messaging.messages.copyExpiration
 import org.session.libsignal.protos.SignalServiceProtos
 import org.session.libsignal.utilities.Log
 
-class UnsendRequest(): ControlMessage() {
-    var timestamp: Long? = null
-    var author: String? = null
+class UnsendRequest(var timestamp: Long? = null, var author: String? = null): ControlMessage() {
 
     override val isSelfSendValid: Boolean = true
 
@@ -22,18 +20,8 @@ class UnsendRequest(): ControlMessage() {
     companion object {
         const val TAG = "UnsendRequest"
 
-        fun fromProto(proto: SignalServiceProtos.Content): UnsendRequest? {
-            val unsendRequestProto = if (proto.hasUnsendRequest()) proto.unsendRequest else return null
-            val timestamp = unsendRequestProto.timestamp
-            val author = unsendRequestProto.author
-            return UnsendRequest(timestamp, author)
-                    .copyExpiration(proto)
-        }
-    }
-
-    constructor(timestamp: Long, author: String) : this() {
-        this.timestamp = timestamp
-        this.author = author
+        fun fromProto(proto: SignalServiceProtos.Content): UnsendRequest? =
+            proto.takeIf { it.hasUnsendRequest() }?.unsendRequest?.run { UnsendRequest(timestamp, author) }?.copyExpiration(proto)
     }
 
     override fun toProto(): SignalServiceProtos.Content? {

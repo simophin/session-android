@@ -1,5 +1,6 @@
 package org.thoughtcrime.securesms.conversation.v2.messages
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.Canvas
@@ -8,7 +9,6 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
-import android.util.Log
 import android.view.Gravity
 import android.view.HapticFeedbackConstants
 import android.view.MotionEvent
@@ -31,13 +31,11 @@ import network.loki.messenger.databinding.ViewVisibleMessageBinding
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.messaging.contacts.Contact.ContactContext
 import org.session.libsession.messaging.open_groups.OpenGroupApi
-import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.ViewUtil
 import org.session.libsession.utilities.getColorFromAttr
+import org.session.libsession.utilities.modifyLayoutParams
 import org.session.libsignal.utilities.IdPrefix
-import org.session.libsignal.utilities.ThreadUtils
-import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.database.LokiAPIDatabase
 import org.thoughtcrime.securesms.database.LokiThreadDatabase
@@ -241,14 +239,12 @@ class VisibleMessageView : LinearLayout {
     private fun showStatusMessage(message: MessageRecord) {
         val disappearing = message.expiresIn > 0
 
-        binding.messageInnerLayout.apply {
-            layoutParams = layoutParams.let { it as FrameLayout.LayoutParams }
-                .apply { gravity = if (message.isOutgoing) Gravity.END else Gravity.START }
+        binding.messageInnerLayout.modifyLayoutParams<FrameLayout.LayoutParams> {
+            gravity = if (message.isOutgoing) Gravity.END else Gravity.START
         }
 
-        binding.statusContainer.apply {
-            layoutParams = layoutParams.let { it as ConstraintLayout.LayoutParams }
-                .apply { horizontalBias = if (message.isOutgoing) 1f else 0f }
+        binding.statusContainer.modifyLayoutParams<ConstraintLayout.LayoutParams> {
+            horizontalBias = if (message.isOutgoing) 1f else 0f
         }
 
         binding.expirationTimerView.isGone = true
@@ -279,25 +275,19 @@ class VisibleMessageView : LinearLayout {
         }
     }
 
-    private fun isStartOfMessageCluster(current: MessageRecord, previous: MessageRecord?, isGroupThread: Boolean): Boolean {
-        return if (isGroupThread) {
-            previous == null || previous.isUpdate || !DateUtils.isSameHour(current.timestamp, previous.timestamp)
-                || current.recipient.address != previous.recipient.address
+    private fun isStartOfMessageCluster(current: MessageRecord, previous: MessageRecord?, isGroupThread: Boolean): Boolean =
+        previous == null || previous.isUpdate || !DateUtils.isSameHour(current.timestamp, previous.timestamp) || if (isGroupThread) {
+            current.recipient.address != previous.recipient.address
         } else {
-            previous == null || previous.isUpdate || !DateUtils.isSameHour(current.timestamp, previous.timestamp)
-                || current.isOutgoing != previous.isOutgoing
+            current.isOutgoing != previous.isOutgoing
         }
-    }
 
-    private fun isEndOfMessageCluster(current: MessageRecord, next: MessageRecord?, isGroupThread: Boolean): Boolean {
-        return if (isGroupThread) {
-            next == null || next.isUpdate || !DateUtils.isSameHour(current.timestamp, next.timestamp)
-                || current.recipient.address != next.recipient.address
+    private fun isEndOfMessageCluster(current: MessageRecord, next: MessageRecord?, isGroupThread: Boolean): Boolean =
+        next == null || next.isUpdate || !DateUtils.isSameHour(current.timestamp, next.timestamp) || if (isGroupThread) {
+            current.recipient.address != next.recipient.address
         } else {
-            next == null || next.isUpdate || !DateUtils.isSameHour(current.timestamp, next.timestamp)
-                || current.isOutgoing != next.isOutgoing
+            current.isOutgoing != next.isOutgoing
         }
-    }
 
     data class MessageStatusInfo(@DrawableRes val iconId: Int?,
                                  @ColorInt val iconTint: Int?,
@@ -345,11 +335,7 @@ class VisibleMessageView : LinearLayout {
     }
 
     private fun handleIsSelectedChanged() {
-        background = if (snIsSelected) {
-            ColorDrawable(context.getColorFromAttr(R.attr.message_selected))
-        } else {
-            null
-        }
+        background = if (snIsSelected) ColorDrawable(context.getColorFromAttr(R.attr.message_selected)) else null
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -364,7 +350,7 @@ class VisibleMessageView : LinearLayout {
         swipeToReplyIconRect.right = right
         swipeToReplyIconRect.bottom = bottom
 
-        if (translationX < 0 /*&& !binding.expirationTimerView.isVisible*/) {
+        if (translationX < 0 && !binding.expirationTimerView.isVisible) {
             val threshold = swipeToReplyThreshold
             swipeToReplyIcon.bounds = swipeToReplyIconRect
             swipeToReplyIcon.alpha = (255.0f * (min(abs(translationX), threshold) / threshold)).roundToInt()
@@ -386,6 +372,7 @@ class VisibleMessageView : LinearLayout {
     // endregion
 
     // region Interaction
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (onPress == null || onSwipeToReply == null || onLongPress == null) { return false }
         when (event.action) {
@@ -486,14 +473,13 @@ class VisibleMessageView : LinearLayout {
     }
 
     private fun maybeShowUserDetails(publicKey: String, threadID: Long) {
-        val userDetailsBottomSheet = UserDetailsBottomSheet()
-        val bundle = bundleOf(
+        UserDetailsBottomSheet().apply {
+            arguments = bundleOf(
                 UserDetailsBottomSheet.ARGUMENT_PUBLIC_KEY to publicKey,
                 UserDetailsBottomSheet.ARGUMENT_THREAD_ID to threadID
-        )
-        userDetailsBottomSheet.arguments = bundle
-        val activity = context as AppCompatActivity
-        userDetailsBottomSheet.show(activity.supportFragmentManager, userDetailsBottomSheet.tag)
+            )
+            show((context as AppCompatActivity).supportFragmentManager, tag)
+        }
     }
 
     fun playVoiceMessage() {

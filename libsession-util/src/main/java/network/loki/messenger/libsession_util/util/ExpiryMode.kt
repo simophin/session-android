@@ -14,3 +14,5 @@ sealed class ExpiryMode(val expirySeconds: Long) {
 
     fun coerceSendToRead(coerce: Boolean = true) = if (coerce && this is AfterSend) AfterRead(expirySeconds) else this
 }
+
+fun afterSend(seconds: Long) = seconds.takeIf { it > 0 }?.let(ExpiryMode::AfterSend) ?: ExpiryMode.NONE
