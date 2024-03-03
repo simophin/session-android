@@ -5,6 +5,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import network.loki.messenger.R
 import network.loki.messenger.libsession_util.util.ExpiryMode
 import org.session.libsession.messaging.MessagingModuleConfiguration
+import org.session.libsession.messaging.messages.Destination
 import org.session.libsession.messaging.messages.ExpirationConfiguration
 import org.session.libsession.messaging.messages.control.ExpirationTimerUpdate
 import org.session.libsession.messaging.sending_receiving.MessageSender
@@ -39,7 +40,11 @@ class DisappearingMessages @Inject constructor(
 
         messageExpirationManager.insertExpirationTimerMessage(message)
         MessageSender.send(message, address)
-        ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
+        if (address.isClosedGroup) {
+            ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(Destination.from(address))
+        } else {
+            ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
+        }
     }
 
     fun showFollowSettingDialog(context: Context, message: MessageRecord) = context.showSessionDialog {

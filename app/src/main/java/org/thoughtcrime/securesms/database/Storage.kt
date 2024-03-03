@@ -2584,6 +2584,11 @@ open class Storage(
                     ?.let { configFactory.contacts?.get(it)?.expiryMode }
             }
             recipient.isClosedGroupRecipient -> {
+                configFactory.getGroupInfoConfig(SessionId.from(recipient.address.serialize()))?.getExpiryTimer()?.let {
+                    if (it == 0L) ExpiryMode.NONE else ExpiryMode.AfterSend(it)
+                }
+            }
+            recipient.isLegacyClosedGroupRecipient -> {
                 // read it from group config if exists
                 GroupUtil.doubleDecodeGroupId(recipient.address.serialize())
                     .let { configFactory.userGroups?.getLegacyGroupInfo(it) }
@@ -2613,10 +2618,10 @@ open class Storage(
                 ?.copy(disappearingTimer = expiryMode.expirySeconds) ?: return
             userGroups.set(groupInfo)
         } else if (recipient.isClosedGroupRecipient) {
-            val userGroups = configFactory.userGroups ?: return
-            val groupInfo = userGroups.getClosedGroup(recipient.address.serialize())
-                ?.copy(disappearingTimer = expiryMode.expirySeconds) ?: return
-            userGroups.set()
+            val groupSessionId = SessionId.from(recipient.address.serialize())
+            val groupInfo = configFactory.getGroupInfoConfig(groupSessionId) ?: return
+            groupInfo.setExpiryTimer(expiryMode.expirySeconds)
+            configFactory.persist(groupInfo, SnodeAPI.nowWithOffset, groupSessionId.hexString())
         } else if (recipient.isLocalNumber) {
             val user = configFactory.user ?: return
             user.setNtsExpiry(expiryMode)
