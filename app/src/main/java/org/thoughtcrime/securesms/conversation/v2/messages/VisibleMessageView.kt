@@ -478,7 +478,7 @@ class VisibleMessageView : LinearLayout {
                 UserDetailsBottomSheet.ARGUMENT_PUBLIC_KEY to publicKey,
                 UserDetailsBottomSheet.ARGUMENT_THREAD_ID to threadID
             )
-            show((context as AppCompatActivity).supportFragmentManager, tag)
+            show((this@VisibleMessageView.context as AppCompatActivity).supportFragmentManager, tag)
         }
     }
 
