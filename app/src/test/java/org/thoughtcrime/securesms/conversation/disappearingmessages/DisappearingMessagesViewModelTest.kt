@@ -7,7 +7,6 @@ import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import network.loki.messenger.R
 import network.loki.messenger.libsession_util.util.ExpiryMode
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -54,7 +53,7 @@ class DisappearingMessagesViewModelTest {
     @Mock lateinit var application: Application
     @Mock lateinit var textSecurePreferences: TextSecurePreferences
     @Mock lateinit var messageExpirationManager: SSKEnvironment.MessageExpirationManagerProtocol
-    @Mock lateinit var disappearingMock: DisappearingMessages
+    @Mock lateinit var disappearingMessages: DisappearingMessages
     @Mock lateinit var threadDb: ThreadDatabase
     @Mock lateinit var groupDb: GroupDatabase
     @Mock lateinit var storage: Storage
@@ -101,7 +100,6 @@ class DisappearingMessagesViewModelTest {
     }
 
     @Test
-    @Ignore("Ignored until resolving wether old config should have expiryMode = ExpiryMode.Legacy or NONE")
     fun `note to self, off, old config`() = runTest {
         mock1on1(ExpiryMode.NONE, LOCAL_ADDRESS)
 
@@ -117,9 +115,9 @@ class DisappearingMessagesViewModelTest {
                 isSelfAdmin = true,
                 address = LOCAL_ADDRESS,
                 isNoteToSelf = true,
-                expiryMode = ExpiryMode.NONE,
+                expiryMode = ExpiryMode.Legacy(0),
                 isNewConfigEnabled = false,
-                persistedMode = ExpiryMode.NONE,
+                persistedMode = ExpiryMode.Legacy(0),
                 showDebugOptions = false
             )
         )
@@ -130,7 +128,7 @@ class DisappearingMessagesViewModelTest {
             UiState(
                 OptionsCard(
                     R.string.activity_disappearing_messages_timer,
-                    typeOption(ExpiryMode.NONE, selected = true),
+                    typeOption(ExpiryMode.NONE, selected = false),
                     timeOption(ExpiryType.LEGACY, 12.hours),
                     timeOption(ExpiryType.LEGACY, 1.days),
                     timeOption(ExpiryType.LEGACY, 7.days),
@@ -558,7 +556,7 @@ class DisappearingMessagesViewModelTest {
         application,
         textSecurePreferences,
         messageExpirationManager,
-        disappearingMock,
+        disappearingMessages,
         threadDb,
         groupDb,
         storage,
