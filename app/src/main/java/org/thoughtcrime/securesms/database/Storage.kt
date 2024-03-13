@@ -290,7 +290,7 @@ open class Storage(
     ): Boolean {
         val dbComponent = DatabaseComponent.get(context)
         val lokiMessageDatabase = dbComponent.lokiMessageDatabase()
-        val threadId = getThreadId(Address.fromSerialized(closedGroupId))!!
+        val threadId = getThreadId(fromSerialized(closedGroupId))!!
         val info = lokiMessageDatabase.getSendersForHashes(threadId, hashes)
         return info.all { it.sender == sender }
     }
@@ -554,7 +554,7 @@ open class Storage(
             is Contacts -> updateContacts(forConfigObject, messageTimestamp)
             is ConversationVolatileConfig -> updateConvoVolatile(forConfigObject, messageTimestamp)
             is UserGroupsConfig -> updateUserGroups(forConfigObject, messageTimestamp)
-            is GroupInfoConfig -> updateGroupInfo(forConfigObject)
+            is GroupInfoConfig -> updateGroupInfo(forConfigObject, messageTimestamp)
             is GroupKeysConfig -> updateGroupKeys(forConfigObject)
             is GroupMembersConfig -> updateGroupMembers(forConfigObject)
         }
@@ -604,8 +604,8 @@ open class Storage(
         }
     }
 
-    private fun updateGroupInfo(groupInfoConfig: GroupInfoConfig) {
-        val threadId = getOrCreateThreadIdFor(Address.fromSerialized(groupInfoConfig.id().hexString()))
+    private fun updateGroupInfo(groupInfoConfig: GroupInfoConfig, messageTimestamp: Long) {
+        val threadId = getOrCreateThreadIdFor(fromSerialized(groupInfoConfig.id().hexString()))
         val recipient = getRecipientForThread(threadId) ?: return
         val db = DatabaseComponent.get(context).recipientDatabase()
         db.setProfileName(recipient, groupInfoConfig.getName())
@@ -713,7 +713,7 @@ open class Storage(
 
         val newClosedGroups = userGroups.allClosedGroupInfo()
         for (closedGroup in newClosedGroups) {
-            val recipient = Recipient.from(context, Address.fromSerialized(closedGroup.groupSessionId.hexString()), false)
+            val recipient = Recipient.from(context, fromSerialized(closedGroup.groupSessionId.hexString()), false)
             setRecipientApprovedMe(recipient, true)
             setRecipientApproved(recipient, !closedGroup.invited)
             val createThread = getThreadId(recipient) == null
@@ -742,12 +742,12 @@ open class Storage(
                     threadDb.setPinned(existingThread, group.priority == PRIORITY_PINNED)
                 }
             } else {
-                val members = group.members.keys.map { Address.fromSerialized(it) }
-                val admins = group.members.filter { it.value /*admin = true*/ }.keys.map { Address.fromSerialized(it) }
+                val members = group.members.keys.map { fromSerialized(it) }
+                val admins = group.members.filter { it.value /*admin = true*/ }.keys.map { fromSerialized(it) }
                 val title = group.name
                 val formationTimestamp = (group.joinedAt * 1000L)
                 createGroup(groupId, title, admins + members, null, null, admins, formationTimestamp)
-                setProfileSharing(Address.fromSerialized(groupId), true)
+                setProfileSharing(fromSerialized(groupId), true)
                 // Add the group to the user's set of public keys to poll for
                 addClosedGroupPublicKey(group.sessionId.hexString())
                 // Store the encryption key pair
@@ -756,14 +756,14 @@ open class Storage(
                 // Notify the PN server
                 PushRegistryV1.subscribeGroup(group.sessionId.hexString(), publicKey = localUserPublicKey)
                 // Notify the user
-                val threadID = getOrCreateThreadIdFor(Address.fromSerialized(groupId))
+                val threadID = getOrCreateThreadIdFor(fromSerialized(groupId))
                 threadDb.setDate(threadID, formationTimestamp)
                 insertOutgoingInfoMessage(context, groupId, SignalServiceGroup.Type.CREATION, title, members.map { it.serialize() }, admins.map { it.serialize() }, threadID, formationTimestamp)
                 // Don't create config group here, it's from a config update
                 // Start polling
                 LegacyClosedGroupPollerV2.shared.startPolling(group.sessionId.hexString())
             }
-            getThreadId(Address.fromSerialized(groupId))?.let {
+            getThreadId(fromSerialized(groupId))?.let {
                 setExpirationConfiguration(
                     getExpirationConfiguration(it)?.takeIf { it.updatedTimestampMs > messageTimestamp }
                         ?: ExpirationConfiguration(it, afterSend(group.disappearingTimer), messageTimestamp)
@@ -2575,7 +2575,7 @@ open class Storage(
 
     override fun getExpirationConfiguration(threadId: Long): ExpirationConfiguration? {
         val recipient = getRecipientForThread(threadId) ?: return null
-        val dbExpirationMetadata = DatabaseComponent.get(context).expirationConfigurationDatabase().getExpirationConfiguration(threadId) ?: return null
+        val dbExpirationMetadata = DatabaseComponent.get(context).expirationConfigurationDatabase().getExpirationConfiguration(threadId)
         return when {
             recipient.isLocalNumber -> configFactory.user?.getNtsExpiry()
             recipient.isContactRecipient -> {
@@ -2595,7 +2595,12 @@ open class Storage(
                     ?.run { disappearingTimer.takeIf { it != 0L }?.let(ExpiryMode::AfterSend) ?: ExpiryMode.NONE }
             }
             else -> null
-        }?.let { ExpirationConfiguration(threadId, it, dbExpirationMetadata.updatedTimestampMs) }
+        }?.let { ExpirationConfiguration(
+            threadId,
+            it,
+            // This will be 0L for new closed groups, apparently we don't need this anymore?
+            dbExpirationMetadata?.updatedTimestampMs ?: 0L
+        ) }
     }
 
     override fun setExpirationConfiguration(config: ExpirationConfiguration) {

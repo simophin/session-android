@@ -39,7 +39,7 @@ import kotlin.time.Duration.Companion.minutes
 private const val THREAD_ID = 1L
 private const val LOCAL_NUMBER = "05---local---address"
 private val LOCAL_ADDRESS = Address.fromSerialized(LOCAL_NUMBER)
-private const val GROUP_NUMBER = "${GroupUtil.OPEN_GROUP_PREFIX}4133"
+private const val GROUP_NUMBER = "${GroupUtil.LEGACY_CLOSED_GROUP_PREFIX}4133"
 private val GROUP_ADDRESS = Address.fromSerialized(GROUP_NUMBER)
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -529,7 +529,8 @@ class DisappearingMessagesViewModelTest {
         mockStuff(mode)
 
         whenever(recipient.address).thenReturn(GROUP_ADDRESS)
-        whenever(recipient.isClosedGroupRecipient).thenReturn(true)
+        whenever(recipient.isGroupRecipient).thenReturn(true)
+        whenever(recipient.isLegacyClosedGroupRecipient).thenReturn(true)
         whenever(groupDb.getGroup(any<String>())).thenReturn(Optional.of(groupRecord))
         whenever(groupRecord.admins).thenReturn(
             buildList {
