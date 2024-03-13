@@ -80,6 +80,13 @@ class ConversationViewModel(
             return storage.getMembers(recipient.address.serialize())
         }
 
+    val isClosedGroupAdmin: Boolean
+        get() {
+            val recipient = recipient ?: return false
+            return !recipient.isClosedGroupRecipient ||
+                    (closedGroupMembers.firstOrNull { it.sessionId == storage.getUserPublicKey() }?.admin ?: false)
+        }
+
 
     val serverCapabilities: List<String>
         get() = openGroup?.let { storage.getServerCapabilities(it.server) } ?: listOf()

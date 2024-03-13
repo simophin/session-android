@@ -1872,7 +1872,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 button(R.string.delete) { messages.forEach(viewModel::deleteForEveryone); endActionMode() }
                 cancelButton { endActionMode() }
             }
-        } else if (allSentByCurrentUser && allHasHash) {
+        } else if ((allSentByCurrentUser || viewModel.isClosedGroupAdmin) && allHasHash) {
             val bottomSheet = DeleteOptionsBottomSheet()
             bottomSheet.recipient = recipient
             bottomSheet.onDeleteForMeTapped = {
