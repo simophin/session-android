@@ -1036,6 +1036,9 @@ open class Storage(
             info = groupInfo,
             members = groupMembers) ?: return Optional.absent()
 
+        // Manually re-key to prevent issue with linked admin devices
+        groupKeys.rekey(groupInfo, groupMembers)
+
         val newGroupRecipient = group.groupSessionId.hexString()
         val configTtl = 14 * 24 * 60 * 60 * 1000L
         // Test the sending
