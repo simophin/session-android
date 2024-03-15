@@ -60,7 +60,7 @@ interface ConversationRepository {
     suspend fun deleteForEveryone(
         threadId: Long,
         recipient: Recipient,
-        message: MessageRecord
+        message: MessageRecord,
     ): ResultOf<Unit>
 
     fun buildUnsendRequest(recipient: Recipient, message: MessageRecord): UnsendRequest?
@@ -194,8 +194,9 @@ class DefaultConversationRepository @Inject constructor(
     override suspend fun deleteForEveryone(
         threadId: Long,
         recipient: Recipient,
-        message: MessageRecord
+        message: MessageRecord,
     ): ResultOf<Unit> = suspendCoroutine { continuation ->
+        // Un-send only works for legacy closed groups and 1to1, handled by null return otherwise
         buildUnsendRequest(recipient, message)?.let { unsendRequest ->
             MessageSender.send(unsendRequest, recipient.address)
         }
@@ -211,24 +212,30 @@ class DefaultConversationRepository @Inject constructor(
                     }
             }
         } else {
-            messageDataProvider.deleteMessage(message.id, !message.isMms)
             messageDataProvider.getServerHashForMessage(message.id, message.isMms)?.let { serverHash ->
                 var publicKey = recipient.address.serialize()
                 if (recipient.isLegacyClosedGroupRecipient) {
                     publicKey = GroupUtil.doubleDecodeGroupID(publicKey).toHexString()
                 }
-                SnodeAPI.deleteMessage(publicKey, listOf(serverHash))
-                    .success {
-                        continuation.resume(ResultOf.Success(Unit))
-                    }.fail { error ->
-                        continuation.resumeWithException(error)
-                    }
+                if (recipient.isClosedGroupRecipient) {
+                    // admin check internally, assume either admin or all belong to user
+                    storage.sendGroupUpdateDeleteMessage(recipient.address.serialize(), listOf(serverHash))
+                    continuation.resume(ResultOf.Success(Unit))
+                } else {
+                    SnodeAPI.deleteMessage(publicKey, listOf(serverHash))
+                        .success {
+                            continuation.resume(ResultOf.Success(Unit))
+                        }.fail { error ->
+                            continuation.resumeWithException(error)
+                        }
+                }
             }
+            messageDataProvider.deleteMessage(message.id, !message.isMms)
         }
     }
 
     override fun buildUnsendRequest(recipient: Recipient, message: MessageRecord): UnsendRequest? {
-        if (recipient.isOpenGroupRecipient) return null
+        if (recipient.isOpenGroupRecipient || recipient.isClosedGroupRecipient) return null
         messageDataProvider.getServerHashForMessage(message.id, message.isMms) ?: return null
         return UnsendRequest(
             author = message.takeUnless { it.isOutgoing }?.run { individualRecipient.address.contactIdentifier() } ?: textSecurePreferences.getLocalNumber(),

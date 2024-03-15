@@ -90,6 +90,7 @@ import org.session.libsignal.crypto.ecc.ECKeyPair
 import org.session.libsignal.messages.SignalServiceAttachmentPointer
 import org.session.libsignal.messages.SignalServiceGroup
 import org.session.libsignal.protos.SignalServiceProtos.DataMessage
+import org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage
 import org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage
 import org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage
 import org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage
@@ -301,7 +302,7 @@ open class Storage(
         val info = lokiMessageDatabase.getSendersForHashes(threadId, hashes.toSet())
         // TODO: no idea if we need to server delete this
         for ((serverHash, sender, messageIdToDelete, isSms) in info) {
-            messageDataProvider.deleteMessage(messageIdToDelete, isSms)
+            messageDataProvider.updateMessageAsDeleted(messageIdToDelete, isSms)
             if (!messageDataProvider.isOutgoingMessage(messageIdToDelete)) {
                 SSKEnvironment.shared.notificationManager.updateNotification(context)
             }
@@ -1885,6 +1886,35 @@ open class Storage(
         }
         MessageSender.send(message, fromSerialized(groupSessionId))
         insertGroupInfoChange(message, closedGroupId)
+    }
+
+    override fun sendGroupUpdateDeleteMessage(groupSessionId: String, messageHashes: List<String>) {
+        val adminKey = configFactory.userGroups?.getClosedGroup(groupSessionId)?.adminKey ?: run {
+            Log.w("ClosedGroup", "Tryin to delete from non-admin, assuming all from us")
+            null
+        }
+        val groupDestination = Destination.ClosedGroup(groupSessionId)
+        ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(groupDestination)
+        val timestamp = SnodeAPI.nowWithOffset
+        val signature = adminKey?.let { key ->
+            val messageToSign = "DELETE_CONTENT$timestamp${messageHashes.joinToString(separator = "")}"
+            SodiumUtilities.sign(messageToSign.toByteArray(), key)
+        }
+        val message = GroupUpdated(
+            GroupUpdateMessage.newBuilder()
+                .setDeleteMemberContent(
+                    GroupUpdateDeleteMemberContentMessage.newBuilder()
+                        .addAllMessageHashes(messageHashes)
+                        .let {
+                            if (signature != null) it.setAdminSignature(ByteString.copyFrom(signature))
+                            else it
+                        }
+                )
+                .build()
+        ).apply {
+            sentTimestamp = timestamp
+        }
+        MessageSender.send(message, fromSerialized(groupSessionId))
     }
 
     override fun setServerCapabilities(server: String, capabilities: List<String>) {

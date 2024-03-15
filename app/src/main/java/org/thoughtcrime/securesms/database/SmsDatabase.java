@@ -241,7 +241,7 @@ public class SmsDatabase extends MessagingDatabase {
   }
 
   @Override
-  public void markAsDeleted(long messageId, boolean read, boolean hasMention) {
+  public void markAsDeleted(long messageId) {
     SQLiteDatabase database     = databaseHelper.getWritableDatabase();
     ContentValues contentValues = new ContentValues();
     contentValues.put(READ, 1);
@@ -298,6 +298,11 @@ public class SmsDatabase extends MessagingDatabase {
     }
 
     return isOutgoing;
+  }
+
+  @Override
+  public String getTypeColumn() {
+    return TYPE;
   }
 
   public void incrementReceiptCount(SyncMessageId messageId, boolean deliveryReceipt, boolean readReceipt) {

@@ -289,7 +289,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         db.update(TABLE_NAME, contentValues, ID_WHERE, arrayOf(messageId.toString()))
     }
 
-    override fun markAsDeleted(messageId: Long, read: Boolean, hasMention: Boolean) {
+    override fun markAsDeleted(messageId: Long) {
         val database = databaseHelper.writableDatabase
         val contentValues = ContentValues()
         contentValues.put(READ, 1)
@@ -864,6 +864,8 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         notifyStickerListeners()
         notifyStickerPackListeners()
     }
+
+    override fun getTypeColumn(): String = MESSAGE_BOX
 
     override fun deleteMessage(messageId: Long): Boolean {
         val threadId = getThreadIdForMessage(messageId)
