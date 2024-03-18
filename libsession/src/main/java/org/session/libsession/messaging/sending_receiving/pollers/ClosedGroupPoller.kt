@@ -115,16 +115,24 @@ class ClosedGroupPoller(private val scope: CoroutineScope,
             hashesToExtend += members.currentHashes()
             hashesToExtend += keys.currentHashes()
 
-            val keysIndex = 0
-            val infoIndex = 1
-            val membersIndex = 2
-            val messageIndex = 3
+            val revokedIndex = 0
+            val keysIndex = 1
+            val infoIndex = 2
+            val membersIndex = 3
+            val messageIndex = 4
 
             val authData = group.signingKey()
             val signCallback = if (isAuthData(authData)) {
                 SnodeAPI.subkeyCallback(authData, keys, false)
             } else SnodeAPI.signingKeyCallback(authData)
 
+            val revokedPoll = SnodeAPI.buildAuthenticatedRetrieveBatchRequest(
+                snode,
+                closedGroupSessionId.hexString(),
+                Namespace.REVOKED_GROUP_MESSAGES(),
+                maxSize = null,
+                signCallback
+            ) ?: return null
             val messagePoll = SnodeAPI.buildAuthenticatedRetrieveBatchRequest(
                     snode,
                     closedGroupSessionId.hexString(),
@@ -154,7 +162,7 @@ class ClosedGroupPoller(private val scope: CoroutineScope,
                     signCallback
             ) ?: return null
 
-            val requests = mutableListOf(keysPoll, infoPoll, membersPoll, messagePoll)
+            val requests = mutableListOf(revokedPoll, keysPoll, infoPoll, membersPoll, messagePoll)
 
             if (hashesToExtend.isNotEmpty()) {
                 SnodeAPI.buildAuthenticatedAlterTtlBatchRequest(
@@ -178,10 +186,11 @@ class ClosedGroupPoller(private val scope: CoroutineScope,
             if (ENABLE_LOGGING) Log.d("ClosedGroupPoller", "Poll results @${SnodeAPI.nowWithOffset}:")
             (pollResult["results"] as List<RawResponse>).forEachIndexed { index, response ->
                 when (index) {
+                    revokedIndex -> handleMessages(response, snode, Namespace.REVOKED_GROUP_MESSAGES(), keys)
                     keysIndex -> handleKeyPoll(response, keys, info, members)
                     infoIndex -> handleInfo(response, info)
                     membersIndex -> handleMembers(response, members)
-                    messageIndex -> handleMessages(response, snode, keys)
+                    messageIndex -> handleMessages(response, snode, Namespace.CLOSED_GROUP_MESSAGES(), keys)
                 }
             }
 
@@ -259,9 +268,14 @@ class ClosedGroupPoller(private val scope: CoroutineScope,
         }
     }
 
-    private fun handleMessages(response: RawResponse, snode: Snode, keysConfig: GroupKeysConfig) {
+    private fun handleMessages(response: RawResponse, snode: Snode, namespace: Int, keysConfig: GroupKeysConfig) {
         val body = response["body"] as RawResponse
-        val messages = SnodeAPI.parseRawMessagesResponse(body, snode, closedGroupSessionId.hexString()) {
+        val messages = SnodeAPI.parseRawMessagesResponse(
+            body,
+            snode,
+            closedGroupSessionId.hexString(),
+            namespace = namespace
+        ) {
             return@parseRawMessagesResponse keysConfig.decrypt(it)
         }
         val parameters = messages.map { (envelope, serverHash) ->

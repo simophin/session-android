@@ -362,6 +362,12 @@ Java_org_session_libsignal_utilities_Namespace_CLOSED_1GROUP_1MESSAGES(JNIEnv *e
 }
 
 extern "C"
+JNIEXPORT jint JNICALL
+Java_org_session_libsignal_utilities_Namespace_REVOKED_1GROUP_1MESSAGES(JNIEnv *env, jobject thiz) {
+    return -11; // we don't have revoked namespace in user configs
+}
+
+extern "C"
 JNIEXPORT void JNICALL
 Java_network_loki_messenger_libsession_1util_Config_free(JNIEnv *env, jobject thiz) {
     jclass baseClass = env->FindClass("network/loki/messenger/libsession_util/Config");
