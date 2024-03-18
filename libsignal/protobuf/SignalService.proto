@@ -209,7 +209,6 @@ message DataMessage {
   message GroupUpdateDeleteMemberContentMessage {
     repeated string memberSessionIds   = 1;
     repeated string messageHashes = 2;
-    // @required
     optional bytes  adminSignature = 3;
   }
 

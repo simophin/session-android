@@ -26,6 +26,7 @@ data class ExtraColors(
     val settingsBackground: Color,
     val destructive: Color,
     val prominentButtonColor: Color,
+    val warning: Color,
 )
 
 /**
@@ -40,6 +41,7 @@ fun AppTheme(
             settingsBackground = getColorFromTheme(R.attr.colorSettingsBackground),
             destructive = Color(getColor(R.color.destructive)),
             prominentButtonColor = getColorFromTheme(R.attr.prominentButtonColor),
+            warning = Color(getColor(R.color.warning))
         )
     }
 

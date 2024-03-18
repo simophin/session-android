@@ -17593,18 +17593,10 @@ public final class SignalServiceProtos {
       // optional bytes adminSignature = 3;
       /**
        * <code>optional bytes adminSignature = 3;</code>
-       *
-       * <pre>
-       * @required
-       * </pre>
        */
       boolean hasAdminSignature();
       /**
        * <code>optional bytes adminSignature = 3;</code>
-       *
-       * <pre>
-       * @required
-       * </pre>
        */
       com.google.protobuf.ByteString getAdminSignature();
     }
@@ -17791,20 +17783,12 @@ public final class SignalServiceProtos {
       private com.google.protobuf.ByteString adminSignature_;
       /**
        * <code>optional bytes adminSignature = 3;</code>
-       *
-       * <pre>
-       * @required
-       * </pre>
        */
       public boolean hasAdminSignature() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
        * <code>optional bytes adminSignature = 3;</code>
-       *
-       * <pre>
-       * @required
-       * </pre>
        */
       public com.google.protobuf.ByteString getAdminSignature() {
         return adminSignature_;
@@ -18289,30 +18273,18 @@ public final class SignalServiceProtos {
         private com.google.protobuf.ByteString adminSignature_ = com.google.protobuf.ByteString.EMPTY;
         /**
          * <code>optional bytes adminSignature = 3;</code>
-         *
-         * <pre>
-         * @required
-         * </pre>
          */
         public boolean hasAdminSignature() {
           return ((bitField0_ & 0x00000004) == 0x00000004);
         }
         /**
          * <code>optional bytes adminSignature = 3;</code>
-         *
-         * <pre>
-         * @required
-         * </pre>
          */
         public com.google.protobuf.ByteString getAdminSignature() {
           return adminSignature_;
         }
         /**
          * <code>optional bytes adminSignature = 3;</code>
-         *
-         * <pre>
-         * @required
-         * </pre>
          */
         public Builder setAdminSignature(com.google.protobuf.ByteString value) {
           if (value == null) {
@@ -18325,10 +18297,6 @@ public final class SignalServiceProtos {
         }
         /**
          * <code>optional bytes adminSignature = 3;</code>
-         *
-         * <pre>
-         * @required
-         * </pre>
          */
         public Builder clearAdminSignature() {
           bitField0_ = (bitField0_ & ~0x00000004);

@@ -338,7 +338,7 @@ fun SearchBar(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 24.dp)
+            .padding(horizontal = 24.dp, vertical = 4.dp)
             .background(MaterialTheme.colors.primaryVariant, RoundedCornerShape(100))
     ) {
         Image(

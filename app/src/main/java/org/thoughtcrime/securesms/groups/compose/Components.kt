@@ -1,8 +1,10 @@
 package org.thoughtcrime.securesms.groups.compose
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -21,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -32,12 +35,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.squareup.phrase.Phrase
 import network.loki.messenger.R
+import org.session.libsession.BuildConfig
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.home.search.getSearchName
 import org.thoughtcrime.securesms.ui.Avatar
+import org.thoughtcrime.securesms.ui.LocalExtraColors
 import org.thoughtcrime.securesms.ui.LocalPreviewMode
 import org.thoughtcrime.securesms.ui.PreviewTheme
 import org.thoughtcrime.securesms.ui.ThemeResPreviewParameterProvider
@@ -53,6 +60,32 @@ fun EmptyPlaceholder(modifier: Modifier = Modifier) {
                 .fillMaxWidth()
                 .padding(vertical = 8.dp)
         )
+    }
+}
+
+@Composable
+fun GroupMinimumVersionBanner(modifier: Modifier = Modifier) {
+    // Minimum version banner
+    val context = LocalContext.current
+    val text = remember {
+        Phrase.from(context, R.string.groupInviteVersionBanner)
+            .put("version", BuildConfig.MINIMUM_GROUP_VERSION)
+            .format()
+            .toString()
+    }
+
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(LocalExtraColors.current.warning)
+    ) {
+        Text(
+            text = text,
+            color = Color.Black,
+            fontSize = 11.sp,
+            maxLines = 2,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(horizontal = 24.dp, vertical = 4.dp))
     }
 }
 

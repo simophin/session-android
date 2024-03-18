@@ -77,6 +77,7 @@ fun SelectContacts(
 
         LazyColumn(modifier = Modifier.weight(1f)) {
             stickyHeader {
+                GroupMinimumVersionBanner()
                 // Search Bar
                 SearchBar(queryFilter, onValueChanged = { value -> queryFilter = value })
             }

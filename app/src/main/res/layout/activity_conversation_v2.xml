@@ -262,7 +262,7 @@
             android:textColor="@color/black"
             android:layout_marginHorizontal="@dimen/large_spacing"
             android:textSize="@dimen/tiny_font_size"
-            android:text="@string/LegacyGroup_info_banner"
+            android:text="@string/groupLegacyBanner"
             />
 
         <ImageView

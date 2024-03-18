@@ -2,7 +2,6 @@ package org.thoughtcrime.securesms.groups.compose
 
 import android.content.Context
 import android.widget.Toast
-import androidx.annotation.StringRes
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -306,11 +305,21 @@ fun EditGroupView(
             NavigationBar(
                 title = stringResource(id = R.string.activity_edit_closed_group_title),
                 onBack = onBack,
-                actionElement = {}
+                actionElement = {
+                    TextButton(onClick = { onBack() }) {
+                        Text(
+                            text = stringResource(id = R.string.menu_done_button),
+                            color = MaterialTheme.colors.onPrimary
+                        )
+                    }
+                }
             )
         }
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
+
+            GroupMinimumVersionBanner()
+
             // Group name title
             Row(
                 modifier = Modifier
@@ -436,11 +445,11 @@ fun MemberItem(modifier: Modifier = Modifier,
                         contentDescription = memberDesc
                     }
             )
-            if (member.memberState !in listOf(MemberState.Member, MemberState.Admin)) {
+            member.memberState.toDisplayString()?.let { displayString ->
                 // Display the current member state
                 val stateDesc = stringResource(R.string.AccessibilityId_member_state)
                 Text(
-                    text = stringResource(member.memberState.toDisplayString()),
+                    text = displayString,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(1.dp)
@@ -533,8 +542,16 @@ enum class MemberState {
     Member
 }
 
-@StringRes
-fun MemberState.toDisplayString(): Int = TODO()
+@Composable
+fun MemberState.toDisplayString(): String? = when(this) {
+    MemberState.InviteSent -> stringResource(id = R.string.groupMemberStateInviteSent)
+    MemberState.Inviting -> stringResource(id = R.string.groupMemberStateInviting)
+    MemberState.InviteFailed -> stringResource(id = R.string.groupMemberStateInviteFailed)
+    MemberState.PromotionSent -> stringResource(id = R.string.groupMemberStatePromotionSent)
+    MemberState.Promoting -> stringResource(id = R.string.groupMemberStatePromoting)
+    MemberState.PromotionFailed -> stringResource(id = R.string.groupMemberStatePromotionFailed)
+    else -> null
+}
 
 fun memberStateOf(member: GroupMember): MemberState = when {
     member.inviteFailed -> MemberState.InviteFailed

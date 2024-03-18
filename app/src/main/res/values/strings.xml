@@ -1132,5 +1132,12 @@
     <string name="EditGroup_promote_action">Promote</string>
     <string name="AccessibilityId_empty_conversation">Empty conversation</string>
     <string name="AccessibilityId_outdated_group_banner">Legacy group banner</string>
-    <string name="LegacyGroup_info_banner">Groups have been upgraded, create a new group to upgrade. Old group functionality will be degraded from [Date].</string>
+    <string name="groupLegacyBanner">Groups have been upgraded, create a new group to upgrade. Old group functionality will be degraded from {date}.</string>
+    <string name="groupInviteVersionBanner">Users must have at least Session version {version} to see invites</string>
+    <string name="groupMemberStateInviteSent">Invite sent</string>
+    <string name="groupMemberStateInviting">Sending invite</string>
+    <string name="groupMemberStateInviteFailed">Invite failed</string>
+    <string name="groupMemberStatePromotionSent">Admin promotion sent</string>
+    <string name="groupMemberStatePromoting">Sending admin promotion</string>
+    <string name="groupMemberStatePromotionFailed">Admin promotion failed</string>
 </resources>
