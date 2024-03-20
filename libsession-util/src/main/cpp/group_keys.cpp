@@ -290,3 +290,11 @@ Java_network_loki_messenger_libsession_1util_GroupKeysConfig_supplementFor(JNIEn
     env->ReleaseStringUTFChars(user_session_id, string);
     return supplement_jbytearray;
 }
+extern "C"
+JNIEXPORT jint JNICALL
+Java_network_loki_messenger_libsession_1util_GroupKeysConfig_currentGeneration(JNIEnv *env,
+                                                                               jobject thiz) {
+    std::lock_guard lock{util::util_mutex_};
+    auto ptr = ptrToKeys(env, thiz);
+    return ptr->current_generation();
+}

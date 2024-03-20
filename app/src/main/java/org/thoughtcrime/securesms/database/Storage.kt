@@ -610,6 +610,13 @@ open class Storage(
         val recipient = getRecipientForThread(threadId) ?: return
         val db = DatabaseComponent.get(context).recipientDatabase()
         db.setProfileName(recipient, groupInfoConfig.getName())
+        groupInfoConfig.getDeleteBefore()?.let { removeBefore ->
+            trimThreadBefore(threadId, removeBefore)
+        }
+        groupInfoConfig.getDeleteAttachmentsBefore()?.let { removeAttachmentsBefore ->
+            val mmsDb = DatabaseComponent.get(context).mmsDatabase()
+            mmsDb.deleteMessagesInThreadBeforeDate(threadId, removeAttachmentsBefore, onlyMedia = true)
+        }
         // TODO: handle deleted group, handle delete attachment / message before a certain time
     }
 
@@ -1742,6 +1749,10 @@ open class Storage(
             val signCallback = signingKeyCallback(adminKey)
             val info = configFactory.getGroupInfoConfig(closedGroupId) ?: return
             val members = configFactory.getGroupMemberConfig(closedGroupId) ?: return
+
+            // Don't remove them twice if another admin has already handled this removal
+            if (members.get(message.sender!!) == null) return Log.w("Loki", "Member has already been removed, not removing again")
+
             val keys = configFactory.getGroupKeysConfig(closedGroupId, info, members, free = false) ?: return
             members.erase(message.sender!!)
 
@@ -1765,6 +1776,7 @@ open class Storage(
                 signCallback
             )
 
+            // somewhere in here there should be a -11 namespace update for removed member
             val stores = listOf(keyMessage, infoMessage, membersMessage).map(ConfigurationSyncJob.ConfigMessageInformation::batch)
 
             val response = SnodeAPI.getSingleTargetSnode(closedGroupHexString).bind { snode ->
@@ -1813,6 +1825,7 @@ open class Storage(
         } else {
             configFactory.getGroupMemberConfig(closedGroupId)?.use { memberConfig ->
                 // if the leaving member is an admin, disable the group and remove it
+                // This is just to emulate the "existing" group behaviour, this will need to be removed in future
                 if (memberConfig.get(message.sender!!)?.admin == true) {
                     pollerFactory.pollerFor(closedGroupId)?.stop()
                     pushRegistry.unregisterForGroup(closedGroupId)

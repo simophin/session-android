@@ -344,6 +344,8 @@ class GroupKeysConfig(pointer: Long): ConfigSig(pointer) {
 
     external fun subAccountSign(message: ByteArray, signingValue: ByteArray): SwarmAuth
 
+    external fun currentGeneration(): Int
+
     data class SwarmAuth(
         val subAccount: String,
         val subAccountSig: String,

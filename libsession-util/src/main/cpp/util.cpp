@@ -1,5 +1,6 @@
 #include "util.h"
 #include <sodium/crypto_sign.h>
+#include <session/multi_encrypt.hpp>
 #include <string>
 
 namespace util {
@@ -264,6 +265,7 @@ Java_network_loki_messenger_libsession_1util_util_Sodium_ed25519KeyPair(JNIEnv *
     jobject return_obj = env->NewObject(kp_class, kp_constructor, pk_jarray, sk_jarray);
     return return_obj;
 }
+
 extern "C"
 JNIEXPORT jbyteArray JNICALL
 Java_network_loki_messenger_libsession_1util_util_Sodium_ed25519PkToCurve25519(JNIEnv *env,
@@ -280,6 +282,57 @@ Java_network_loki_messenger_libsession_1util_util_Sodium_ed25519PkToCurve25519(J
     jbyteArray curve_pk_jarray = util::bytes_from_ustring(env, session::ustring_view {curve_pk.data(), curve_pk.size()});
     return curve_pk_jarray;
 }
+
+extern "C"
+JNIEXPORT jbyteArray JNICALL
+Java_network_loki_messenger_libsession_1util_util_Sodium_encryptForMultipleSimple(JNIEnv *env,
+                                                                                  jobject thiz,
+                                                                                  jstring message,
+                                                                                  jstring recipient,
+                                                                                  jbyteArray secret_key,
+                                                                                  jstring domain) {
+    auto sk_ustring = util::ustring_from_bytes(env, secret_key);
+    auto message_converted = util::ustring_from_jstring(env, message);
+    auto recipient_converted = util::ustring_from_jstring(env, recipient);
+    auto domain_bytes = env->GetStringUTFChars(domain, nullptr);
+    auto const recipient_vec = std::vector{session::ustring_view {recipient_converted}};
+
+    auto result = session::encrypt_for_multiple_simple(
+            message_converted,
+            recipient_vec,
+            sk_ustring,
+            domain_bytes
+    );
+    env->ReleaseStringUTFChars(domain, domain_bytes);
+    auto bytes = util::bytes_from_ustring(env, result);
+    return bytes;
+}
+
+extern "C"
+JNIEXPORT jbyteArray JNICALL
+Java_network_loki_messenger_libsession_1util_util_Sodium_decryptForMultipleSimple(JNIEnv *env,
+                                                                                  jobject thiz,
+                                                                                  jbyteArray encoded,
+                                                                                  jbyteArray secret_key,
+                                                                                  jbyteArray sender_pub_key,
+                                                                                  jstring domain) {
+    auto sk_ustring = util::ustring_from_bytes(env, secret_key);
+    auto encoded_ustring = util::ustring_from_bytes(env, encoded);
+    auto pub_ustring = util::ustring_from_bytes(env, sender_pub_key);
+    auto domain_bytes = env->GetStringUTFChars(domain, nullptr);
+    auto result = session::decrypt_for_multiple_simple(
+            encoded_ustring,
+            sk_ustring,
+            pub_ustring,
+            domain_bytes
+            );
+    env->ReleaseStringUTFChars(domain,domain_bytes);
+    if (result) {
+        return util::bytes_from_ustring(env, *result);
+    }
+    return nullptr;
+}
+
 extern "C"
 JNIEXPORT jobject JNICALL
 Java_network_loki_messenger_libsession_1util_util_BaseCommunityInfo_00024Companion_parseFullUrl(

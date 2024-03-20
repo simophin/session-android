@@ -1153,17 +1153,13 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
     }
 
     /*package*/
-    fun deleteMessagesInThreadBeforeDate(threadId: Long, date: Long) {
+    fun deleteMessagesInThreadBeforeDate(threadId: Long, date: Long, onlyMedia: Boolean) {
         var cursor: Cursor? = null
         try {
             val db = databaseHelper.readableDatabase
-            var where =
-                THREAD_ID + " = ? AND (CASE (" + MESSAGE_BOX + " & " + MmsSmsColumns.Types.BASE_TYPE_MASK + ") "
-            for (outgoingType in MmsSmsColumns.Types.OUTGOING_MESSAGE_TYPES) {
-                where += " WHEN $outgoingType THEN $DATE_SENT < $date"
-            }
-            where += " ELSE $DATE_RECEIVED < $date END)"
-            cursor = db!!.query(
+            var where = "$THREAD_ID = ? AND $DATE_SENT < $date"
+            if (onlyMedia) where += " AND $PART_COUNT >= 1"
+            cursor = db.query(
                 TABLE_NAME,
                 arrayOf<String?>(ID),
                 where,

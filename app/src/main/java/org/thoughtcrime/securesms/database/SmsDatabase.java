@@ -718,13 +718,7 @@ public class SmsDatabase extends MessagingDatabase {
 
   /*package*/void deleteMessagesInThreadBeforeDate(long threadId, long date) {
     SQLiteDatabase db = databaseHelper.getWritableDatabase();
-    String where      = THREAD_ID + " = ? AND (CASE " + TYPE;
-
-    for (long outgoingType : Types.OUTGOING_MESSAGE_TYPES) {
-      where += " WHEN " + outgoingType + " THEN " + DATE_SENT + " < " + date;
-    }
-
-    where += (" ELSE " + DATE_RECEIVED + " < " + date + " END)");
+    String where      = THREAD_ID + " = ? AND " + DATE_SENT + " < " + date;
 
     db.delete(TABLE_NAME, where, new String[] {threadId + ""});
   }

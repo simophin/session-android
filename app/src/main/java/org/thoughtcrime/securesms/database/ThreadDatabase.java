@@ -294,7 +294,7 @@ public class ThreadDatabase extends Database {
         Log.i("ThreadDatabase", "Cut off tweet date: " + lastTweetDate);
 
         DatabaseComponent.get(context).smsDatabase().deleteMessagesInThreadBeforeDate(threadId, lastTweetDate);
-        DatabaseComponent.get(context).mmsDatabase().deleteMessagesInThreadBeforeDate(threadId, lastTweetDate);
+        DatabaseComponent.get(context).mmsDatabase().deleteMessagesInThreadBeforeDate(threadId, lastTweetDate, false);
 
         update(threadId, false);
         notifyConversationListeners(threadId);
@@ -308,7 +308,7 @@ public class ThreadDatabase extends Database {
   public void trimThreadBefore(long threadId, long timestamp) {
     Log.i("ThreadDatabase", "Trimming thread: " + threadId + " before :"+timestamp);
     DatabaseComponent.get(context).smsDatabase().deleteMessagesInThreadBeforeDate(threadId, timestamp);
-    DatabaseComponent.get(context).mmsDatabase().deleteMessagesInThreadBeforeDate(threadId, timestamp);
+    DatabaseComponent.get(context).mmsDatabase().deleteMessagesInThreadBeforeDate(threadId, timestamp, false);
     update(threadId, false);
     notifyConversationListeners(threadId);
   }
