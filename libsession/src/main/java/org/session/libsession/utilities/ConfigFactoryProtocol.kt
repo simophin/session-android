@@ -13,6 +13,7 @@ import org.session.libsession.messaging.messages.Destination
 import org.session.libsignal.utilities.SessionId
 
 interface ConfigFactoryProtocol {
+
     val user: UserProfile?
     val contacts: Contacts?
     val convoVolatile: ConversationVolatileConfig?
@@ -43,6 +44,18 @@ interface ConfigFactoryProtocol {
         info: GroupInfoConfig,
         members: GroupMembersConfig
     ): GroupKeysConfig?
+
+    fun encryptForUser(message: String,
+                       domain: String,
+                       recipientSessionId: SessionId,
+                       closedGroupSessionId: SessionId): ByteArray?
+
+    fun maybeDecryptForUser(encoded: ByteArray,
+                            domain: String,
+                            closedGroupSessionId: SessionId): ByteArray?
+
+    fun userSessionId(): SessionId?
+
 }
 
 interface ConfigFactoryUpdateListener {

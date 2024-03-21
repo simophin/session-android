@@ -20,6 +20,7 @@ import network.loki.messenger.libsession_util.util.ExpiryMode
 import network.loki.messenger.libsession_util.util.GroupDisplayInfo
 import network.loki.messenger.libsession_util.util.GroupInfo
 import network.loki.messenger.libsession_util.util.KeyPair
+import network.loki.messenger.libsession_util.util.Sodium
 import network.loki.messenger.libsession_util.util.UserPic
 import network.loki.messenger.libsession_util.util.afterSend
 import nl.komponents.kovenant.functional.bind
@@ -100,8 +101,10 @@ import org.session.libsignal.utilities.Hex
 import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.KeyHelper
 import org.session.libsignal.utilities.Log
+import org.session.libsignal.utilities.Namespace
 import org.session.libsignal.utilities.SessionId
 import org.session.libsignal.utilities.guava.Optional
+import org.session.libsignal.utilities.removingIdPrefixIfNeeded
 import org.session.libsignal.utilities.toHexString
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper
 import org.thoughtcrime.securesms.database.model.MessageId
@@ -1626,7 +1629,7 @@ open class Storage(
         insertGroupInfoChange(message, closedGroupId)
     }
 
-    override fun removeMember(groupSessionId: String, removedMembers: Array<String>, fromDelete: Boolean) {
+    override fun removeMember(groupSessionId: String, removedMembers: Array<String>) {
         val closedGroupId = SessionId.from(groupSessionId)
         val adminKey = configFactory.userGroups?.getClosedGroup(groupSessionId)?.adminKey ?: return
         if (adminKey.isEmpty()) {
@@ -1653,6 +1656,21 @@ open class Storage(
 
         val toDelete = mutableListOf<String>()
 
+        val revocationStore = Sodium.encryptForMultipleSimple(
+            removedMembers.map{"$it-${keys.currentGeneration()}"}.toTypedArray(),
+            removedMembers.map { it.removingIdPrefixIfNeeded() }.toTypedArray(),
+            adminKey,
+            Sodium.KICKED_DOMAIN
+        )?.let { encryptedForMembers ->
+            val message = SnodeMessage(
+                groupSessionId,
+                Base64.encodeBytes(encryptedForMembers),
+                SnodeMessage.CONFIG_TTL,
+                SnodeAPI.nowWithOffset
+            )
+            SnodeAPI.buildAuthenticatedStoreBatchInfo(Namespace.REVOKED_GROUP_MESSAGES(), message, adminKey)
+        } ?: return Log.e("Storage", "Couldn't encrypt revocation for users ${removedMembers.size}")
+
         val keyMessage = keys.messageInformation(groupSessionId, adminKey)
         val infoMessage = info.messageInformation(toDelete, groupSessionId, adminKey)
         val membersMessage = members.messageInformation(toDelete, groupSessionId, adminKey)
@@ -1665,7 +1683,7 @@ open class Storage(
             signCallback
         )
 
-        val stores = listOf(keyMessage, infoMessage, membersMessage).map(ConfigurationSyncJob.ConfigMessageInformation::batch)
+        val stores = listOf(revocationStore) + listOf(keyMessage, infoMessage, membersMessage).map(ConfigurationSyncJob.ConfigMessageInformation::batch)
 
         val response = SnodeAPI.getSingleTargetSnode(groupSessionId).bind { snode ->
             SnodeAPI.getRawBatchResponse(
@@ -1745,83 +1763,7 @@ open class Storage(
         val closedGroup = userGroups.getClosedGroup(closedGroupId.hexString()) ?: return
         if (closedGroup.hasAdminKey()) {
             // re-key and do a new config removing the previous member
-            val adminKey = closedGroup.adminKey
-            val signCallback = signingKeyCallback(adminKey)
-            val info = configFactory.getGroupInfoConfig(closedGroupId) ?: return
-            val members = configFactory.getGroupMemberConfig(closedGroupId) ?: return
-
-            // Don't remove them twice if another admin has already handled this removal
-            if (members.get(message.sender!!) == null) return Log.w("Loki", "Member has already been removed, not removing again")
-
-            val keys = configFactory.getGroupKeysConfig(closedGroupId, info, members, free = false) ?: return
-            members.erase(message.sender!!)
-
-            keys.rekey(info, members)
-
-            val toDelete = mutableListOf<String>()
-
-            val keyMessage = keys.messageInformation(closedGroupHexString, adminKey)
-            val infoMessage = info.messageInformation(toDelete, closedGroupHexString, adminKey)
-            val membersMessage = members.messageInformation(toDelete, closedGroupHexString, adminKey)
-
-            val revocation = SnodeAPI.buildAuthenticatedRevokeSubKeyBatchRequest(
-                closedGroupHexString,
-                adminKey,
-                arrayOf(message.sender!!.let { keys.getSubAccountToken(SessionId.from(it)) })
-            ) ?: return Log.e("ClosedGroup", "Failed to build revocation update")
-
-            val delete = SnodeAPI.buildAuthenticatedDeleteBatchInfo(
-                closedGroupHexString,
-                toDelete,
-                signCallback
-            )
-
-            // somewhere in here there should be a -11 namespace update for removed member
-            val stores = listOf(keyMessage, infoMessage, membersMessage).map(ConfigurationSyncJob.ConfigMessageInformation::batch)
-
-            val response = SnodeAPI.getSingleTargetSnode(closedGroupHexString).bind { snode ->
-                SnodeAPI.getRawBatchResponse(
-                    snode,
-                    closedGroupHexString,
-                    stores + revocation + delete,
-                    sequence = true
-                )
-            }
-
-            try {
-                val rawResponse = response.get()
-                val results = (rawResponse["results"] as ArrayList<Any>).first() as Map<String,Any>
-                if (results["code"] as Int != 200) {
-                    throw Exception("Response wasn't successful for revoke and key update: ${results["body"] as? String}")
-                }
-
-                configFactory.saveGroupConfigs(keys, info, members)
-
-                val timestamp = SnodeAPI.nowWithOffset
-                val messageToSign = "MEMBER_CHANGE${GroupUpdateMemberChangeMessage.Type.REMOVED.name}$timestamp"
-                val signature = SodiumUtilities.sign(messageToSign.toByteArray(), adminKey)
-                val updatedMessage = GroupUpdated(
-                        GroupUpdateMessage.newBuilder()
-                                .setMemberChangeMessage(
-                                        GroupUpdateMemberChangeMessage.newBuilder()
-                                                .addAllMemberSessionIds(listOf(message.sender!!))
-                                                .setType(GroupUpdateMemberChangeMessage.Type.REMOVED)
-                                                .setAdminSignature(ByteString.copyFrom(signature))
-                                )
-                                .build()
-                ).apply { this.sentTimestamp = timestamp }
-                MessageSender.send(updatedMessage, fromSerialized(closedGroupHexString))
-                info.free()
-                members.free()
-                keys.free()
-            } catch (e: Exception) {
-                Log.e("ClosedGroup", "Failed to store new key", e)
-                info.free()
-                members.free()
-                keys.free()
-                // toaster toast here
-                return
-            }
+            removeMember(closedGroupHexString, arrayOf(message.sender!!))
         } else {
             configFactory.getGroupMemberConfig(closedGroupId)?.use { memberConfig ->
                 // if the leaving member is an admin, disable the group and remove it
@@ -1833,13 +1775,10 @@ open class Storage(
                         deleteConversation(threadId)
                     }
                     configFactory.removeGroup(closedGroupId)
+                } else {
+                    insertGroupInfoChange(message, closedGroupId)
                 }
             }
-        }
-
-        // if we still have the group, insert the info message
-        if (userGroups.getClosedGroup(closedGroupHexString) != null) {
-            insertGroupInfoChange(message, closedGroupId)
         }
     }
 

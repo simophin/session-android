@@ -11,6 +11,7 @@ import network.loki.messenger.libsession_util.GroupKeysConfig
 import network.loki.messenger.libsession_util.GroupMembersConfig
 import network.loki.messenger.libsession_util.util.GroupInfo
 import network.loki.messenger.libsession_util.util.GroupInfo.ClosedGroupInfo.Companion.isAuthData
+import network.loki.messenger.libsession_util.util.Sodium
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.jobs.BatchMessageReceiveJob
 import org.session.libsession.messaging.jobs.JobQueue
@@ -186,11 +187,11 @@ class ClosedGroupPoller(private val scope: CoroutineScope,
             if (ENABLE_LOGGING) Log.d("ClosedGroupPoller", "Poll results @${SnodeAPI.nowWithOffset}:")
             (pollResult["results"] as List<RawResponse>).forEachIndexed { index, response ->
                 when (index) {
-                    revokedIndex -> handleMessages(response, snode, Namespace.REVOKED_GROUP_MESSAGES(), keys)
+                    revokedIndex -> handleRevoked(response, keys)
                     keysIndex -> handleKeyPoll(response, keys, info, members)
                     infoIndex -> handleInfo(response, info)
                     membersIndex -> handleMembers(response, members)
-                    messageIndex -> handleMessages(response, snode, Namespace.CLOSED_GROUP_MESSAGES(), keys)
+                    messageIndex -> handleMessages(response, snode, keys)
                 }
             }
 
@@ -227,6 +228,44 @@ class ClosedGroupPoller(private val scope: CoroutineScope,
             val timestamp = rawMessageAsJSON["timestamp"] as? Long ?: return@mapNotNull null
             val data = base64EncodedData.let { Base64.decode(it) }
             ParsedRawMessage(data, hash, timestamp)
+        }
+    }
+
+    private fun handleRevoked(response: RawResponse, keys: GroupKeysConfig) {
+        // This shouldn't ever return null at this point
+        val userSessionId = configFactoryProtocol.userSessionId()!!
+        val body = response["body"] as? RawResponse
+        if (body == null) {
+            if (ENABLE_LOGGING) Log.e("GroupPoller", "No revoked messages")
+            return
+        }
+        val messages = body["messages"] as? List<*>
+            ?: return Log.w("GroupPoller", "body didn't contain a list of messages")
+        messages.forEach { messageMap ->
+            val rawMessageAsJSON = messageMap as? Map<*,*>
+                ?: return@forEach Log.w("GroupPoller", "rawMessage wasn't a map as expected")
+            val data = rawMessageAsJSON["data"] as? String ?: return@forEach
+            val hash = rawMessageAsJSON["hash"] as? String ?: return@forEach
+            val timestamp = rawMessageAsJSON["timestamp"] as? Long ?: return@forEach
+            Log.d("GroupPoller", "Handling message with hash $hash")
+
+            val decoded = configFactoryProtocol.maybeDecryptForUser(
+                Base64.decode(data),
+                Sodium.KICKED_DOMAIN,
+                closedGroupSessionId,
+            )
+
+            if (decoded != null) {
+                Log.d("GroupPoller", "decoded kick message was for us")
+                val message = decoded.decodeToString()
+                if (Sodium.KICKED_REGEX.matches(message)) {
+                    val (sessionId, generation) = message.split("-")
+                    if (sessionId == userSessionId.hexString() && generation.toInt() > keys.currentGeneration()) {
+                        Log.d("GroupPoller", "We were kicked from the group, delete and stop polling")
+                    }
+                }
+            }
+
         }
     }
 
@@ -268,13 +307,12 @@ class ClosedGroupPoller(private val scope: CoroutineScope,
         }
     }
 
-    private fun handleMessages(response: RawResponse, snode: Snode, namespace: Int, keysConfig: GroupKeysConfig) {
+    private fun handleMessages(response: RawResponse, snode: Snode, keysConfig: GroupKeysConfig) {
         val body = response["body"] as RawResponse
         val messages = SnodeAPI.parseRawMessagesResponse(
             body,
             snode,
-            closedGroupSessionId.hexString(),
-            namespace = namespace
+            closedGroupSessionId.hexString()
         ) {
             return@parseRawMessagesResponse keysConfig.decrypt(it)
         }

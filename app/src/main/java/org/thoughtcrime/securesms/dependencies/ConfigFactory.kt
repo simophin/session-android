@@ -13,6 +13,7 @@ import network.loki.messenger.libsession_util.GroupKeysConfig
 import network.loki.messenger.libsession_util.GroupMembersConfig
 import network.loki.messenger.libsession_util.UserGroupsConfig
 import network.loki.messenger.libsession_util.UserProfile
+import network.loki.messenger.libsession_util.util.Sodium
 import org.session.libsession.messaging.messages.Destination
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.ConfigFactoryProtocol
@@ -31,6 +32,7 @@ import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 class ConfigFactory(
     private val context: Context,
     private val configDatabase: ConfigDatabase,
+    /** <ed25519 secret key,33 byte prefixed public key (hex encoded)> */
     private val maybeGetUserInfo: () -> Pair<ByteArray, String>?
 ) :
     ConfigFactoryProtocol {
@@ -39,7 +41,7 @@ class ConfigFactory(
         // config change, any message which would normally result in a config change which was sent
         // before `lastConfigMessage.timestamp - configChangeBufferPeriod` will not  actually have
         // it's changes applied (control text will still be added though)
-        val configChangeBufferPeriod: Long = (2 * 60 * 1000)
+        const val configChangeBufferPeriod: Long = (2 * 60 * 1000)
     }
 
     fun keyPairChanged() { // this should only happen restoring or clearing data
@@ -261,6 +263,42 @@ class ConfigFactory(
         )
     }
 
+    override fun encryptForUser(message: String,
+                                domain: String,
+                                recipientSessionId: SessionId,
+                                closedGroupSessionId: SessionId): ByteArray? {
+        val groupSecret = getGroupAuthInfo(closedGroupSessionId)?.first
+            ?: run {
+                Log.e("ConfigFactory", "Tried to encrypt a message without admin keys")
+                return null
+            }
+
+        return Sodium.encryptForMultipleSimple(
+            message = message,
+            // important! public key without prefix (32 bytes value)
+            recipient = recipientSessionId.publicKey,
+            ed25519SecretKey = groupSecret,
+            domain = domain,
+        )
+    }
+
+    override fun userSessionId(): SessionId? {
+        return maybeGetUserInfo()?.second?.let(SessionId::from)
+    }
+
+    override fun maybeDecryptForUser(encoded: ByteArray, domain: String, closedGroupSessionId: SessionId): ByteArray? {
+        val secret = maybeGetUserInfo()?.first ?: run {
+            Log.e("ConfigFactory", "No user ed25519 secret key decrypting a message for us")
+            return null
+        }
+        return Sodium.decryptForMultipleSimple(
+            encoded = encoded,
+            ed25519SecretKey = secret,
+            domain = domain,
+            senderPubKey = closedGroupSessionId.pubKeyBytes
+        )
+    }
+
     override fun getUserConfigs(): List<ConfigBase> =
         listOfNotNull(user, contacts, convoVolatile, userGroups)
 
@@ -410,6 +448,12 @@ class ConfigFactory(
     ) {
         val pubKey = groupInfo.id().hexString()
         val timestamp = SnodeAPI.nowWithOffset
+
+        // this would be nicer with a .any iteration or something but the base types don't line up
+        val anyNeedDump = groupKeys.needsDump() || groupInfo.needsDump() || groupMembers.needsDump()
+        if (!anyNeedDump) return Log.d("ConfigFactory", "Group config doesn't need dump, skipping")
+        else Log.d("ConfigFactory", "Group config needs dump, storing and notifying")
+
         configDatabase.storeGroupConfigs(pubKey, groupKeys.dump(), groupInfo.dump(), groupMembers.dump(), timestamp)
         _configUpdateNotifications.trySend(groupInfo.id())
     }
