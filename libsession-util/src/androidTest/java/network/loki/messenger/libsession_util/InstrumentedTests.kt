@@ -2,13 +2,26 @@ package network.loki.messenger.libsession_util
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import network.loki.messenger.libsession_util.util.*
+import network.loki.messenger.libsession_util.util.BaseCommunityInfo
+import network.loki.messenger.libsession_util.util.Contact
+import network.loki.messenger.libsession_util.util.Conversation
+import network.loki.messenger.libsession_util.util.ExpiryMode
+import network.loki.messenger.libsession_util.util.GroupMember
+import network.loki.messenger.libsession_util.util.KeyPair
+import network.loki.messenger.libsession_util.util.Sodium
+import network.loki.messenger.libsession_util.util.UserPic
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.CoreMatchers.hasItem
 import org.hamcrest.CoreMatchers.not
 import org.hamcrest.CoreMatchers.notNullValue
 import org.hamcrest.MatcherAssert.assertThat
-import org.junit.Assert.*
+import org.junit.Assert.assertArrayEquals
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotEquals
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.session.libsignal.utilities.Hex
@@ -74,6 +87,18 @@ class InstrumentedTests {
         contacts.set(contact.copy(name = "test2"))
         contacts.set(contact.copy(name = "test"))
         assertTrue(contacts.dirty())
+    }
+
+    @Test
+    fun test_multi_encrypt() {
+        val user = keyPair
+        val xUserKey = Sodium.ed25519PkToCurve25519(user.pubKey)
+        val groupKey = groupKeyPair
+        val test = "test".encodeToByteArray()
+        val encoded = Sodium.encryptForMultipleSimple(arrayOf(test), arrayOf(xUserKey), groupKey.secretKey, "test")!!
+        val xGroupKey = Sodium.ed25519PkToCurve25519(groupKey.pubKey)
+        val decoded = Sodium.decryptForMultipleSimple(encoded, user.secretKey, xGroupKey, "test")
+        assertEquals(test, decoded)
     }
 
     @Test

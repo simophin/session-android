@@ -1,4 +1,5 @@
 #include "util.h"
+#include "sodium/randombytes.h"
 #include <sodium/crypto_sign.h>
 #include <session/multi_encrypt.hpp>
 #include <string>
@@ -310,7 +311,7 @@ Java_network_loki_messenger_libsession_1util_util_Sodium_encryptForMultipleSimpl
 
 extern "C"
 JNIEXPORT jbyteArray JNICALL
-Java_network_loki_messenger_libsession_1util_util_Sodium_encryptForMultipleSimple___3Ljava_lang_String_2_3Ljava_lang_String_2_3BLjava_lang_String_2(
+Java_network_loki_messenger_libsession_1util_util_Sodium_encryptForMultipleSimple___3_3B_3_3B_3BLjava_lang_String_2(
         JNIEnv *env, jobject thiz, jobjectArray messages, jobjectArray recipients,
         jbyteArray ed25519_secret_key, jstring domain) {
     std::vector<session::ustring_view> message_vec{};
@@ -321,25 +322,28 @@ Java_network_loki_messenger_libsession_1util_util_Sodium_encryptForMultipleSimpl
         return nullptr;
     }
     for (int i = 0; i < size; i++) {
-        jstring message_j = static_cast<jstring>(env->GetObjectArrayElement(messages, i));
-        jstring recipient_j = static_cast<jstring>(env->GetObjectArrayElement(recipients, i));
-        session::ustring message = util::ustring_from_jstring(env, message_j);
-        session::ustring recipient = util::ustring_from_jstring(env, recipient_j);
+        jbyteArray message_j = static_cast<jbyteArray>(env->GetObjectArrayElement(messages, i));
+        jbyteArray recipient_j = static_cast<jbyteArray>(env->GetObjectArrayElement(recipients, i));
+        session::ustring message = util::ustring_from_bytes(env, message_j);
+        session::ustring recipient = util::ustring_from_bytes(env, recipient_j);
+
         message_vec.emplace_back(session::ustring_view {message});
         recipient_vec.emplace_back(session::ustring_view{recipient});
     }
 
     auto sk = util::ustring_from_bytes(env, ed25519_secret_key);
-    auto pk = sk.substr(32);
-    sk = sk.substr(0, 32);
+    std::array<unsigned char, 24> random_nonce;
+    randombytes_buf(random_nonce.data(), random_nonce.size());
+    session::ustring nonce{random_nonce.data(), 24};
+
     auto domain_string = env->GetStringUTFChars(domain, nullptr);
 
     auto result = session::encrypt_for_multiple_simple(
             message_vec,
             recipient_vec,
             sk,
-            pk,
-            domain_string
+            domain_string,
+            nonce
     );
 
     env->ReleaseStringUTFChars(domain, domain_string);

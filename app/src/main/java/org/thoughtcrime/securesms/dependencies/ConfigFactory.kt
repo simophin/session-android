@@ -295,7 +295,7 @@ class ConfigFactory(
             encoded = encoded,
             ed25519SecretKey = secret,
             domain = domain,
-            senderPubKey = closedGroupSessionId.pubKeyBytes
+            senderPubKey = Sodium.ed25519PkToCurve25519(closedGroupSessionId.pubKeyBytes)
         )
     }
 

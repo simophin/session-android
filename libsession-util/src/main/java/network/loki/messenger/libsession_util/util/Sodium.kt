@@ -18,8 +18,8 @@ object Sodium {
     ): ByteArray?
 
     external fun encryptForMultipleSimple(
-        messages: Array<String>,
-        recipients: Array<String>,
+        messages: Array<ByteArray>,
+        recipients: Array<ByteArray>,
         ed25519SecretKey: ByteArray,
         domain: String
     ): ByteArray?

@@ -104,7 +104,6 @@ import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.Namespace
 import org.session.libsignal.utilities.SessionId
 import org.session.libsignal.utilities.guava.Optional
-import org.session.libsignal.utilities.removingIdPrefixIfNeeded
 import org.session.libsignal.utilities.toHexString
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper
 import org.thoughtcrime.securesms.database.model.MessageId
@@ -1657,8 +1656,8 @@ open class Storage(
         val toDelete = mutableListOf<String>()
 
         val revocationStore = Sodium.encryptForMultipleSimple(
-            removedMembers.map{"$it-${keys.currentGeneration()}"}.toTypedArray(),
-            removedMembers.map { it.removingIdPrefixIfNeeded() }.toTypedArray(),
+            removedMembers.map{"$it-${keys.currentGeneration()}".encodeToByteArray()}.toTypedArray(),
+            removedMembers.map(SessionId::from).map(SessionId::pubKeyBytes).toTypedArray(),
             adminKey,
             Sodium.KICKED_DOMAIN
         )?.let { encryptedForMembers ->
