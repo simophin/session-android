@@ -263,25 +263,6 @@ class ConfigFactory(
         )
     }
 
-    override fun encryptForUser(message: String,
-                                domain: String,
-                                recipientSessionId: SessionId,
-                                closedGroupSessionId: SessionId): ByteArray? {
-        val groupSecret = getGroupAuthInfo(closedGroupSessionId)?.first
-            ?: run {
-                Log.e("ConfigFactory", "Tried to encrypt a message without admin keys")
-                return null
-            }
-
-        return Sodium.encryptForMultipleSimple(
-            message = message,
-            // important! public key without prefix (32 bytes value)
-            recipient = recipientSessionId.publicKey,
-            ed25519SecretKey = groupSecret,
-            domain = domain,
-        )
-    }
-
     override fun userSessionId(): SessionId? {
         return maybeGetUserInfo()?.second?.let(SessionId::from)
     }

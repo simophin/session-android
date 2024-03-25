@@ -45,11 +45,6 @@ interface ConfigFactoryProtocol {
         members: GroupMembersConfig
     ): GroupKeysConfig?
 
-    fun encryptForUser(message: String,
-                       domain: String,
-                       recipientSessionId: SessionId,
-                       closedGroupSessionId: SessionId): ByteArray?
-
     fun maybeDecryptForUser(encoded: ByteArray,
                             domain: String,
                             closedGroupSessionId: SessionId): ByteArray?

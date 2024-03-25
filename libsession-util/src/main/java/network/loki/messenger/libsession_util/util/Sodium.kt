@@ -10,12 +10,6 @@ object Sodium {
     }
     external fun ed25519KeyPair(seed: ByteArray): KeyPair
     external fun ed25519PkToCurve25519(pk: ByteArray): ByteArray
-    external fun encryptForMultipleSimple(
-        message: String,
-        recipient: String,
-        ed25519SecretKey: ByteArray,
-        domain: String
-    ): ByteArray?
 
     external fun encryptForMultipleSimple(
         messages: Array<ByteArray>,

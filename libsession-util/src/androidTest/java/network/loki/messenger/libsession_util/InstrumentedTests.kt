@@ -94,11 +94,13 @@ class InstrumentedTests {
         val user = keyPair
         val xUserKey = Sodium.ed25519PkToCurve25519(user.pubKey)
         val groupKey = groupKeyPair
-        val test = "test".encodeToByteArray()
-        val encoded = Sodium.encryptForMultipleSimple(arrayOf(test), arrayOf(xUserKey), groupKey.secretKey, "test")!!
         val xGroupKey = Sodium.ed25519PkToCurve25519(groupKey.pubKey)
+
+        val test = "test"
+
+        val encoded = Sodium.encryptForMultipleSimple(arrayOf(test.encodeToByteArray()), arrayOf(xUserKey), groupKey.secretKey, "test")!!
         val decoded = Sodium.decryptForMultipleSimple(encoded, user.secretKey, xGroupKey, "test")
-        assertEquals(test, decoded)
+        assertEquals(test, decoded?.decodeToString())
     }
 
     @Test
