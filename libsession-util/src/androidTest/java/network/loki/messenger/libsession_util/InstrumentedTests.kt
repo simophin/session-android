@@ -104,6 +104,23 @@ class InstrumentedTests {
     }
 
     @Test
+    fun test_multi_encrypt_from_user_groups() {
+        val user = keyPair
+        val xUserKey = Sodium.ed25519PkToCurve25519(user.pubKey)
+        val groups = UserGroupsConfig.newInstance(user.secretKey)
+        val group = groups.createGroup()
+        val groupSk = group.adminKey
+        val groupPub = group.groupSessionId.pubKeyBytes
+        val groupXPub = Sodium.ed25519PkToCurve25519(groupPub)
+
+        val test = "test"
+
+        val encoded = Sodium.encryptForMultipleSimple(arrayOf(test.encodeToByteArray()), arrayOf(xUserKey), groupSk, "test")!!
+        val decoded = Sodium.decryptForMultipleSimple(encoded, user.secretKey, groupXPub, "test")
+        assertEquals(test, decoded?.decodeToString())
+    }
+
+    @Test
     fun jni_contacts() {
         val contacts = Contacts.newInstance(keyPair.secretKey)
         val definitelyRealId = "050000000000000000000000000000000000000000000000000000000000000000"

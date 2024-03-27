@@ -116,8 +116,8 @@ class ClosedGroupPoller(private val scope: CoroutineScope,
             hashesToExtend += members.currentHashes()
             hashesToExtend += keys.currentHashes()
 
-            val revokedIndex = 0
-            val keysIndex = 1
+            val keysIndex = 0
+            val revokedIndex = 1
             val infoIndex = 2
             val membersIndex = 3
             val messageIndex = 4
@@ -163,7 +163,7 @@ class ClosedGroupPoller(private val scope: CoroutineScope,
                     signCallback
             ) ?: return null
 
-            val requests = mutableListOf(revokedPoll, keysPoll, infoPoll, membersPoll, messagePoll)
+            val requests = mutableListOf(keysPoll, revokedPoll, infoPoll, membersPoll, messagePoll)
 
             if (hashesToExtend.isNotEmpty()) {
                 SnodeAPI.buildAuthenticatedAlterTtlBatchRequest(
@@ -260,8 +260,10 @@ class ClosedGroupPoller(private val scope: CoroutineScope,
                 val message = decoded.decodeToString()
                 if (Sodium.KICKED_REGEX.matches(message)) {
                     val (sessionId, generation) = message.split("-")
-                    if (sessionId == userSessionId.hexString() && generation.toInt() > keys.currentGeneration()) {
+                    if (sessionId == userSessionId.hexString() && generation.toInt() >= keys.currentGeneration()) {
                         Log.d("GroupPoller", "We were kicked from the group, delete and stop polling")
+                        stop()
+                        configFactoryProtocol.removeGroup(closedGroupSessionId)
                     }
                 }
             }
