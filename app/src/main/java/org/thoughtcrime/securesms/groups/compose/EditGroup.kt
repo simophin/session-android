@@ -28,7 +28,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
@@ -59,7 +58,6 @@ import com.squareup.phrase.Phrase
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import network.loki.messenger.R
@@ -178,8 +176,6 @@ class EditGroupViewModel @AssistedInject constructor(
     private val configFactory: ConfigFactory
 ): ViewModel() {
 
-    val processingStream = Channel<EditGroupEvent>(Channel.UNLIMITED)
-
     val viewState = viewModelScope.launchMolecule(Immediate) {
 
         val currentUserId = rememberSaveable {
@@ -195,7 +191,7 @@ class EditGroupViewModel @AssistedInject constructor(
             )
         }
 
-        val closedGroupInfo by configFactory.configUpdateNotifications.map(SessionId::hexString).filter { it == groupSessionId }
+        val closedGroupInfo by configFactory.configUpdateNotifications.map(SessionId::hexString).filter(groupSessionId::equals)
             .map {
                 storage.getClosedGroupDisplayInfo(it)!! to getMembers()
             }.collectAsState(initial = storage.getClosedGroupDisplayInfo(groupSessionId)!! to getMembers())
@@ -204,8 +200,6 @@ class EditGroupViewModel @AssistedInject constructor(
 
         val name = closedGroup.name
         val description = closedGroup.description
-
-        val scope = rememberCoroutineScope()
 
         EditGroupState(
             EditGroupViewState(

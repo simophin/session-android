@@ -28,7 +28,7 @@ import org.session.libsignal.utilities.Snode
 import kotlin.time.Duration.Companion.days
 
 class ClosedGroupPoller(private val scope: CoroutineScope,
-                        private val execute: CoroutineDispatcher,
+                        private val executor: CoroutineDispatcher,
                         private val closedGroupSessionId: SessionId,
                         private val configFactoryProtocol: ConfigFactoryProtocol) {
 
@@ -71,7 +71,7 @@ class ClosedGroupPoller(private val scope: CoroutineScope,
 
         if (ENABLE_LOGGING) Log.d("ClosedGroupPoller", "Starting closed group poller for ${closedGroupSessionId.hexString().take(4)}")
         job?.cancel()
-        job = scope.launch(execute) {
+        job = scope.launch(executor) {
             val closedGroups = configFactoryProtocol.userGroups ?: return@launch
             isRunning = true
             while (isActive && isRunning) {
@@ -263,7 +263,7 @@ class ClosedGroupPoller(private val scope: CoroutineScope,
                     if (sessionId == userSessionId.hexString() && generation.toInt() >= keys.currentGeneration()) {
                         Log.d("GroupPoller", "We were kicked from the group, delete and stop polling")
                         stop()
-                        configFactoryProtocol.removeGroup(closedGroupSessionId)
+                        // TODO: add in async group leaving job
                     }
                 }
             }

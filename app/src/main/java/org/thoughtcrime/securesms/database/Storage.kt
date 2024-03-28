@@ -736,7 +736,6 @@ open class Storage(
                 pushRegistry.registerForGroup(closedGroup.groupSessionId)
             }
         }
-        // TODO: add in removing legacy closed groups via config update
 
         for (group in lgc) {
             val groupId = GroupUtil.doubleEncodeGroupID(group.sessionId.hexString())
