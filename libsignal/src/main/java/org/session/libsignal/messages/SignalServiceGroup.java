@@ -40,7 +40,9 @@ public class SignalServiceGroup {
     CREATION,
     NAME_CHANGE,
     MEMBER_ADDED,
-    MEMBER_REMOVED
+    MEMBER_REMOVED,
+    LEAVING,
+    ERROR_QUIT
   }
 
   private final byte[]                            groupId;

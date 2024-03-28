@@ -150,10 +150,14 @@ interface StorageProtocol {
     fun removeClosedGroupPublicKey(groupPublicKey: String)
     fun addClosedGroupEncryptionKeyPair(encryptionKeyPair: ECKeyPair, groupPublicKey: String, timestamp: Long)
     fun removeAllClosedGroupEncryptionKeyPairs(groupPublicKey: String)
+    fun removeClosedGroupThread(threadID: Long)
     fun insertIncomingInfoMessage(context: Context, senderPublicKey: String, groupID: String, type: SignalServiceGroup.Type,
-        name: String, members: Collection<String>, admins: Collection<String>, sentTimestamp: Long)
+        name: String, members: Collection<String>, admins: Collection<String>, sentTimestamp: Long): Long?
+
+    fun updateInfoMessage(context: Context, messageId: Long, groupID: String, type: SignalServiceGroup.Type, name: String, members: Collection<String>)
+
     fun insertOutgoingInfoMessage(context: Context, groupID: String, type: SignalServiceGroup.Type, name: String,
-        members: Collection<String>, admins: Collection<String>, threadID: Long, sentTimestamp: Long)
+        members: Collection<String>, admins: Collection<String>, threadID: Long, sentTimestamp: Long): Long?
     fun isLegacyClosedGroup(publicKey: String): Boolean
     fun getClosedGroupEncryptionKeyPairs(groupPublicKey: String): MutableList<ECKeyPair>
     fun getLatestClosedGroupEncryptionKeyPair(groupPublicKey: String): ECKeyPair?

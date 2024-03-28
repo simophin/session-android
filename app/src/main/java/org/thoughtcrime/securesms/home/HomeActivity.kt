@@ -478,7 +478,9 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
 
     override fun onLongConversationClick(thread: ThreadRecord) {
         val bottomSheet = ConversationOptionsBottomSheet(this)
+        bottomSheet.publicKey = publicKey
         bottomSheet.thread = thread
+        bottomSheet.group = groupDatabase.getGroup(thread.recipient.address.toString()).orNull()
         bottomSheet.onViewDetailsTapped = {
             bottomSheet.dismiss()
             val userDetailsBottomSheet = UserDetailsBottomSheet()
@@ -627,15 +629,24 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     private fun deleteConversation(thread: ThreadRecord) {
         val threadID = thread.threadId
         val recipient = thread.recipient
+        if (recipient.isGroupRecipient) {
+            val group = groupDatabase.getGroup(recipient.address.toString()).orNull()
+            if (group != null && !group.members.map { it.toString() }.contains(publicKey) || group == null) {
+                threadDb.deleteConversation(threadID)
+                // Update the badge count
+                ApplicationContext.getInstance(this).messageNotifier.updateNotification(this)
+                return
+            }
+        }
         val message = if (recipient.isGroupRecipient) {
             val group = groupDatabase.getGroup(recipient.address.toString()).orNull()
             if (group != null && group.admins.map { it.toString() }.contains(textSecurePreferences.getLocalNumber())) {
                 "Because you are the creator of this group it will be deleted for everyone. This cannot be undone."
             } else {
-                resources.getString(R.string.activity_home_leave_group_dialog_message)
+                String.format(resources.getString(R.string.activity_home_leave_group_dialog_message), thread.recipient.name)
             }
         } else {
-            resources.getString(R.string.activity_home_delete_conversation_dialog_message)
+            String.format(resources.getString(R.string.activity_home_delete_conversation_dialog_message), thread.recipient.name)
         }
 
         showSessionDialog {
@@ -662,16 +673,16 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                     val v2OpenGroup = DatabaseComponent.get(context).lokiThreadDatabase().getOpenGroupChat(threadID)
                     if (v2OpenGroup != null) {
                         v2OpenGroup.apply { OpenGroupManager.delete(server, room, context) }
-                    } else {
+                    } else if (!isClosedGroup){
                         lifecycleScope.launch(Dispatchers.IO) {
                             threadDb.deleteConversation(threadID)
                         }
                     }
                     // Update the badge count
                     ApplicationContext.getInstance(context).messageNotifier.updateNotification(context)
-                    // Notify the user
+    if (!isClosedGroup) {                // Notify the user
                     val toastMessage = if (recipient.isGroupRecipient) R.string.MessageRecord_left_group else R.string.activity_home_conversation_deleted_message
-                    Toast.makeText(context, toastMessage, Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, toastMessage, Toast.LENGTH_LONG).show()}
                 }
             }
             button(R.string.no)

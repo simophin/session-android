@@ -6,6 +6,7 @@
     <string name="delete">Delete</string>
     <string name="resend">Resend</string>
     <string name="reply">Reply</string>
+    <string name="leave">Leave</string>
     <string name="ban">Ban</string>
     <string name="please_wait">Please wait…</string>
     <string name="save">Save</string>
@@ -341,6 +342,9 @@
     <string name="MediaRepository_all_media">All media</string>
     <!-- MessageRecord -->
     <string name="MessageRecord_message_encrypted_with_a_legacy_protocol_version_that_is_no_longer_supported">Received a message encrypted using an old version of Session that is no longer supported. Please ask the sender to update to the most recent version and resend the message.</string>
+    <string name="MessageRecord_leaving_group">Leaving...</string>
+    <string name="MessageRecord_leave_group_error">Failed to leave Group!</string>
+    <string name="MessageRecord_unable_leave_group">Unable to leave the Group, please try again</string>
     <string name="MessageRecord_left_group">You have left the group.</string>
     <string name="MessageRecord_you_updated_group">You updated the group.</string>
     <string name="MessageRecord_s_updated_group">%s updated the group.</string>
@@ -765,9 +769,9 @@
     <string name="activity_pn_mode_no_option_picked_dialog_title">Please Pick an Option</string>
     <string name="activity_home_empty_state_message">You don\'t have any contacts yet</string>
     <string name="activity_home_empty_state_button_title">Start a Session</string>
-    <string name="activity_home_leave_group_dialog_message">Are you sure you want to leave this group?</string>
+    <string name="activity_home_leave_group_dialog_message">Are you sure you want to leave %s?</string>
     <string name="activity_home_leaving_group_failed_message">"Couldn\'t leave group"</string>
-    <string name="activity_home_delete_conversation_dialog_message">Are you sure you want to delete this conversation?</string>
+    <string name="activity_home_delete_conversation_dialog_message">Are you sure you want to delete your conversation with %s?</string>
     <string name="activity_home_conversation_deleted_message">Conversation deleted</string>
     <string name="activity_seed_title">Your Recovery Phrase</string>
     <string name="activity_seed_title_2">Meet your recovery phrase</string>

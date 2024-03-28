@@ -178,6 +178,22 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         }
     }
 
+    fun updateInfoMessage(messageId: Long, body: String?, runThreadUpdate: Boolean = true) {
+        val threadId = getThreadIdForMessage(messageId)
+        val db = databaseHelper.writableDatabase
+        db.execSQL(
+            "UPDATE $TABLE_NAME SET $BODY = ? WHERE $ID = ?",
+            arrayOf(body, messageId.toString())
+        )
+        with (get(context).threadDatabase()) {
+            setLastSeen(threadId)
+            setHasSent(threadId, true)
+            if (runThreadUpdate) {
+                update(threadId, true)
+            }
+        }
+    }
+
     fun updateSentTimestamp(messageId: Long, newTimestamp: Long, threadId: Long) {
         val db = databaseHelper.writableDatabase
         db.execSQL(

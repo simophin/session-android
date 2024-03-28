@@ -1,5 +1,6 @@
 package org.thoughtcrime.securesms.database
 
+import android.content.ContentValues
 import android.content.Context
 import android.net.Uri
 import com.google.protobuf.ByteString
@@ -1217,25 +1218,32 @@ open class Storage(
         DatabaseComponent.get(context).groupDatabase().updateZombieMembers(groupID, members)
     }
 
-    override fun insertIncomingInfoMessage(context: Context, senderPublicKey: String, groupID: String, type: SignalServiceGroup.Type, name: String, members: Collection<String>, admins: Collection<String>, sentTimestamp: Long) {
+    override fun insertIncomingInfoMessage(context: Context, senderPublicKey: String, groupID: String, type: SignalServiceGroup.Type, name: String, members: Collection<String>, admins: Collection<String>, sentTimestamp: Long): Long? {
         val group = SignalServiceGroup(type, GroupUtil.getDecodedGroupIDAsData(groupID), SignalServiceGroup.GroupType.SIGNAL, name, members.toList(), null, admins.toList())
         val m = IncomingTextMessage(fromSerialized(senderPublicKey), 1, sentTimestamp, "", Optional.of(group), 0, 0, true, false)
         val updateData = UpdateMessageData.buildGroupUpdate(type, name, members)?.toJSON()
         val infoMessage = IncomingGroupMessage(m, updateData, true)
         val smsDB = DatabaseComponent.get(context).smsDatabase()
-        smsDB.insertMessageInbox(infoMessage,  true)
+        return smsDB.insertMessageInbox(infoMessage,  true).orNull().messageId
     }
 
-    override fun insertOutgoingInfoMessage(context: Context, groupID: String, type: SignalServiceGroup.Type, name: String, members: Collection<String>, admins: Collection<String>, threadID: Long, sentTimestamp: Long) {
+    override fun updateInfoMessage(context: Context, messageId: Long, groupID: String, type: SignalServiceGroup.Type, name: String, members: Collection<String>) {
+        val mmsDB = DatabaseComponent.get(context).mmsDatabase()
+        val updateData = UpdateMessageData.buildGroupUpdate(type, name, members)?.toJSON()
+        mmsDB.updateInfoMessage(messageId, updateData)
+    }
+
+    override fun insertOutgoingInfoMessage(context: Context, groupID: String, type: SignalServiceGroup.Type, name: String, members: Collection<String>, admins: Collection<String>, threadID: Long, sentTimestamp: Long): Long? {
         val userPublicKey = getUserPublicKey()!!
         val recipient = Recipient.from(context, fromSerialized(groupID), false)
         val updateData = UpdateMessageData.buildGroupUpdate(type, name, members)?.toJSON() ?: ""
         val infoMessage = OutgoingGroupMediaMessage(recipient, updateData, groupID, null, sentTimestamp, 0, 0, true, null, listOf(), listOf())
         val mmsDB = DatabaseComponent.get(context).mmsDatabase()
         val mmsSmsDB = DatabaseComponent.get(context).mmsSmsDatabase()
-        if (mmsSmsDB.getMessageFor(sentTimestamp, userPublicKey) != null) return
+        if (mmsSmsDB.getMessageFor(sentTimestamp, userPublicKey) != null) return null
         val infoMessageID = mmsDB.insertMessageOutbox(infoMessage, threadID, false, null, runThreadUpdate = true)
         mmsDB.markAsSent(infoMessageID, true)
+        return infoMessageID
     }
 
     override fun isLegacyClosedGroup(publicKey: String): Boolean {
@@ -1274,6 +1282,10 @@ open class Storage(
 
     override fun removeAllClosedGroupEncryptionKeyPairs(groupPublicKey: String) {
         DatabaseComponent.get(context).lokiAPIDatabase().removeAllClosedGroupEncryptionKeyPairs(groupPublicKey)
+    }
+
+    override fun removeClosedGroupThread(threadID: Long) {
+        DatabaseComponent.get(context).threadDatabase().deleteConversation(threadID)
     }
 
     override fun updateFormationTimestamp(groupID: String, formationTimestamp: Long) {

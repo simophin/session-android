@@ -96,6 +96,12 @@ class ControlMessageView : LinearLayout {
                     binding.expirationTimerView.setExpirationTime(message.expireStarted, message.expiresIn)
                 }
             }
+            message.isGroupUpdateMessage -> {
+                val updateMessageData: UpdateMessageData? = UpdateMessageData.fromJSON(message.body)
+                if (updateMessageData?.isGroupErrorQuitKind() == true) {
+                    binding.textView.setTextColor(context.getColor(R.color.destructive))
+                }
+            }
         }
 
         binding.textView.isGone = message.isCallLog

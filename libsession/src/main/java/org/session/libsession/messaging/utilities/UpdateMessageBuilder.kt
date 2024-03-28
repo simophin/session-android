@@ -198,6 +198,29 @@ object UpdateMessageBuilder {
             }
             is UpdateMessageData.Kind.OpenGroupInvitation -> ""
         }
+            is UpdateMessageData.Kind.GroupMemberLeft -> {
+                message = if (isOutgoing) {
+                    context.getString(R.string.MessageRecord_left_group)
+                } else {
+                    context.getString(R.string.ConversationItem_group_action_left, senderName)
+                }
+            }
+            is UpdateMessageData.Kind.GroupLeaving -> {
+                message = if (isOutgoing) {
+                    context.getString(R.string.MessageRecord_leaving_group)
+                } else {
+                    ""
+                }
+            }
+            is UpdateMessageData.Kind.GroupErrorQuit -> {
+                message = if (isInConversation) {
+                    context.getString(R.string.MessageRecord_unable_leave_group)
+                } else {
+                    context.getString(R.string.MessageRecord_leave_group_error)
+                }
+            }
+        }
+        return message
     }
 
     fun Context.youOrSender(sessionId: String) = if (storage.getUserPublicKey() == sessionId) getString(R.string.MessageRecord_you) else getSenderName(sessionId)

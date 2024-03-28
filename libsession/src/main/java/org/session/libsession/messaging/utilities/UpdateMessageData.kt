@@ -28,7 +28,9 @@ class UpdateMessageData () {
         JsonSubTypes.Type(Kind.GroupAvatarUpdated::class, name = "GroupAvatarUpdated"),
         JsonSubTypes.Type(Kind.GroupMemberUpdated::class, name = "GroupMemberUpdated"),
         JsonSubTypes.Type(Kind.GroupExpirationUpdated::class, name = "GroupExpirationUpdated"),
-        JsonSubTypes.Type(Kind.GroupInvitation::class, name = "GroupInvitation")
+        JsonSubTypes.Type(Kind.GroupInvitation::class, name = "GroupInvitation"),
+        JsonSubTypes.Type(Kind.GroupLeaving::class, name = "GroupLeaving"),
+        JsonSubTypes.Type(Kind.GroupErrorQuit::class, name = "GroupErrorQuit")
     )
     sealed class Kind {
         data object GroupCreation: Kind()
@@ -50,6 +52,8 @@ class UpdateMessageData () {
         class OpenGroupInvitation(val groupUrl: String, val groupName: String): Kind() {
             constructor(): this("", "")
         }
+        data object GroupLeaving: Kind()
+        data object GroupErrorQuit: Kind()
         data class GroupInvitation(val invitingAdmin: String) : Kind() {
             constructor(): this("")
         }
@@ -110,6 +114,8 @@ class UpdateMessageData () {
                     }?.let { UpdateMessageData(it) }
                 }
                 inner.hasMemberLeftMessage() -> UpdateMessageData(Kind.GroupMemberLeft)
+                SignalServiceGroup.Type.LEAVING -> UpdateMessageData(Kind.GroupLeaving())
+                SignalServiceGroup.Type.ERROR_QUIT -> UpdateMessageData(Kind.GroupErrorQuit())
                 else -> null
             }
         }
@@ -130,5 +136,13 @@ class UpdateMessageData () {
 
     fun toJSON(): String {
         return JsonUtil.toJson(this)
+    }
+
+    fun isGroupLeavingKind(): Boolean {
+        return kind is Kind.GroupLeaving
+    }
+
+    fun isGroupErrorQuitKind(): Boolean {
+        return kind is Kind.GroupErrorQuit
     }
 }

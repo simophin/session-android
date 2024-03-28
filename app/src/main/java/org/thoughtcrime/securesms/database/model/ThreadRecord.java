@@ -83,18 +83,10 @@ public class ThreadRecord extends DisplayRecord {
   @Override
   public SpannableString getDisplayBody(@NonNull Context context) {
     if (isGroupUpdateMessage()) {
-      UpdateMessageData updateMessageData = UpdateMessageData.Companion.fromJSON(getBody());
-      if (updateMessageData.getKind() instanceof UpdateMessageData.Kind.GroupInvitation) {
-        // The recipient here is 'intentionally wrong' because ThreadRecord doesn't have a reference to the individual snippet recipient
-        return emphasisAdded(
-                String.valueOf(
-                        UpdateMessageBuilder.buildGroupUpdateMessage(
-                                context,
-                                updateMessageData,
-                                getRecipient().getAddress().serialize(), isOutgoing()
-                        )
-                )
-        );
+      String body = getBody();
+      if (!body.isEmpty()) {
+        UpdateMessageData updateMessageData = UpdateMessageData.Companion.fromJSON(body);
+        return emphasisAdded(UpdateMessageBuilder.INSTANCE.buildGroupUpdateMessage(context, updateMessageData, null, isOutgoing(), false));
       }
       return emphasisAdded(context.getString(R.string.ThreadRecord_group_updated));
     } else if (isOpenGroupInvitation()) {
@@ -198,6 +190,28 @@ public class ThreadRecord extends DisplayRecord {
 
   public int getInitialRecipientHash() {
     return initialRecipientHash;
+  }
+
+  public boolean isLeavingGroup() {
+    if (isGroupUpdateMessage()) {
+      String body = getBody();
+      if (!body.isEmpty()) {
+        UpdateMessageData updateMessageData = UpdateMessageData.Companion.fromJSON(body);
+        return updateMessageData.isGroupLeavingKind();
+      }
+    }
+    return false;
+  }
+
+  public boolean isErrorLeavingGroup() {
+    if (isGroupUpdateMessage()) {
+      String body = getBody();
+      if (!body.isEmpty()) {
+        UpdateMessageData updateMessageData = UpdateMessageData.Companion.fromJSON(body);
+        return updateMessageData.isGroupErrorQuitKind();
+      }
+    }
+    return false;
   }
 
   public String getInvitingAdminId() {
