@@ -85,8 +85,15 @@ public class ThreadRecord extends DisplayRecord {
     if (isGroupUpdateMessage()) {
       String body = getBody();
       if (!body.isEmpty()) {
-        UpdateMessageData updateMessageData = UpdateMessageData.Companion.fromJSON(body);
-        return emphasisAdded(UpdateMessageBuilder.INSTANCE.buildGroupUpdateMessage(context, updateMessageData, null, isOutgoing(), false));
+        UpdateMessageData updateMessageData = UpdateMessageData.fromJSON(body);
+        if (updateMessageData != null) {
+          return emphasisAdded(
+                  UpdateMessageBuilder.buildGroupUpdateMessage(context, updateMessageData, null, isOutgoing(), false)
+                          .toString()
+          );
+        } else {
+          return null;
+        }
       }
       return emphasisAdded(context.getString(R.string.ThreadRecord_group_updated));
     } else if (isOpenGroupInvitation()) {

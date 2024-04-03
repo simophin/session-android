@@ -1061,9 +1061,10 @@ fun MessageReceiver.disableLocalGroupAndUnsubscribe(groupPublicKey: String, grou
     LegacyClosedGroupPollerV2.shared.stopPolling(groupPublicKey)
 
     if (delete) {
-        val threadId = storage.getOrCreateThreadIdFor(Address.fromSerialized(groupID))
-        storage.cancelPendingMessageSendJobs(threadId)
-        storage.deleteConversation(threadId)
+        storage.getThreadId(Address.fromSerialized(groupID))?.let { threadId ->
+            storage.cancelPendingMessageSendJobs(threadId)
+            storage.deleteConversation(threadId)
+        }
     }
 }
 // endregion

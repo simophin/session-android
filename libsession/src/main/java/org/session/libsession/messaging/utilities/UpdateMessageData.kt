@@ -85,6 +85,8 @@ class UpdateMessageData () {
                 SignalServiceGroup.Type.MEMBER_ADDED -> UpdateMessageData(Kind.GroupMemberAdded(members))
                 SignalServiceGroup.Type.MEMBER_REMOVED -> UpdateMessageData(Kind.GroupMemberRemoved(members))
                 SignalServiceGroup.Type.QUIT -> UpdateMessageData(Kind.GroupMemberLeft)
+                SignalServiceGroup.Type.LEAVING -> UpdateMessageData(Kind.GroupLeaving)
+                SignalServiceGroup.Type.ERROR_QUIT -> UpdateMessageData(Kind.GroupErrorQuit)
                 else -> null
             }
         }
@@ -114,8 +116,6 @@ class UpdateMessageData () {
                     }?.let { UpdateMessageData(it) }
                 }
                 inner.hasMemberLeftMessage() -> UpdateMessageData(Kind.GroupMemberLeft)
-                SignalServiceGroup.Type.LEAVING -> UpdateMessageData(Kind.GroupLeaving())
-                SignalServiceGroup.Type.ERROR_QUIT -> UpdateMessageData(Kind.GroupErrorQuit())
                 else -> null
             }
         }
@@ -124,6 +124,7 @@ class UpdateMessageData () {
             return UpdateMessageData(Kind.OpenGroupInvitation(url, name))
         }
 
+        @JvmStatic
         fun fromJSON(json: String): UpdateMessageData? {
              return try {
                 JsonUtil.fromJson(json, UpdateMessageData::class.java)

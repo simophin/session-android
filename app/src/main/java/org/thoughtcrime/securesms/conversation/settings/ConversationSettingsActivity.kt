@@ -11,15 +11,22 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityConversationSettingsBinding
+import org.session.libsession.messaging.sending_receiving.MessageSender
+import org.session.libsession.utilities.Address
+import org.session.libsession.utilities.GroupUtil
+import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsignal.utilities.Log
+import org.session.libsignal.utilities.toHexString
 import org.thoughtcrime.securesms.MediaOverviewActivity
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
+import org.thoughtcrime.securesms.database.GroupDatabase
 import org.thoughtcrime.securesms.database.LokiThreadDatabase
 import org.thoughtcrime.securesms.database.ThreadDatabase
 import org.thoughtcrime.securesms.groups.EditClosedGroupActivity
 import org.thoughtcrime.securesms.groups.EditLegacyClosedGroupActivity
 import org.thoughtcrime.securesms.showSessionDialog
+import java.io.IOException
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -45,6 +52,7 @@ class ConversationSettingsActivity: PassphraseRequiredActionBarActivity(), View.
     }
 
     @Inject lateinit var threadDb: ThreadDatabase
+    @Inject lateinit var groupDb: GroupDatabase
     @Inject lateinit var lokiThreadDb: LokiThreadDatabase
     @Inject lateinit var viewModelFactory: ConversationSettingsViewModel.AssistedFactory
     val viewModel: ConversationSettingsViewModel by viewModels {
@@ -127,13 +135,13 @@ class ConversationSettingsActivity: PassphraseRequiredActionBarActivity(), View.
     }
 
     override fun onClick(v: View?) {
+        val threadRecipient = viewModel.recipient ?: return
         when {
             v === binding.searchConversation -> {
                 setResult(RESULT_SEARCH)
                 finish()
             }
             v === binding.allMedia -> {
-                val threadRecipient = viewModel.recipient ?: return
                 val intent = Intent(this, MediaOverviewActivity::class.java).apply {
                     putExtra(MediaOverviewActivity.ADDRESS_EXTRA, threadRecipient.address)
                 }
@@ -167,34 +175,72 @@ class ConversationSettingsActivity: PassphraseRequiredActionBarActivity(), View.
                 }
             }
             v === binding.leaveGroup -> {
-                val groupInfo = viewModel.closedGroupInfo()
 
-                showSessionDialog {
+                if (threadRecipient.isLegacyClosedGroupRecipient) {
+                    // Send a leave group message if this is an active closed group
+                    val groupString = threadRecipient.address.toGroupString()
+                    val ourId = TextSecurePreferences.getLocalNumber(this)!!
+                    if (groupDb.isActive(groupString)) {
+                        showSessionDialog {
 
-                    title(R.string.conversation_settings_leave_group)
+                            title(R.string.conversation_settings_leave_group)
 
-                    val name = viewModel.recipient!!.name!!
-                    val textWithArgs = if (groupInfo?.isUserAdmin == true) {
-                        context.getString(R.string.conversation_settings_leave_group_as_admin)
-                    } else {
-                        Phrase.from(context, R.string.conversation_settings_leave_group_name)
-                            .put("group", name)
-                            .format()
-                    }
-                    text(textWithArgs)
-                    destructiveButton(
-                        R.string.conversation_settings_leave_group,
-                        R.string.conversation_settings_leave_group
-                    ) {
-                        lifecycleScope.launch {
-                            if (viewModel.leaveGroup()) {
-                                finish()
+                            val name = viewModel.recipient!!.name!!
+                            val textWithArgs = if (groupDb.getGroup(groupString).get().admins.map(Address::serialize).contains(ourId)) {
+                                context.getString(R.string.conversation_settings_leave_group_as_admin)
+                            } else {
+                                Phrase.from(context, R.string.conversation_settings_leave_group_name)
+                                    .put("group", name)
+                                    .format()
                             }
+                            text(textWithArgs)
+                            destructiveButton(
+                                R.string.conversation_settings_leave_group,
+                                R.string.conversation_settings_leave_group
+                            ) {
+                                lifecycleScope.launch {
+                                    GroupUtil.doubleDecodeGroupID(threadRecipient.address.toString())
+                                        .toHexString()
+                                        .let { MessageSender.explicitLeave(it, true, deleteThread = true) }
+                                    finish()
+                                }
+                            }
+                            cancelButton()
+                        }
+                        try {
+
+                        } catch (e: IOException) {
+                            Log.e("Loki", e)
                         }
                     }
-                    cancelButton()
-                }
+                } else if (threadRecipient.isClosedGroupRecipient) {
+                    val groupInfo = viewModel.closedGroupInfo()
+                    showSessionDialog {
 
+                        title(R.string.conversation_settings_leave_group)
+
+                        val name = viewModel.recipient!!.name!!
+                        val textWithArgs = if (groupInfo?.isUserAdmin == true) {
+                            context.getString(R.string.conversation_settings_leave_group_as_admin)
+                        } else {
+                            Phrase.from(context, R.string.conversation_settings_leave_group_name)
+                                .put("group", name)
+                                .format()
+                        }
+                        text(textWithArgs)
+                        destructiveButton(
+                            R.string.conversation_settings_leave_group,
+                            R.string.conversation_settings_leave_group
+                        ) {
+                            lifecycleScope.launch {
+                                if (viewModel.leaveGroup()) {
+                                    finish()
+                                }
+                            }
+                        }
+                        cancelButton()
+                    }
+                }
             }
             v === binding.editGroup -> {
                 val recipient = viewModel.recipient ?: return

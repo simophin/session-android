@@ -133,6 +133,7 @@ class JobQueue : JobDelegate {
                     }
                     is NotifyPNServerJob,
                     is AttachmentUploadJob,
+                    is GroupLeavingJob,
                     is MessageSendJob -> {
                         txQueue.send(job)
                     }

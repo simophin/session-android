@@ -31,7 +31,7 @@ class GroupLeavingJob(val groupPublicKey: String, val notifyUser: Boolean, val d
         private val DELETE_THREAD_KEY = "delete_thread"
     }
 
-    override fun execute(dispatcherName: String) {
+    override suspend fun execute(dispatcherName: String) {
         val context = MessagingModuleConfiguration.shared.context
         val storage = MessagingModuleConfiguration.shared.storage
         val userPublicKey = TextSecurePreferences.getLocalNumber(context)!!
@@ -51,18 +51,14 @@ class GroupLeavingJob(val groupPublicKey: String, val notifyUser: Boolean, val d
             val infoType = SignalServiceGroup.Type.LEAVING
             messageId = storage.insertOutgoingInfoMessage(context, groupID, infoType, name, updatedMembers, admins, threadID, sentTime)
         }
-        MessageSender.sendNonDurably(closedGroupControlMessage, Address.fromSerialized(groupID)).success {
+        MessageSender.sendNonDurably(closedGroupControlMessage, Address.fromSerialized(groupID), false).success {
             // Notify the user
             if (notifyUser && (messageId != null)) {
                 val infoType = SignalServiceGroup.Type.QUIT
                 storage.updateInfoMessage(context, messageId, groupID, infoType, name, updatedMembers)
             }
-            // Remove the thread
-            if (deleteThread) {
-                storage.removeClosedGroupThread(threadID)
-            }
             // Remove the group private key and unsubscribe from PNs
-            MessageReceiver.disableLocalGroupAndUnsubscribe(groupPublicKey, groupID, userPublicKey)
+            MessageReceiver.disableLocalGroupAndUnsubscribe(groupPublicKey, groupID, userPublicKey, deleteThread)
             handleSuccess(dispatcherName)
         }.fail {
             storage.setActive(groupID, true)

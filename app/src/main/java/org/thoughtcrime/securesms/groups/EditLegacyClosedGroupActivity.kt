@@ -18,10 +18,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.R
-import nl.komponents.kovenant.Promise
-import nl.komponents.kovenant.task
-import nl.komponents.kovenant.ui.failUi
-import nl.komponents.kovenant.ui.successUi
 import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.messaging.sending_receiving.groupSizeLimit
 import org.session.libsession.utilities.Address
@@ -301,10 +297,10 @@ class EditLegacyClosedGroupActivity : PassphraseRequiredActionBarActivity() {
         if (isClosedGroup) {
             isLoading = true
             loaderContainer.fadeIn()
-            val promise: Promise<Any, Exception> = if (!members.contains(Recipient.from(this, Address.fromSerialized(userPublicKey), false))) {
-                MessageSender.explicitLeave(groupPublicKey!!, false)
-            } else {
-                task {
+            try {
+                if (!members.contains(Recipient.from(this, Address.fromSerialized(userPublicKey), false))) {
+                    MessageSender.explicitLeave(groupPublicKey!!, false)
+                } else {
                     if (hasNameChanged) {
                         MessageSender.explicitNameChange(groupPublicKey!!, name)
                     }
@@ -315,13 +311,11 @@ class EditLegacyClosedGroupActivity : PassphraseRequiredActionBarActivity() {
                         if (removes.isNotEmpty()) MessageSender.explicitRemoveMembers(groupPublicKey!!, removes.map { it.address.serialize() })
                     }
                 }
-            }
-            promise.successUi {
                 loaderContainer.fadeOut()
                 isLoading = false
                 updateGroupConfig()
                 finish()
-            }.failUi { exception ->
+            } catch (exception: Exception) {
                 val message = if (exception is MessageSender.Error) exception.description else "An error occurred"
                 Toast.makeText(this@EditLegacyClosedGroupActivity, message, Toast.LENGTH_LONG).show()
                 loaderContainer.fadeOut()

@@ -655,13 +655,17 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                 lifecycleScope.launch(Dispatchers.Main) {
                     val context = this@HomeActivity
                     // Cancel any outstanding jobs
-                    DatabaseComponent.get(context).sessionJobDatabase().cancelPendingMessageSendJobs(threadID)
+                    DatabaseComponent.get(context).sessionJobDatabase()
+                        .cancelPendingMessageSendJobs(threadID)
                     // Send a leave group message if this is an active closed group
-                    if (recipient.address.isLegacyClosedGroup && DatabaseComponent.get(context).groupDatabase().isActive(recipient.address.toGroupString())) {
+                    if (recipient.address.isLegacyClosedGroup && DatabaseComponent.get(context)
+                            .groupDatabase().isActive(recipient.address.toGroupString())
+                    ) {
                         try {
-                            GroupUtil.doubleDecodeGroupID(recipient.address.toString()).toHexString()
+                            GroupUtil.doubleDecodeGroupID(recipient.address.toString())
+                                .toHexString()
                                 .takeIf(DatabaseComponent.get(context).lokiAPIDatabase()::isClosedGroup)
-                                ?.let { MessageSender.explicitLeave(it, false) }
+                                ?.let { MessageSender.explicitLeave(it, true, deleteThread = true) }
                         } catch (e: IOException) {
                             Log.e("Loki", e)
                         }
@@ -670,19 +674,23 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                         storage.leaveGroup(recipient.address.serialize())
                     }
                     // Delete the conversation
-                    val v2OpenGroup = DatabaseComponent.get(context).lokiThreadDatabase().getOpenGroupChat(threadID)
+                    val v2OpenGroup = DatabaseComponent.get(context).lokiThreadDatabase()
+                        .getOpenGroupChat(threadID)
                     if (v2OpenGroup != null) {
-                        v2OpenGroup.apply { OpenGroupManager.delete(server, room, context) }
-                    } else if (!isClosedGroup){
-                        lifecycleScope.launch(Dispatchers.IO) {
-                            threadDb.deleteConversation(threadID)
-                        }
+                        OpenGroupManager.delete(
+                            v2OpenGroup.server,
+                            v2OpenGroup.room,
+                            context
+                        )
                     }
                     // Update the badge count
-                    ApplicationContext.getInstance(context).messageNotifier.updateNotification(context)
-    if (!isClosedGroup) {                // Notify the user
-                    val toastMessage = if (recipient.isGroupRecipient) R.string.MessageRecord_left_group else R.string.activity_home_conversation_deleted_message
-                    Toast.makeText(context, toastMessage, Toast.LENGTH_LONG).show()}
+                    ApplicationContext.getInstance(context).messageNotifier.updateNotification(
+                        context
+                    )
+                    // Notify the user
+                    val toastMessage =
+                        if (recipient.isGroupRecipient) R.string.MessageRecord_left_group else R.string.activity_home_conversation_deleted_message
+                    Toast.makeText(context, toastMessage, Toast.LENGTH_LONG).show()
                 }
             }
             button(R.string.no)

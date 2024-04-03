@@ -64,7 +64,11 @@ class ConversationSettingsViewModel(
         }
     }
 
-    fun closedGroupInfo(): GroupDisplayInfo? = recipient?.address?.serialize()?.let(storage::getClosedGroupDisplayInfo)
+    fun closedGroupInfo(): GroupDisplayInfo? = recipient
+        ?.address
+        ?.takeIf { it.isClosedGroup }
+        ?.serialize()
+        ?.let(storage::getClosedGroupDisplayInfo)
 
     suspend fun leaveGroup(): Boolean {
         return withContext(Dispatchers.IO) {

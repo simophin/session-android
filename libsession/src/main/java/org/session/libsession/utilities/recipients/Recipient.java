@@ -326,7 +326,7 @@ public class Recipient implements RecipientModifiedListener {
     String sessionID = this.address.toString();
     if (isOpenGroupRecipient()) {
       return this.name;
-    } else if (isClosedGroupRecipient()) {
+    } else if (isLegacyClosedGroupRecipient() || isClosedGroupRecipient()) {
       if (this.name == null) {
         List<String> names = new LinkedList<>();
         for (Recipient recipient : participants) {

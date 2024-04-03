@@ -27,6 +27,7 @@ object UpdateMessageBuilder {
     private const val NUM_OTHERS = "number_others"
     private const val ADMIN = "admin"
     private const val GROUP = "group"
+    private const val USER = "user"
 
     val storage = MessagingModuleConfiguration.shared.storage
 
@@ -35,7 +36,7 @@ object UpdateMessageBuilder {
         ?: truncateIdForDisplay(senderId)
 
     @JvmStatic
-    fun buildGroupUpdateMessage(context: Context, updateMessageData: UpdateMessageData, senderId: String? = null, isOutgoing: Boolean = false): CharSequence {
+    fun buildGroupUpdateMessage(context: Context, updateMessageData: UpdateMessageData, senderId: String? = null, isOutgoing: Boolean = false, isInConversation: Boolean): CharSequence {
         val updateData = updateMessageData.kind
         if (updateData == null || !isOutgoing && senderId == null) return ""
         val senderName: String = if (isOutgoing) context.getString(R.string.MessageRecord_you)
@@ -197,30 +198,30 @@ object UpdateMessageBuilder {
                 }
             }
             is UpdateMessageData.Kind.OpenGroupInvitation -> ""
-        }
             is UpdateMessageData.Kind.GroupMemberLeft -> {
-                message = if (isOutgoing) {
+                return if (isOutgoing) {
                     context.getString(R.string.MessageRecord_left_group)
                 } else {
-                    context.getString(R.string.ConversationItem_group_action_left, senderName)
+                    Phrase.from(context,R.string.ConversationItem_group_action_left)
+                        .put(USER, senderName)
+                        .format()
                 }
             }
             is UpdateMessageData.Kind.GroupLeaving -> {
-                message = if (isOutgoing) {
+                return if (isOutgoing) {
                     context.getString(R.string.MessageRecord_leaving_group)
                 } else {
                     ""
                 }
             }
             is UpdateMessageData.Kind.GroupErrorQuit -> {
-                message = if (isInConversation) {
+                return if (isInConversation) {
                     context.getString(R.string.MessageRecord_unable_leave_group)
                 } else {
                     context.getString(R.string.MessageRecord_leave_group_error)
                 }
             }
         }
-        return message
     }
 
     fun Context.youOrSender(sessionId: String) = if (storage.getUserPublicKey() == sessionId) getString(R.string.MessageRecord_you) else getSenderName(sessionId)

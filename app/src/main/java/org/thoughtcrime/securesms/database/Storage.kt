@@ -1,6 +1,5 @@
 package org.thoughtcrime.securesms.database
 
-import android.content.ContentValues
 import android.content.Context
 import android.net.Uri
 import com.google.protobuf.ByteString
@@ -1586,6 +1585,10 @@ open class Storage(
             val smsDB = DatabaseComponent.get(context).smsDatabase()
             smsDB.insertMessageInbox(infoMessage,  true)
         }
+    }
+
+    private fun updateControlMessage(updateData: UpdateMessageData, messageId: Long, closedGroup: SessionId) {
+        TODO()
     }
 
     override fun promoteMember(groupSessionId: String, promotions: Array<String>) {
