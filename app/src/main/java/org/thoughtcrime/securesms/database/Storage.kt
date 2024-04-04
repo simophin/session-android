@@ -1534,20 +1534,26 @@ open class Storage(
 
     }
 
-    override fun insertGroupInfoChange(message: GroupUpdated, closedGroup: SessionId) {
+    override fun insertGroupInfoChange(message: GroupUpdated, closedGroup: SessionId): Long? {
         val sentTimestamp = message.sentTimestamp ?: SnodeAPI.nowWithOffset
         val senderPublicKey = message.sender
-        val updateData = UpdateMessageData.buildGroupUpdate(message) ?: return
+        val updateData = UpdateMessageData.buildGroupUpdate(message) ?: return null
 
-        insertUpdateControlMessage(updateData, sentTimestamp, senderPublicKey, closedGroup)
+        return insertUpdateControlMessage(updateData, sentTimestamp, senderPublicKey, closedGroup)
     }
 
-    private fun insertGroupInviteControlMessage(sentTimestamp: Long, senderPublicKey: String, closedGroup: SessionId) {
+    override fun updateGroupInfoChange(messageId: Long, newType: UpdateMessageData.Kind) {
+        val mmsDB = DatabaseComponent.get(context).mmsDatabase()
+        val newMessage = UpdateMessageData.buildGroupLeaveUpdate(newType)
+        mmsDB.updateInfoMessage(messageId, newMessage.toJSON())
+    }
+
+    private fun insertGroupInviteControlMessage(sentTimestamp: Long, senderPublicKey: String, closedGroup: SessionId): Long? {
         val updateData = UpdateMessageData(UpdateMessageData.Kind.GroupInvitation(senderPublicKey))
-        insertUpdateControlMessage(updateData, sentTimestamp, senderPublicKey, closedGroup)
+        return insertUpdateControlMessage(updateData, sentTimestamp, senderPublicKey, closedGroup)
     }
 
-    private fun insertUpdateControlMessage(updateData: UpdateMessageData, sentTimestamp: Long, senderPublicKey: String?, closedGroup: SessionId) {
+    private fun insertUpdateControlMessage(updateData: UpdateMessageData, sentTimestamp: Long, senderPublicKey: String?, closedGroup: SessionId): Long? {
         val userPublicKey = getUserPublicKey()!!
         val recipient = Recipient.from(context, fromSerialized(closedGroup.hexString()), false)
         val threadDb = DatabaseComponent.get(context).threadDatabase()
@@ -1575,20 +1581,19 @@ open class Storage(
             )
             val mmsDB = DatabaseComponent.get(context).mmsDatabase()
             val mmsSmsDB = DatabaseComponent.get(context).mmsSmsDatabase()
-            if (mmsSmsDB.getMessageFor(sentTimestamp, userPublicKey) != null) return
+            // check for conflict here, not returning duplicate in case it's different
+            if (mmsSmsDB.getMessageFor(sentTimestamp, userPublicKey) != null) return null
             val infoMessageID = mmsDB.insertMessageOutbox(infoMessage, threadID, false, null, runThreadUpdate = true)
             mmsDB.markAsSent(infoMessageID, true)
+            return infoMessageID
         } else {
             val group = SignalServiceGroup(Hex.fromStringCondensed(closedGroup.hexString()), SignalServiceGroup.GroupType.SIGNAL)
             val m = IncomingTextMessage(fromSerialized(senderPublicKey), 1, sentTimestamp, "", Optional.of(group), expiresInMillis, expireStartedAt, true, false)
             val infoMessage = IncomingGroupMessage(m, inviteJson, true)
             val smsDB = DatabaseComponent.get(context).smsDatabase()
-            smsDB.insertMessageInbox(infoMessage,  true)
+            val insertResult = smsDB.insertMessageInbox(infoMessage,  true)
+            return insertResult.orNull()?.messageId
         }
-    }
-
-    private fun updateControlMessage(updateData: UpdateMessageData, messageId: Long, closedGroup: SessionId) {
-        TODO()
     }
 
     override fun promoteMember(groupSessionId: String, promotions: Array<String>) {

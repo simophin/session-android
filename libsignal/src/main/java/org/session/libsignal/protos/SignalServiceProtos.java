@@ -10975,101 +10975,87 @@ public final class SignalServiceProtos {
        */
       org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessageOrBuilder getInviteMessageOrBuilder();
 
-      // optional .signalservice.DataMessage.GroupUpdateDeleteMessage deleteMessage = 2;
+      // optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 2;
       /**
-       * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMessage deleteMessage = 2;</code>
-       */
-      boolean hasDeleteMessage();
-      /**
-       * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMessage deleteMessage = 2;</code>
-       */
-      org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage getDeleteMessage();
-      /**
-       * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMessage deleteMessage = 2;</code>
-       */
-      org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessageOrBuilder getDeleteMessageOrBuilder();
-
-      // optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 3;
-      /**
-       * <code>optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 3;</code>
+       * <code>optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 2;</code>
        */
       boolean hasInfoChangeMessage();
       /**
-       * <code>optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 3;</code>
+       * <code>optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 2;</code>
        */
       org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage getInfoChangeMessage();
       /**
-       * <code>optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 3;</code>
+       * <code>optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 2;</code>
        */
       org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessageOrBuilder getInfoChangeMessageOrBuilder();
 
-      // optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 4;
+      // optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 3;
       /**
-       * <code>optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 4;</code>
+       * <code>optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 3;</code>
        */
       boolean hasMemberChangeMessage();
       /**
-       * <code>optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 4;</code>
+       * <code>optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 3;</code>
        */
       org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage getMemberChangeMessage();
       /**
-       * <code>optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 4;</code>
+       * <code>optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 3;</code>
        */
       org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessageOrBuilder getMemberChangeMessageOrBuilder();
 
-      // optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 5;
+      // optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 4;
       /**
-       * <code>optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 5;</code>
+       * <code>optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 4;</code>
        */
       boolean hasPromoteMessage();
       /**
-       * <code>optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 5;</code>
+       * <code>optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 4;</code>
        */
       org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage getPromoteMessage();
       /**
-       * <code>optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 5;</code>
+       * <code>optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 4;</code>
        */
       org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessageOrBuilder getPromoteMessageOrBuilder();
 
-      // optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 6;
+      // optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 5;
       /**
-       * <code>optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 6;</code>
+       * <code>optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 5;</code>
        */
       boolean hasMemberLeftMessage();
       /**
-       * <code>optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 6;</code>
+       * <code>optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 5;</code>
        */
       org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage getMemberLeftMessage();
       /**
-       * <code>optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 6;</code>
+       * <code>optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 5;</code>
        */
       org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessageOrBuilder getMemberLeftMessageOrBuilder();
 
-      // optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 7;
+      // optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 6;
       /**
-       * <code>optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 7;</code>
+       * <code>optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 6;</code>
        */
       boolean hasInviteResponse();
       /**
-       * <code>optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 7;</code>
+       * <code>optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 6;</code>
        */
       org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage getInviteResponse();
       /**
-       * <code>optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 7;</code>
+       * <code>optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 6;</code>
        */
       org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessageOrBuilder getInviteResponseOrBuilder();
 
-      // optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 8;
+      // optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 7;
       /**
-       * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 8;</code>
+       * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 7;</code>
        */
       boolean hasDeleteMemberContent();
       /**
-       * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 8;</code>
+       * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 7;</code>
        */
       org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage getDeleteMemberContent();
       /**
-       * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 8;</code>
+       * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 7;</code>
        */
       org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessageOrBuilder getDeleteMemberContentOrBuilder();
     }
@@ -11142,21 +11128,8 @@ public final class SignalServiceProtos {
                 break;
               }
               case 18: {
-                org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage.Builder subBuilder = null;
-                if (((bitField0_ & 0x00000002) == 0x00000002)) {
-                  subBuilder = deleteMessage_.toBuilder();
-                }
-                deleteMessage_ = input.readMessage(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage.PARSER, extensionRegistry);
-                if (subBuilder != null) {
-                  subBuilder.mergeFrom(deleteMessage_);
-                  deleteMessage_ = subBuilder.buildPartial();
-                }
-                bitField0_ |= 0x00000002;
-                break;
-              }
-              case 26: {
                 org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage.Builder subBuilder = null;
-                if (((bitField0_ & 0x00000004) == 0x00000004)) {
+                if (((bitField0_ & 0x00000002) == 0x00000002)) {
                   subBuilder = infoChangeMessage_.toBuilder();
                 }
                 infoChangeMessage_ = input.readMessage(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage.PARSER, extensionRegistry);
@@ -11164,12 +11137,12 @@ public final class SignalServiceProtos {
                   subBuilder.mergeFrom(infoChangeMessage_);
                   infoChangeMessage_ = subBuilder.buildPartial();
                 }
-                bitField0_ |= 0x00000004;
+                bitField0_ |= 0x00000002;
                 break;
               }
-              case 34: {
+              case 26: {
                 org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage.Builder subBuilder = null;
-                if (((bitField0_ & 0x00000008) == 0x00000008)) {
+                if (((bitField0_ & 0x00000004) == 0x00000004)) {
                   subBuilder = memberChangeMessage_.toBuilder();
                 }
                 memberChangeMessage_ = input.readMessage(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage.PARSER, extensionRegistry);
@@ -11177,12 +11150,12 @@ public final class SignalServiceProtos {
                   subBuilder.mergeFrom(memberChangeMessage_);
                   memberChangeMessage_ = subBuilder.buildPartial();
                 }
-                bitField0_ |= 0x00000008;
+                bitField0_ |= 0x00000004;
                 break;
               }
-              case 42: {
+              case 34: {
                 org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage.Builder subBuilder = null;
-                if (((bitField0_ & 0x00000010) == 0x00000010)) {
+                if (((bitField0_ & 0x00000008) == 0x00000008)) {
                   subBuilder = promoteMessage_.toBuilder();
                 }
                 promoteMessage_ = input.readMessage(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage.PARSER, extensionRegistry);
@@ -11190,12 +11163,12 @@ public final class SignalServiceProtos {
                   subBuilder.mergeFrom(promoteMessage_);
                   promoteMessage_ = subBuilder.buildPartial();
                 }
-                bitField0_ |= 0x00000010;
+                bitField0_ |= 0x00000008;
                 break;
               }
-              case 50: {
+              case 42: {
                 org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage.Builder subBuilder = null;
-                if (((bitField0_ & 0x00000020) == 0x00000020)) {
+                if (((bitField0_ & 0x00000010) == 0x00000010)) {
                   subBuilder = memberLeftMessage_.toBuilder();
                 }
                 memberLeftMessage_ = input.readMessage(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage.PARSER, extensionRegistry);
@@ -11203,12 +11176,12 @@ public final class SignalServiceProtos {
                   subBuilder.mergeFrom(memberLeftMessage_);
                   memberLeftMessage_ = subBuilder.buildPartial();
                 }
-                bitField0_ |= 0x00000020;
+                bitField0_ |= 0x00000010;
                 break;
               }
-              case 58: {
+              case 50: {
                 org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage.Builder subBuilder = null;
-                if (((bitField0_ & 0x00000040) == 0x00000040)) {
+                if (((bitField0_ & 0x00000020) == 0x00000020)) {
                   subBuilder = inviteResponse_.toBuilder();
                 }
                 inviteResponse_ = input.readMessage(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage.PARSER, extensionRegistry);
@@ -11216,12 +11189,12 @@ public final class SignalServiceProtos {
                   subBuilder.mergeFrom(inviteResponse_);
                   inviteResponse_ = subBuilder.buildPartial();
                 }
-                bitField0_ |= 0x00000040;
+                bitField0_ |= 0x00000020;
                 break;
               }
-              case 66: {
+              case 58: {
                 org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage.Builder subBuilder = null;
-                if (((bitField0_ & 0x00000080) == 0x00000080)) {
+                if (((bitField0_ & 0x00000040) == 0x00000040)) {
                   subBuilder = deleteMemberContent_.toBuilder();
                 }
                 deleteMemberContent_ = input.readMessage(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage.PARSER, extensionRegistry);
@@ -11229,7 +11202,7 @@ public final class SignalServiceProtos {
                   subBuilder.mergeFrom(deleteMemberContent_);
                   deleteMemberContent_ = subBuilder.buildPartial();
                 }
-                bitField0_ |= 0x00000080;
+                bitField0_ |= 0x00000040;
                 break;
               }
             }
@@ -11294,155 +11267,133 @@ public final class SignalServiceProtos {
         return inviteMessage_;
       }
 
-      // optional .signalservice.DataMessage.GroupUpdateDeleteMessage deleteMessage = 2;
-      public static final int DELETEMESSAGE_FIELD_NUMBER = 2;
-      private org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage deleteMessage_;
+      // optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 2;
+      public static final int INFOCHANGEMESSAGE_FIELD_NUMBER = 2;
+      private org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage_;
       /**
-       * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMessage deleteMessage = 2;</code>
+       * <code>optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 2;</code>
        */
-      public boolean hasDeleteMessage() {
+      public boolean hasInfoChangeMessage() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
-       * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMessage deleteMessage = 2;</code>
-       */
-      public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage getDeleteMessage() {
-        return deleteMessage_;
-      }
-      /**
-       * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMessage deleteMessage = 2;</code>
-       */
-      public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessageOrBuilder getDeleteMessageOrBuilder() {
-        return deleteMessage_;
-      }
-
-      // optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 3;
-      public static final int INFOCHANGEMESSAGE_FIELD_NUMBER = 3;
-      private org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage_;
-      /**
-       * <code>optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 3;</code>
-       */
-      public boolean hasInfoChangeMessage() {
-        return ((bitField0_ & 0x00000004) == 0x00000004);
-      }
-      /**
-       * <code>optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 3;</code>
+       * <code>optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 2;</code>
        */
       public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage getInfoChangeMessage() {
         return infoChangeMessage_;
       }
       /**
-       * <code>optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 3;</code>
+       * <code>optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 2;</code>
        */
       public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessageOrBuilder getInfoChangeMessageOrBuilder() {
         return infoChangeMessage_;
       }
 
-      // optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 4;
-      public static final int MEMBERCHANGEMESSAGE_FIELD_NUMBER = 4;
+      // optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 3;
+      public static final int MEMBERCHANGEMESSAGE_FIELD_NUMBER = 3;
       private org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage_;
       /**
-       * <code>optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 4;</code>
+       * <code>optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 3;</code>
        */
       public boolean hasMemberChangeMessage() {
-        return ((bitField0_ & 0x00000008) == 0x00000008);
+        return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       /**
-       * <code>optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 4;</code>
+       * <code>optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 3;</code>
        */
       public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage getMemberChangeMessage() {
         return memberChangeMessage_;
       }
       /**
-       * <code>optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 4;</code>
+       * <code>optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 3;</code>
        */
       public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessageOrBuilder getMemberChangeMessageOrBuilder() {
         return memberChangeMessage_;
       }
 
-      // optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 5;
-      public static final int PROMOTEMESSAGE_FIELD_NUMBER = 5;
+      // optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 4;
+      public static final int PROMOTEMESSAGE_FIELD_NUMBER = 4;
       private org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage promoteMessage_;
       /**
-       * <code>optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 5;</code>
+       * <code>optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 4;</code>
        */
       public boolean hasPromoteMessage() {
-        return ((bitField0_ & 0x00000010) == 0x00000010);
+        return ((bitField0_ & 0x00000008) == 0x00000008);
       }
       /**
-       * <code>optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 5;</code>
+       * <code>optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 4;</code>
        */
       public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage getPromoteMessage() {
         return promoteMessage_;
       }
       /**
-       * <code>optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 5;</code>
+       * <code>optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 4;</code>
        */
       public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessageOrBuilder getPromoteMessageOrBuilder() {
         return promoteMessage_;
       }
 
-      // optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 6;
-      public static final int MEMBERLEFTMESSAGE_FIELD_NUMBER = 6;
+      // optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 5;
+      public static final int MEMBERLEFTMESSAGE_FIELD_NUMBER = 5;
       private org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage_;
       /**
-       * <code>optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 6;</code>
+       * <code>optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 5;</code>
        */
       public boolean hasMemberLeftMessage() {
-        return ((bitField0_ & 0x00000020) == 0x00000020);
+        return ((bitField0_ & 0x00000010) == 0x00000010);
       }
       /**
-       * <code>optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 6;</code>
+       * <code>optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 5;</code>
        */
       public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage getMemberLeftMessage() {
         return memberLeftMessage_;
       }
       /**
-       * <code>optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 6;</code>
+       * <code>optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 5;</code>
        */
       public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessageOrBuilder getMemberLeftMessageOrBuilder() {
         return memberLeftMessage_;
       }
 
-      // optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 7;
-      public static final int INVITERESPONSE_FIELD_NUMBER = 7;
+      // optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 6;
+      public static final int INVITERESPONSE_FIELD_NUMBER = 6;
       private org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage inviteResponse_;
       /**
-       * <code>optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 7;</code>
+       * <code>optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 6;</code>
        */
       public boolean hasInviteResponse() {
-        return ((bitField0_ & 0x00000040) == 0x00000040);
+        return ((bitField0_ & 0x00000020) == 0x00000020);
       }
       /**
-       * <code>optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 7;</code>
+       * <code>optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 6;</code>
        */
       public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage getInviteResponse() {
         return inviteResponse_;
       }
       /**
-       * <code>optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 7;</code>
+       * <code>optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 6;</code>
        */
       public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessageOrBuilder getInviteResponseOrBuilder() {
         return inviteResponse_;
       }
 
-      // optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 8;
-      public static final int DELETEMEMBERCONTENT_FIELD_NUMBER = 8;
+      // optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 7;
+      public static final int DELETEMEMBERCONTENT_FIELD_NUMBER = 7;
       private org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent_;
       /**
-       * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 8;</code>
+       * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 7;</code>
        */
       public boolean hasDeleteMemberContent() {
-        return ((bitField0_ & 0x00000080) == 0x00000080);
+        return ((bitField0_ & 0x00000040) == 0x00000040);
       }
       /**
-       * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 8;</code>
+       * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 7;</code>
        */
       public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage getDeleteMemberContent() {
         return deleteMemberContent_;
       }
       /**
-       * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 8;</code>
+       * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 7;</code>
        */
       public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessageOrBuilder getDeleteMemberContentOrBuilder() {
         return deleteMemberContent_;
@@ -11450,7 +11401,6 @@ public final class SignalServiceProtos {
 
       private void initFields() {
         inviteMessage_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage.getDefaultInstance();
-        deleteMessage_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage.getDefaultInstance();
         infoChangeMessage_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage.getDefaultInstance();
         memberChangeMessage_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage.getDefaultInstance();
         promoteMessage_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage.getDefaultInstance();
@@ -11465,12 +11415,6 @@ public final class SignalServiceProtos {
 
         if (hasInviteMessage()) {
           if (!getInviteMessage().isInitialized()) {
-            memoizedIsInitialized = 0;
-            return false;
-          }
-        }
-        if (hasDeleteMessage()) {
-          if (!getDeleteMessage().isInitialized()) {
             memoizedIsInitialized = 0;
             return false;
           }
@@ -11510,25 +11454,22 @@ public final class SignalServiceProtos {
           output.writeMessage(1, inviteMessage_);
         }
         if (((bitField0_ & 0x00000002) == 0x00000002)) {
-          output.writeMessage(2, deleteMessage_);
+          output.writeMessage(2, infoChangeMessage_);
         }
         if (((bitField0_ & 0x00000004) == 0x00000004)) {
-          output.writeMessage(3, infoChangeMessage_);
+          output.writeMessage(3, memberChangeMessage_);
         }
         if (((bitField0_ & 0x00000008) == 0x00000008)) {
-          output.writeMessage(4, memberChangeMessage_);
+          output.writeMessage(4, promoteMessage_);
         }
         if (((bitField0_ & 0x00000010) == 0x00000010)) {
-          output.writeMessage(5, promoteMessage_);
+          output.writeMessage(5, memberLeftMessage_);
         }
         if (((bitField0_ & 0x00000020) == 0x00000020)) {
-          output.writeMessage(6, memberLeftMessage_);
+          output.writeMessage(6, inviteResponse_);
         }
         if (((bitField0_ & 0x00000040) == 0x00000040)) {
-          output.writeMessage(7, inviteResponse_);
-        }
-        if (((bitField0_ & 0x00000080) == 0x00000080)) {
-          output.writeMessage(8, deleteMemberContent_);
+          output.writeMessage(7, deleteMemberContent_);
         }
         getUnknownFields().writeTo(output);
       }
@@ -11545,31 +11486,27 @@ public final class SignalServiceProtos {
         }
         if (((bitField0_ & 0x00000002) == 0x00000002)) {
           size += com.google.protobuf.CodedOutputStream
-            .computeMessageSize(2, deleteMessage_);
+            .computeMessageSize(2, infoChangeMessage_);
         }
         if (((bitField0_ & 0x00000004) == 0x00000004)) {
           size += com.google.protobuf.CodedOutputStream
-            .computeMessageSize(3, infoChangeMessage_);
+            .computeMessageSize(3, memberChangeMessage_);
         }
         if (((bitField0_ & 0x00000008) == 0x00000008)) {
           size += com.google.protobuf.CodedOutputStream
-            .computeMessageSize(4, memberChangeMessage_);
+            .computeMessageSize(4, promoteMessage_);
         }
         if (((bitField0_ & 0x00000010) == 0x00000010)) {
           size += com.google.protobuf.CodedOutputStream
-            .computeMessageSize(5, promoteMessage_);
+            .computeMessageSize(5, memberLeftMessage_);
         }
         if (((bitField0_ & 0x00000020) == 0x00000020)) {
           size += com.google.protobuf.CodedOutputStream
-            .computeMessageSize(6, memberLeftMessage_);
+            .computeMessageSize(6, inviteResponse_);
         }
         if (((bitField0_ & 0x00000040) == 0x00000040)) {
           size += com.google.protobuf.CodedOutputStream
-            .computeMessageSize(7, inviteResponse_);
-        }
-        if (((bitField0_ & 0x00000080) == 0x00000080)) {
-          size += com.google.protobuf.CodedOutputStream
-            .computeMessageSize(8, deleteMemberContent_);
+            .computeMessageSize(7, deleteMemberContent_);
         }
         size += getUnknownFields().getSerializedSize();
         memoizedSerializedSize = size;
@@ -11684,7 +11621,6 @@ public final class SignalServiceProtos {
         private void maybeForceBuilderInitialization() {
           if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
             getInviteMessageFieldBuilder();
-            getDeleteMessageFieldBuilder();
             getInfoChangeMessageFieldBuilder();
             getMemberChangeMessageFieldBuilder();
             getPromoteMessageFieldBuilder();
@@ -11705,48 +11641,42 @@ public final class SignalServiceProtos {
             inviteMessageBuilder_.clear();
           }
           bitField0_ = (bitField0_ & ~0x00000001);
-          if (deleteMessageBuilder_ == null) {
-            deleteMessage_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage.getDefaultInstance();
-          } else {
-            deleteMessageBuilder_.clear();
-          }
-          bitField0_ = (bitField0_ & ~0x00000002);
           if (infoChangeMessageBuilder_ == null) {
             infoChangeMessage_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage.getDefaultInstance();
           } else {
             infoChangeMessageBuilder_.clear();
           }
-          bitField0_ = (bitField0_ & ~0x00000004);
+          bitField0_ = (bitField0_ & ~0x00000002);
           if (memberChangeMessageBuilder_ == null) {
             memberChangeMessage_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage.getDefaultInstance();
           } else {
             memberChangeMessageBuilder_.clear();
           }
-          bitField0_ = (bitField0_ & ~0x00000008);
+          bitField0_ = (bitField0_ & ~0x00000004);
           if (promoteMessageBuilder_ == null) {
             promoteMessage_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage.getDefaultInstance();
           } else {
             promoteMessageBuilder_.clear();
           }
-          bitField0_ = (bitField0_ & ~0x00000010);
+          bitField0_ = (bitField0_ & ~0x00000008);
           if (memberLeftMessageBuilder_ == null) {
             memberLeftMessage_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage.getDefaultInstance();
           } else {
             memberLeftMessageBuilder_.clear();
           }
-          bitField0_ = (bitField0_ & ~0x00000020);
+          bitField0_ = (bitField0_ & ~0x00000010);
           if (inviteResponseBuilder_ == null) {
             inviteResponse_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage.getDefaultInstance();
           } else {
             inviteResponseBuilder_.clear();
           }
-          bitField0_ = (bitField0_ & ~0x00000040);
+          bitField0_ = (bitField0_ & ~0x00000020);
           if (deleteMemberContentBuilder_ == null) {
             deleteMemberContent_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage.getDefaultInstance();
           } else {
             deleteMemberContentBuilder_.clear();
           }
-          bitField0_ = (bitField0_ & ~0x00000080);
+          bitField0_ = (bitField0_ & ~0x00000040);
           return this;
         }
 
@@ -11786,53 +11716,45 @@ public final class SignalServiceProtos {
           if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
             to_bitField0_ |= 0x00000002;
           }
-          if (deleteMessageBuilder_ == null) {
-            result.deleteMessage_ = deleteMessage_;
-          } else {
-            result.deleteMessage_ = deleteMessageBuilder_.build();
-          }
-          if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
-            to_bitField0_ |= 0x00000004;
-          }
           if (infoChangeMessageBuilder_ == null) {
             result.infoChangeMessage_ = infoChangeMessage_;
           } else {
             result.infoChangeMessage_ = infoChangeMessageBuilder_.build();
           }
-          if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
-            to_bitField0_ |= 0x00000008;
+          if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+            to_bitField0_ |= 0x00000004;
           }
           if (memberChangeMessageBuilder_ == null) {
             result.memberChangeMessage_ = memberChangeMessage_;
           } else {
             result.memberChangeMessage_ = memberChangeMessageBuilder_.build();
           }
-          if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
-            to_bitField0_ |= 0x00000010;
+          if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+            to_bitField0_ |= 0x00000008;
           }
           if (promoteMessageBuilder_ == null) {
             result.promoteMessage_ = promoteMessage_;
           } else {
             result.promoteMessage_ = promoteMessageBuilder_.build();
           }
-          if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
-            to_bitField0_ |= 0x00000020;
+          if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+            to_bitField0_ |= 0x00000010;
           }
           if (memberLeftMessageBuilder_ == null) {
             result.memberLeftMessage_ = memberLeftMessage_;
           } else {
             result.memberLeftMessage_ = memberLeftMessageBuilder_.build();
           }
-          if (((from_bitField0_ & 0x00000040) == 0x00000040)) {
-            to_bitField0_ |= 0x00000040;
+          if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
+            to_bitField0_ |= 0x00000020;
           }
           if (inviteResponseBuilder_ == null) {
             result.inviteResponse_ = inviteResponse_;
           } else {
             result.inviteResponse_ = inviteResponseBuilder_.build();
           }
-          if (((from_bitField0_ & 0x00000080) == 0x00000080)) {
-            to_bitField0_ |= 0x00000080;
+          if (((from_bitField0_ & 0x00000040) == 0x00000040)) {
+            to_bitField0_ |= 0x00000040;
           }
           if (deleteMemberContentBuilder_ == null) {
             result.deleteMemberContent_ = deleteMemberContent_;
@@ -11857,9 +11779,6 @@ public final class SignalServiceProtos {
           if (other == org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMessage.getDefaultInstance()) return this;
           if (other.hasInviteMessage()) {
             mergeInviteMessage(other.getInviteMessage());
-          }
-          if (other.hasDeleteMessage()) {
-            mergeDeleteMessage(other.getDeleteMessage());
           }
           if (other.hasInfoChangeMessage()) {
             mergeInfoChangeMessage(other.getInfoChangeMessage());
@@ -11886,12 +11805,6 @@ public final class SignalServiceProtos {
         public final boolean isInitialized() {
           if (hasInviteMessage()) {
             if (!getInviteMessage().isInitialized()) {
-              
-              return false;
-            }
-          }
-          if (hasDeleteMessage()) {
-            if (!getDeleteMessage().isInitialized()) {
               
               return false;
             }
@@ -12059,135 +11972,18 @@ public final class SignalServiceProtos {
           return inviteMessageBuilder_;
         }
 
-        // optional .signalservice.DataMessage.GroupUpdateDeleteMessage deleteMessage = 2;
-        private org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage deleteMessage_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage.getDefaultInstance();
-        private com.google.protobuf.SingleFieldBuilder<
-            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessageOrBuilder> deleteMessageBuilder_;
-        /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMessage deleteMessage = 2;</code>
-         */
-        public boolean hasDeleteMessage() {
-          return ((bitField0_ & 0x00000002) == 0x00000002);
-        }
-        /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMessage deleteMessage = 2;</code>
-         */
-        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage getDeleteMessage() {
-          if (deleteMessageBuilder_ == null) {
-            return deleteMessage_;
-          } else {
-            return deleteMessageBuilder_.getMessage();
-          }
-        }
-        /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMessage deleteMessage = 2;</code>
-         */
-        public Builder setDeleteMessage(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage value) {
-          if (deleteMessageBuilder_ == null) {
-            if (value == null) {
-              throw new NullPointerException();
-            }
-            deleteMessage_ = value;
-            onChanged();
-          } else {
-            deleteMessageBuilder_.setMessage(value);
-          }
-          bitField0_ |= 0x00000002;
-          return this;
-        }
-        /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMessage deleteMessage = 2;</code>
-         */
-        public Builder setDeleteMessage(
-            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage.Builder builderForValue) {
-          if (deleteMessageBuilder_ == null) {
-            deleteMessage_ = builderForValue.build();
-            onChanged();
-          } else {
-            deleteMessageBuilder_.setMessage(builderForValue.build());
-          }
-          bitField0_ |= 0x00000002;
-          return this;
-        }
-        /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMessage deleteMessage = 2;</code>
-         */
-        public Builder mergeDeleteMessage(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage value) {
-          if (deleteMessageBuilder_ == null) {
-            if (((bitField0_ & 0x00000002) == 0x00000002) &&
-                deleteMessage_ != org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage.getDefaultInstance()) {
-              deleteMessage_ =
-                org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage.newBuilder(deleteMessage_).mergeFrom(value).buildPartial();
-            } else {
-              deleteMessage_ = value;
-            }
-            onChanged();
-          } else {
-            deleteMessageBuilder_.mergeFrom(value);
-          }
-          bitField0_ |= 0x00000002;
-          return this;
-        }
-        /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMessage deleteMessage = 2;</code>
-         */
-        public Builder clearDeleteMessage() {
-          if (deleteMessageBuilder_ == null) {
-            deleteMessage_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage.getDefaultInstance();
-            onChanged();
-          } else {
-            deleteMessageBuilder_.clear();
-          }
-          bitField0_ = (bitField0_ & ~0x00000002);
-          return this;
-        }
-        /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMessage deleteMessage = 2;</code>
-         */
-        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage.Builder getDeleteMessageBuilder() {
-          bitField0_ |= 0x00000002;
-          onChanged();
-          return getDeleteMessageFieldBuilder().getBuilder();
-        }
-        /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMessage deleteMessage = 2;</code>
-         */
-        public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessageOrBuilder getDeleteMessageOrBuilder() {
-          if (deleteMessageBuilder_ != null) {
-            return deleteMessageBuilder_.getMessageOrBuilder();
-          } else {
-            return deleteMessage_;
-          }
-        }
-        /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMessage deleteMessage = 2;</code>
-         */
-        private com.google.protobuf.SingleFieldBuilder<
-            org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessageOrBuilder> 
-            getDeleteMessageFieldBuilder() {
-          if (deleteMessageBuilder_ == null) {
-            deleteMessageBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-                org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMessageOrBuilder>(
-                    deleteMessage_,
-                    getParentForChildren(),
-                    isClean());
-            deleteMessage_ = null;
-          }
-          return deleteMessageBuilder_;
-        }
-
-        // optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 3;
+        // optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 2;
         private org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage.getDefaultInstance();
         private com.google.protobuf.SingleFieldBuilder<
             org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessageOrBuilder> infoChangeMessageBuilder_;
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 3;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 2;</code>
          */
         public boolean hasInfoChangeMessage() {
-          return ((bitField0_ & 0x00000004) == 0x00000004);
+          return ((bitField0_ & 0x00000002) == 0x00000002);
         }
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 3;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 2;</code>
          */
         public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage getInfoChangeMessage() {
           if (infoChangeMessageBuilder_ == null) {
@@ -12197,7 +11993,7 @@ public final class SignalServiceProtos {
           }
         }
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 3;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 2;</code>
          */
         public Builder setInfoChangeMessage(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage value) {
           if (infoChangeMessageBuilder_ == null) {
@@ -12209,11 +12005,11 @@ public final class SignalServiceProtos {
           } else {
             infoChangeMessageBuilder_.setMessage(value);
           }
-          bitField0_ |= 0x00000004;
+          bitField0_ |= 0x00000002;
           return this;
         }
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 3;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 2;</code>
          */
         public Builder setInfoChangeMessage(
             org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage.Builder builderForValue) {
@@ -12223,15 +12019,15 @@ public final class SignalServiceProtos {
           } else {
             infoChangeMessageBuilder_.setMessage(builderForValue.build());
           }
-          bitField0_ |= 0x00000004;
+          bitField0_ |= 0x00000002;
           return this;
         }
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 3;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 2;</code>
          */
         public Builder mergeInfoChangeMessage(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage value) {
           if (infoChangeMessageBuilder_ == null) {
-            if (((bitField0_ & 0x00000004) == 0x00000004) &&
+            if (((bitField0_ & 0x00000002) == 0x00000002) &&
                 infoChangeMessage_ != org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage.getDefaultInstance()) {
               infoChangeMessage_ =
                 org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage.newBuilder(infoChangeMessage_).mergeFrom(value).buildPartial();
@@ -12242,11 +12038,11 @@ public final class SignalServiceProtos {
           } else {
             infoChangeMessageBuilder_.mergeFrom(value);
           }
-          bitField0_ |= 0x00000004;
+          bitField0_ |= 0x00000002;
           return this;
         }
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 3;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 2;</code>
          */
         public Builder clearInfoChangeMessage() {
           if (infoChangeMessageBuilder_ == null) {
@@ -12255,19 +12051,19 @@ public final class SignalServiceProtos {
           } else {
             infoChangeMessageBuilder_.clear();
           }
-          bitField0_ = (bitField0_ & ~0x00000004);
+          bitField0_ = (bitField0_ & ~0x00000002);
           return this;
         }
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 3;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 2;</code>
          */
         public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage.Builder getInfoChangeMessageBuilder() {
-          bitField0_ |= 0x00000004;
+          bitField0_ |= 0x00000002;
           onChanged();
           return getInfoChangeMessageFieldBuilder().getBuilder();
         }
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 3;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 2;</code>
          */
         public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessageOrBuilder getInfoChangeMessageOrBuilder() {
           if (infoChangeMessageBuilder_ != null) {
@@ -12277,7 +12073,7 @@ public final class SignalServiceProtos {
           }
         }
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 3;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdateInfoChangeMessage infoChangeMessage = 2;</code>
          */
         private com.google.protobuf.SingleFieldBuilder<
             org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessageOrBuilder> 
@@ -12293,18 +12089,18 @@ public final class SignalServiceProtos {
           return infoChangeMessageBuilder_;
         }
 
-        // optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 4;
+        // optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 3;
         private org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage.getDefaultInstance();
         private com.google.protobuf.SingleFieldBuilder<
             org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessageOrBuilder> memberChangeMessageBuilder_;
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 4;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 3;</code>
          */
         public boolean hasMemberChangeMessage() {
-          return ((bitField0_ & 0x00000008) == 0x00000008);
+          return ((bitField0_ & 0x00000004) == 0x00000004);
         }
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 4;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 3;</code>
          */
         public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage getMemberChangeMessage() {
           if (memberChangeMessageBuilder_ == null) {
@@ -12314,7 +12110,7 @@ public final class SignalServiceProtos {
           }
         }
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 4;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 3;</code>
          */
         public Builder setMemberChangeMessage(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage value) {
           if (memberChangeMessageBuilder_ == null) {
@@ -12326,11 +12122,11 @@ public final class SignalServiceProtos {
           } else {
             memberChangeMessageBuilder_.setMessage(value);
           }
-          bitField0_ |= 0x00000008;
+          bitField0_ |= 0x00000004;
           return this;
         }
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 4;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 3;</code>
          */
         public Builder setMemberChangeMessage(
             org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage.Builder builderForValue) {
@@ -12340,15 +12136,15 @@ public final class SignalServiceProtos {
           } else {
             memberChangeMessageBuilder_.setMessage(builderForValue.build());
           }
-          bitField0_ |= 0x00000008;
+          bitField0_ |= 0x00000004;
           return this;
         }
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 4;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 3;</code>
          */
         public Builder mergeMemberChangeMessage(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage value) {
           if (memberChangeMessageBuilder_ == null) {
-            if (((bitField0_ & 0x00000008) == 0x00000008) &&
+            if (((bitField0_ & 0x00000004) == 0x00000004) &&
                 memberChangeMessage_ != org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage.getDefaultInstance()) {
               memberChangeMessage_ =
                 org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage.newBuilder(memberChangeMessage_).mergeFrom(value).buildPartial();
@@ -12359,11 +12155,11 @@ public final class SignalServiceProtos {
           } else {
             memberChangeMessageBuilder_.mergeFrom(value);
           }
-          bitField0_ |= 0x00000008;
+          bitField0_ |= 0x00000004;
           return this;
         }
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 4;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 3;</code>
          */
         public Builder clearMemberChangeMessage() {
           if (memberChangeMessageBuilder_ == null) {
@@ -12372,19 +12168,19 @@ public final class SignalServiceProtos {
           } else {
             memberChangeMessageBuilder_.clear();
           }
-          bitField0_ = (bitField0_ & ~0x00000008);
+          bitField0_ = (bitField0_ & ~0x00000004);
           return this;
         }
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 4;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 3;</code>
          */
         public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage.Builder getMemberChangeMessageBuilder() {
-          bitField0_ |= 0x00000008;
+          bitField0_ |= 0x00000004;
           onChanged();
           return getMemberChangeMessageFieldBuilder().getBuilder();
         }
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 4;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 3;</code>
          */
         public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessageOrBuilder getMemberChangeMessageOrBuilder() {
           if (memberChangeMessageBuilder_ != null) {
@@ -12394,7 +12190,7 @@ public final class SignalServiceProtos {
           }
         }
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 4;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdateMemberChangeMessage memberChangeMessage = 3;</code>
          */
         private com.google.protobuf.SingleFieldBuilder<
             org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessageOrBuilder> 
@@ -12410,18 +12206,18 @@ public final class SignalServiceProtos {
           return memberChangeMessageBuilder_;
         }
 
-        // optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 5;
+        // optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 4;
         private org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage promoteMessage_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage.getDefaultInstance();
         private com.google.protobuf.SingleFieldBuilder<
             org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessageOrBuilder> promoteMessageBuilder_;
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 5;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 4;</code>
          */
         public boolean hasPromoteMessage() {
-          return ((bitField0_ & 0x00000010) == 0x00000010);
+          return ((bitField0_ & 0x00000008) == 0x00000008);
         }
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 5;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 4;</code>
          */
         public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage getPromoteMessage() {
           if (promoteMessageBuilder_ == null) {
@@ -12431,7 +12227,7 @@ public final class SignalServiceProtos {
           }
         }
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 5;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 4;</code>
          */
         public Builder setPromoteMessage(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage value) {
           if (promoteMessageBuilder_ == null) {
@@ -12443,11 +12239,11 @@ public final class SignalServiceProtos {
           } else {
             promoteMessageBuilder_.setMessage(value);
           }
-          bitField0_ |= 0x00000010;
+          bitField0_ |= 0x00000008;
           return this;
         }
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 5;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 4;</code>
          */
         public Builder setPromoteMessage(
             org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage.Builder builderForValue) {
@@ -12457,15 +12253,15 @@ public final class SignalServiceProtos {
           } else {
             promoteMessageBuilder_.setMessage(builderForValue.build());
           }
-          bitField0_ |= 0x00000010;
+          bitField0_ |= 0x00000008;
           return this;
         }
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 5;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 4;</code>
          */
         public Builder mergePromoteMessage(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage value) {
           if (promoteMessageBuilder_ == null) {
-            if (((bitField0_ & 0x00000010) == 0x00000010) &&
+            if (((bitField0_ & 0x00000008) == 0x00000008) &&
                 promoteMessage_ != org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage.getDefaultInstance()) {
               promoteMessage_ =
                 org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage.newBuilder(promoteMessage_).mergeFrom(value).buildPartial();
@@ -12476,11 +12272,11 @@ public final class SignalServiceProtos {
           } else {
             promoteMessageBuilder_.mergeFrom(value);
           }
-          bitField0_ |= 0x00000010;
+          bitField0_ |= 0x00000008;
           return this;
         }
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 5;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 4;</code>
          */
         public Builder clearPromoteMessage() {
           if (promoteMessageBuilder_ == null) {
@@ -12489,19 +12285,19 @@ public final class SignalServiceProtos {
           } else {
             promoteMessageBuilder_.clear();
           }
-          bitField0_ = (bitField0_ & ~0x00000010);
+          bitField0_ = (bitField0_ & ~0x00000008);
           return this;
         }
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 5;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 4;</code>
          */
         public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage.Builder getPromoteMessageBuilder() {
-          bitField0_ |= 0x00000010;
+          bitField0_ |= 0x00000008;
           onChanged();
           return getPromoteMessageFieldBuilder().getBuilder();
         }
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 5;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 4;</code>
          */
         public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessageOrBuilder getPromoteMessageOrBuilder() {
           if (promoteMessageBuilder_ != null) {
@@ -12511,7 +12307,7 @@ public final class SignalServiceProtos {
           }
         }
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 5;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdatePromoteMessage promoteMessage = 4;</code>
          */
         private com.google.protobuf.SingleFieldBuilder<
             org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdatePromoteMessageOrBuilder> 
@@ -12527,18 +12323,18 @@ public final class SignalServiceProtos {
           return promoteMessageBuilder_;
         }
 
-        // optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 6;
+        // optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 5;
         private org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage.getDefaultInstance();
         private com.google.protobuf.SingleFieldBuilder<
             org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessageOrBuilder> memberLeftMessageBuilder_;
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 6;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 5;</code>
          */
         public boolean hasMemberLeftMessage() {
-          return ((bitField0_ & 0x00000020) == 0x00000020);
+          return ((bitField0_ & 0x00000010) == 0x00000010);
         }
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 6;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 5;</code>
          */
         public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage getMemberLeftMessage() {
           if (memberLeftMessageBuilder_ == null) {
@@ -12548,7 +12344,7 @@ public final class SignalServiceProtos {
           }
         }
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 6;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 5;</code>
          */
         public Builder setMemberLeftMessage(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage value) {
           if (memberLeftMessageBuilder_ == null) {
@@ -12560,11 +12356,11 @@ public final class SignalServiceProtos {
           } else {
             memberLeftMessageBuilder_.setMessage(value);
           }
-          bitField0_ |= 0x00000020;
+          bitField0_ |= 0x00000010;
           return this;
         }
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 6;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 5;</code>
          */
         public Builder setMemberLeftMessage(
             org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage.Builder builderForValue) {
@@ -12574,15 +12370,15 @@ public final class SignalServiceProtos {
           } else {
             memberLeftMessageBuilder_.setMessage(builderForValue.build());
           }
-          bitField0_ |= 0x00000020;
+          bitField0_ |= 0x00000010;
           return this;
         }
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 6;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 5;</code>
          */
         public Builder mergeMemberLeftMessage(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage value) {
           if (memberLeftMessageBuilder_ == null) {
-            if (((bitField0_ & 0x00000020) == 0x00000020) &&
+            if (((bitField0_ & 0x00000010) == 0x00000010) &&
                 memberLeftMessage_ != org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage.getDefaultInstance()) {
               memberLeftMessage_ =
                 org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage.newBuilder(memberLeftMessage_).mergeFrom(value).buildPartial();
@@ -12593,11 +12389,11 @@ public final class SignalServiceProtos {
           } else {
             memberLeftMessageBuilder_.mergeFrom(value);
           }
-          bitField0_ |= 0x00000020;
+          bitField0_ |= 0x00000010;
           return this;
         }
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 6;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 5;</code>
          */
         public Builder clearMemberLeftMessage() {
           if (memberLeftMessageBuilder_ == null) {
@@ -12606,19 +12402,19 @@ public final class SignalServiceProtos {
           } else {
             memberLeftMessageBuilder_.clear();
           }
-          bitField0_ = (bitField0_ & ~0x00000020);
+          bitField0_ = (bitField0_ & ~0x00000010);
           return this;
         }
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 6;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 5;</code>
          */
         public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage.Builder getMemberLeftMessageBuilder() {
-          bitField0_ |= 0x00000020;
+          bitField0_ |= 0x00000010;
           onChanged();
           return getMemberLeftMessageFieldBuilder().getBuilder();
         }
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 6;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 5;</code>
          */
         public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessageOrBuilder getMemberLeftMessageOrBuilder() {
           if (memberLeftMessageBuilder_ != null) {
@@ -12628,7 +12424,7 @@ public final class SignalServiceProtos {
           }
         }
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 6;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdateMemberLeftMessage memberLeftMessage = 5;</code>
          */
         private com.google.protobuf.SingleFieldBuilder<
             org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberLeftMessageOrBuilder> 
@@ -12644,18 +12440,18 @@ public final class SignalServiceProtos {
           return memberLeftMessageBuilder_;
         }
 
-        // optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 7;
+        // optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 6;
         private org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage inviteResponse_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage.getDefaultInstance();
         private com.google.protobuf.SingleFieldBuilder<
             org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessageOrBuilder> inviteResponseBuilder_;
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 7;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 6;</code>
          */
         public boolean hasInviteResponse() {
-          return ((bitField0_ & 0x00000040) == 0x00000040);
+          return ((bitField0_ & 0x00000020) == 0x00000020);
         }
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 7;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 6;</code>
          */
         public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage getInviteResponse() {
           if (inviteResponseBuilder_ == null) {
@@ -12665,7 +12461,7 @@ public final class SignalServiceProtos {
           }
         }
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 7;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 6;</code>
          */
         public Builder setInviteResponse(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage value) {
           if (inviteResponseBuilder_ == null) {
@@ -12677,11 +12473,11 @@ public final class SignalServiceProtos {
           } else {
             inviteResponseBuilder_.setMessage(value);
           }
-          bitField0_ |= 0x00000040;
+          bitField0_ |= 0x00000020;
           return this;
         }
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 7;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 6;</code>
          */
         public Builder setInviteResponse(
             org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage.Builder builderForValue) {
@@ -12691,15 +12487,15 @@ public final class SignalServiceProtos {
           } else {
             inviteResponseBuilder_.setMessage(builderForValue.build());
           }
-          bitField0_ |= 0x00000040;
+          bitField0_ |= 0x00000020;
           return this;
         }
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 7;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 6;</code>
          */
         public Builder mergeInviteResponse(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage value) {
           if (inviteResponseBuilder_ == null) {
-            if (((bitField0_ & 0x00000040) == 0x00000040) &&
+            if (((bitField0_ & 0x00000020) == 0x00000020) &&
                 inviteResponse_ != org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage.getDefaultInstance()) {
               inviteResponse_ =
                 org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage.newBuilder(inviteResponse_).mergeFrom(value).buildPartial();
@@ -12710,11 +12506,11 @@ public final class SignalServiceProtos {
           } else {
             inviteResponseBuilder_.mergeFrom(value);
           }
-          bitField0_ |= 0x00000040;
+          bitField0_ |= 0x00000020;
           return this;
         }
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 7;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 6;</code>
          */
         public Builder clearInviteResponse() {
           if (inviteResponseBuilder_ == null) {
@@ -12723,19 +12519,19 @@ public final class SignalServiceProtos {
           } else {
             inviteResponseBuilder_.clear();
           }
-          bitField0_ = (bitField0_ & ~0x00000040);
+          bitField0_ = (bitField0_ & ~0x00000020);
           return this;
         }
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 7;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 6;</code>
          */
         public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage.Builder getInviteResponseBuilder() {
-          bitField0_ |= 0x00000040;
+          bitField0_ |= 0x00000020;
           onChanged();
           return getInviteResponseFieldBuilder().getBuilder();
         }
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 7;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 6;</code>
          */
         public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessageOrBuilder getInviteResponseOrBuilder() {
           if (inviteResponseBuilder_ != null) {
@@ -12745,7 +12541,7 @@ public final class SignalServiceProtos {
           }
         }
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 7;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdateInviteResponseMessage inviteResponse = 6;</code>
          */
         private com.google.protobuf.SingleFieldBuilder<
             org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessageOrBuilder> 
@@ -12761,18 +12557,18 @@ public final class SignalServiceProtos {
           return inviteResponseBuilder_;
         }
 
-        // optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 8;
+        // optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 7;
         private org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage.getDefaultInstance();
         private com.google.protobuf.SingleFieldBuilder<
             org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessageOrBuilder> deleteMemberContentBuilder_;
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 8;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 7;</code>
          */
         public boolean hasDeleteMemberContent() {
-          return ((bitField0_ & 0x00000080) == 0x00000080);
+          return ((bitField0_ & 0x00000040) == 0x00000040);
         }
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 8;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 7;</code>
          */
         public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage getDeleteMemberContent() {
           if (deleteMemberContentBuilder_ == null) {
@@ -12782,7 +12578,7 @@ public final class SignalServiceProtos {
           }
         }
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 8;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 7;</code>
          */
         public Builder setDeleteMemberContent(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage value) {
           if (deleteMemberContentBuilder_ == null) {
@@ -12794,11 +12590,11 @@ public final class SignalServiceProtos {
           } else {
             deleteMemberContentBuilder_.setMessage(value);
           }
-          bitField0_ |= 0x00000080;
+          bitField0_ |= 0x00000040;
           return this;
         }
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 8;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 7;</code>
          */
         public Builder setDeleteMemberContent(
             org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage.Builder builderForValue) {
@@ -12808,15 +12604,15 @@ public final class SignalServiceProtos {
           } else {
             deleteMemberContentBuilder_.setMessage(builderForValue.build());
           }
-          bitField0_ |= 0x00000080;
+          bitField0_ |= 0x00000040;
           return this;
         }
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 8;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 7;</code>
          */
         public Builder mergeDeleteMemberContent(org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage value) {
           if (deleteMemberContentBuilder_ == null) {
-            if (((bitField0_ & 0x00000080) == 0x00000080) &&
+            if (((bitField0_ & 0x00000040) == 0x00000040) &&
                 deleteMemberContent_ != org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage.getDefaultInstance()) {
               deleteMemberContent_ =
                 org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage.newBuilder(deleteMemberContent_).mergeFrom(value).buildPartial();
@@ -12827,11 +12623,11 @@ public final class SignalServiceProtos {
           } else {
             deleteMemberContentBuilder_.mergeFrom(value);
           }
-          bitField0_ |= 0x00000080;
+          bitField0_ |= 0x00000040;
           return this;
         }
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 8;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 7;</code>
          */
         public Builder clearDeleteMemberContent() {
           if (deleteMemberContentBuilder_ == null) {
@@ -12840,19 +12636,19 @@ public final class SignalServiceProtos {
           } else {
             deleteMemberContentBuilder_.clear();
           }
-          bitField0_ = (bitField0_ & ~0x00000080);
+          bitField0_ = (bitField0_ & ~0x00000040);
           return this;
         }
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 8;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 7;</code>
          */
         public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage.Builder getDeleteMemberContentBuilder() {
-          bitField0_ |= 0x00000080;
+          bitField0_ |= 0x00000040;
           onChanged();
           return getDeleteMemberContentFieldBuilder().getBuilder();
         }
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 8;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 7;</code>
          */
         public org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessageOrBuilder getDeleteMemberContentOrBuilder() {
           if (deleteMemberContentBuilder_ != null) {
@@ -12862,7 +12658,7 @@ public final class SignalServiceProtos {
           }
         }
         /**
-         * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 8;</code>
+         * <code>optional .signalservice.DataMessage.GroupUpdateDeleteMemberContentMessage deleteMemberContent = 7;</code>
          */
         private com.google.protobuf.SingleFieldBuilder<
             org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessageOrBuilder> 
@@ -36086,7 +35882,7 @@ public final class SignalServiceProtos {
       "\"\226\001\n\032DataExtractionNotification\022<\n\004type\030" +
       "\001 \002(\0162..signalservice.DataExtractionNoti" +
       "fication.Type\022\021\n\ttimestamp\030\002 \001(\004\"\'\n\004Type" +
-      "\022\016\n\nSCREENSHOT\020\001\022\017\n\013MEDIA_SAVED\020\002\"\210\034\n\013Da" +
+      "\022\016\n\nSCREENSHOT\020\001\022\017\n\013MEDIA_SAVED\020\002\"\274\033\n\013Da" +
       "taMessage\022\014\n\004body\030\001 \001(\t\0225\n\013attachments\030\002" +
       " \003(\0132 .signalservice.AttachmentPointer\022\r" +
       "\n\005flags\030\004 \001(\r\022\023\n\013expireTimer\030\005 \001(\r\022\022\n\npr" +
@@ -36115,114 +35911,112 @@ public final class SignalServiceProtos {
       "(\0132 .signalservice.AttachmentPointer\032:\n\013" +
       "LokiProfile\022\023\n\013displayName\030\001 \001(\t\022\026\n\016prof" +
       "ilePicture\030\002 \001(\t\0320\n\023OpenGroupInvitation\022" +
-      "\013\n\003url\030\001 \002(\t\022\014\n\004name\030\003 \002(\t\032\256\005\n\022GroupUpda" +
+      "\013\n\003url\030\001 \002(\t\022\014\n\004name\030\003 \002(\t\032\342\004\n\022GroupUpda" +
       "teMessage\022J\n\rinviteMessage\030\001 \001(\01323.signa" +
       "lservice.DataMessage.GroupUpdateInviteMe" +
-      "ssage\022J\n\rdeleteMessage\030\002 \001(\01323.signalser" +
-      "vice.DataMessage.GroupUpdateDeleteMessag" +
-      "e\022R\n\021infoChangeMessage\030\003 \001(\01327.signalser" +
-      "vice.DataMessage.GroupUpdateInfoChangeMe",
-      "ssage\022V\n\023memberChangeMessage\030\004 \001(\01329.sig" +
-      "nalservice.DataMessage.GroupUpdateMember" +
-      "ChangeMessage\022L\n\016promoteMessage\030\005 \001(\01324." +
-      "signalservice.DataMessage.GroupUpdatePro" +
-      "moteMessage\022R\n\021memberLeftMessage\030\006 \001(\01327" +
-      ".signalservice.DataMessage.GroupUpdateMe" +
-      "mberLeftMessage\022S\n\016inviteResponse\030\007 \001(\0132" +
-      ";.signalservice.DataMessage.GroupUpdateI" +
-      "nviteResponseMessage\022]\n\023deleteMemberCont" +
-      "ent\030\010 \001(\0132@.signalservice.DataMessage.Gr",
-      "oupUpdateDeleteMemberContentMessage\032p\n\030G" +
-      "roupUpdateInviteMessage\022\026\n\016groupSessionI" +
-      "d\030\001 \002(\t\022\014\n\004name\030\002 \002(\t\022\026\n\016memberAuthData\030" +
-      "\003 \002(\014\022\026\n\016adminSignature\030\004 \002(\014\032L\n\030GroupUp" +
-      "dateDeleteMessage\022\030\n\020memberSessionIds\030\001 " +
-      "\003(\t\022\026\n\016adminSignature\030\002 \002(\014\0326\n\031GroupUpda" +
-      "tePromoteMessage\022\031\n\021groupIdentitySeed\030\001 " +
-      "\002(\014\032\353\001\n\034GroupUpdateInfoChangeMessage\022J\n\004" +
-      "type\030\001 \002(\0162<.signalservice.DataMessage.G" +
-      "roupUpdateInfoChangeMessage.Type\022\023\n\013upda",
-      "tedName\030\002 \001(\t\022\031\n\021updatedExpiration\030\003 \001(\r" +
-      "\022\026\n\016adminSignature\030\004 \002(\014\"7\n\004Type\022\010\n\004NAME" +
-      "\020\001\022\n\n\006AVATAR\020\002\022\031\n\025DISAPPEARING_MESSAGES\020" +
-      "\003\032\345\001\n\036GroupUpdateMemberChangeMessage\022L\n\004" +
-      "type\030\001 \002(\0162>.signalservice.DataMessage.G" +
-      "roupUpdateMemberChangeMessage.Type\022\030\n\020me" +
-      "mberSessionIds\030\002 \003(\t\022\025\n\rhistoryShared\030\003 " +
-      "\001(\010\022\026\n\016adminSignature\030\004 \002(\014\",\n\004Type\022\t\n\005A" +
-      "DDED\020\001\022\013\n\007REMOVED\020\002\022\014\n\010PROMOTED\020\003\032\036\n\034Gro" +
-      "upUpdateMemberLeftMessage\0326\n GroupUpdate",
-      "InviteResponseMessage\022\022\n\nisApproved\030\001 \002(" +
-      "\010\032p\n%GroupUpdateDeleteMemberContentMessa" +
-      "ge\022\030\n\020memberSessionIds\030\001 \003(\t\022\025\n\rmessageH" +
-      "ashes\030\002 \003(\t\022\026\n\016adminSignature\030\003 \001(\014\032\203\005\n\031" +
-      "ClosedGroupControlMessage\022G\n\004type\030\001 \002(\0162" +
-      "9.signalservice.DataMessage.ClosedGroupC" +
-      "ontrolMessage.Type\022\021\n\tpublicKey\030\002 \001(\014\022\014\n" +
-      "\004name\030\003 \001(\t\0221\n\021encryptionKeyPair\030\004 \001(\0132\026" +
-      ".signalservice.KeyPair\022\017\n\007members\030\005 \003(\014\022" +
-      "\016\n\006admins\030\006 \003(\014\022U\n\010wrappers\030\007 \003(\0132C.sign",
-      "alservice.DataMessage.ClosedGroupControl" +
-      "Message.KeyPairWrapper\022\027\n\017expirationTime" +
-      "r\030\010 \001(\r\022\030\n\020memberPrivateKey\030\t \001(\014\022\022\n\npri" +
-      "vateKey\030\n \001(\014\032=\n\016KeyPairWrapper\022\021\n\tpubli" +
-      "cKey\030\001 \002(\014\022\030\n\020encryptedKeyPair\030\002 \002(\014\"\312\001\n" +
-      "\004Type\022\007\n\003NEW\020\001\022\027\n\023ENCRYPTION_KEY_PAIR\020\003\022" +
-      "\017\n\013NAME_CHANGE\020\004\022\021\n\rMEMBERS_ADDED\020\005\022\023\n\017M" +
-      "EMBERS_REMOVED\020\006\022\017\n\013MEMBER_LEFT\020\007\022\n\n\006INV" +
-      "ITE\020\t\022\013\n\007PROMOTE\020\n\022\020\n\014DELETE_GROUP\020\013\022\023\n\017" +
-      "DELETE_MESSAGES\020\014\022\026\n\022DELETE_ATTACHMENTS\020",
-      "\r\032\222\001\n\010Reaction\022\n\n\002id\030\001 \002(\004\022\016\n\006author\030\002 \002" +
-      "(\t\022\r\n\005emoji\030\003 \001(\t\022:\n\006action\030\004 \002(\0162*.sign" +
-      "alservice.DataMessage.Reaction.Action\"\037\n" +
-      "\006Action\022\t\n\005REACT\020\000\022\n\n\006REMOVE\020\001\"$\n\005Flags\022" +
-      "\033\n\027EXPIRATION_TIMER_UPDATE\020\002\"B\n\022GroupDel" +
-      "eteMessage\022\021\n\tpublicKey\030\001 \002(\014\022\031\n\021lastEnc" +
-      "ryptionKey\030\002 \002(\014\"\030\n\026GroupMemberLeftMessa" +
-      "ge\"O\n\022GroupInviteMessage\022\021\n\tpublicKey\030\001 " +
-      "\002(\014\022\014\n\004name\030\002 \002(\t\022\030\n\020memberPrivateKey\030\003 " +
-      "\002(\014\"E\n\023GroupPromoteMessage\022\021\n\tpublicKey\030",
-      "\001 \002(\014\022\033\n\023encryptedPrivateKey\030\002 \002(\014\"\352\001\n\013C" +
-      "allMessage\022-\n\004type\030\001 \002(\0162\037.signalservice" +
-      ".CallMessage.Type\022\014\n\004sdps\030\002 \003(\t\022\027\n\017sdpML" +
-      "ineIndexes\030\003 \003(\r\022\017\n\007sdpMids\030\004 \003(\t\022\014\n\004uui" +
-      "d\030\005 \002(\t\"f\n\004Type\022\r\n\tPRE_OFFER\020\006\022\t\n\005OFFER\020" +
-      "\001\022\n\n\006ANSWER\020\002\022\026\n\022PROVISIONAL_ANSWER\020\003\022\022\n" +
-      "\016ICE_CANDIDATES\020\004\022\014\n\010END_CALL\020\005\"\245\004\n\024Conf" +
-      "igurationMessage\022E\n\014closedGroups\030\001 \003(\0132/" +
-      ".signalservice.ConfigurationMessage.Clos" +
-      "edGroup\022\022\n\nopenGroups\030\002 \003(\t\022\023\n\013displayNa",
-      "me\030\003 \001(\t\022\026\n\016profilePicture\030\004 \001(\t\022\022\n\nprof" +
-      "ileKey\030\005 \001(\014\022=\n\010contacts\030\006 \003(\0132+.signals" +
-      "ervice.ConfigurationMessage.Contact\032\233\001\n\013" +
-      "ClosedGroup\022\021\n\tpublicKey\030\001 \001(\014\022\014\n\004name\030\002" +
-      " \001(\t\0221\n\021encryptionKeyPair\030\003 \001(\0132\026.signal" +
-      "service.KeyPair\022\017\n\007members\030\004 \003(\014\022\016\n\006admi" +
-      "ns\030\005 \003(\014\022\027\n\017expirationTimer\030\006 \001(\r\032\223\001\n\007Co" +
-      "ntact\022\021\n\tpublicKey\030\001 \002(\014\022\014\n\004name\030\002 \002(\t\022\026" +
-      "\n\016profilePicture\030\003 \001(\t\022\022\n\nprofileKey\030\004 \001" +
-      "(\014\022\022\n\nisApproved\030\005 \001(\010\022\021\n\tisBlocked\030\006 \001(",
-      "\010\022\024\n\014didApproveMe\030\007 \001(\010\"y\n\026MessageReques" +
-      "tResponse\022\022\n\nisApproved\030\001 \002(\010\022\022\n\nprofile" +
-      "Key\030\002 \001(\014\0227\n\007profile\030\003 \001(\0132&.signalservi" +
-      "ce.DataMessage.LokiProfile\"\375\001\n\023SharedCon" +
-      "figMessage\0225\n\004kind\030\001 \002(\0162\'.signalservice" +
-      ".SharedConfigMessage.Kind\022\r\n\005seqno\030\002 \002(\003" +
-      "\022\014\n\004data\030\003 \002(\014\"\221\001\n\004Kind\022\020\n\014USER_PROFILE\020" +
-      "\001\022\014\n\010CONTACTS\020\002\022\027\n\023CONVO_INFO_VOLATILE\020\003" +
-      "\022\n\n\006GROUPS\020\004\022\025\n\021CLOSED_GROUP_INFO\020\005\022\030\n\024C" +
-      "LOSED_GROUP_MEMBERS\020\006\022\023\n\017ENCRYPTION_KEYS",
-      "\020\007\"u\n\016ReceiptMessage\0220\n\004type\030\001 \002(\0162\".sig" +
-      "nalservice.ReceiptMessage.Type\022\021\n\ttimest" +
-      "amp\030\002 \003(\004\"\036\n\004Type\022\014\n\010DELIVERY\020\000\022\010\n\004READ\020" +
-      "\001\"\354\001\n\021AttachmentPointer\022\n\n\002id\030\001 \002(\006\022\023\n\013c" +
-      "ontentType\030\002 \001(\t\022\013\n\003key\030\003 \001(\014\022\014\n\004size\030\004 " +
-      "\001(\r\022\021\n\tthumbnail\030\005 \001(\014\022\016\n\006digest\030\006 \001(\014\022\020" +
-      "\n\010fileName\030\007 \001(\t\022\r\n\005flags\030\010 \001(\r\022\r\n\005width" +
-      "\030\t \001(\r\022\016\n\006height\030\n \001(\r\022\017\n\007caption\030\013 \001(\t\022" +
-      "\013\n\003url\030e \001(\t\"\032\n\005Flags\022\021\n\rVOICE_MESSAGE\020\001" +
-      "B3\n\034org.session.libsignal.protosB\023Signal",
-      "ServiceProtos"
+      "ssage\022R\n\021infoChangeMessage\030\002 \001(\01327.signa" +
+      "lservice.DataMessage.GroupUpdateInfoChan" +
+      "geMessage\022V\n\023memberChangeMessage\030\003 \001(\01329" +
+      ".signalservice.DataMessage.GroupUpdateMe",
+      "mberChangeMessage\022L\n\016promoteMessage\030\004 \001(" +
+      "\01324.signalservice.DataMessage.GroupUpdat" +
+      "ePromoteMessage\022R\n\021memberLeftMessage\030\005 \001" +
+      "(\01327.signalservice.DataMessage.GroupUpda" +
+      "teMemberLeftMessage\022S\n\016inviteResponse\030\006 " +
+      "\001(\0132;.signalservice.DataMessage.GroupUpd" +
+      "ateInviteResponseMessage\022]\n\023deleteMember" +
+      "Content\030\007 \001(\0132@.signalservice.DataMessag" +
+      "e.GroupUpdateDeleteMemberContentMessage\032" +
+      "p\n\030GroupUpdateInviteMessage\022\026\n\016groupSess",
+      "ionId\030\001 \002(\t\022\014\n\004name\030\002 \002(\t\022\026\n\016memberAuthD" +
+      "ata\030\003 \002(\014\022\026\n\016adminSignature\030\004 \002(\014\032L\n\030Gro" +
+      "upUpdateDeleteMessage\022\030\n\020memberSessionId" +
+      "s\030\001 \003(\t\022\026\n\016adminSignature\030\002 \002(\014\0326\n\031Group" +
+      "UpdatePromoteMessage\022\031\n\021groupIdentitySee" +
+      "d\030\001 \002(\014\032\353\001\n\034GroupUpdateInfoChangeMessage" +
+      "\022J\n\004type\030\001 \002(\0162<.signalservice.DataMessa" +
+      "ge.GroupUpdateInfoChangeMessage.Type\022\023\n\013" +
+      "updatedName\030\002 \001(\t\022\031\n\021updatedExpiration\030\003" +
+      " \001(\r\022\026\n\016adminSignature\030\004 \002(\014\"7\n\004Type\022\010\n\004",
+      "NAME\020\001\022\n\n\006AVATAR\020\002\022\031\n\025DISAPPEARING_MESSA" +
+      "GES\020\003\032\345\001\n\036GroupUpdateMemberChangeMessage" +
+      "\022L\n\004type\030\001 \002(\0162>.signalservice.DataMessa" +
+      "ge.GroupUpdateMemberChangeMessage.Type\022\030" +
+      "\n\020memberSessionIds\030\002 \003(\t\022\025\n\rhistoryShare" +
+      "d\030\003 \001(\010\022\026\n\016adminSignature\030\004 \002(\014\",\n\004Type\022" +
+      "\t\n\005ADDED\020\001\022\013\n\007REMOVED\020\002\022\014\n\010PROMOTED\020\003\032\036\n" +
+      "\034GroupUpdateMemberLeftMessage\0326\n GroupUp" +
+      "dateInviteResponseMessage\022\022\n\nisApproved\030" +
+      "\001 \002(\010\032p\n%GroupUpdateDeleteMemberContentM",
+      "essage\022\030\n\020memberSessionIds\030\001 \003(\t\022\025\n\rmess" +
+      "ageHashes\030\002 \003(\t\022\026\n\016adminSignature\030\003 \001(\014\032" +
+      "\203\005\n\031ClosedGroupControlMessage\022G\n\004type\030\001 " +
+      "\002(\01629.signalservice.DataMessage.ClosedGr" +
+      "oupControlMessage.Type\022\021\n\tpublicKey\030\002 \001(" +
+      "\014\022\014\n\004name\030\003 \001(\t\0221\n\021encryptionKeyPair\030\004 \001" +
+      "(\0132\026.signalservice.KeyPair\022\017\n\007members\030\005 " +
+      "\003(\014\022\016\n\006admins\030\006 \003(\014\022U\n\010wrappers\030\007 \003(\0132C." +
+      "signalservice.DataMessage.ClosedGroupCon" +
+      "trolMessage.KeyPairWrapper\022\027\n\017expiration",
+      "Timer\030\010 \001(\r\022\030\n\020memberPrivateKey\030\t \001(\014\022\022\n" +
+      "\nprivateKey\030\n \001(\014\032=\n\016KeyPairWrapper\022\021\n\tp" +
+      "ublicKey\030\001 \002(\014\022\030\n\020encryptedKeyPair\030\002 \002(\014" +
+      "\"\312\001\n\004Type\022\007\n\003NEW\020\001\022\027\n\023ENCRYPTION_KEY_PAI" +
+      "R\020\003\022\017\n\013NAME_CHANGE\020\004\022\021\n\rMEMBERS_ADDED\020\005\022" +
+      "\023\n\017MEMBERS_REMOVED\020\006\022\017\n\013MEMBER_LEFT\020\007\022\n\n" +
+      "\006INVITE\020\t\022\013\n\007PROMOTE\020\n\022\020\n\014DELETE_GROUP\020\013" +
+      "\022\023\n\017DELETE_MESSAGES\020\014\022\026\n\022DELETE_ATTACHME" +
+      "NTS\020\r\032\222\001\n\010Reaction\022\n\n\002id\030\001 \002(\004\022\016\n\006author" +
+      "\030\002 \002(\t\022\r\n\005emoji\030\003 \001(\t\022:\n\006action\030\004 \002(\0162*.",
+      "signalservice.DataMessage.Reaction.Actio" +
+      "n\"\037\n\006Action\022\t\n\005REACT\020\000\022\n\n\006REMOVE\020\001\"$\n\005Fl" +
+      "ags\022\033\n\027EXPIRATION_TIMER_UPDATE\020\002\"B\n\022Grou" +
+      "pDeleteMessage\022\021\n\tpublicKey\030\001 \002(\014\022\031\n\021las" +
+      "tEncryptionKey\030\002 \002(\014\"\030\n\026GroupMemberLeftM" +
+      "essage\"O\n\022GroupInviteMessage\022\021\n\tpublicKe" +
+      "y\030\001 \002(\014\022\014\n\004name\030\002 \002(\t\022\030\n\020memberPrivateKe" +
+      "y\030\003 \002(\014\"E\n\023GroupPromoteMessage\022\021\n\tpublic" +
+      "Key\030\001 \002(\014\022\033\n\023encryptedPrivateKey\030\002 \002(\014\"\352" +
+      "\001\n\013CallMessage\022-\n\004type\030\001 \002(\0162\037.signalser",
+      "vice.CallMessage.Type\022\014\n\004sdps\030\002 \003(\t\022\027\n\017s" +
+      "dpMLineIndexes\030\003 \003(\r\022\017\n\007sdpMids\030\004 \003(\t\022\014\n" +
+      "\004uuid\030\005 \002(\t\"f\n\004Type\022\r\n\tPRE_OFFER\020\006\022\t\n\005OF" +
+      "FER\020\001\022\n\n\006ANSWER\020\002\022\026\n\022PROVISIONAL_ANSWER\020" +
+      "\003\022\022\n\016ICE_CANDIDATES\020\004\022\014\n\010END_CALL\020\005\"\245\004\n\024" +
+      "ConfigurationMessage\022E\n\014closedGroups\030\001 \003" +
+      "(\0132/.signalservice.ConfigurationMessage." +
+      "ClosedGroup\022\022\n\nopenGroups\030\002 \003(\t\022\023\n\013displ" +
+      "ayName\030\003 \001(\t\022\026\n\016profilePicture\030\004 \001(\t\022\022\n\n" +
+      "profileKey\030\005 \001(\014\022=\n\010contacts\030\006 \003(\0132+.sig",
+      "nalservice.ConfigurationMessage.Contact\032" +
+      "\233\001\n\013ClosedGroup\022\021\n\tpublicKey\030\001 \001(\014\022\014\n\004na" +
+      "me\030\002 \001(\t\0221\n\021encryptionKeyPair\030\003 \001(\0132\026.si" +
+      "gnalservice.KeyPair\022\017\n\007members\030\004 \003(\014\022\016\n\006" +
+      "admins\030\005 \003(\014\022\027\n\017expirationTimer\030\006 \001(\r\032\223\001" +
+      "\n\007Contact\022\021\n\tpublicKey\030\001 \002(\014\022\014\n\004name\030\002 \002" +
+      "(\t\022\026\n\016profilePicture\030\003 \001(\t\022\022\n\nprofileKey" +
+      "\030\004 \001(\014\022\022\n\nisApproved\030\005 \001(\010\022\021\n\tisBlocked\030" +
+      "\006 \001(\010\022\024\n\014didApproveMe\030\007 \001(\010\"y\n\026MessageRe" +
+      "questResponse\022\022\n\nisApproved\030\001 \002(\010\022\022\n\npro",
+      "fileKey\030\002 \001(\014\0227\n\007profile\030\003 \001(\0132&.signals" +
+      "ervice.DataMessage.LokiProfile\"\375\001\n\023Share" +
+      "dConfigMessage\0225\n\004kind\030\001 \002(\0162\'.signalser" +
+      "vice.SharedConfigMessage.Kind\022\r\n\005seqno\030\002" +
+      " \002(\003\022\014\n\004data\030\003 \002(\014\"\221\001\n\004Kind\022\020\n\014USER_PROF" +
+      "ILE\020\001\022\014\n\010CONTACTS\020\002\022\027\n\023CONVO_INFO_VOLATI" +
+      "LE\020\003\022\n\n\006GROUPS\020\004\022\025\n\021CLOSED_GROUP_INFO\020\005\022" +
+      "\030\n\024CLOSED_GROUP_MEMBERS\020\006\022\023\n\017ENCRYPTION_" +
+      "KEYS\020\007\"u\n\016ReceiptMessage\0220\n\004type\030\001 \002(\0162\"" +
+      ".signalservice.ReceiptMessage.Type\022\021\n\tti",
+      "mestamp\030\002 \003(\004\"\036\n\004Type\022\014\n\010DELIVERY\020\000\022\010\n\004R" +
+      "EAD\020\001\"\354\001\n\021AttachmentPointer\022\n\n\002id\030\001 \002(\006\022" +
+      "\023\n\013contentType\030\002 \001(\t\022\013\n\003key\030\003 \001(\014\022\014\n\004siz" +
+      "e\030\004 \001(\r\022\021\n\tthumbnail\030\005 \001(\014\022\016\n\006digest\030\006 \001" +
+      "(\014\022\020\n\010fileName\030\007 \001(\t\022\r\n\005flags\030\010 \001(\r\022\r\n\005w" +
+      "idth\030\t \001(\r\022\016\n\006height\030\n \001(\r\022\017\n\007caption\030\013 " +
+      "\001(\t\022\013\n\003url\030e \001(\t\"\032\n\005Flags\022\021\n\rVOICE_MESSA" +
+      "GE\020\001B3\n\034org.session.libsignal.protosB\023Si" +
+      "gnalServiceProtos"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -36306,7 +36100,7 @@ public final class SignalServiceProtos {
           internal_static_signalservice_DataMessage_GroupUpdateMessage_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_signalservice_DataMessage_GroupUpdateMessage_descriptor,
-              new java.lang.String[] { "InviteMessage", "DeleteMessage", "InfoChangeMessage", "MemberChangeMessage", "PromoteMessage", "MemberLeftMessage", "InviteResponse", "DeleteMemberContent", });
+              new java.lang.String[] { "InviteMessage", "InfoChangeMessage", "MemberChangeMessage", "PromoteMessage", "MemberLeftMessage", "InviteResponse", "DeleteMemberContent", });
           internal_static_signalservice_DataMessage_GroupUpdateInviteMessage_descriptor =
             internal_static_signalservice_DataMessage_descriptor.getNestedTypes().get(5);
           internal_static_signalservice_DataMessage_GroupUpdateInviteMessage_fieldAccessorTable = new

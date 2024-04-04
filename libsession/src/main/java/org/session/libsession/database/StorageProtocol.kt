@@ -30,6 +30,7 @@ import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAt
 import org.session.libsession.messaging.sending_receiving.data_extraction.DataExtractionNotificationInfoMessage
 import org.session.libsession.messaging.sending_receiving.link_preview.LinkPreview
 import org.session.libsession.messaging.sending_receiving.quotes.QuoteModel
+import org.session.libsession.messaging.utilities.UpdateMessageData
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupRecord
 import org.session.libsession.utilities.recipients.Recipient
@@ -173,7 +174,8 @@ interface StorageProtocol {
     fun getLibSessionClosedGroup(groupSessionId: String): GroupInfo.ClosedGroupInfo?
     fun getClosedGroupDisplayInfo(groupSessionId: String): GroupDisplayInfo?
     fun inviteClosedGroupMembers(groupSessionId: String, invitees: List<String>)
-    fun insertGroupInfoChange(message: GroupUpdated, closedGroup: SessionId)
+    fun insertGroupInfoChange(message: GroupUpdated, closedGroup: SessionId): Long?
+    fun updateGroupInfoChange(messageId: Long, newType: UpdateMessageData.Kind)
     fun promoteMember(groupSessionId: String, promotions: Array<String>)
     fun removeMember(groupSessionId: String, removedMembers: Array<String>)
     fun handlePromoted(keyPair: KeyPair)

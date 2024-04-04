@@ -124,6 +124,10 @@ class UpdateMessageData () {
             return UpdateMessageData(Kind.OpenGroupInvitation(url, name))
         }
 
+        fun buildGroupLeaveUpdate(newType: Kind): UpdateMessageData {
+            return UpdateMessageData(newType)
+        }
+
         @JvmStatic
         fun fromJSON(json: String): UpdateMessageData? {
              return try {
@@ -133,6 +137,7 @@ class UpdateMessageData () {
                 null
             }
         }
+
     }
 
     fun toJSON(): String {
