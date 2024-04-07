@@ -175,6 +175,7 @@ interface StorageProtocol {
     fun getClosedGroupDisplayInfo(groupSessionId: String): GroupDisplayInfo?
     fun inviteClosedGroupMembers(groupSessionId: String, invitees: List<String>)
     fun insertGroupInfoChange(message: GroupUpdated, closedGroup: SessionId): Long?
+    fun insertGroupInfoLeaving(closedGroup: SessionId): Long?
     fun updateGroupInfoChange(messageId: Long, newType: UpdateMessageData.Kind)
     fun promoteMember(groupSessionId: String, promotions: Array<String>)
     fun removeMember(groupSessionId: String, removedMembers: Array<String>)

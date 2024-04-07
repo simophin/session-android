@@ -1542,6 +1542,14 @@ open class Storage(
         return insertUpdateControlMessage(updateData, sentTimestamp, senderPublicKey, closedGroup)
     }
 
+    override fun insertGroupInfoLeaving(closedGroup: SessionId): Long? {
+        val sentTimestamp = SnodeAPI.nowWithOffset
+        val senderPublicKey = getUserPublicKey() ?: return null
+        val updateData = UpdateMessageData.buildGroupLeaveUpdate(UpdateMessageData.Kind.GroupLeaving)
+
+        return insertUpdateControlMessage(updateData, sentTimestamp, senderPublicKey, closedGroup)
+    }
+
     override fun updateGroupInfoChange(messageId: Long, newType: UpdateMessageData.Kind) {
         val mmsDB = DatabaseComponent.get(context).mmsDatabase()
         val newMessage = UpdateMessageData.buildGroupLeaveUpdate(newType)

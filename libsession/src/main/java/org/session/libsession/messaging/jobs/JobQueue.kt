@@ -134,6 +134,7 @@ class JobQueue : JobDelegate {
                     is NotifyPNServerJob,
                     is AttachmentUploadJob,
                     is GroupLeavingJob,
+                    is LibSessionGroupLeavingJob,
                     is MessageSendJob -> {
                         txQueue.send(job)
                     }
