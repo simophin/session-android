@@ -105,7 +105,7 @@ class PushRegistryV2 @Inject constructor(private val pushReceiver: PushReceiver)
         val pnKey = pushReceiver.getOrCreateNotificationKey()
 
         val timestamp = SnodeAPI.nowWithOffset / 1000 // get timestamp in ms -> s
-        val namespaces = listOf(Namespace.CLOSED_GROUP_MESSAGES(),Namespace.CLOSED_GROUP_INFO(), Namespace.CLOSED_GROUP_MEMBERS())
+        val namespaces = listOf(Namespace.CLOSED_GROUP_MESSAGES())
         val sigData = "MONITOR${groupSessionId}${timestamp}1${namespaces.joinToString(separator = ",")}".encodeToByteArray()
         val subkeyAuth = groupKeysConfig.subAccountSign(sigData, authData)
         val requestParameters = SubscriptionRequest(

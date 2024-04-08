@@ -233,9 +233,8 @@ class ConversationSettingsActivity: PassphraseRequiredActionBarActivity(), View.
                             R.string.conversation_settings_leave_group
                         ) {
                             lifecycleScope.launch {
-                                if (viewModel.leaveGroup()) {
-                                    finish()
-                                }
+                                viewModel.leaveGroup()
+                                finish()
                             }
                         }
                         cancelButton()

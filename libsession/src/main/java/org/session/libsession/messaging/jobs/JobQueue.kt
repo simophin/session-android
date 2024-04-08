@@ -240,7 +240,9 @@ class JobQueue : JobDelegate {
             OpenGroupDeleteJob.KEY,
             RetrieveProfileAvatarJob.KEY,
             ConfigurationSyncJob.KEY,
-            InviteContactsJob.KEY
+            InviteContactsJob.KEY,
+            GroupLeavingJob.KEY,
+            LibSessionGroupLeavingJob.KEY
         )
         allJobTypes.forEach { type ->
             resumePendingJobs(type)

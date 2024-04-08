@@ -6,6 +6,7 @@ import network.loki.messenger.libsession_util.Config
 import network.loki.messenger.libsession_util.util.GroupDisplayInfo
 import network.loki.messenger.libsession_util.util.GroupInfo
 import network.loki.messenger.libsession_util.util.KeyPair
+import nl.komponents.kovenant.Promise
 import org.session.libsession.messaging.BlindedIdMapping
 import org.session.libsession.messaging.calls.CallMessageType
 import org.session.libsession.messaging.contacts.Contact
@@ -181,9 +182,9 @@ interface StorageProtocol {
     fun removeMember(groupSessionId: String, removedMembers: Array<String>)
     fun handlePromoted(keyPair: KeyPair)
     fun handleMemberLeft(message: GroupUpdated, closedGroupId: SessionId)
-    fun leaveGroup(groupSessionId: String): Boolean
+    fun leaveGroup(groupSessionId: String, deleteOnLeave: Boolean): Boolean
     fun setName(groupSessionId: String, newName: String)
-    fun sendGroupUpdateDeleteMessage(groupSessionId: String, messageHashes: List<String>)
+    fun sendGroupUpdateDeleteMessage(groupSessionId: String, messageHashes: List<String>): Promise<Unit, Exception>
 
     // Groups
     fun getAllGroups(includeInactive: Boolean): List<GroupRecord>

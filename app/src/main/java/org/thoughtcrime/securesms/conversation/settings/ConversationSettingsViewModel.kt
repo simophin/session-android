@@ -10,8 +10,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import network.loki.messenger.libsession_util.util.GroupDisplayInfo
 import org.session.libsession.database.StorageProtocol
+import org.session.libsession.messaging.jobs.JobQueue
+import org.session.libsession.messaging.jobs.LibSessionGroupLeavingJob
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsignal.utilities.SessionId
 
 class ConversationSettingsViewModel(
     val threadId: Long,
@@ -70,9 +73,15 @@ class ConversationSettingsViewModel(
         ?.serialize()
         ?.let(storage::getClosedGroupDisplayInfo)
 
-    suspend fun leaveGroup(): Boolean {
+    // Assume that user has verified they don't want to add a new admin etc
+    suspend fun leaveGroup() {
+        val recipient = recipient ?: return
         return withContext(Dispatchers.IO) {
-            storage.leaveGroup(recipient!!.address.serialize())
+            val groupLeave = LibSessionGroupLeavingJob(
+                SessionId.from(recipient.address.serialize()),
+                true
+            )
+            JobQueue.shared.add(groupLeave)
         }
     }
 

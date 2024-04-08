@@ -805,7 +805,7 @@ object SnodeAPI {
         params
     }
 
-    fun subkeyCallback(authData: ByteArray, groupKeysConfig: GroupKeysConfig, freeAfter: Boolean = true): SignCallback = { message, timestamp, namespace ->
+    fun subkeyCallback(authData: ByteArray, groupKeysConfig: GroupKeysConfig, freeKeysAfterSign: Boolean = true): SignCallback = { message, timestamp, namespace ->
         val (subaccount, subaccountSig, sig) = groupKeysConfig.subAccountSign(message.toByteArray(), authData)
         val params = mutableMapOf<String, Any>(
             "subaccount" to subaccount,
@@ -818,7 +818,7 @@ object SnodeAPI {
         if (namespace != null && namespace != Namespace.DEFAULT()) {
             params += "namespace" to namespace
         }
-        if (freeAfter) {
+        if (freeKeysAfterSign) {
             groupKeysConfig.free()
         }
         params

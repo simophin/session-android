@@ -23,6 +23,7 @@ import network.loki.messenger.libsession_util.util.KeyPair
 import network.loki.messenger.libsession_util.util.Sodium
 import network.loki.messenger.libsession_util.util.UserPic
 import network.loki.messenger.libsession_util.util.afterSend
+import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.functional.bind
 import org.session.libsession.avatars.AvatarHelper
 import org.session.libsession.database.StorageProtocol
@@ -74,7 +75,10 @@ import org.session.libsession.messaging.utilities.UpdateMessageData
 import org.session.libsession.snode.OnionRequestAPI
 import org.session.libsession.snode.RawResponse
 import org.session.libsession.snode.SnodeAPI
+import org.session.libsession.snode.SnodeAPI.buildAuthenticatedDeleteBatchInfo
+import org.session.libsession.snode.SnodeAPI.buildAuthenticatedStoreBatchInfo
 import org.session.libsession.snode.SnodeAPI.signingKeyCallback
+import org.session.libsession.snode.SnodeAPI.subkeyCallback
 import org.session.libsession.snode.SnodeMessage
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.Address.Companion.fromSerialized
@@ -608,7 +612,7 @@ open class Storage(
     }
 
     private fun updateGroupInfo(groupInfoConfig: GroupInfoConfig, messageTimestamp: Long) {
-        val threadId = getOrCreateThreadIdFor(fromSerialized(groupInfoConfig.id().hexString()))
+        val threadId = getThreadId(fromSerialized(groupInfoConfig.id().hexString())) ?: return
         val recipient = getRecipientForThread(threadId) ?: return
         val db = DatabaseComponent.get(context).recipientDatabase()
         db.setProfileName(recipient, groupInfoConfig.getName())
@@ -1808,7 +1812,7 @@ open class Storage(
         }
     }
 
-    override fun leaveGroup(groupSessionId: String): Boolean {
+    override fun leaveGroup(groupSessionId: String, deleteOnLeave: Boolean): Boolean {
         val closedGroupId = SessionId.from(groupSessionId)
         val message = GroupUpdated(
             GroupUpdateMessage.newBuilder()
@@ -1816,17 +1820,20 @@ open class Storage(
                 .build()
         )
         try {
+            // throws on unsuccessful send
             MessageSender.sendNonDurably(message, fromSerialized(groupSessionId), false).get()
             pollerFactory.pollerFor(closedGroupId)?.stop()
             pushRegistry.unregisterForGroup(closedGroupId)
             // TODO: set "deleted" and post to -10 group namespace?
-            getThreadId(fromSerialized(groupSessionId))?.let { threadId ->
-                deleteConversation(threadId)
+            if (deleteOnLeave) {
+                getThreadId(fromSerialized(groupSessionId))?.let { threadId ->
+                    deleteConversation(threadId)
+                }
+                configFactory.removeGroup(closedGroupId)
+                ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
             }
-            configFactory.removeGroup(closedGroupId)
-            ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
         } catch (e: Exception) {
-            Log.e("ClosedGroup", "Failed to send leave group message")
+            Log.e("ClosedGroup", "Failed to send leave group message", e)
             return false
         }
         return true
@@ -1869,10 +1876,14 @@ open class Storage(
         insertGroupInfoChange(message, closedGroupId)
     }
 
-    override fun sendGroupUpdateDeleteMessage(groupSessionId: String, messageHashes: List<String>) {
-        val adminKey = configFactory.userGroups?.getClosedGroup(groupSessionId)?.adminKey ?: run {
-            Log.w("ClosedGroup", "Tryin to delete from non-admin, assuming all from us")
-            null
+    override fun sendGroupUpdateDeleteMessage(groupSessionId: String, messageHashes: List<String>): Promise<Unit, Exception> {
+        val closedGroup = configFactory.userGroups?.getClosedGroup(groupSessionId)
+            ?: return Promise.ofFail(NullPointerException("No group found"))
+
+        val adminKey = if (closedGroup.hasAdminKey()) closedGroup.adminKey else null
+        val subkeyCallback by lazy {
+            closedGroup.authData
+            subkeyCallback(closedGroup.authData, configFactory.getGroupKeysConfig(SessionId.from(groupSessionId))!!)
         }
         val groupDestination = Destination.ClosedGroup(groupSessionId)
         ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(groupDestination)
@@ -1895,7 +1906,22 @@ open class Storage(
         ).apply {
             sentTimestamp = timestamp
         }
-        MessageSender.send(message, fromSerialized(groupSessionId))
+
+        val signCallback = adminKey?.let(::signingKeyCallback) ?: subkeyCallback
+
+        val authenticatedDelete = buildAuthenticatedDeleteBatchInfo(groupSessionId, messageHashes, required = true)!!
+        val authenticatedStore = buildAuthenticatedStoreBatchInfo(
+            Namespace.CLOSED_GROUP_MESSAGES(),
+            MessageSender.buildWrappedMessageToSnode(Destination.ClosedGroup(groupSessionId), message, false)
+        )!!
+        SnodeAPI.getSingleTargetSnode(groupSessionId).bind { snode ->
+            SnodeAPI.getRawBatchResponse(
+                snode,
+                groupSessionId,
+                listOf(authenticatedDelete, authenticatedStore),
+                sequence = true
+            )
+        }
     }
 
     override fun setServerCapabilities(server: String, capabilities: List<String>) {

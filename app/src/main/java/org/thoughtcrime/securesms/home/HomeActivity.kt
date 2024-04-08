@@ -37,6 +37,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.jobs.JobQueue
+import org.session.libsession.messaging.jobs.LibSessionGroupLeavingJob
 import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.Address
@@ -45,6 +46,7 @@ import org.session.libsession.utilities.ProfilePictureModifiedEvent
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.Log
+import org.session.libsignal.utilities.SessionId
 import org.session.libsignal.utilities.ThreadUtils
 import org.session.libsignal.utilities.toHexString
 import org.thoughtcrime.securesms.ApplicationContext
@@ -629,7 +631,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     private fun deleteConversation(thread: ThreadRecord) {
         val threadID = thread.threadId
         val recipient = thread.recipient
-        if (recipient.isGroupRecipient) {
+        if (recipient.isLegacyClosedGroupRecipient) {
             val group = groupDatabase.getGroup(recipient.address.toString()).orNull()
             if (group != null && !group.members.map { it.toString() }.contains(publicKey) || group == null) {
                 threadDb.deleteConversation(threadID)
@@ -671,7 +673,8 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                         }
                     }
                     if (recipient.address.isClosedGroup) {
-                        storage.leaveGroup(recipient.address.serialize())
+                        val groupLeave = LibSessionGroupLeavingJob(SessionId.from(recipient.address.serialize()), true)
+                        JobQueue.shared.add(groupLeave)
                     }
                     // Delete the conversation
                     val v2OpenGroup = DatabaseComponent.get(context).lokiThreadDatabase()

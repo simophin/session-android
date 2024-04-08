@@ -5,7 +5,7 @@ import org.session.libsession.messaging.utilities.Data
 import org.session.libsession.messaging.utilities.UpdateMessageData
 import org.session.libsignal.utilities.SessionId
 
-class LibSessionGroupLeavingJob(val sessionId: SessionId): Job {
+class LibSessionGroupLeavingJob(val sessionId: SessionId, val deleteOnLeave: Boolean): Job {
 
 
     override var delegate: JobDelegate? = null
@@ -26,22 +26,28 @@ class LibSessionGroupLeavingJob(val sessionId: SessionId): Job {
             return
         }
         // do actual group leave request
+
         // on success
-        storage.deleteConversation(/*Group's conversation ID*/ 0)
-        // on error
-        storage.updateGroupInfoChange(messageId, UpdateMessageData.Kind.GroupErrorQuit)
-        delegate?.handleJobSucceeded(this, dispatcherName)
+        if (storage.leaveGroup(sessionId.hexString(), deleteOnLeave)) {
+            // message is already deleted, succeed
+            delegate?.handleJobSucceeded(this, dispatcherName)
+        } else {
+            // Error leaving group, update the info message
+            storage.updateGroupInfoChange(messageId, UpdateMessageData.Kind.GroupErrorQuit)
+        }
     }
 
     override fun serialize(): Data =
         Data.Builder()
             .putString(SESSION_ID_KEY, sessionId.hexString())
+            .putBoolean(DELETE_ON_LEAVE_KEY, deleteOnLeave)
             .build()
 
     class Factory : Job.Factory<LibSessionGroupLeavingJob> {
         override fun create(data: Data): LibSessionGroupLeavingJob {
             return LibSessionGroupLeavingJob(
-                SessionId.from(data.getString(SESSION_ID_KEY))
+                SessionId.from(data.getString(SESSION_ID_KEY)),
+                data.getBoolean(DELETE_ON_LEAVE_KEY)
             )
         }
     }
@@ -51,6 +57,7 @@ class LibSessionGroupLeavingJob(val sessionId: SessionId): Job {
     companion object {
         const val KEY = "LibSessionGroupLeavingJob"
         private const val SESSION_ID_KEY = "SessionId"
+        private const val DELETE_ON_LEAVE_KEY = "DeleteOnLeave"
     }
 
 }
