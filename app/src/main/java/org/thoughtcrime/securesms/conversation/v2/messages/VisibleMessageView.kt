@@ -32,6 +32,7 @@ import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.messaging.contacts.Contact.ContactContext
 import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.utilities.Address
+import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.ViewUtil
 import org.session.libsession.utilities.getColorFromAttr
 import org.session.libsession.utilities.modifyLayoutParams
@@ -131,7 +132,8 @@ class VisibleMessageView : LinearLayout {
         senderSessionID: String,
         lastSeen: Long,
         delegate: VisibleMessageViewDelegate? = null,
-        onAttachmentNeedsDownload: (Long, Long) -> Unit
+        onAttachmentNeedsDownload: (Long, Long) -> Unit,
+        lastSentMessageId: Long
     ) {
         val threadID = message.threadId
         val thread = threadDb.getRecipientForThreadId(threadID) ?: return
@@ -164,7 +166,7 @@ class VisibleMessageView : LinearLayout {
                 binding.profilePictureView.publicKey = senderSessionID
                 binding.profilePictureView.update(message.individualRecipient)
                 binding.profilePictureView.setOnClickListener {
-                    if (thread.isOpenGroupRecipient) {
+                    if (thread.isCommunityRecipient) {
                         val openGroup = lokiThreadDb.getOpenGroupChat(threadID)
                         if (IdPrefix.fromValue(senderSessionID) == IdPrefix.BLINDED && openGroup?.canWrite == true) {
                             // TODO: support v2 soon
@@ -177,7 +179,7 @@ class VisibleMessageView : LinearLayout {
                         maybeShowUserDetails(senderSessionID, threadID)
                     }
                 }
-                if (thread.isOpenGroupRecipient) {
+                if (thread.isCommunityRecipient) {
                     val openGroup = lokiThreadDb.getOpenGroupChat(threadID) ?: return
                     var standardPublicKey = ""
                     var blindedPublicKey: String? = null
@@ -193,16 +195,20 @@ class VisibleMessageView : LinearLayout {
         }
         binding.senderNameTextView.isVisible = !message.isOutgoing && (isStartOfMessageCluster && (isGroupThread || snIsSelected))
         val contactContext =
-            if (thread.isOpenGroupRecipient) ContactContext.OPEN_GROUP else ContactContext.REGULAR
+            if (thread.isCommunityRecipient) ContactContext.OPEN_GROUP else ContactContext.REGULAR
         binding.senderNameTextView.text = contact?.displayName(contactContext) ?: senderSessionID
+
         // Unread marker
         binding.unreadMarkerContainer.isVisible = lastSeen != -1L && message.timestamp > lastSeen && (previous == null || previous.timestamp <= lastSeen) && !message.isOutgoing
+
         // Date break
         val showDateBreak = isStartOfMessageCluster || snIsSelected
         binding.dateBreakTextView.text = if (showDateBreak) DateUtils.getDisplayFormattedTimeSpanString(context, Locale.getDefault(), message.timestamp) else null
         binding.dateBreakTextView.isVisible = showDateBreak
+
         // Message status indicator
         showStatusMessage(message)
+
         // Emoji Reactions
         val emojiLayoutParams = binding.emojiReactionsView.root.layoutParams as ConstraintLayout.LayoutParams
         emojiLayoutParams.horizontalBias = if (message.isOutgoing) 1f else 0f
@@ -237,7 +243,8 @@ class VisibleMessageView : LinearLayout {
     }
 
     private fun showStatusMessage(message: MessageRecord) {
-        val disappearing = message.expiresIn > 0
+
+        val scheduledToDisappear = message.expiresIn > 0
 
         binding.messageInnerLayout.modifyLayoutParams<FrameLayout.LayoutParams> {
             gravity = if (message.isOutgoing) Gravity.END else Gravity.START
@@ -249,21 +256,22 @@ class VisibleMessageView : LinearLayout {
 
         binding.expirationTimerView.isGone = true
 
-        if (message.isOutgoing || disappearing) {
+        if (message.isOutgoing || scheduledToDisappear) {
             val (iconID, iconColor, textId) = getMessageStatusImage(message)
             textId?.let(binding.messageStatusTextView::setText)
             iconColor?.let(binding.messageStatusTextView::setTextColor)
             iconID?.let { ContextCompat.getDrawable(context, it) }
                 ?.run { iconColor?.let { mutate().apply { setTint(it) } } ?: this }
                 ?.let(binding.messageStatusImageView::setImageDrawable)
-            
-            val lastMessageID = mmsSmsDb.getLastMessageID(message.threadId)
-            val isLastMessage = message.id == lastMessageID
-            binding.messageStatusTextView.isVisible =
-                textId != null && (!message.isSent || isLastMessage || disappearing)
-            val showTimer = disappearing && !message.isPending
-            binding.messageStatusImageView.isVisible =
-                iconID != null && !showTimer && (!message.isSent || isLastMessage)
+
+            // Always show the delivery status of the last sent message
+            val thisUsersSessionId = TextSecurePreferences.getLocalNumber(context)
+            val lastSentMessageId = mmsSmsDb.getLastSentMessageFromSender(message.threadId, thisUsersSessionId)
+            val isLastSentMessage = lastSentMessageId == message.id
+
+            binding.messageStatusTextView.isVisible = textId != null && (isLastSentMessage || scheduledToDisappear)
+            val showTimer = scheduledToDisappear && !message.isPending
+            binding.messageStatusImageView.isVisible = iconID != null && !showTimer && (!message.isSent || isLastSentMessage)
 
             binding.messageStatusImageView.bringToFront()
             binding.expirationTimerView.bringToFront()

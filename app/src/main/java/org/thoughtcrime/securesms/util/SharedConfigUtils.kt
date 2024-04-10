@@ -16,7 +16,7 @@ fun ConversationVolatileConfig.getConversationUnread(thread: ThreadRecord): Bool
         return getClosedGroup(recipient.address.serialize())?.unread == true
     } else if (recipient.isLegacyClosedGroupRecipient) {
         return getLegacyClosedGroup(GroupUtil.doubleDecodeGroupId(recipient.address.toGroupString()))?.unread == true
-    } else if (recipient.isOpenGroupRecipient) {
+    } else if (recipient.isCommunityRecipient) {
         val openGroup = MessagingModuleConfiguration.shared.storage.getOpenGroup(thread.threadId) ?: return false
         return getCommunity(openGroup.server, openGroup.room)?.unread == true
     }

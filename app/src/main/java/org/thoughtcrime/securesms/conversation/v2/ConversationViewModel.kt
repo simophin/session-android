@@ -1,12 +1,16 @@
 package org.thoughtcrime.securesms.conversation.v2
 
 import android.content.Context
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+
 import com.goterl.lazysodium.utils.KeyPair
+
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,9 +27,12 @@ import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.Log
+import org.thoughtcrime.securesms.database.MmsSmsDatabase
+
 import org.session.libsignal.utilities.SessionId
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.repository.ConversationRepository
+
 import java.util.UUID
 
 class ConversationViewModel(
@@ -169,9 +176,14 @@ class ConversationViewModel(
     }
 
     fun deleteForEveryone(message: MessageRecord) = viewModelScope.launch {
-        val recipient = recipient ?: return@launch
+        val recipient = recipient ?: return@launch Log.w("Loki", "Recipient was null for delete for everyone - aborting delete operation.")
+
         repository.deleteForEveryone(threadId, recipient, message)
+            .onSuccess {
+                Log.d("Loki", "Deleted message ${message.id} ")
+            }
             .onFailure {
+                Log.w("Loki", "FAILED TO delete message ${message.id} ")
                 showMessage("Couldn't delete message due to error: $it")
             }
     }
@@ -193,10 +205,15 @@ class ConversationViewModel(
             }
     }
 
-    fun banAndDeleteAll(recipient: Recipient) = viewModelScope.launch {
-        repository.banAndDeleteAll(threadId, recipient)
+    fun banAndDeleteAll(messageRecord: MessageRecord) = viewModelScope.launch {
+
+        repository.banAndDeleteAll(threadId, messageRecord.individualRecipient)
             .onSuccess {
+                // At this point the server side messages have been successfully deleted..
                 showMessage("Successfully banned user and deleted all their messages")
+
+                // ..so we can now delete all their messages in this thread from local storage & remove the views.
+                repository.deleteAllLocalMessagesInThreadFromSenderOfMessage(messageRecord)
             }
             .onFailure {
                 showMessage("Couldn't execute request due to error: $it")

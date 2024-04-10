@@ -540,7 +540,7 @@ class ConversationReactionOverlay : FrameLayout {
             items += ActionItem(R.attr.menu_copy_icon, R.string.copy, { handleActionItemClicked(Action.COPY_MESSAGE) })
         }
         // Copy Session ID
-        if (recipient.isGroupRecipient && !recipient.isOpenGroupRecipient && message.recipient.address.toString() != userPublicKey) {
+        if (recipient.isGroupRecipient && !recipient.isCommunityRecipient && message.recipient.address.toString() != userPublicKey) {
             items += ActionItem(R.attr.menu_copy_icon, R.string.activity_conversation_menu_copy_session_id, { handleActionItemClicked(Action.COPY_SESSION_ID) })
         }
         // Delete message
