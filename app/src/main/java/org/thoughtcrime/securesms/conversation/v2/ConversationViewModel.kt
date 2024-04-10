@@ -1,16 +1,12 @@
 package org.thoughtcrime.securesms.conversation.v2
 
 import android.content.Context
-
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-
 import com.goterl.lazysodium.utils.KeyPair
-
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,12 +23,9 @@ import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.Log
-import org.thoughtcrime.securesms.database.MmsSmsDatabase
-
 import org.session.libsignal.utilities.SessionId
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.repository.ConversationRepository
-
 import java.util.UUID
 
 class ConversationViewModel(
@@ -107,7 +100,7 @@ class ConversationViewModel(
     val isMessageRequestThread : Boolean
         get() {
             val recipient = recipient ?: return false
-            return !recipient.isLocalNumber && !recipient.isLegacyClosedGroupRecipient && !recipient.isOpenGroupRecipient && !recipient.isApproved
+            return !recipient.isLocalNumber && !recipient.isLegacyClosedGroupRecipient && !recipient.isCommunityRecipient && !recipient.isApproved
         }
 
     val canReactToMessages: Boolean

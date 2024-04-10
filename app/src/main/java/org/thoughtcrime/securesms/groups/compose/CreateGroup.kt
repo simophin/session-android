@@ -37,7 +37,6 @@ import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.ui.CellWithPaddingAndMargin
 import org.thoughtcrime.securesms.ui.CloseIcon
 import org.thoughtcrime.securesms.ui.Divider
-import org.thoughtcrime.securesms.ui.EditableAvatar
 import org.thoughtcrime.securesms.ui.NavigationBar
 import org.thoughtcrime.securesms.ui.PreviewTheme
 
@@ -68,11 +67,12 @@ fun CreateGroup(
                             actionElement = { CloseIcon(onClose) }
                         )
                         // Editable avatar (future chunk)
-                        EditableAvatar(
-                            modifier = Modifier
-                                .align(Alignment.CenterHorizontally)
-                                .padding(top = 16.dp)
-                        )
+                        // EditableAvatar(
+                        //     modifier = Modifier
+                        //         .align(Alignment.CenterHorizontally)
+                        //         .padding(top = 16.dp)
+                        // )
+
                         // Title
                         val nameDescription = stringResource(id = R.string.AccessibilityId_closed_group_edit_group_name)
                         OutlinedTextField(
@@ -86,20 +86,22 @@ fun CreateGroup(
                                     contentDescription = nameDescription
                                 },
                         )
-                        // Description
-                        val descriptionDescription = stringResource(id = R.string.AccessibilityId_closed_group_edit_group_description)
-                        OutlinedTextField(
-                            value = viewState.description,
-                            onValueChange = { updateState(StateUpdate.Description(it)) },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .align(Alignment.CenterHorizontally)
-                                .padding(vertical = 8.dp, horizontal = 24.dp)
-                                .semantics {
-                                    contentDescription = descriptionDescription
-                                },
-                        )
 
+                        // Description
+                        // val descriptionDescription = stringResource(id = R.string.AccessibilityId_closed_group_edit_group_description)
+                        // OutlinedTextField(
+                        //     value = viewState.description,
+                        //     onValueChange = { updateState(StateUpdate.Description(it)) },
+                        //     modifier = Modifier
+                        //         .fillMaxWidth()
+                        //         .align(Alignment.CenterHorizontally)
+                        //         .padding(vertical = 8.dp, horizontal = 24.dp)
+                        //         .semantics {
+                        //             contentDescription = descriptionDescription
+                        //         },
+                        // )
+
+                        // Add contacts area
                         CellWithPaddingAndMargin(padding = 0.dp) {
                             Column(Modifier.fillMaxSize()) {
                                 // Select Contacts
@@ -125,21 +127,21 @@ fun CreateGroup(
                                 }
                                 Divider()
                                 // Add account ID or ONS
-                                Row(padding) {
-                                    Image(
-                                        painterResource(id = R.drawable.ic_baseline_add_24),
-                                        null,
-                                        Modifier
-                                            .padding(4.dp)
-                                            .align(Alignment.CenterVertically)
-                                    )
-                                    Text(
-                                        stringResource(id = R.string.activity_create_closed_group_add_account_or_ons),
-                                        Modifier
-                                            .padding(4.dp)
-                                            .align(Alignment.CenterVertically)
-                                    )
-                                }
+                                // Row(padding) {
+                                //     Image(
+                                //         painterResource(id = R.drawable.ic_baseline_add_24),
+                                //         null,
+                                //         Modifier
+                                //             .padding(4.dp)
+                                //             .align(Alignment.CenterVertically)
+                                //     )
+                                //     Text(
+                                //         stringResource(id = R.string.activity_create_closed_group_add_account_or_ons),
+                                //         Modifier
+                                //             .padding(4.dp)
+                                //             .align(Alignment.CenterVertically)
+                                //     )
+                                // }
                             }
                         }
                     }
@@ -196,7 +198,7 @@ fun ClosedGroupPreview(
             name = "Person"
         }
     )
-    PreviewTheme(R.style.Theme_Session_DayNight_NoActionBar_Test) {
+    PreviewTheme(R.style.Base_Theme_Session_ForceDark) {
         CreateGroup(
             viewState = ViewState.DEFAULT.copy(
                 // override any preview parameters

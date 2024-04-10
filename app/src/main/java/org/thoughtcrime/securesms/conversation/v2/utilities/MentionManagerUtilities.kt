@@ -21,7 +21,7 @@ object MentionManagerUtilities {
                 val members = storage.getMembers(recipient.address.serialize())
                  result.addAll(members.map { it.sessionId })
             }
-            recipient.address.isOpenGroup -> {
+            recipient.address.isCommunity -> {
                 val messageDatabase = DatabaseComponent.get(context).mmsSmsDatabase()
                 val reader = messageDatabase.readerFor(messageDatabase.getConversation(threadID, true, 0, 200))
                 var record: MessageRecord? = reader.next

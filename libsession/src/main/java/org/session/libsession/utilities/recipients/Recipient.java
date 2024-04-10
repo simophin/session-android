@@ -324,7 +324,7 @@ public class Recipient implements RecipientModifiedListener {
   public synchronized @Nullable String getName() {
     StorageProtocol storage = MessagingModuleConfiguration.getShared().getStorage();
     String sessionID = this.address.toString();
-    if (isOpenGroupRecipient()) {
+    if (isCommunityRecipient()) {
       return this.name;
     } else if (isLegacyClosedGroupRecipient() || isClosedGroupRecipient()) {
       if (this.name == null) {
