@@ -25,6 +25,7 @@ import network.loki.messenger.libsession_util.util.UserPic
 import network.loki.messenger.libsession_util.util.afterSend
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.functional.bind
+import nl.komponents.kovenant.functional.map
 import org.session.libsession.avatars.AvatarHelper
 import org.session.libsession.database.StorageProtocol
 import org.session.libsession.messaging.BlindedIdMapping
@@ -1698,7 +1699,7 @@ open class Storage(
                 SnodeMessage.CONFIG_TTL,
                 SnodeAPI.nowWithOffset
             )
-            SnodeAPI.buildAuthenticatedStoreBatchInfo(Namespace.REVOKED_GROUP_MESSAGES(), message, adminKey)
+            buildAuthenticatedStoreBatchInfo(Namespace.REVOKED_GROUP_MESSAGES(), message, adminKey)
         } ?: return Log.e("Storage", "Couldn't encrypt revocation for users ${removedMembers.size}")
 
         val keyMessage = keys.messageInformation(groupSessionId, adminKey)
@@ -1707,7 +1708,7 @@ open class Storage(
 
         val signCallback = signingKeyCallback(adminKey)
 
-        val delete = SnodeAPI.buildAuthenticatedDeleteBatchInfo(
+        val delete = buildAuthenticatedDeleteBatchInfo(
             groupSessionId,
             toDelete,
             signCallback
@@ -1880,10 +1881,13 @@ open class Storage(
         val closedGroup = configFactory.userGroups?.getClosedGroup(groupSessionId)
             ?: return Promise.ofFail(NullPointerException("No group found"))
 
+        val keys = configFactory.getGroupKeysConfig(SessionId.from(groupSessionId))
+            ?: return Promise.ofFail(NullPointerException("No group keys found"))
+
         val adminKey = if (closedGroup.hasAdminKey()) closedGroup.adminKey else null
         val subkeyCallback by lazy {
             closedGroup.authData
-            subkeyCallback(closedGroup.authData, configFactory.getGroupKeysConfig(SessionId.from(groupSessionId))!!)
+            subkeyCallback(closedGroup.authData, keys, freeKeysAfterSign = false)
         }
         val groupDestination = Destination.ClosedGroup(groupSessionId)
         ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(groupDestination)
@@ -1908,19 +1912,30 @@ open class Storage(
         }
 
         val signCallback = adminKey?.let(::signingKeyCallback) ?: subkeyCallback
-
-        val authenticatedDelete = buildAuthenticatedDeleteBatchInfo(groupSessionId, messageHashes, required = true)!!
+        // Delete might need fake hash?
+        val authenticatedDelete = if (adminKey == null) null else buildAuthenticatedDeleteBatchInfo(groupSessionId, messageHashes, signCallback, required = true)
         val authenticatedStore = buildAuthenticatedStoreBatchInfo(
             Namespace.CLOSED_GROUP_MESSAGES(),
-            MessageSender.buildWrappedMessageToSnode(Destination.ClosedGroup(groupSessionId), message, false)
-        )!!
-        SnodeAPI.getSingleTargetSnode(groupSessionId).bind { snode ->
+            MessageSender.buildWrappedMessageToSnode(Destination.ClosedGroup(groupSessionId), message, false),
+            signCallback
+        )
+
+        keys.free()
+
+        // delete only present when admin
+        val storeIndex = if (adminKey != null) 1 else 0
+        return SnodeAPI.getSingleTargetSnode(groupSessionId).bind { snode ->
             SnodeAPI.getRawBatchResponse(
                 snode,
                 groupSessionId,
-                listOf(authenticatedDelete, authenticatedStore),
+                listOfNotNull(authenticatedDelete, authenticatedStore),
                 sequence = true
             )
+        }.map { rawResponse ->
+            val results = (rawResponse["results"] as ArrayList<Any>)[storeIndex] as Map<String,Any>
+            val hash = results["hash"] as? String
+            message.serverHash = hash
+            MessageSender.handleSuccessfulMessageSend(message, groupDestination, false)
         }
     }
 

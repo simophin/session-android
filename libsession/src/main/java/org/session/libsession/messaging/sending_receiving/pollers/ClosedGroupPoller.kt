@@ -184,7 +184,7 @@ class ClosedGroupPoller(private val scope: CoroutineScope,
             ).get()
 
             // If we no longer have a group, stop poller
-            if (configFactoryProtocol.userGroups?.getClosedGroup(closedGroupSessionId.hexString()) != null) return null
+            if (configFactoryProtocol.userGroups?.getClosedGroup(closedGroupSessionId.hexString()) == null) return null
 
             // if poll result body is null here we don't have any things ig
             if (ENABLE_LOGGING) Log.d("ClosedGroupPoller", "Poll results @${SnodeAPI.nowWithOffset}:")

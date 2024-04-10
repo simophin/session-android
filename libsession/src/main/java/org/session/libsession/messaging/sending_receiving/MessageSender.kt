@@ -7,7 +7,6 @@ import nl.komponents.kovenant.deferred
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.messaging.jobs.MessageSendJob
-import org.session.libsession.messaging.jobs.NotifyPNServerJob
 import org.session.libsession.messaging.messages.Destination
 import org.session.libsession.messaging.messages.Message
 import org.session.libsession.messaging.messages.applyExpiryMode
@@ -278,10 +277,6 @@ object MessageSender {
                             else -> false
                         }
 
-                        if (shouldNotify) {
-                            val notifyPNServerJob = NotifyPNServerJob(snodeMessage)
-                            JobQueue.shared.add(notifyPNServerJob)
-                        }
                         deferred.resolve(Unit)
                     }
                     promise.fail {

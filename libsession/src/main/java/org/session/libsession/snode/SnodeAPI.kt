@@ -374,6 +374,11 @@ object SnodeAPI {
     }
 
     fun buildAuthenticatedStoreBatchInfo(namespace: Int, message: SnodeMessage, signingKey: ByteArray, ed25519PubKey: String? = null): SnodeBatchRequestInfo {
+        val signingKeyCallback = signingKeyCallback(signingKey)
+        return buildAuthenticatedStoreBatchInfo(namespace, message, signingKeyCallback, ed25519PubKey)
+    }
+
+    fun buildAuthenticatedStoreBatchInfo(namespace: Int, message: SnodeMessage, signCallback: SignCallback, ed25519PubKey: String? = null): SnodeBatchRequestInfo {
         val params = mutableMapOf<String, Any>()
         // load the message data params into the sub request
         // currently loads:
@@ -382,28 +387,18 @@ object SnodeAPI {
         // ttl
         // timestamp
         params.putAll(message.toJSON())
-        params["namespace"] = namespace
 
         // used for sig generation since it is also the value used in timestamp parameter
         val messageTimestamp = message.timestamp
 
-        val signature = ByteArray(Sign.BYTES)
-        val verificationData = "store$namespace$messageTimestamp".toByteArray()
-        try {
-            sodium.cryptoSignDetached(
-                signature,
-                verificationData,
-                verificationData.size.toLong(),
-                signingKey
-            )
-        } catch (e: Exception) {
-            Log.e("Loki", "Signing data failed with user secret key", e)
-        }
+        val signatureParams = signCallback("store$namespace$messageTimestamp", messageTimestamp, namespace)
+        params += signatureParams
+
         // timestamp already set
         if (ed25519PubKey != null) {
             params["pubkey_ed25519"] = ed25519PubKey
         }
-        params["signature"] = Base64.encodeBytes(signature)
+
         return SnodeBatchRequestInfo(
             Snode.Method.SendMessage.rawValue,
             params,

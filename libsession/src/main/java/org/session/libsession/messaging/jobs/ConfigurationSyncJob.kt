@@ -201,7 +201,7 @@ data class ConfigurationSyncJob(val destination: Destination) : Job {
                 // dump and write config after successful
                 if (config is ConfigBase && config.needsDump()) { // usually this will be true? ))
                     val groupPubKey = if (destination is Destination.ClosedGroup) destination.publicKey else null
-                    configFactory.persist(config, (message.params["timestamp"] as String).toLong(), groupPubKey)
+                    configFactory.persist(config, message.params["timestamp"] as Long, groupPubKey)
                 } else if (config is GroupKeysConfig && config.needsDump()) {
                     Log.d("Loki", "Should persist the GroupKeysConfig")
                 }
