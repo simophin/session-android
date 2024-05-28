@@ -9,6 +9,7 @@ import okhttp3.RequestBody
 import org.session.libsession.messaging.jobs.Job.Companion.MAX_BUFFER_SIZE
 import org.session.libsession.messaging.sending_receiving.notifications.Server
 import org.session.libsession.messaging.utilities.Data
+import org.session.libsession.messaging.utilities.await
 import org.session.libsession.snode.OnionRequestAPI
 import org.session.libsession.snode.SnodeMessage
 import org.session.libsession.snode.Version
@@ -17,11 +18,12 @@ import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.retryIfNeeded
 
 class NotifyPNServerJob(val message: SnodeMessage) : Job {
-    override var delegate: JobDelegate? = null
     override var id: String? = null
     override var failureCount: Int = 0
-
     override val maxFailureCount: Int = 20
+    override val jobKey: Any?
+        get() = null
+
     companion object {
         val KEY: String = "NotifyPNServerJob"
 
@@ -48,19 +50,7 @@ class NotifyPNServerJob(val message: SnodeMessage) : Job {
             } fail { exception ->
                 Log.d("NotifyPNServerJob", "Couldn't notify PN server due to error: $exception.")
             }
-        } success {
-            handleSuccess(dispatcherName)
-        } fail {
-            handleFailure(dispatcherName, it)
-        }
-    }
-
-    private fun handleSuccess(dispatcherName: String) {
-        delegate?.handleJobSucceeded(this, dispatcherName)
-    }
-
-    private fun handleFailure(dispatcherName: String, error: Exception) {
-        delegate?.handleJobFailed(this, dispatcherName, error)
+        }.await()
     }
 
     override fun serialize(): Data {

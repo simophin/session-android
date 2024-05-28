@@ -397,12 +397,20 @@ open class Storage(
         DatabaseComponent.get(context).sessionJobDatabase().markJobAsFailedPermanently(jobId)
     }
 
+    override fun removeJob(jobId: String) {
+        DatabaseComponent.get(context).sessionJobDatabase().removeJob(jobId)
+    }
+
     override fun getAllPendingJobs(type: String): Map<String, Job?> {
         return DatabaseComponent.get(context).sessionJobDatabase().getAllJobs(type)
     }
 
     override fun getAttachmentUploadJob(attachmentID: Long): AttachmentUploadJob? {
-        return DatabaseComponent.get(context).sessionJobDatabase().getAttachmentUploadJob(attachmentID)
+        return DatabaseComponent.get(context).sessionJobDatabase().getAttachmentUploadJobs(listOf(attachmentID)).firstOrNull()
+    }
+
+    override fun getAttachmentUploadJobs(attachmentIDs: Collection<Long>): List<AttachmentUploadJob> {
+        return DatabaseComponent.get(context).sessionJobDatabase().getAttachmentUploadJobs(attachmentIDs)
     }
 
     override fun getMessageSendJob(messageSendJobID: String): MessageSendJob? {

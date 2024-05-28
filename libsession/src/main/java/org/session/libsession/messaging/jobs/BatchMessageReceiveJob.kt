@@ -48,12 +48,14 @@ class BatchMessageReceiveJob(
     val openGroupID: String? = null
 ) : Job {
 
-    override var delegate: JobDelegate? = null
     override var id: String? = null
     override var failureCount: Int = 0
     override val maxFailureCount: Int = 1 // handled in JobQueue onJobFailed
     // Failure Exceptions must be retryable if they're a  MessageReceiver.Error
     val failures = mutableListOf<MessageReceiveParameters>()
+
+    override val jobKey: Any?
+        get() = null
 
     companion object {
         const val TAG = "BatchMessageReceiveJob"
@@ -242,12 +244,11 @@ class BatchMessageReceiveJob(
 
     private fun handleSuccess(dispatcherName: String) {
         Log.i(TAG, "Completed processing of ${messages.size} messages (id: $id)")
-        delegate?.handleJobSucceeded(this, dispatcherName)
     }
 
     private fun handleFailure(dispatcherName: String) {
         Log.i(TAG, "Handling failure of ${failures.size} messages (${messages.size - failures.size} processed successfully) (id: $id)")
-        delegate?.handleJobFailed(this, dispatcherName, Exception("One or more jobs resulted in failure"))
+        throw Exception("One or more jobs resulted in failure")
     }
 
     override fun serialize(): Data {

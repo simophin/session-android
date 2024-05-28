@@ -8,27 +8,25 @@ import org.session.libsession.utilities.GroupUtil
 
 class GroupAvatarDownloadJob(val server: String, val room: String, val imageId: String?) : Job {
 
-    override var delegate: JobDelegate? = null
     override var id: String? = null
     override var failureCount: Int = 0
     override val maxFailureCount: Int = 10
 
+    override val jobKey: Any? get() = null
+
     override suspend fun execute(dispatcherName: String) {
         if (imageId == null) {
-            delegate?.handleJobFailedPermanently(this, dispatcherName, Exception("GroupAvatarDownloadJob now requires imageId"))
-            return
+            throw Exception("GroupAvatarDownloadJob now requires imageId")
         }
         val storage = MessagingModuleConfiguration.shared.storage
         val openGroup = storage.getOpenGroup(room, server)
         if (openGroup == null || storage.getThreadId(openGroup) == null) {
-            delegate?.handleJobFailedPermanently(this, dispatcherName, Exception("GroupAvatarDownloadJob openGroup is null"))
-            return
+            throw JobPermanentlyFailedException(Exception("GroupAvatarDownloadJob openGroup is null"))
         }
         val storedImageId = openGroup.imageId
 
         if (storedImageId == null || storedImageId != imageId) {
-            delegate?.handleJobFailedPermanently(this, dispatcherName, Exception("GroupAvatarDownloadJob imageId does not match the OpenGroup"))
-            return
+            throw JobPermanentlyFailedException(Exception("GroupAvatarDownloadJob imageId does not match the OpenGroup"))
         }
 
         try {
@@ -38,16 +36,14 @@ class GroupAvatarDownloadJob(val server: String, val room: String, val imageId: 
             val postDownloadStoredImageId = storage.getOpenGroup(room, server)?.imageId
 
             if (postDownloadStoredImageId == null || postDownloadStoredImageId != imageId) {
-                delegate?.handleJobFailedPermanently(this, dispatcherName, Exception("GroupAvatarDownloadJob imageId no longer matches the OpenGroup"))
-                return
+                throw JobPermanentlyFailedException(Exception("GroupAvatarDownloadJob imageId no longer matches the OpenGroup"))
             }
 
             val groupId = GroupUtil.getEncodedOpenGroupID("$server.$room".toByteArray())
             storage.updateProfilePicture(groupId, bytes)
             storage.updateTimestampUpdated(groupId, SnodeAPI.nowWithOffset)
-            delegate?.handleJobSucceeded(this, dispatcherName)
         } catch (e: Exception) {
-            delegate?.handleJobFailed(this, dispatcherName, e)
+            throw e
         }
     }
 

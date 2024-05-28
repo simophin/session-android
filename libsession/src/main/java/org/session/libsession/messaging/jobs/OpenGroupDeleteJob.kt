@@ -14,10 +14,11 @@ class OpenGroupDeleteJob(private val messageServerIds: LongArray, private val th
         private const val OPEN_GROUP_ID = "openGroupId"
     }
 
-    override var delegate: JobDelegate? = null
     override var id: String? = null
     override var failureCount: Int = 0
     override val maxFailureCount: Int = 1
+    override val jobKey: Any?
+        get() = null
 
     override suspend fun execute(dispatcherName: String) {
         val dataProvider = MessagingModuleConfiguration.shared.messageDataProvider
@@ -39,11 +40,10 @@ class OpenGroupDeleteJob(private val messageServerIds: LongArray, private val th
             }
 
             Log.d(TAG, "Deleted ${messageIds.first.size + messageIds.second.size} messages successfully")
-            delegate?.handleJobSucceeded(this, dispatcherName)
         }
         catch (e: Exception) {
             Log.w(TAG, "OpenGroupDeleteJob failed: $e")
-            delegate?.handleJobFailed(this, dispatcherName, e)
+            throw e
         }
     }
 

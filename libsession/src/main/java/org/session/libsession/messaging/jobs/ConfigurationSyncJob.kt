@@ -15,12 +15,13 @@ import org.session.libsignal.utilities.Log
 import java.util.concurrent.atomic.AtomicBoolean
 
 // only contact (self) and closed group destinations will be supported
-data class ConfigurationSyncJob(val destination: Destination): Job {
-
-    override var delegate: JobDelegate? = null
+class ConfigurationSyncJob(val destination: Destination): Job {
     override var id: String? = null
     override var failureCount: Int = 0
     override val maxFailureCount: Int = 10
+
+    override val jobKey: Any?
+        get() = null
 
     val shouldRunAgain = AtomicBoolean(false)
 
@@ -30,21 +31,19 @@ data class ConfigurationSyncJob(val destination: Destination): Job {
         val currentTime = SnodeAPI.nowWithOffset
         val userEdKeyPair = MessagingModuleConfiguration.shared.getUserED25519KeyPair()
         val userPublicKey = storage.getUserPublicKey()
-        val delegate = delegate
         if (destination is Destination.ClosedGroup // TODO: closed group configs will be handled in closed group feature
             // if we haven't enabled the new configs don't run
             || !ConfigBase.isNewConfigEnabled(forcedConfig, currentTime)
             // if we don't have a user ed key pair for signing updates
             || userEdKeyPair == null
             // this will be useful to not handle null delegate cases
-            || delegate == null
             // check our local identity key exists
             || userPublicKey.isNullOrEmpty()
             // don't allow pushing  configs for non-local user
             || (destination is Destination.Contact && destination.publicKey != userPublicKey)
         ) {
             Log.w(TAG, "No need to run config sync job, TODO")
-            return delegate?.handleJobSucceeded(this, dispatcherName) ?: Unit
+            return
         }
 
         // configFactory singleton instance will come in handy for modifying hashes and fetching configs for namespace etc
@@ -54,7 +53,9 @@ data class ConfigurationSyncJob(val destination: Destination): Job {
         val configsRequiringPush = configFactory.getUserConfigs().filter { config -> config.needsPush() }
 
         // don't run anything if we don't need to push anything
-        if (configsRequiringPush.isEmpty()) return delegate.handleJobSucceeded(this, dispatcherName)
+        if (configsRequiringPush.isEmpty()) {
+            return
+        }
 
         // need to get the current hashes before we call `push()`
         val toDeleteHashes = mutableListOf<String>()
@@ -83,7 +84,7 @@ data class ConfigurationSyncJob(val destination: Destination): Job {
 
         if (batchObjects.any { it == null }) {
             // stop running here, something like a signing error occurred
-            return delegate.handleJobFailedPermanently(this, dispatcherName, NullPointerException("One or more requests had a null batch request info"))
+            throw JobPermanentlyFailedException(NullPointerException("One or more requests had a null batch request info"))
         }
 
         val allRequests = mutableListOf<SnodeAPI.SnodeBatchRequestInfo>()
@@ -146,9 +147,9 @@ data class ConfigurationSyncJob(val destination: Destination): Job {
             }
         } catch (e: Exception) {
             Log.e(TAG, "Error performing batch request", e)
-            return delegate.handleJobFailed(this, dispatcherName, e)
+            throw e
         }
-        delegate.handleJobSucceeded(this, dispatcherName)
+
         if (shouldRunAgain.get() && storage.getConfigSyncJob(destination) == null) {
             // reschedule if something has updated since we started this job
             JobQueue.shared.add(ConfigurationSyncJob(destination))

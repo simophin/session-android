@@ -43,10 +43,14 @@ class SessionJobDatabase(context: Context, helper: SQLCipherOpenHelper) : Databa
     }
 
     fun markJobAsSucceeded(jobID: String) {
-        databaseHelper.writableDatabase.delete(sessionJobTable, "${Companion.jobID} = ?", arrayOf( jobID ))
+        removeJob(jobID)
     }
 
     fun markJobAsFailedPermanently(jobID: String) {
+        removeJob(jobID)
+    }
+
+    fun removeJob(jobID: String) {
         databaseHelper.writableDatabase.delete(sessionJobTable, "${Companion.jobID} = ?", arrayOf( jobID ))
     }
 
@@ -63,14 +67,14 @@ class SessionJobDatabase(context: Context, helper: SQLCipherOpenHelper) : Databa
         }.toMap()
     }
 
-    fun getAttachmentUploadJob(attachmentID: Long): AttachmentUploadJob? {
+    fun getAttachmentUploadJobs(attachmentIDs: Collection<Long>): List<AttachmentUploadJob> {
         val database = databaseHelper.readableDatabase
         val result = mutableListOf<AttachmentUploadJob>()
         database.getAll(sessionJobTable, "$jobType = ?", arrayOf( AttachmentUploadJob.KEY )) { cursor ->
             val job = jobFromCursor(cursor) as AttachmentUploadJob?
             if (job != null) { result.add(job) }
         }
-        return result.firstOrNull { job -> job.attachmentID == attachmentID }
+        return result.filter { job -> attachmentIDs.contains(job.attachmentID) }
     }
 
     fun getMessageSendJob(messageSendJobID: String): MessageSendJob? {

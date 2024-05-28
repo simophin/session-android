@@ -22,12 +22,12 @@ import kotlinx.coroutines.launch
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewVisibleMessageBinding
 import org.session.libsession.messaging.contacts.Contact
+import org.session.libsession.messaging.sending_receiving.attachments.Attachment
 import org.session.libsession.utilities.TextSecurePreferences
 import org.thoughtcrime.securesms.conversation.v2.messages.ControlMessageView
 import org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageView
 import org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageViewDelegate
 import org.thoughtcrime.securesms.database.CursorRecyclerViewAdapter
-import org.thoughtcrime.securesms.database.MmsSmsColumns
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.mms.GlideRequests
@@ -37,17 +37,18 @@ import java.util.concurrent.atomic.AtomicLong
 import kotlin.math.min
 
 class ConversationAdapter(
-    context: Context,
-    cursor: Cursor,
-    originalLastSeen: Long,
-    private val isReversed: Boolean,
-    private val onItemPress: (MessageRecord, Int, VisibleMessageView, MotionEvent) -> Unit,
-    private val onItemSwipeToReply: (MessageRecord, Int) -> Unit,
-    private val onItemLongPress: (MessageRecord, Int, VisibleMessageView) -> Unit,
-    private val onDeselect: (MessageRecord, Int) -> Unit,
-    private val onAttachmentNeedsDownload: (Long, Long) -> Unit,
-    private val glide: GlideRequests,
-    lifecycleCoroutineScope: LifecycleCoroutineScope
+        context: Context,
+        cursor: Cursor,
+        originalLastSeen: Long,
+        private val isReversed: Boolean,
+        private val onItemPress: (MessageRecord, Int, VisibleMessageView, MotionEvent) -> Unit,
+        private val onItemSwipeToReply: (MessageRecord, Int) -> Unit,
+        private val onItemLongPress: (MessageRecord, Int, VisibleMessageView) -> Unit,
+        private val onDeselect: (MessageRecord, Int) -> Unit,
+        private val onAttachmentNeedsDownload: (Attachment) -> Unit,
+        private val onVisibleMessageBound: (MessageRecord) -> Unit,
+        private val glide: GlideRequests,
+        lifecycleCoroutineScope: LifecycleCoroutineScope
 ) : CursorRecyclerViewAdapter<ViewHolder>(context, cursor) {
     private val messageDB by lazy { DatabaseComponent.get(context).mmsSmsDatabase() }
     private val contactDB by lazy { DatabaseComponent.get(context).sessionContactDatabase() }
@@ -142,6 +143,8 @@ class ConversationAdapter(
                         onAttachmentNeedsDownload,
                         lastSentMessageId
                 )
+
+                onVisibleMessageBound(message)
 
                 if (!message.isDeleted) {
                     visibleMessageView.onPress = { event -> onItemPress(message, viewHolder.adapterPosition, visibleMessageView, event) }

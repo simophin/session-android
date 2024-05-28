@@ -53,8 +53,10 @@ interface StorageProtocol {
     fun persistJob(job: Job)
     fun markJobAsSucceeded(jobId: String)
     fun markJobAsFailedPermanently(jobId: String)
+    fun removeJob(jobId: String)
     fun getAllPendingJobs(type: String): Map<String,Job?>
     fun getAttachmentUploadJob(attachmentID: Long): AttachmentUploadJob?
+    fun getAttachmentUploadJobs(attachmentIDs: Collection<Long>): List<AttachmentUploadJob>
     fun getMessageSendJob(messageSendJobID: String): MessageSendJob?
     fun getMessageReceiveJob(messageReceiveJobID: String): Job?
     fun getGroupAvatarDownloadJob(server: String, room: String, imageId: String?): Job?

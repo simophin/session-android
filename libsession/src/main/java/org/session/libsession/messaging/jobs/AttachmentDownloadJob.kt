@@ -18,13 +18,14 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream
 
-class AttachmentDownloadJob(val attachmentID: Long, val databaseMessageID: Long) : Job {
-    override var delegate: JobDelegate? = null
+class AttachmentDownloadJob(private val attachmentID: Long, private val databaseMessageID: Long) : Job {
     override var id: String? = null
     override var failureCount: Int = 0
 
+    override val jobKey = listOf(attachmentID, databaseMessageID)
+
     // Error
-    internal sealed class Error(val description: String) : Exception(description) {
+    internal sealed class Error(val description: String) : RuntimeException(description) {
         object NoAttachment : Error("No such attachment.")
         object NoThread: Error("Thread no longer exists")
         object NoSender: Error("Thread recipient or sender does not exist")
@@ -47,7 +48,7 @@ class AttachmentDownloadJob(val attachmentID: Long, val databaseMessageID: Long)
         val messageDataProvider = MessagingModuleConfiguration.shared.messageDataProvider
         val threadID = storage.getThreadIdForMms(databaseMessageID)
 
-        val handleFailure: (java.lang.Exception, attachmentId: AttachmentId?) -> Unit = { exception, attachment ->
+        val handlePossibleFailure: (java.lang.Exception, attachmentId: AttachmentId?) -> Unit = { exception, attachment ->
             if (exception == Error.NoAttachment
                     || exception == Error.NoThread
                     || exception == Error.NoSender
@@ -59,7 +60,7 @@ class AttachmentDownloadJob(val attachmentID: Long, val databaseMessageID: Long)
                     Log.d("AttachmentDownloadJob", "Setting attachment state = failed, don't have attachment")
                     messageDataProvider.setAttachmentState(AttachmentState.FAILED, AttachmentId(attachmentID,0), databaseMessageID)
                 }
-                this.handlePermanentFailure(dispatcherName, exception)
+                throw JobPermanentlyFailedException(exception)
             } else if (exception == Error.DuplicateData) {
                 attachment?.let { id ->
                     Log.d("AttachmentDownloadJob", "Setting attachment state = done from duplicate data")
@@ -68,7 +69,6 @@ class AttachmentDownloadJob(val attachmentID: Long, val databaseMessageID: Long)
                     Log.d("AttachmentDownloadJob", "Setting attachment state = done from duplicate data")
                     messageDataProvider.setAttachmentState(AttachmentState.DONE, AttachmentId(attachmentID,0), databaseMessageID)
                 }
-                this.handleSuccess(dispatcherName)
             } else {
                 if (failureCount + 1 >= maxFailureCount) {
                     attachment?.let { id ->
@@ -79,12 +79,12 @@ class AttachmentDownloadJob(val attachmentID: Long, val databaseMessageID: Long)
                         messageDataProvider.setAttachmentState(AttachmentState.FAILED, AttachmentId(attachmentID,0), databaseMessageID)
                     }
                 }
-                this.handleFailure(dispatcherName, exception)
+                throw exception
             }
         }
 
         if (threadID < 0) {
-            handleFailure(Error.NoThread, null)
+            handlePossibleFailure(Error.NoThread, null)
             return
         }
 
@@ -97,22 +97,22 @@ class AttachmentDownloadJob(val attachmentID: Long, val databaseMessageID: Long)
         }
         val contact = sender?.let { storage.getContactWithSessionID(it) }
         if (threadRecipient == null || sender == null || (contact == null && !selfSend)) {
-            handleFailure(Error.NoSender, null)
+            handlePossibleFailure(Error.NoSender, null)
             return
         }
         if (!threadRecipient.isGroupRecipient && contact?.isTrusted != true && storage.getUserPublicKey() != sender) {
             // if we aren't receiving a group message, a message from ourselves (self-send) and the contact sending is not trusted:
             // do not continue, but do not fail
-            handleFailure(Error.NoSender, null)
+            handlePossibleFailure(Error.NoSender, null)
             return
         }
 
         var tempFile: File? = null
         try {
             val attachment = messageDataProvider.getDatabaseAttachment(attachmentID)
-                ?: return handleFailure(Error.NoAttachment, null)
+                ?: return handlePossibleFailure(Error.NoAttachment, null)
             if (attachment.hasData()) {
-                handleFailure(Error.DuplicateData, attachment.attachmentId)
+                handlePossibleFailure(Error.DuplicateData, attachment.attachmentId)
                 return
             }
             messageDataProvider.setAttachmentState(AttachmentState.STARTED, attachment.attachmentId, this.databaseMessageID)
@@ -152,36 +152,22 @@ class AttachmentDownloadJob(val attachmentID: Long, val databaseMessageID: Long)
             Log.d("AttachmentDownloadJob", "deleting tempfile")
             tempFile.delete()
             Log.d("AttachmentDownloadJob", "succeeding job")
-            handleSuccess(dispatcherName)
         } catch (e: Exception) {
             Log.e("AttachmentDownloadJob", "Error processing attachment download", e)
             tempFile?.delete()
-            return handleFailure(e,null)
+            return handlePossibleFailure(e,null)
         }
     }
 
     private fun getInputStream(tempFile: File, attachment: DatabaseAttachment): InputStream {
         // Assume we're retrieving an attachment for an open group server if the digest is not set
-        return if (attachment.digest?.size ?: 0 == 0 || attachment.key.isNullOrEmpty()) {
+        return if ((attachment.digest?.size ?: 0) == 0 || attachment.key.isNullOrEmpty()) {
             Log.d("AttachmentDownloadJob", "getting input stream with no attachment digest")
             FileInputStream(tempFile)
         } else {
             Log.d("AttachmentDownloadJob", "getting input stream with attachment digest")
             AttachmentCipherInputStream.createForAttachment(tempFile, attachment.size, Base64.decode(attachment.key), attachment.digest)
         }
-    }
-
-    private fun handleSuccess(dispatcherName: String) {
-        Log.w("AttachmentDownloadJob", "Attachment downloaded successfully.")
-        delegate?.handleJobSucceeded(this, dispatcherName)
-    }
-
-    private fun handlePermanentFailure(dispatcherName: String, e: Exception) {
-        delegate?.handleJobFailedPermanently(this, dispatcherName, e)
-    }
-
-    private fun handleFailure(dispatcherName: String, e: Exception) {
-        delegate?.handleJobFailed(this, dispatcherName, e)
     }
 
     private fun createTempFile(): File {
@@ -194,7 +180,7 @@ class AttachmentDownloadJob(val attachmentID: Long, val databaseMessageID: Long)
         return Data.Builder()
             .putLong(ATTACHMENT_ID_KEY, attachmentID)
             .putLong(TS_INCOMING_MESSAGE_ID_KEY, databaseMessageID)
-            .build();
+            .build()
     }
 
     override fun getFactoryKey(): String {

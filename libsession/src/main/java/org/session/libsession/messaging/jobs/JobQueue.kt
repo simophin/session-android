@@ -21,7 +21,7 @@ import kotlin.math.min
 import kotlin.math.pow
 import kotlin.math.roundToLong
 
-class JobQueue : JobDelegate {
+class JobQueue {
     private var hasResumedPendingJobs = false // Just for debugging
     private val jobTimestampMap = ConcurrentHashMap<Long, AtomicInteger>()
     private val rxDispatcher = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
@@ -31,10 +31,10 @@ class JobQueue : JobDelegate {
     private val scope = CoroutineScope(Dispatchers.Default) + SupervisorJob()
     private val queue = Channel<Job>(UNLIMITED)
     private val pendingJobIds = mutableSetOf<String>()
-
     private val openGroupChannels = mutableMapOf<String, Channel<Job>>()
+    private val permanentlyFailedJobKeys = mutableSetOf<JobTypeAndKey>()
 
-    val timer = Timer()
+    private val timer = Timer()
 
     private fun CoroutineScope.processWithOpenGroupDispatcher(
         channel: Channel<Job>,
@@ -61,7 +61,7 @@ class JobQueue : JobDelegate {
                     launch(dispatcher) {
                         for (groupJob in newGroupChannel) {
                             if (!isActive) break
-                            groupJob.process(name)
+                            processJob(groupJob, name)
                         }
                     }
                     openGroupChannels[openGroupId] = newGroupChannel
@@ -86,24 +86,26 @@ class JobQueue : JobDelegate {
             if (!isActive) break
             if (asynchronous) {
                 launch(dispatcher) {
-                    job.process(name)
+                    processJob(job, name)
                 }
             } else {
-                job.process(name)
+                processJob(job, name)
             }
         }
     }
 
-    private suspend fun Job.process(dispatcherName: String) {
-        Log.d(dispatcherName,"processJob: ${javaClass.simpleName} (id: $id)")
-        delegate = this@JobQueue
+    private suspend fun processJob(job: Job, dispatcherName: String) {
+        Log.d(dispatcherName,"processJob: ${job.javaClass.simpleName} (id: ${job.id}, key: ${job.jobKey})")
 
         try {
-            execute(dispatcherName)
+            job.execute(dispatcherName)
+            handleJobSucceeded(job, dispatcherName)
+        }
+        catch (e: JobPermanentlyFailedException) {
+            handleJobFailedPermanently(job, dispatcherName, e.cause)
         }
         catch (e: Exception) {
-            Log.d(dispatcherName, "unhandledJobException: ${javaClass.simpleName} (id: $id)")
-            this@JobQueue.handleJobFailed(this, dispatcherName, e)
+            handleJobFailed(job, dispatcherName, e)
         }
     }
 
@@ -164,6 +166,17 @@ class JobQueue : JobDelegate {
     }
 
     fun add(job: Job) {
+        val jobKey = job.jobKey
+
+        if (jobKey != null) {
+            synchronized(permanentlyFailedJobKeys) {
+                if (permanentlyFailedJobKeys.contains(JobTypeAndKey(job::class.java, jobKey))) {
+                    Log.d("Loki", "Skipping previously permanently failed job: ${job::class.simpleName} (key: ${job.jobKey})")
+                    return
+                }
+            }
+        }
+
         addWithoutExecuting(job)
         queue.trySend(job) // offer always called on unlimited capacity
     }
@@ -198,7 +211,7 @@ class JobQueue : JobDelegate {
         for ((id, job) in allPendingJobs) {
             if (job == null) {
                 // Job failed to deserialize, remove it from the DB
-                handleJobFailedPermanently(id)
+                MessagingModuleConfiguration.shared.storage.removeJob(id)
             } else {
                 pendingJobs.add(job)
             }
@@ -233,13 +246,13 @@ class JobQueue : JobDelegate {
         }
     }
 
-    override fun handleJobSucceeded(job: Job, dispatcherName: String) {
+    private fun handleJobSucceeded(job: Job, dispatcherName: String) {
         val jobId = job.id ?: return
         MessagingModuleConfiguration.shared.storage.markJobAsSucceeded(jobId)
         pendingJobIds.remove(jobId)
     }
 
-    override fun handleJobFailed(job: Job, dispatcherName: String, error: Exception) {
+    private fun handleJobFailed(job: Job, dispatcherName: String, error: Exception) {
         // Canceled
         val storage = MessagingModuleConfiguration.shared.storage
         if (storage.isJobCanceled(job)) {
@@ -277,15 +290,17 @@ class JobQueue : JobDelegate {
         }
     }
 
-    override fun handleJobFailedPermanently(job: Job, dispatcherName: String, error: Exception) {
+    private fun handleJobFailedPermanently(job: Job, dispatcherName: String, error: Exception) {
         val jobId = job.id ?: return
-        handleJobFailedPermanently(jobId)
-        Log.d(dispatcherName, "permanentlyFailedJob: ${javaClass.simpleName} (id: ${job.id})")
-    }
+        MessagingModuleConfiguration.shared.storage.markJobAsFailedPermanently(jobId)
+        Log.d(dispatcherName,"permanentlyFailedJob: ${job.javaClass.simpleName} (id: ${job.id}, key: ${job.jobKey})", error)
 
-    private fun handleJobFailedPermanently(jobId: String) {
-        val storage = MessagingModuleConfiguration.shared.storage
-        storage.markJobAsFailedPermanently(jobId)
+        val jobKey = job.jobKey
+        if (jobKey != null) {
+            synchronized(permanentlyFailedJobKeys) {
+                permanentlyFailedJobKeys.add(JobTypeAndKey(job::class.java, jobKey))
+            }
+        }
     }
 
     private fun getRetryInterval(job: Job): Long {
@@ -300,6 +315,5 @@ class JobQueue : JobDelegate {
         return (1000 * 0.25 * min(maxBackoff, (2.0).pow(job.failureCount))).roundToLong()
     }
 
-    private fun Job.isSend() = this is MessageSendJob || this is AttachmentUploadJob
-
+    private data class JobTypeAndKey(val type: Class<out Job>, val key: Any)
 }

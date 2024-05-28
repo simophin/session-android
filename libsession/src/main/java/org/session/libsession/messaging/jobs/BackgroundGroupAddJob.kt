@@ -15,10 +15,12 @@ class BackgroundGroupAddJob(val joinUrl: String): Job {
         private const val JOIN_URL = "joinUri"
     }
 
-    override var delegate: JobDelegate? = null
     override var id: String? = null
     override var failureCount: Int = 0
     override val maxFailureCount: Int = 1
+
+    override val jobKey: Any?
+        get() = null
 
     val openGroupId: String? get() {
         val url = HttpUrl.parse(joinUrl) ?: return null
@@ -34,18 +36,15 @@ class BackgroundGroupAddJob(val joinUrl: String): Job {
             val allOpenGroups = storage.getAllOpenGroups().map { it.value.joinURL }
             if (allOpenGroups.contains(openGroup.joinUrl())) {
                 Log.e("OpenGroupDispatcher", "Failed to add group because", DuplicateGroupException())
-                delegate?.handleJobFailed(this, dispatcherName, DuplicateGroupException())
-                return
+                throw DuplicateGroupException()
             }
             storage.addOpenGroup(openGroup.joinUrl())
             storage.onOpenGroupAdded(openGroup.server, openGroup.room)
         } catch (e: Exception) {
             Log.e("OpenGroupDispatcher", "Failed to add group because",e)
-            delegate?.handleJobFailed(this, dispatcherName, e)
-            return
+            throw e
         }
         Log.d("Loki", "Group added successfully")
-        delegate?.handleJobSucceeded(this, dispatcherName)
     }
 
     override fun serialize(): Data = Data.Builder()

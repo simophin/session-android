@@ -162,12 +162,7 @@ fun MessageDetails(
                 modifier = Modifier.padding(horizontal = 32.dp),
                 factory = {
                     ViewVisibleMessageContentBinding.inflate(LayoutInflater.from(it)).mainContainerConstraint.apply {
-                        bind(
-                            message,
-                            thread = state.thread!!,
-                            onAttachmentNeedsDownload = onAttachmentNeedsDownload,
-                            suppressThumbnails = true
-                        )
+
 
                         setOnTouchListener { _, event ->
                             if (event.actionMasked == ACTION_UP) onContentClick(event)
@@ -175,7 +170,14 @@ fun MessageDetails(
                         }
                     }
                 }
-            )
+            ) { view ->
+                view.bind(
+                        message,
+                        thread = state.thread!!,
+                        onAttachmentNeedsDownload = { attachment -> onAttachmentNeedsDownload(attachment.attachmentId.rowId, attachment.mmsId) },
+                        suppressThumbnails = true
+                )
+            }
         }
         Carousel(state.imageAttachments) { onClickImage(it) }
         state.nonImageAttachmentFileDetails?.let { FileDetails(it) }

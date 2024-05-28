@@ -66,7 +66,6 @@ import network.loki.messenger.libsession_util.util.ExpiryMode
 import nl.komponents.kovenant.ui.successUi
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.contacts.Contact
-import org.session.libsession.messaging.jobs.AttachmentDownloadJob
 import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.messaging.mentions.Mention
 import org.session.libsession.messaging.mentions.MentionsManager
@@ -282,6 +281,10 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     private val layoutManager: LinearLayoutManager?
         get() { return binding?.conversationRecyclerView?.layoutManager as LinearLayoutManager? }
 
+    private val messageAttachmentDownloadHelper: MessageAttachmentDownloadHelper by lazy {
+        MessageAttachmentDownloadHelper(JobQueue.shared, scope = lifecycleScope)
+    }
+
     private val seed by lazy {
         var hexEncodedSeed = IdentityKeyUtil.retrieve(this, IdentityKeyUtil.LOKI_SEED)
         if (hexEncodedSeed == null) {
@@ -326,11 +329,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                     onDeselect(message, position, it)
                 }
             },
-            onAttachmentNeedsDownload = { attachmentId, mmsId ->
-                lifecycleScope.launch(Dispatchers.IO) {
-                    JobQueue.shared.add(AttachmentDownloadJob(attachmentId, mmsId))
-                }
-            },
+            onAttachmentNeedsDownload = messageAttachmentDownloadHelper::onAttachmentDownloadRequested,
+            onVisibleMessageBound = messageAttachmentDownloadHelper::onMessageBecomeVisible,
             glide = glide,
             lifecycleCoroutineScope = lifecycleScope
         )

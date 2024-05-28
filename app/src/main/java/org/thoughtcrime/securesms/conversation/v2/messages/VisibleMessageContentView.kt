@@ -22,8 +22,6 @@ import androidx.core.view.isVisible
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewVisibleMessageContentBinding
 import okhttp3.HttpUrl
-import org.session.libsession.messaging.MessagingModuleConfiguration
-import org.session.libsession.messaging.sending_receiving.attachments.AttachmentTransferProgress
 import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAttachment
 import org.session.libsession.utilities.ThemeUtil
 import org.session.libsession.utilities.getColorFromAttr
@@ -66,7 +64,7 @@ class VisibleMessageContentView : ConstraintLayout {
         thread: Recipient,
         searchQuery: String? = null,
         contactIsTrusted: Boolean = true,
-        onAttachmentNeedsDownload: (Long, Long) -> Unit,
+        onAttachmentNeedsDownload: (DatabaseAttachment) -> Unit,
         suppressThumbnails: Boolean = false
     ) {
         // Background
@@ -128,25 +126,6 @@ class VisibleMessageContentView : ConstraintLayout {
                 binding.quoteView.root.getGlobalVisibleRect(r)
                 if (r.contains(event.rawX.roundToInt(), event.rawY.roundToInt())) {
                     delegate?.scrollToMessageIfPossible(quote.id)
-                }
-            }
-        }
-
-        if (message is MmsMessageRecord) {
-            message.slideDeck.asAttachments().forEach { attach ->
-                val dbAttachment = attach as? DatabaseAttachment ?: return@forEach
-                val attachmentId = dbAttachment.attachmentId.rowId
-                if (attach.transferState == AttachmentTransferProgress.TRANSFER_PROGRESS_PENDING
-                    && MessagingModuleConfiguration.shared.storage.getAttachmentUploadJob(attachmentId) == null) {
-                    onAttachmentNeedsDownload(attachmentId, dbAttachment.mmsId)
-                }
-            }
-            message.linkPreviews.forEach { preview ->
-                val previewThumbnail = preview.getThumbnail().orNull() as? DatabaseAttachment ?: return@forEach
-                val attachmentId = previewThumbnail.attachmentId.rowId
-                if (previewThumbnail.transferState == AttachmentTransferProgress.TRANSFER_PROGRESS_PENDING
-                    && MessagingModuleConfiguration.shared.storage.getAttachmentUploadJob(attachmentId) == null) {
-                    onAttachmentNeedsDownload(attachmentId, previewThumbnail.mmsId)
                 }
             }
         }

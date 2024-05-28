@@ -5,11 +5,11 @@ import org.session.libsession.messaging.utilities.Data
 import org.session.libsession.utilities.TextSecurePreferences
 
 class TrimThreadJob(val threadId: Long, val openGroupId: String?) : Job {
-    override var delegate: JobDelegate? = null
     override var id: String? = null
     override var failureCount: Int = 0
-
     override val maxFailureCount: Int = 1
+    override val jobKey: Any?
+        get() = null
 
     companion object {
         const val KEY: String = "TrimThreadJob"
@@ -29,7 +29,6 @@ class TrimThreadJob(val threadId: Long, val openGroupId: String?) : Job {
             val oldestMessageTime = System.currentTimeMillis() - TRIM_TIME_LIMIT
             storage.trimThreadBefore(threadId, oldestMessageTime)
         }
-        delegate?.handleJobSucceeded(this, dispatcherName)
     }
 
     override fun serialize(): Data {

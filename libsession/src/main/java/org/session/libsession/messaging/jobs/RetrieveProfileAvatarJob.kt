@@ -20,10 +20,11 @@ import java.security.SecureRandom
 import java.util.concurrent.ConcurrentSkipListSet
 
 class RetrieveProfileAvatarJob(private val profileAvatar: String?, val recipientAddress: Address): Job {
-    override var delegate: JobDelegate? = null
     override var id: String? = null
     override var failureCount: Int = 0
     override val maxFailureCount: Int = 3
+
+    override val jobKey = profileAvatar to recipientAddress
 
     companion object {
         val TAG = RetrieveProfileAvatarJob::class.simpleName
@@ -38,15 +39,16 @@ class RetrieveProfileAvatarJob(private val profileAvatar: String?, val recipient
     }
 
     override suspend fun execute(dispatcherName: String) {
-        val delegate = delegate ?: return
-        if (profileAvatar in errorUrls) return delegate.handleJobFailed(this, dispatcherName, Exception("Profile URL 404'd this app instance"))
+        if (profileAvatar in errorUrls) {
+            throw Exception("Profile URL 404'd this app instance")
+        }
         val context = MessagingModuleConfiguration.shared.context
         val storage = MessagingModuleConfiguration.shared.storage
         val recipient = Recipient.from(context, recipientAddress, true)
         val profileKey = recipient.resolve().profileKey
 
         if (profileKey == null || (profileKey.size != 32 && profileKey.size != 16)) {
-            return delegate.handleJobFailedPermanently(this, dispatcherName, Exception("Recipient profile key is gone!"))
+            throw JobPermanentlyFailedException(Exception("Recipient profile key is gone!"))
         }
 
         // Commit '78d1e9d' (fix: open group threads and avatar downloads) had this commented out so
@@ -93,11 +95,10 @@ class RetrieveProfileAvatarJob(private val profileAvatar: String?, val recipient
             if (failureCount + 1 >= maxFailureCount) {
                 errorUrls += profileAvatar
             }
-            return delegate.handleJobFailed(this, dispatcherName, e)
+            throw e
         } finally {
             downloadDestination.delete()
         }
-        return delegate.handleJobSucceeded(this, dispatcherName)
     }
 
     override fun serialize(): Data {
