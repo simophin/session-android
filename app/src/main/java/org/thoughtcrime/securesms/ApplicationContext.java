@@ -224,6 +224,7 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
                 lastSentTimestampCache
                 );
         callMessageProcessor = new CallMessageProcessor(this, textSecurePreferences, ProcessLifecycleOwner.get().getLifecycle(), storage);
+        poller = new Poller(configFactory);
         Log.i(TAG, "onCreate()");
         startKovenant();
         initializeSecurityProvider();
@@ -259,6 +260,8 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
         Log.i(TAG, "App is now visible.");
         KeyCachingService.onAppForegrounded(this);
 
+        poller.onAppVisible();
+
         // If the user account hasn't been created or onboarding wasn't finished then don't start
         // the pollers
         if (TextSecurePreferences.getLocalNumber(this) == null || !TextSecurePreferences.hasSeenWelcomeScreen(this)) {
@@ -266,12 +269,6 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
         }
 
         ThreadUtils.queue(()->{
-            if (poller != null) {
-                poller.setCaughtUp(false);
-            }
-
-            startPollingIfNeeded();
-
             OpenGroupManager.INSTANCE.startPolling();
         });
     }
@@ -282,9 +279,7 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
         Log.i(TAG, "App is no longer visible.");
         KeyCachingService.onAppBackgrounded(this);
         messageNotifier.setVisibleThread(-1);
-        if (poller != null) {
-            poller.stopIfNeeded();
-        }
+        poller.onAppBackgrounded();
         ClosedGroupPollerV2.getShared().stopAll();
     }
 
@@ -436,18 +431,11 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
     private void setUpPollingIfNeeded() {
         String userPublicKey = TextSecurePreferences.getLocalNumber(this);
         if (userPublicKey == null) return;
-        if (poller != null) {
-            poller.setUserPublicKey(userPublicKey);
-            return;
-        }
-        poller = new Poller(configFactory, new Timer());
+        poller.updateUserPublicKey(userPublicKey);
     }
 
     public void startPollingIfNeeded() {
         setUpPollingIfNeeded();
-        if (poller != null) {
-            poller.startIfNeeded();
-        }
         ClosedGroupPollerV2.getShared().start();
     }
 
