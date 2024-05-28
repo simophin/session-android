@@ -26,14 +26,19 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.loader.content.CursorLoader;
 
+import org.session.libsession.messaging.contacts.Contact;
 import org.session.libsession.utilities.GroupRecord;
 import org.thoughtcrime.securesms.database.GroupDatabase;
+import org.thoughtcrime.securesms.database.SessionContactDatabase;
 import org.thoughtcrime.securesms.database.ThreadDatabase;
 import org.thoughtcrime.securesms.database.model.ThreadRecord;
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import network.loki.messenger.R;
 
@@ -187,7 +192,18 @@ public class ContactsCursorLoader extends CursorLoader {
   }
 
   private List<Cursor> getContactsCursors() {
-    return new ArrayList<>(2);
+    SessionContactDatabase database = DatabaseComponent.get(getContext()).sessionContactDatabase();
+    Set<Contact> allContacts = database.getAllContacts();
+    MatrixCursor cursor = new MatrixCursor(CONTACT_PROJECTION, allContacts.size());
+    for (Contact contact : allContacts) {
+      cursor.addRow(new Object[] { contact.getName(),
+                                   contact.getSessionID(),
+                                   ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE,
+                                   "",
+                                   NORMAL_TYPE });
+    }
+
+    return Collections.singletonList(cursor);
     /*
     if (!Permissions.hasAny(getContext(), Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS)) {
       return cursorList;

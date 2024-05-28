@@ -21,8 +21,10 @@ class ContactListAdapter(
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var items = listOf<ContactListItem>()
         set(value) {
-            field = value
-            notifyDataSetChanged()
+            if (field != value) {
+                field = value
+                notifyDataSetChanged()
+            }
         }
 
     private object ViewType {

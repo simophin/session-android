@@ -3,6 +3,7 @@ package org.thoughtcrime.securesms.database
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
+import androidx.core.database.getLongOrNull
 import androidx.core.database.getStringOrNull
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.messaging.utilities.SessionId
@@ -89,7 +90,7 @@ class SessionContactDatabase(context: Context, helper: SQLCipherOpenHelper) : Da
         cursor.getStringOrNull(cursor.getColumnIndexOrThrow(profilePictureEncryptionKey))?.let {
             contact.profilePictureEncryptionKey = Base64.decode(it)
         }
-        contact.threadID = cursor.getLong(cursor.getColumnIndexOrThrow(threadID))
+        contact.threadID = cursor.getLongOrNull(cursor.getColumnIndexOrThrow(threadID))
         contact.isTrusted = cursor.getInt(cursor.getColumnIndexOrThrow(isTrusted)) != 0
         return contact
     }
