@@ -16,17 +16,17 @@ object MentionsManager {
         }
     }
 
-    fun getMentionCandidates(query: String, threadID: Long, isOpenGroup: Boolean): List<Mention> {
+    fun getMentionCandidates(query: String, threadID: Long, isOpenGroup: Boolean): List<MentionCandidate> {
         val cache = userPublicKeyCache[threadID] ?: return listOf()
         // Prepare
         val context = if (isOpenGroup) Contact.ContactContext.OPEN_GROUP else Contact.ContactContext.REGULAR
         val storage = MessagingModuleConfiguration.shared.storage
         val userPublicKey = storage.getUserPublicKey()
         // Gather candidates
-        var candidates: List<Mention> = cache.mapNotNull { publicKey ->
+        var candidates: List<MentionCandidate> = cache.mapNotNull { publicKey ->
             val contact = storage.getContactWithSessionID(publicKey)
             val displayName = contact?.displayName(context) ?: return@mapNotNull null
-            Mention(publicKey, displayName)
+            MentionCandidate(publicKey, displayName)
         }
         candidates = candidates.filter { it.publicKey != userPublicKey }
         // Sort alphabetically first

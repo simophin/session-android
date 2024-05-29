@@ -2,18 +2,17 @@ package org.thoughtcrime.securesms.conversation.v2.components
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ListView
-import org.session.libsession.messaging.mentions.Mention
+import org.session.libsession.messaging.mentions.MentionCandidate
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.mms.GlideRequests
 import org.thoughtcrime.securesms.util.toPx
 
 class MentionCandidateSelectionView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : ListView(context, attrs, defStyleAttr) {
-    private var mentionCandidates = listOf<Mention>()
+    private var mentionCandidates = listOf<MentionCandidate>()
         set(newValue) { field = newValue; mentionCandidateSelectionViewAdapter.mentionCandidates = newValue }
     var glide: GlideRequests? = null
         set(newValue) { field = newValue; mentionCandidateSelectionViewAdapter.glide = newValue }
@@ -21,12 +20,12 @@ class MentionCandidateSelectionView(context: Context, attrs: AttributeSet?, defS
         set(newValue) { field = newValue; mentionCandidateSelectionViewAdapter.openGroupServer = openGroupServer }
     var openGroupRoom: String? = null
         set(newValue) { field = newValue; mentionCandidateSelectionViewAdapter.openGroupRoom = openGroupRoom }
-    var onMentionCandidateSelected: ((Mention) -> Unit)? = null
+    var onMentionCandidateSelected: ((MentionCandidate) -> Unit)? = null
 
     private val mentionCandidateSelectionViewAdapter by lazy { Adapter(context) }
 
     private class Adapter(private val context: Context) : BaseAdapter() {
-        var mentionCandidates = listOf<Mention>()
+        var mentionCandidates = listOf<MentionCandidate>()
             set(newValue) { field = newValue; notifyDataSetChanged() }
         var glide: GlideRequests? = null
         var openGroupServer: String? = null
@@ -40,7 +39,7 @@ class MentionCandidateSelectionView(context: Context, attrs: AttributeSet?, defS
             return position.toLong()
         }
 
-        override fun getItem(position: Int): Mention {
+        override fun getItem(position: Int): MentionCandidate {
             return mentionCandidates[position]
         }
 
@@ -67,7 +66,7 @@ class MentionCandidateSelectionView(context: Context, attrs: AttributeSet?, defS
         }
     }
 
-    fun show(mentionCandidates: List<Mention>, threadID: Long) {
+    fun show(mentionCandidates: List<MentionCandidate>, threadID: Long) {
         val openGroup = DatabaseComponent.get(context).lokiThreadDatabase().getOpenGroupChat(threadID)
         if (openGroup != null) {
             openGroupServer = openGroup.server

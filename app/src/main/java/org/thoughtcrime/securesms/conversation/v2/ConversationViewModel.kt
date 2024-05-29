@@ -13,10 +13,14 @@ import dagger.assisted.AssistedInject
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.session.libsession.messaging.mentions.MentionCandidate
 
 import org.session.libsession.messaging.messages.ExpirationConfiguration
 import org.session.libsession.messaging.open_groups.OpenGroup
@@ -27,7 +31,7 @@ import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.Log
-import org.thoughtcrime.securesms.database.MmsSmsDatabase
+import org.thoughtcrime.securesms.conversation.v2.utilities.MentionRepository
 
 import org.thoughtcrime.securesms.database.Storage
 import org.thoughtcrime.securesms.database.model.MessageRecord
@@ -39,7 +43,8 @@ class ConversationViewModel(
     val threadId: Long,
     val edKeyPair: KeyPair?,
     private val repository: ConversationRepository,
-    private val storage: Storage
+    private val storage: Storage,
+    private val mentionRepository: MentionRepository,
 ) : ViewModel() {
 
     val showSendAfterApprovalText: Boolean
@@ -91,6 +96,13 @@ class ConversationViewModel(
         // allow reactions if the open group is null (normal conversations) or the open group's capabilities include reactions
         get() = (openGroup == null || OpenGroupApi.Capability.REACTIONS.name.lowercase() in serverCapabilities)
 
+    private val memberPublicKeys: StateFlow<List<String>?> = mentionRepository
+        .observeThreadMemberPublicKeys(threadId)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(10000), null)
+
+    private val _memberSearchQuery = MutableSharedFlow<String>(extraBufferCapacity = 1)
+
+//    val mentionAutoCompleteList: StateFlow<List<MentionCandidate>> = TODO()
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
@@ -255,11 +267,12 @@ class ConversationViewModel(
         @Assisted private val threadId: Long,
         @Assisted private val edKeyPair: KeyPair?,
         private val repository: ConversationRepository,
-        private val storage: Storage
+        private val storage: Storage,
+        private val mentionRepository: MentionRepository,
     ) : ViewModelProvider.Factory {
 
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return ConversationViewModel(threadId, edKeyPair, repository, storage) as T
+            return ConversationViewModel(threadId, edKeyPair, repository, storage, mentionRepository) as T
         }
     }
 }

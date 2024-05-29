@@ -8,7 +8,7 @@ import android.widget.BaseAdapter
 import android.widget.ListView
 import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.R
-import org.session.libsession.messaging.mentions.Mention
+import org.session.libsession.messaging.mentions.MentionCandidate
 import org.thoughtcrime.securesms.database.LokiThreadDatabase
 import org.thoughtcrime.securesms.mms.GlideRequests
 import org.thoughtcrime.securesms.util.toPx
@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MentionCandidatesView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : ListView(context, attrs, defStyleAttr) {
-    private var candidates = listOf<Mention>()
+    private var candidates = listOf<MentionCandidate>()
         set(newValue) { field = newValue; snAdapter.candidates = newValue }
     var glide: GlideRequests? = null
         set(newValue) { field = newValue; snAdapter.glide = newValue }
@@ -24,14 +24,14 @@ class MentionCandidatesView(context: Context, attrs: AttributeSet?, defStyleAttr
         set(newValue) { field = newValue; snAdapter.openGroupServer = openGroupServer }
     var openGroupRoom: String? = null
         set(newValue) { field = newValue; snAdapter.openGroupRoom = openGroupRoom }
-    var onCandidateSelected: ((Mention) -> Unit)? = null
+    var onCandidateSelected: ((MentionCandidate) -> Unit)? = null
 
     @Inject lateinit var threadDb: LokiThreadDatabase
 
     private val snAdapter by lazy { Adapter(context) }
 
     private class Adapter(private val context: Context) : BaseAdapter() {
-        var candidates = listOf<Mention>()
+        var candidates = listOf<MentionCandidate>()
             set(newValue) { field = newValue; notifyDataSetChanged() }
         var glide: GlideRequests? = null
         var openGroupServer: String? = null
@@ -39,7 +39,7 @@ class MentionCandidatesView(context: Context, attrs: AttributeSet?, defStyleAttr
 
         override fun getCount(): Int { return candidates.count() }
         override fun getItemId(position: Int): Long { return position.toLong() }
-        override fun getItem(position: Int): Mention { return candidates[position] }
+        override fun getItem(position: Int): MentionCandidate { return candidates[position] }
 
         override fun getView(position: Int, cellToBeReused: View?, parent: ViewGroup): View {
             val cell = cellToBeReused as MentionCandidateView? ?: MentionCandidateView(context).apply {
@@ -66,7 +66,7 @@ class MentionCandidatesView(context: Context, attrs: AttributeSet?, defStyleAttr
         }
     }
 
-    fun show(candidates: List<Mention>, threadID: Long) {
+    fun show(candidates: List<MentionCandidate>, threadID: Long) {
         val openGroup = threadDb.getOpenGroupChat(threadID)
         if (openGroup != null) {
             openGroupServer = openGroup.server
@@ -75,7 +75,7 @@ class MentionCandidatesView(context: Context, attrs: AttributeSet?, defStyleAttr
         setMentionCandidates(candidates)
     }
 
-    fun setMentionCandidates(candidates: List<Mention>) {
+    fun setMentionCandidates(candidates: List<MentionCandidate>) {
         this.candidates = candidates
         val layoutParams = this.layoutParams as ViewGroup.LayoutParams
         layoutParams.height = toPx(Math.min(candidates.count(), 4) * 44, resources)

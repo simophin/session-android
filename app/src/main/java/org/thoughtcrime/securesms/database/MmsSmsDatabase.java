@@ -37,7 +37,9 @@ import org.thoughtcrime.securesms.database.model.MessageRecord;
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent;
 
 import java.io.Closeable;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import kotlin.Pair;
@@ -87,6 +89,22 @@ public class MmsSmsDatabase extends Database {
 
   public MmsSmsDatabase(Context context, SQLCipherOpenHelper databaseHelper) {
     super(context, databaseHelper);
+  }
+
+  public @NotNull List<String> getParticipantPublicKeysForThread(long threadId) {
+    final List<String> publicKeys;
+    try (Cursor cursor = getReadableDatabase().query(
+            "SELECT DISTINCT" + MmsSmsColumns.ADDRESS + " FROM " + SmsDatabase.TABLE_NAME +
+                    " WHERE " + MmsSmsColumns.THREAD_ID + " = ?",
+            new Object[]{ threadId }
+    )) {
+      publicKeys = new ArrayList<>(cursor.getCount());
+      while (cursor.moveToNext()) {
+          publicKeys.add(cursor.getString(0));
+      }
+    }
+
+    return publicKeys;
   }
 
   public @Nullable MessageRecord getMessageForTimestamp(long timestamp) {

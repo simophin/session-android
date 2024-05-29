@@ -6,13 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.RelativeLayout
 import network.loki.messenger.databinding.ViewMentionCandidateV2Binding
-import org.session.libsession.messaging.mentions.Mention
+import org.session.libsession.messaging.mentions.MentionCandidate
 import org.thoughtcrime.securesms.groups.OpenGroupManager
 import org.thoughtcrime.securesms.mms.GlideRequests
 
 class MentionCandidateView : RelativeLayout {
     private lateinit var binding: ViewMentionCandidateV2Binding
-    var candidate = Mention("", "")
+    var candidate = MentionCandidate("", "")
         set(newValue) { field = newValue; update() }
     var glide: GlideRequests? = null
     var openGroupServer: String? = null

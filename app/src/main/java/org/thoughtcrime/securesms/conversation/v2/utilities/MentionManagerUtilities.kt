@@ -1,8 +1,10 @@
 package org.thoughtcrime.securesms.conversation.v2.utilities
 
 import android.content.Context
+import android.os.SystemClock
 import org.session.libsession.messaging.mentions.MentionsManager
 import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 
@@ -10,6 +12,7 @@ object MentionManagerUtilities {
 
     fun populateUserPublicKeyCacheIfNeeded(threadID: Long, context: Context) {
         val result = mutableSetOf<String>()
+        val start = SystemClock.uptimeMillis()
         val recipient = DatabaseComponent.get(context).threadDatabase().getRecipientForThreadId(threadID) ?: return
         if (recipient.address.isClosedGroup) {
             val members = DatabaseComponent.get(context).groupDatabase().getGroupMembers(recipient.address.toGroupString(), false).map { it.address.serialize() }
@@ -30,5 +33,7 @@ object MentionManagerUtilities {
             result.add(TextSecurePreferences.getLocalNumber(context)!!)
         }
         MentionsManager.userPublicKeyCache[threadID] = result
+
+        Log.d("MentionManagerUtilities", "Populated user public key cache for thread $threadID in ${SystemClock.uptimeMillis() - start}ms, closedGroup = ${recipient.address.isClosedGroup}")
     }
 }
