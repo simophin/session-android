@@ -100,7 +100,7 @@ class HomeViewModel @Inject constructor(
     @OptIn(FlowPreview::class)
     private fun reloadTriggersAndContentChanges() = merge(
         manualReloadTrigger,
-        contentResolver.observeChanges(DatabaseContentProviders.ConversationList.CONTENT_URI)
+        contentResolver.observeChanges(DatabaseContentProviders.ConversationList.CONTENT_URI, true)
     )
         .flowOn(Dispatchers.IO)
         .debounce(CHANGE_NOTIFICATION_DEBOUNCE_MILLS)
