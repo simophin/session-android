@@ -97,9 +97,13 @@ public class MmsSmsDatabase extends Database {
   }
 
   public @Nullable MessageRecord getMessageFor(long timestamp, String serializedAuthor) {
+    return getMessageFor(timestamp, serializedAuthor, true);
+  }
+
+  public @Nullable MessageRecord getMessageFor(long timestamp, String serializedAuthor, boolean getQuote) {
 
     try (Cursor cursor = queryTables(PROJECTION, MmsSmsColumns.NORMALIZED_DATE_SENT + " = " + timestamp, null, null)) {
-      MmsSmsDatabase.Reader reader = readerFor(cursor);
+      MmsSmsDatabase.Reader reader = readerFor(cursor, getQuote);
 
       MessageRecord messageRecord;
       boolean isOwnNumber = Util.isOwnNumber(context, serializedAuthor);
@@ -635,7 +639,11 @@ public class MmsSmsDatabase extends Database {
   }
 
   public Reader readerFor(@NonNull Cursor cursor) {
-    return new Reader(cursor);
+    return readerFor(cursor, true);
+  }
+
+  public Reader readerFor(@NonNull Cursor cursor, boolean getQuote) {
+    return new Reader(cursor, getQuote);
   }
 
   @NotNull
@@ -658,11 +666,13 @@ public class MmsSmsDatabase extends Database {
   public class Reader implements Closeable {
 
     private final Cursor                 cursor;
+    private final boolean                getQuote;
     private       SmsDatabase.Reader     smsReader;
     private       MmsDatabase.Reader     mmsReader;
 
-    public Reader(Cursor cursor) {
+    public Reader(Cursor cursor, boolean getQuote) {
       this.cursor = cursor;
+      this.getQuote = getQuote;
     }
 
     private SmsDatabase.Reader getSmsReader() {
@@ -675,7 +685,7 @@ public class MmsSmsDatabase extends Database {
 
     private MmsDatabase.Reader getMmsReader() {
       if (mmsReader == null) {
-        mmsReader = DatabaseComponent.get(context).mmsDatabase().readerFor(cursor);
+        mmsReader = DatabaseComponent.get(context).mmsDatabase().readerFor(cursor, getQuote);
       }
 
       return mmsReader;

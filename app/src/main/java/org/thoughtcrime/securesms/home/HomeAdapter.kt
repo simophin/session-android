@@ -9,13 +9,18 @@ import androidx.recyclerview.widget.ListUpdateCallback
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.NO_ID
 import network.loki.messenger.R
+import network.loki.messenger.databinding.ViewMessageRequestBannerBinding
 import org.thoughtcrime.securesms.dependencies.ConfigFactory
 import org.thoughtcrime.securesms.mms.GlideRequests
+import org.thoughtcrime.securesms.util.DateUtils
+import java.util.Locale
 
 class HomeAdapter(
     private val context: Context,
     private val configFactory: ConfigFactory,
-    private val listener: ConversationClickListener
+    private val listener: ConversationClickListener,
+    private val showMessageRequests: () -> Unit,
+    private val hideMessageRequests: () -> Unit,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), ListUpdateCallback {
 
     companion object {
@@ -23,13 +28,21 @@ class HomeAdapter(
         private const val ITEM = 1
     }
 
-    var header: View? = null
+    var messageRequests: HomeViewModel.MessageRequests? = null
+        set(value) {
+            if (field == value) return
+            val hadHeader = hasHeaderView()
+            field = value
+            if (value != null) {
+                if (hadHeader) notifyItemChanged(0) else notifyItemInserted(0)
+            } else if (hadHeader) notifyItemRemoved(0)
+        }
 
-    var data: HomeViewModel.Data = HomeViewModel.Data(emptyList(), emptySet())
+    var data: HomeViewModel.Data = HomeViewModel.Data()
         set(newData) {
-            if (field === newData) {
-                return
-            }
+            if (field === newData) return
+
+            messageRequests = newData.messageRequests
 
             val diff = HomeDiffUtil(field, newData, context, configFactory)
             val diffResult = DiffUtil.calculateDiff(diff)
@@ -37,10 +50,10 @@ class HomeAdapter(
             diffResult.dispatchUpdatesTo(this as ListUpdateCallback)
         }
 
-    fun hasHeaderView(): Boolean = header != null
+    fun hasHeaderView(): Boolean = messageRequests != null
 
     private val headerCount: Int
-        get() = if (header == null) 0 else 1
+        get() = if (messageRequests == null) 0 else 1
 
     override fun onInserted(position: Int, count: Int) {
         notifyItemRangeInserted(position + headerCount, count)
@@ -69,7 +82,11 @@ class HomeAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         when (viewType) {
             HEADER -> {
-                HeaderFooterViewHolder(header!!)
+                ViewMessageRequestBannerBinding.inflate(LayoutInflater.from(parent.context)).apply {
+                    root.setOnClickListener { showMessageRequests() }
+                    root.setOnLongClickListener { hideMessageRequests(); true }
+                    root.layoutParams = RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT)
+                }.let(::HeaderFooterViewHolder)
             }
             ITEM -> {
                 val conversationView = LayoutInflater.from(parent.context).inflate(R.layout.view_conversation, parent, false) as ConversationView
@@ -85,19 +102,27 @@ class HomeAdapter(
         }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (holder is ConversationViewHolder) {
-            val offset = if (hasHeaderView()) position - 1 else position
-            val thread = data.threads[offset]
-            val isTyping = data.typingThreadIDs.contains(thread.threadId)
-            holder.view.bind(thread, isTyping, glide)
+        when (holder) {
+            is HeaderFooterViewHolder -> {
+                holder.binding.run {
+                    messageRequests?.let {
+                        unreadCountTextView.text = it.count
+                        timestampTextView.text = it.timestamp
+                    }
+                }
+            }
+            is ConversationViewHolder -> {
+                val offset = if (hasHeaderView()) position - 1 else position
+                val thread = data.threads[offset]
+                val isTyping = data.typingThreadIDs.contains(thread.threadId)
+                holder.view.bind(thread, isTyping, glide)
+            }
         }
     }
 
     override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
         if (holder is ConversationViewHolder) {
             holder.view.recycle()
-        } else {
-            super.onViewRecycled(holder)
         }
     }
 
@@ -109,6 +134,5 @@ class HomeAdapter(
 
     class ConversationViewHolder(val view: ConversationView) : RecyclerView.ViewHolder(view)
 
-    class HeaderFooterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
-
+    class HeaderFooterViewHolder(val binding: ViewMessageRequestBannerBinding) : RecyclerView.ViewHolder(binding.root)
 }
