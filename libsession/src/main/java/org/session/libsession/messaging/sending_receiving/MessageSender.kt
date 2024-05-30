@@ -1,8 +1,12 @@
 package org.session.libsession.messaging.sending_receiving
 
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapMerge
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.scan
 import network.loki.messenger.libsession_util.util.ExpiryMode
-import nl.komponents.kovenant.Promise
-import nl.komponents.kovenant.deferred
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.messaging.jobs.MessageSendJob
@@ -26,7 +30,7 @@ import org.session.libsession.messaging.open_groups.OpenGroupMessage
 import org.session.libsession.messaging.utilities.MessageWrapper
 import org.session.libsession.messaging.utilities.SessionId
 import org.session.libsession.messaging.utilities.SodiumUtilities
-import org.session.libsession.snode.RawResponsePromise
+import org.session.libsession.snode.RawResponse
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.snode.SnodeAPI.nowWithOffset
 import org.session.libsession.snode.SnodeMessage
@@ -39,13 +43,11 @@ import org.session.libsignal.crypto.PushTransportDetails
 import org.session.libsignal.protos.SignalServiceProtos
 import org.session.libsignal.utilities.Base64
 import org.session.libsignal.utilities.IdPrefix
-import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.Namespace
 import org.session.libsignal.utilities.defaultRequiresAuth
 import org.session.libsignal.utilities.hasNamespaces
 import org.session.libsignal.utilities.hexEncodedPublicKey
 import java.util.concurrent.TimeUnit
-import java.util.concurrent.atomic.AtomicInteger
 import org.session.libsession.messaging.sending_receiving.attachments.Attachment as SignalAttachment
 import org.session.libsession.messaging.sending_receiving.link_preview.LinkPreview as SignalLinkPreview
 import org.session.libsession.messaging.sending_receiving.quotes.QuoteModel as SignalQuote
@@ -72,7 +74,7 @@ object MessageSender {
     }
 
     // Convenience
-    fun send(message: Message, destination: Destination, isSyncMessage: Boolean): Promise<Unit, Exception> {
+    suspend fun send(message: Message, destination: Destination, isSyncMessage: Boolean) {
         if (message is VisibleMessage) MessagingModuleConfiguration.shared.lastSentTimestampCache.submitTimestamp(message.threadID!!, message.sentTimestamp!!)
         return if (destination is Destination.LegacyOpenGroup || destination is Destination.OpenGroup || destination is Destination.OpenGroupInbox) {
             sendToOpenGroupDestination(destination, message)
@@ -171,9 +173,7 @@ object MessageSender {
     }
 
     // One-on-One Chats & Closed Groups
-    private fun sendToSnodeDestination(destination: Destination, message: Message, isSyncMessage: Boolean = false): Promise<Unit, Exception> {
-        val deferred = deferred<Unit, Exception>()
-        val promise = deferred.promise
+    private suspend fun sendToSnodeDestination(destination: Destination, message: Message, isSyncMessage: Boolean = false) {
         val storage = MessagingModuleConfiguration.shared.storage
         val userPublicKey = storage.getUserPublicKey()
 
@@ -186,7 +186,7 @@ object MessageSender {
             if (destination is Destination.Contact && message is VisibleMessage && !isSelfSend()) {
                 SnodeModule.shared.broadcaster.broadcast("messageFailed", message.sentTimestamp!!)
             }
-            deferred.reject(error)
+            throw error
         }
         try {
             val snodeMessage = buildWrappedMessageToSnode(destination, message, isSyncMessage)
@@ -204,53 +204,63 @@ object MessageSender {
 
                 else -> listOf(Namespace.DEFAULT)
             }
-            namespaces.map { namespace -> SnodeAPI.sendMessage(snodeMessage, requiresAuth = false, namespace = namespace) }.let { promises ->
-                var isSuccess = false
-                val promiseCount = promises.size
-                val errorCount = AtomicInteger(0)
-                promises.forEach { promise: RawResponsePromise ->
-                    promise.success {
-                        if (isSuccess) { return@success } // Succeed as soon as the first promise succeeds
-                        isSuccess = true
-                        val hash = it["hash"] as? String
-                        message.serverHash = hash
-                        handleSuccessfulMessageSend(message, destination, isSyncMessage)
 
-                        val shouldNotify: Boolean = when (message) {
-                            is VisibleMessage, is UnsendRequest -> !isSyncMessage
-                            is CallMessage -> {
-                                // Note: Other 'CallMessage' types are too big to send as push notifications
-                                // so only send the 'preOffer' message as a notification
-                                when (message.type) {
-                                    SignalServiceProtos.CallMessage.Type.PRE_OFFER -> true
-                                    else -> false
-                                }
-                            }
-                            else -> false
-                        }
-
-                        /*
-                        if (message is ClosedGroupControlMessage && message.kind is ClosedGroupControlMessage.Kind.New) {
-                            shouldNotify = true
-                        }
-                         */
-                        if (shouldNotify) {
-                            val notifyPNServerJob = NotifyPNServerJob(snodeMessage)
-                            JobQueue.shared.add(notifyPNServerJob)
-                        }
-                        deferred.resolve(Unit)
-                    }
-                    promise.fail {
-                        errorCount.getAndIncrement()
-                        if (errorCount.get() != promiseCount) { return@fail } // Only error out if all promises failed
-                        handleFailure(it)
+            // Send message to all namespaces async, wait for the first successful response,
+            // or fail at the end if all requests failed.
+            @Suppress("OPT_IN_USAGE")
+            val response = namespaces.asFlow()
+                .flatMapMerge { namespace ->
+                    flow {
+                        emit(runCatching { SnodeAPI.sendMessage(snodeMessage, requiresAuth = false, namespace = namespace) })
                     }
                 }
+                .scan(emptyList<Result<RawResponse>>()) { acc, value -> acc + value }
+                .mapNotNull { results ->
+                    val lastResult = results.lastOrNull()
+
+                    // If the last result is successful, returns it
+                    // If all requests failed, also returns the last result
+                    // Otherwise, returns null to indicate we need to continue mapping
+                    if (lastResult != null &&
+                        (lastResult.isSuccess || results.size == namespaces.size)) {
+                        lastResult
+                    } else {
+                        null
+                    }
+                }
+                .first()
+                .getOrThrow()
+
+            val hash = response["hash"] as? String
+            message.serverHash = hash
+            handleSuccessfulMessageSend(message, destination, isSyncMessage)
+
+            val shouldNotify: Boolean = when (message) {
+                is VisibleMessage, is UnsendRequest -> !isSyncMessage
+                is CallMessage -> {
+                    // Note: Other 'CallMessage' types are too big to send as push notifications
+                    // so only send the 'preOffer' message as a notification
+                    when (message.type) {
+                        SignalServiceProtos.CallMessage.Type.PRE_OFFER -> true
+                        else -> false
+                    }
+                }
+                else -> false
             }
+
+            /*
+            if (message is ClosedGroupControlMessage && message.kind is ClosedGroupControlMessage.Kind.New) {
+                shouldNotify = true
+            }
+             */
+            if (shouldNotify) {
+                val notifyPNServerJob = NotifyPNServerJob(snodeMessage)
+                JobQueue.shared.add(notifyPNServerJob)
+            }
+
         } catch (exception: Exception) {
             handleFailure(exception)
         }
-        return promise
     }
 
     private fun getSpecifiedTtl(
@@ -267,8 +277,7 @@ object MessageSender {
     ?.expiryMillis
 
     // Open Groups
-    private fun sendToOpenGroupDestination(destination: Destination, message: Message): Promise<Unit, Exception> {
-        val deferred = deferred<Unit, Exception>()
+    private suspend fun sendToOpenGroupDestination(destination: Destination, message: Message) {
         val storage = MessagingModuleConfiguration.shared.storage
         val configFactory = MessagingModuleConfiguration.shared.configFactory
         if (message.sentTimestamp == null) {
@@ -311,7 +320,7 @@ object MessageSender {
         // Set the failure handler (need it here already for precondition failure handling)
         fun handleFailure(error: Exception) {
             handleFailedMessageSend(message, error)
-            deferred.reject(error)
+            throw error
         }
         try {
             // Attach the user's profile if needed
@@ -333,13 +342,10 @@ object MessageSender {
                         sentTimestamp = message.sentTimestamp!!,
                         base64EncodedData = Base64.encodeBytes(plaintext),
                     )
-                    OpenGroupApi.sendMessage(openGroupMessage, destination.roomToken, destination.server, destination.whisperTo, destination.whisperMods, destination.fileIds).success {
-                        message.openGroupServerMessageID = it.serverID
-                        handleSuccessfulMessageSend(message, destination, openGroupSentTimestamp = it.sentTimestamp)
-                        deferred.resolve(Unit)
-                    }.fail {
-                        handleFailure(it)
-                    }
+
+                    val result = OpenGroupApi.sendMessage(openGroupMessage, destination.roomToken, destination.server, destination.whisperTo, destination.whisperMods, destination.fileIds)
+                    message.openGroupServerMessageID = result.serverID
+                    handleSuccessfulMessageSend(message, destination, openGroupSentTimestamp = result.sentTimestamp)
                 }
                 is Destination.OpenGroupInbox -> {
                     message.recipient = destination.blindedPublicKey
@@ -355,24 +361,19 @@ object MessageSender {
                         destination.serverPublicKey
                     )
                     val base64EncodedData = Base64.encodeBytes(ciphertext)
-                    OpenGroupApi.sendDirectMessage(base64EncodedData, destination.blindedPublicKey, destination.server).success {
-                        message.openGroupServerMessageID = it.id
-                        handleSuccessfulMessageSend(message, destination, openGroupSentTimestamp = TimeUnit.SECONDS.toMillis(it.postedAt))
-                        deferred.resolve(Unit)
-                    }.fail {
-                        handleFailure(it)
-                    }
+                    val result = OpenGroupApi.sendDirectMessage(base64EncodedData, destination.blindedPublicKey, destination.server)
+                    message.openGroupServerMessageID = result.id
+                    handleSuccessfulMessageSend(message, destination, openGroupSentTimestamp = TimeUnit.SECONDS.toMillis(result.postedAt))
                 }
                 else -> throw IllegalStateException("Invalid destination.")
             }
         } catch (exception: Exception) {
             handleFailure(exception)
         }
-        return deferred.promise
     }
 
     // Result Handling
-    private fun handleSuccessfulMessageSend(message: Message, destination: Destination, isSyncMessage: Boolean = false, openGroupSentTimestamp: Long = -1) {
+    private suspend fun handleSuccessfulMessageSend(message: Message, destination: Destination, isSyncMessage: Boolean = false, openGroupSentTimestamp: Long = -1) {
         if (message is VisibleMessage) MessagingModuleConfiguration.shared.lastSentTimestampCache.submitTimestamp(message.threadID!!, openGroupSentTimestamp)
         val storage = MessagingModuleConfiguration.shared.storage
         val userPublicKey = storage.getUserPublicKey()!!
@@ -498,13 +499,13 @@ object MessageSender {
         JobQueue.shared.add(job)
     }
 
-    fun sendNonDurably(message: VisibleMessage, attachments: List<SignalAttachment>, address: Address, isSyncMessage: Boolean): Promise<Unit, Exception> {
+    suspend fun sendNonDurably(message: VisibleMessage, attachments: List<SignalAttachment>, address: Address, isSyncMessage: Boolean) {
         val attachmentIDs = MessagingModuleConfiguration.shared.messageDataProvider.getAttachmentIDsFor(message.id!!)
         message.attachmentIDs.addAll(attachmentIDs)
         return sendNonDurably(message, address, isSyncMessage)
     }
 
-    fun sendNonDurably(message: Message, address: Address, isSyncMessage: Boolean): Promise<Unit, Exception> {
+    suspend fun sendNonDurably(message: Message, address: Address, isSyncMessage: Boolean) {
         val threadID = MessagingModuleConfiguration.shared.storage.getThreadId(address)
         message.threadID = threadID
         val destination = Destination.from(address)
@@ -512,7 +513,7 @@ object MessageSender {
     }
 
     // Closed groups
-    fun createClosedGroup(device: Device, name: String, members: Collection<String>): Promise<String, Exception> {
+    suspend fun createClosedGroup(device: Device, name: String, members: Collection<String>): String {
         return create(device, name, members)
     }
 
@@ -524,12 +525,12 @@ object MessageSender {
         return addMembers(groupPublicKey, membersToAdd)
     }
 
-    fun explicitRemoveMembers(groupPublicKey: String, membersToRemove: List<String>) {
-        return removeMembers(groupPublicKey, membersToRemove)
+    suspend fun explicitRemoveMembers(groupPublicKey: String, membersToRemove: List<String>) {
+        removeMembers(groupPublicKey, membersToRemove)
     }
 
     @JvmStatic
-    fun explicitLeave(groupPublicKey: String, notifyUser: Boolean): Promise<Unit, Exception> {
+    suspend fun explicitLeave(groupPublicKey: String, notifyUser: Boolean) {
         return leave(groupPublicKey, notifyUser)
     }
 

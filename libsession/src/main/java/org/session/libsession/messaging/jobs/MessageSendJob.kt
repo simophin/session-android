@@ -65,9 +65,11 @@ class MessageSendJob(val message: Message, val destination: Destination) : Job {
             } // Wait for all attachments to upload before continuing
         }
         val isSync = destination is Destination.Contact && destination.publicKey == sender
-        val promise = MessageSender.send(this.message, this.destination, isSync).success {
-            this.handleSuccess(dispatcherName)
-        }.fail { exception ->
+
+        try {
+            MessageSender.send(this.message, this.destination, isSync)
+            handleSuccess(dispatcherName)
+        } catch (exception: Exception) {
             var logStacktrace = true
 
             when (exception) {
@@ -87,11 +89,6 @@ class MessageSendJob(val message: Message, val destination: Destination) : Job {
 
             if (logStacktrace) { Log.e(TAG, "Couldn't send message due to error", exception) }
             else { Log.e(TAG, "Couldn't send message due to error: ${exception.message}") }
-        }
-        try {
-            promise.get()
-        } catch (e: Exception) {
-            Log.d(TAG, "Promise failed to resolve successfully", e)
         }
     }
 

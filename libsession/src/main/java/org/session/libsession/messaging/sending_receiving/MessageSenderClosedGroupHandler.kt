@@ -3,6 +3,8 @@
 package org.session.libsession.messaging.sending_receiving
 
 import com.google.protobuf.ByteString
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.deferred
 import org.session.libsession.messaging.MessagingModuleConfiguration
@@ -33,13 +35,12 @@ const val groupSizeLimit = 100
 
 val pendingKeyPairs = ConcurrentHashMap<String, Optional<ECKeyPair>>()
 
-fun MessageSender.create(
+suspend fun MessageSender.create(
     device: Device,
     name: String,
     members: Collection<String>
-): Promise<String, Exception> {
-    val deferred = deferred<String, Exception>()
-    ThreadUtils.queue {
+): String {
+    return withContext(Dispatchers.IO) {
         // Prepare
         val context = MessagingModuleConfiguration.shared.context
         val storage = MessagingModuleConfiguration.shared.storage
@@ -77,7 +78,7 @@ fun MessageSender.create(
             val closedGroupControlMessage = ClosedGroupControlMessage(closedGroupUpdateKind, groupID)
             closedGroupControlMessage.sentTimestamp = sentTime
             try {
-                sendNonDurably(closedGroupControlMessage, Address.fromSerialized(member), member == ourPubKey).get()
+                sendNonDurably(closedGroupControlMessage, Address.fromSerialized(member), member == ourPubKey)
             } catch (e: Exception) {
                 // We failed to properly create the group so delete it's associated data (in the past
                 // we didn't create this data until the messages successfully sent but this resulted
@@ -85,8 +86,7 @@ fun MessageSender.create(
                 storage.removeClosedGroupPublicKey(groupPublicKey)
                 storage.removeAllClosedGroupEncryptionKeyPairs(groupPublicKey)
                 storage.deleteConversation(threadID)
-                deferred.reject(e)
-                return@queue
+                throw e
             }
         }
 
@@ -97,10 +97,8 @@ fun MessageSender.create(
         // Start polling
         ClosedGroupPollerV2.shared.startPolling(groupPublicKey)
         // Fulfill the promise
-        deferred.resolve(groupID)
+        groupID
     }
-    // Return
-    return deferred.promise
 }
 
 fun MessageSender.setName(groupPublicKey: String, newName: String) {
@@ -185,7 +183,7 @@ fun MessageSender.addMembers(groupPublicKey: String, membersToAdd: List<String>)
     storage.insertOutgoingInfoMessage(context, groupID, infoType, name, membersToAdd, admins, threadID, sentTime)
 }
 
-fun MessageSender.removeMembers(groupPublicKey: String, membersToRemove: List<String>) {
+suspend fun MessageSender.removeMembers(groupPublicKey: String, membersToRemove: List<String>) {
     val context = MessagingModuleConfiguration.shared.context
     val storage = MessagingModuleConfiguration.shared.storage
     val userPublicKey = storage.getUserPublicKey()!!
@@ -235,14 +233,13 @@ fun MessageSender.removeMembers(groupPublicKey: String, membersToRemove: List<St
     }
 }
 
-fun MessageSender.leave(groupPublicKey: String, notifyUser: Boolean = true): Promise<Unit, Exception> {
-    val deferred = deferred<Unit, Exception>()
-    ThreadUtils.queue {
+suspend fun MessageSender.leave(groupPublicKey: String, notifyUser: Boolean = true){
+    withContext(Dispatchers.IO) {
         val context = MessagingModuleConfiguration.shared.context
         val storage = MessagingModuleConfiguration.shared.storage
         val userPublicKey = TextSecurePreferences.getLocalNumber(context)!!
         val groupID = GroupUtil.doubleEncodeGroupID(groupPublicKey)
-        val group = storage.getGroup(groupID) ?: return@queue deferred.reject(Error.NoThread)
+        val group = storage.getGroup(groupID) ?: throw Error.NoThread
         val updatedMembers = group.members.map { it.serialize() }.toSet() - userPublicKey
         val admins = group.admins.map { it.serialize() }
         val name = group.title
@@ -251,8 +248,9 @@ fun MessageSender.leave(groupPublicKey: String, notifyUser: Boolean = true): Pro
         val sentTime = SnodeAPI.nowWithOffset
         closedGroupControlMessage.sentTimestamp = sentTime
         storage.setActive(groupID, false)
-        sendNonDurably(closedGroupControlMessage, Address.fromSerialized(groupID), isSyncMessage = false).success {
-            // Notify the user
+
+        try {
+            sendNonDurably(closedGroupControlMessage, Address.fromSerialized(groupID), isSyncMessage = false)
             val infoType = SignalServiceGroup.Type.QUIT
             if (notifyUser) {
                 val threadID = storage.getOrCreateThreadIdFor(Address.fromSerialized(groupID))
@@ -260,15 +258,15 @@ fun MessageSender.leave(groupPublicKey: String, notifyUser: Boolean = true): Pro
             }
             // Remove the group private key and unsubscribe from PNs
             MessageReceiver.disableLocalGroupAndUnsubscribe(groupPublicKey, groupID, userPublicKey, true)
-            deferred.resolve(Unit)
-        }.fail {
+        } catch (e: Exception) {
             storage.setActive(groupID, true)
+            throw e
         }
+
     }
-    return deferred.promise
 }
 
-fun MessageSender.generateAndSendNewEncryptionKeyPair(groupPublicKey: String, targetMembers: Collection<String>) {
+suspend fun MessageSender.generateAndSendNewEncryptionKeyPair(groupPublicKey: String, targetMembers: Collection<String>) {
     // Prepare
     val storage = MessagingModuleConfiguration.shared.storage
     val userPublicKey = storage.getUserPublicKey()!!
@@ -289,14 +287,13 @@ fun MessageSender.generateAndSendNewEncryptionKeyPair(groupPublicKey: String, ta
         // Make sure we set the pending key pair or wait until it is not null
     } while (!pendingKeyPairs.replace(groupPublicKey,Optional.absent(),Optional.fromNullable(newKeyPair)))
     // Distribute it
-    sendEncryptionKeyPair(groupPublicKey, newKeyPair, targetMembers)?.success {
-        // Store it * after * having sent out the message to the group
-        storage.addClosedGroupEncryptionKeyPair(newKeyPair, groupPublicKey, SnodeAPI.nowWithOffset)
-        pendingKeyPairs[groupPublicKey] = Optional.absent()
-    }
+    sendEncryptionKeyPair(groupPublicKey, newKeyPair, targetMembers)
+    // Store it * after * having sent out the message to the group
+    storage.addClosedGroupEncryptionKeyPair(newKeyPair, groupPublicKey, SnodeAPI.nowWithOffset)
+    pendingKeyPairs[groupPublicKey] = Optional.absent()
 }
 
-fun MessageSender.sendEncryptionKeyPair(groupPublicKey: String, newKeyPair: ECKeyPair, targetMembers: Collection<String>, targetUser: String? = null, force: Boolean = true): Promise<Unit, Exception>? {
+suspend fun MessageSender.sendEncryptionKeyPair(groupPublicKey: String, newKeyPair: ECKeyPair, targetMembers: Collection<String>, targetUser: String? = null, force: Boolean = true) {
     val destination = targetUser ?: GroupUtil.doubleEncodeGroupID(groupPublicKey)
     val proto = SignalServiceProtos.KeyPair.newBuilder()
     proto.publicKey = ByteString.copyFrom(newKeyPair.publicKey.serialize().removingIdPrefixIfNeeded())
@@ -310,12 +307,11 @@ fun MessageSender.sendEncryptionKeyPair(groupPublicKey: String, newKeyPair: ECKe
     val sentTime = SnodeAPI.nowWithOffset
     val closedGroupControlMessage = ClosedGroupControlMessage(kind, null)
     closedGroupControlMessage.sentTimestamp = sentTime
-    return if (force) {
+    if (force) {
         val isSync = MessagingModuleConfiguration.shared.storage.getUserPublicKey() == destination
         MessageSender.sendNonDurably(closedGroupControlMessage, Address.fromSerialized(destination), isSyncMessage = isSync)
     } else {
         MessageSender.send(closedGroupControlMessage, Address.fromSerialized(destination))
-        null
     }
 }
 

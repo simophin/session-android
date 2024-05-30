@@ -1,9 +1,12 @@
 package org.session.libsession.messaging.sending_receiving.pollers
 
-import nl.komponents.kovenant.Promise
-import nl.komponents.kovenant.functional.bind
-import nl.komponents.kovenant.functional.map
-import nl.komponents.kovenant.task
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.plus
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.jobs.BatchMessageReceiveJob
 import org.session.libsession.messaging.jobs.JobQueue
@@ -17,18 +20,14 @@ import org.session.libsignal.utilities.defaultRequiresAuth
 import org.session.libsignal.utilities.hasNamespaces
 import java.text.DateFormat
 import java.util.Date
-import java.util.concurrent.Executors
-import java.util.concurrent.ScheduledFuture
-import java.util.concurrent.TimeUnit
 import kotlin.math.min
 
 class ClosedGroupPollerV2 {
-    private val executorService = Executors.newScheduledThreadPool(1)
-    private var isPolling = mutableMapOf<String, Boolean>()
-    private var futures = mutableMapOf<String, ScheduledFuture<*>>()
+    private val pollingJobs = hashMapOf<String, Job>()
+    private val scope = CoroutineScope(Dispatchers.Default) + SupervisorJob()
 
     private fun isPolling(groupPublicKey: String): Boolean {
-        return isPolling[groupPublicKey] ?: false
+        return pollingJobs[groupPublicKey]?.isActive == true
     }
 
     companion object {
@@ -49,98 +48,87 @@ class ClosedGroupPollerV2 {
     }
 
     fun startPolling(groupPublicKey: String) {
-        if (isPolling(groupPublicKey)) { return }
-        isPolling[groupPublicKey] = true
-        setUpPolling(groupPublicKey)
-    }
+        synchronized(pollingJobs) {
+            if (pollingJobs[groupPublicKey]?.isActive == true) return
 
-    fun stopAll() {
-        futures.forEach { it.value.cancel(false) }
-        isPolling.forEach { isPolling[it.key] = false }
-    }
-
-    fun stopPolling(groupPublicKey: String) {
-        futures[groupPublicKey]?.cancel(false)
-        isPolling[groupPublicKey] = false
-    }
-
-    private fun setUpPolling(groupPublicKey: String) {
-        poll(groupPublicKey).success {
-            pollRecursively(groupPublicKey)
-        }.fail {
-            // The error is logged in poll(_:)
-            pollRecursively(groupPublicKey)
+            pollingJobs[groupPublicKey] = scope.launch {
+                pollForever(groupPublicKey)
+            }
         }
     }
 
-    private fun pollRecursively(groupPublicKey: String) {
-        if (!isPolling(groupPublicKey)) { return }
+    fun stopAll() {
+        synchronized(pollingJobs) {
+            pollingJobs.values.forEach { it.cancel() }
+            pollingJobs.clear()
+        }
+    }
+
+    fun stopPolling(groupPublicKey: String) {
+        synchronized(pollingJobs) {
+            pollingJobs.remove(groupPublicKey)?.cancel()
+        }
+    }
+
+    private suspend fun pollForever(groupPublicKey: String) {
         // Get the received date of the last message in the thread. If we don't have any messages yet, pick some
         // reasonable fake time interval to use instead.
         val storage = MessagingModuleConfiguration.shared.storage
         val groupID = GroupUtil.doubleEncodeGroupID(groupPublicKey)
-        val threadID = storage.getThreadId(groupID)
-        if (threadID == null) {
-            Log.d("Loki", "Stopping group poller due to missing thread for closed group: $groupPublicKey.")
-            stopPolling(groupPublicKey)
-            return
-        }
-        val lastUpdated = storage.getLastUpdated(threadID)
-        val timeSinceLastMessage = if (lastUpdated != -1L) Date().time - lastUpdated else 5 * 60 * 1000
-        val minPollInterval = Companion.minPollInterval
-        val limit: Long = 12 * 60 * 60 * 1000
-        val a = (Companion.maxPollInterval - minPollInterval).toDouble() / limit.toDouble()
-        val nextPollInterval = a * min(timeSinceLastMessage, limit) + minPollInterval
-        executorService?.schedule({
-            poll(groupPublicKey).success {
-                pollRecursively(groupPublicKey)
-            }.fail {
-                // The error is logged in poll(_:)
-                pollRecursively(groupPublicKey)
+
+        while (true) {
+            val threadID = storage.getThreadId(groupID)
+            if (threadID == null) {
+                Log.d("Loki", "Stopping group poller due to missing thread for closed group: $groupPublicKey.")
+                return
             }
-        }, nextPollInterval.toLong(), TimeUnit.MILLISECONDS)
+            val lastUpdated = storage.getLastUpdated(threadID)
+            val timeSinceLastMessage = if (lastUpdated != -1L) Date().time - lastUpdated else 5 * 60 * 1000
+            val limit: Long = 12 * 60 * 60 * 1000
+            val a = (maxPollInterval - minPollInterval).toDouble() / limit.toDouble()
+            val nextPollInterval = a * min(timeSinceLastMessage, limit) + minPollInterval
+
+            delay(nextPollInterval.toLong())
+
+            try {
+                pollOnce(groupPublicKey)
+            } catch (e: Exception) {
+                Log.e("Loki", "Failed to poll closed group: $groupPublicKey.", e)
+            }
+        }
     }
 
-    fun poll(groupPublicKey: String): Promise<Unit, Exception> {
-        if (!isPolling(groupPublicKey)) { return Promise.of(Unit) }
-        val promise = SnodeAPI.getSwarm(groupPublicKey).bind { swarm ->
-            val snode = swarm.getRandomElementOrNull() ?: throw InsufficientSnodesException() // Should be cryptographically secure
-            if (!isPolling(groupPublicKey)) { throw PollingCanceledException() }
-            val currentForkInfo = SnodeAPI.forkInfo
-            when {
-                currentForkInfo.defaultRequiresAuth() -> SnodeAPI.getRawMessages(snode, groupPublicKey, requiresAuth = false, namespace = Namespace.UNAUTHENTICATED_CLOSED_GROUP)
-                    .map { SnodeAPI.parseRawMessagesResponse(it, snode, groupPublicKey, Namespace.UNAUTHENTICATED_CLOSED_GROUP) }
-                currentForkInfo.hasNamespaces() -> task {
-                    val unAuthed = SnodeAPI.getRawMessages(snode, groupPublicKey, requiresAuth = false, namespace = Namespace.UNAUTHENTICATED_CLOSED_GROUP)
-                        .map { SnodeAPI.parseRawMessagesResponse(it, snode, groupPublicKey, Namespace.UNAUTHENTICATED_CLOSED_GROUP) }
-                    val default = SnodeAPI.getRawMessages(snode, groupPublicKey, requiresAuth = false, namespace = Namespace.DEFAULT)
-                        .map { SnodeAPI.parseRawMessagesResponse(it, snode, groupPublicKey, Namespace.DEFAULT) }
-                    val unAuthedResult = unAuthed.get()
-                    val defaultResult = default.get()
-                    val format = DateFormat.getTimeInstance()
-                    if (unAuthedResult.isNotEmpty() || defaultResult.isNotEmpty()) {
-                        Log.d("Poller", "@${format.format(Date())}Polled ${unAuthedResult.size} from -10, ${defaultResult.size} from 0")
-                    }
-                    unAuthedResult + defaultResult
-                }
-                else -> SnodeAPI.getRawMessages(snode, groupPublicKey, requiresAuth = false, namespace = Namespace.DEFAULT)
-                    .map { SnodeAPI.parseRawMessagesResponse(it, snode, groupPublicKey) }
-            }
-        }
-        promise.success { envelopes ->
-            if (!isPolling(groupPublicKey)) { return@success }
+    private suspend fun pollOnce(groupPublicKey: String) {
+        val swarm = SnodeAPI.getSwarm(groupPublicKey)
+        val snode = swarm.getRandomElementOrNull() ?: throw InsufficientSnodesException() // Should be cryptographically secure
+        if (!isPolling(groupPublicKey)) { throw PollingCanceledException() }
+        val currentForkInfo = SnodeAPI.forkInfo
 
-            val parameters = envelopes.map { (envelope, serverHash) ->
-                MessageReceiveParameters(envelope.toByteArray(), serverHash = serverHash)
+        val envelopes = when {
+            currentForkInfo.defaultRequiresAuth() -> SnodeAPI.getRawMessages(snode, groupPublicKey, requiresAuth = false, namespace = Namespace.UNAUTHENTICATED_CLOSED_GROUP)
+                .let { SnodeAPI.parseRawMessagesResponse(it, snode, groupPublicKey, Namespace.UNAUTHENTICATED_CLOSED_GROUP) }
+            currentForkInfo.hasNamespaces() -> {
+                val unAuthedResult = SnodeAPI.getRawMessages(snode, groupPublicKey, requiresAuth = false, namespace = Namespace.UNAUTHENTICATED_CLOSED_GROUP)
+                    .let { SnodeAPI.parseRawMessagesResponse(it, snode, groupPublicKey, Namespace.UNAUTHENTICATED_CLOSED_GROUP) }
+                val defaultResult = SnodeAPI.getRawMessages(snode, groupPublicKey, requiresAuth = false, namespace = Namespace.DEFAULT)
+                    .let { SnodeAPI.parseRawMessagesResponse(it, snode, groupPublicKey, Namespace.DEFAULT) }
+                val format = DateFormat.getTimeInstance()
+                if (unAuthedResult.isNotEmpty() || defaultResult.isNotEmpty()) {
+                    Log.d("Poller", "@${format.format(Date())}Polled ${unAuthedResult.size} from -10, ${defaultResult.size} from 0")
+                }
+                unAuthedResult + defaultResult
             }
-            parameters.chunked(BatchMessageReceiveJob.BATCH_DEFAULT_NUMBER).iterator().forEach { chunk ->
-                val job = BatchMessageReceiveJob(chunk)
-                JobQueue.shared.add(job)
-            }
+            else -> SnodeAPI.getRawMessages(snode, groupPublicKey, requiresAuth = false, namespace = Namespace.DEFAULT)
+                .let { SnodeAPI.parseRawMessagesResponse(it, snode, groupPublicKey) }
         }
-        promise.fail {
-            Log.d("Loki", "Polling failed for closed group due to error: $it.")
+
+        val parameters = envelopes.map { (envelope, serverHash) ->
+            MessageReceiveParameters(envelope.toByteArray(), serverHash = serverHash)
         }
-        return promise.map { }
+
+        parameters.chunked(BatchMessageReceiveJob.BATCH_DEFAULT_NUMBER).iterator().forEach { chunk ->
+            val job = BatchMessageReceiveJob(chunk)
+            JobQueue.shared.add(job)
+        }
     }
 }

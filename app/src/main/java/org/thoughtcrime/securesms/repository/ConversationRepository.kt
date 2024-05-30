@@ -185,29 +185,27 @@ class DefaultConversationRepository @Inject constructor(
         threadId: Long,
         recipient: Recipient,
         message: MessageRecord
-    ): ResultOf<Unit> = suspendCoroutine { continuation ->
-        buildUnsendRequest(recipient, message)?.let { unsendRequest ->
-            MessageSender.send(unsendRequest, recipient.address)
-        }
-
-        val openGroup = lokiThreadDb.getOpenGroupChat(threadId)
-        if (openGroup != null) {
-            val serverId = lokiMessageDb.getServerID(message.id, !message.isMms)?.let { messageServerID ->
-                OpenGroupApi.deleteMessage(messageServerID, openGroup.room, openGroup.server)
-                    .success {
-                        messageDataProvider.deleteMessage(message.id, !message.isMms)
-                        continuation.resume(ResultOf.Success(Unit))
-                    }.fail { error ->
-                        Log.w("TAG", "Call to OpenGroupApi.deleteForEveryone failed - attempting to resume..")
-                        continuation.resumeWithException(error)
-                    }
+    ): ResultOf<Unit> {
+        return ResultOf.wrap {
+            buildUnsendRequest(recipient, message)?.let { unsendRequest ->
+                MessageSender.send(unsendRequest, recipient.address)
             }
 
-            // If the server ID is null then this message is stuck in limbo (it has likely been
-            // deleted remotely but that deletion did not occur locally) - so we'll delete the
-            // message locally to clean up.
-            if (serverId == null) {
-                Log.w("ConversationRepository","Found community message without a server ID - deleting locally.")
+            val openGroup = lokiThreadDb.getOpenGroupChat(threadId)
+            if (openGroup != null) {
+                lokiMessageDb.getServerID(message.id, !message.isMms)?.let { messageServerID ->
+                    OpenGroupApi.deleteMessage(messageServerID, openGroup.room, openGroup.server)
+                    messageDataProvider.deleteMessage(message.id, !message.isMms)
+                    return@wrap
+                }
+
+                // If the server ID is null then this message is stuck in limbo (it has likely been
+                // deleted remotely but that deletion did not occur locally) - so we'll delete the
+                // message locally to clean up.
+                Log.w(
+                    "ConversationRepository",
+                    "Found community message without a server ID - deleting locally."
+                )
 
                 // Caution: The bool returned from `deleteMessage` is NOT "Was the message
                 // successfully deleted?" - it is "Was the thread itself also deleted because
@@ -217,22 +215,16 @@ class DefaultConversationRepository @Inject constructor(
                 } else {
                     smsDb.deleteMessage(message.id)
                 }
-            }
-        }
-        else // If this thread is NOT in a Community
-        {
-            messageDataProvider.deleteMessage(message.id, !message.isMms)
-            messageDataProvider.getServerHashForMessage(message.id, message.isMms)?.let { serverHash ->
-                var publicKey = recipient.address.serialize()
-                if (recipient.isClosedGroupRecipient) {
-                    publicKey = GroupUtil.doubleDecodeGroupID(publicKey).toHexString()
-                }
-                SnodeAPI.deleteMessage(publicKey, listOf(serverHash))
-                    .success {
-                        continuation.resume(ResultOf.Success(Unit))
-                    }.fail { error ->
-                        Log.w("ConversationRepository", "Call to SnodeAPI.deleteMessage failed - attempting to resume..")
-                        continuation.resumeWithException(error)
+            } else // If this thread is NOT in a Community
+            {
+                messageDataProvider.deleteMessage(message.id, !message.isMms)
+                messageDataProvider.getServerHashForMessage(message.id, message.isMms)
+                    ?.let { serverHash ->
+                        var publicKey = recipient.address.serialize()
+                        if (recipient.isClosedGroupRecipient) {
+                            publicKey = GroupUtil.doubleDecodeGroupID(publicKey).toHexString()
+                        }
+                        SnodeAPI.deleteMessage(publicKey, listOf(serverHash))
                     }
             }
         }
@@ -250,7 +242,7 @@ class DefaultConversationRepository @Inject constructor(
     override suspend fun deleteMessageWithoutUnsendRequest(
         threadId: Long,
         messages: Set<MessageRecord>
-    ): ResultOf<Unit> = suspendCoroutine { continuation ->
+    ): ResultOf<Unit> = ResultOf.wrap {
         val openGroup = lokiThreadDb.getOpenGroupChat(threadId)
         if (openGroup != null) {
             val messageServerIDs = mutableMapOf<Long, MessageRecord>()
@@ -261,11 +253,7 @@ class DefaultConversationRepository @Inject constructor(
             }
             messageServerIDs.forEach { (messageServerID, message) ->
                 OpenGroupApi.deleteMessage(messageServerID, openGroup.room, openGroup.server)
-                    .success {
-                        messageDataProvider.deleteMessage(message.id, !message.isMms)
-                    }.fail { error ->
-                        continuation.resumeWithException(error)
-                    }
+                messageDataProvider.deleteMessage(message.id, !message.isMms)
             }
         } else {
             for (message in messages) {
@@ -276,33 +264,22 @@ class DefaultConversationRepository @Inject constructor(
                 }
             }
         }
-        continuation.resume(ResultOf.Success(Unit))
     }
 
     override suspend fun banUser(threadId: Long, recipient: Recipient): ResultOf<Unit> =
-        suspendCoroutine { continuation ->
+        ResultOf.wrap {
             val sessionID = recipient.address.toString()
             val openGroup = lokiThreadDb.getOpenGroupChat(threadId)!!
             OpenGroupApi.ban(sessionID, openGroup.room, openGroup.server)
-                .success {
-                    continuation.resume(ResultOf.Success(Unit))
-                }.fail { error ->
-                    continuation.resumeWithException(error)
-                }
         }
 
     override suspend fun banAndDeleteAll(threadId: Long, recipient: Recipient): ResultOf<Unit> =
-        suspendCoroutine { continuation ->
+        ResultOf.wrap {
             // Note: This sessionId could be the blinded Id
             val sessionID = recipient.address.toString()
             val openGroup = lokiThreadDb.getOpenGroupChat(threadId)!!
 
             OpenGroupApi.banAndDeleteAll(sessionID, openGroup.room, openGroup.server)
-                .success {
-                    continuation.resume(ResultOf.Success(Unit))
-                }.fail { error ->
-                    continuation.resumeWithException(error)
-                }
         }
 
     override suspend fun deleteThread(threadId: Long): ResultOf<Unit> {

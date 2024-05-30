@@ -1,7 +1,5 @@
 package org.session.libsession.messaging.file_server
 
-import nl.komponents.kovenant.Promise
-import nl.komponents.kovenant.functional.map
 import okhttp3.Headers
 import okhttp3.HttpUrl
 import okhttp3.MediaType
@@ -43,8 +41,8 @@ object FileServerApi {
         return RequestBody.create(MediaType.get("application/json"), parametersAsJSON)
     }
 
-    private fun send(request: Request): Promise<ByteArray, Exception> {
-        val url = HttpUrl.parse(server) ?: return Promise.ofFail(Error.InvalidURL)
+    private suspend fun send(request: Request): ByteArray {
+        val url = HttpUrl.parse(server) ?: throw Error.InvalidURL
         val urlBuilder = HttpUrl.Builder()
             .scheme(url.scheme())
             .host(url.host())
@@ -65,21 +63,25 @@ object FileServerApi {
             HTTP.Verb.DELETE -> requestBuilder.delete(createBody(request.body, request.parameters))
         }
         return if (request.useOnionRouting) {
-            OnionRequestAPI.sendOnionRequest(requestBuilder.build(), server, serverPublicKey).map {
-                it.body ?: throw Error.ParsingFailed
-            }.fail { e ->
+            try {
+                OnionRequestAPI.sendOnionRequest(requestBuilder.build(), server, serverPublicKey).let {
+                    it.body ?: throw Error.ParsingFailed
+                }
+            } catch (e: Exception) {
                 when (e) {
                     // No need for the stack trace for HTTP errors
                     is HTTP.HTTPRequestFailedException -> Log.e("Loki", "File server request failed due to error: ${e.message}")
                     else -> Log.e("Loki", "File server request failed", e)
                 }
+
+                throw e
             }
         } else {
-            Promise.ofFail(IllegalStateException("It's currently not allowed to send non onion routed requests."))
+            throw IllegalStateException("It's currently not allowed to send non onion routed requests.")
         }
     }
 
-    fun upload(file: ByteArray): Promise<Long, Exception> {
+    suspend fun upload(file: ByteArray): Long {
         val request = Request(
             verb = HTTP.Verb.POST,
             endpoint = "file",
@@ -89,7 +91,7 @@ object FileServerApi {
                 "Content-Type" to "application/octet-stream"
             )
         )
-        return send(request).map { response ->
+        return send(request).let { response ->
             val json = JsonUtil.fromJson(response, Map::class.java)
             val hasId = json.containsKey("id")
             val id = json.getOrDefault("id", null)
@@ -98,7 +100,7 @@ object FileServerApi {
         }
     }
 
-    fun download(file: String): Promise<ByteArray, Exception> {
+    suspend fun download(file: String): ByteArray {
         val request = Request(verb = HTTP.Verb.GET, endpoint = "file/$file")
         return send(request)
     }

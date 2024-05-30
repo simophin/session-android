@@ -1,6 +1,8 @@
 package org.session.libsignal.utilities
 
 class Snode(val address: String, val port: Int, val publicKeySet: KeySet?) {
+    val id: String by lazy { "$address:$port" }
+
     val ip: String get() = address.removePrefix("https://")
 
     public enum class Method(val rawValue: String) {
@@ -31,5 +33,5 @@ class Snode(val address: String, val port: Int, val publicKeySet: KeySet?) {
         return address.hashCode() xor port.hashCode()
     }
 
-    override fun toString(): String { return "$address:$port" }
+    override fun toString(): String = id
 }

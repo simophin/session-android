@@ -15,6 +15,7 @@ import org.session.libsession.snode.Version
 import org.session.libsignal.utilities.JsonUtil
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.retryIfNeeded
+import org.session.libsignal.utilities.runRetry
 
 class NotifyPNServerJob(val message: SnodeMessage) : Job {
     override var delegate: JobDelegate? = null
@@ -35,23 +36,28 @@ class NotifyPNServerJob(val message: SnodeMessage) : Job {
         val url = "${server.url}/notify"
         val body = RequestBody.create(MediaType.get("application/json"), JsonUtil.toJson(parameters))
         val request = Request.Builder().url(url).post(body).build()
-        retryIfNeeded(4) {
-            OnionRequestAPI.sendOnionRequest(
-                request,
-                server.url,
-                server.publicKey,
-                Version.V2
-            ) success { response ->
-                when (response.code) {
-                    null, 0 -> Log.d("NotifyPNServerJob", "Couldn't notify PN server due to error: ${response.message}.")
+        try {
+            runRetry(4) {
+                try {
+                    val response = OnionRequestAPI.sendOnionRequest(
+                        request,
+                        server.url,
+                        server.publicKey,
+                        Version.V2
+                    )
+
+                    when (response.code) {
+                        null, 0 -> Log.d("NotifyPNServerJob", "Couldn't notify PN server due to error: ${response.message}.")
+                    }
+                } catch (exception: Exception) {
+                    Log.d("NotifyPNServerJob", "Couldn't notify PN server due to error: $exception.")
+                    throw exception
                 }
-            } fail { exception ->
-                Log.d("NotifyPNServerJob", "Couldn't notify PN server due to error: $exception.")
             }
-        } success {
+
             handleSuccess(dispatcherName)
-        } fail {
-            handleFailure(dispatcherName, it)
+        } catch (e: Exception) {
+            handleFailure(dispatcherName, e)
         }
     }
 

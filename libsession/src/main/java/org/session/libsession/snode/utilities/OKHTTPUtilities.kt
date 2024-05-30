@@ -1,11 +1,10 @@
-package org.session.libsession.utilities
+package org.session.libsession.snode.utilities
 
 import okhttp3.MultipartBody
 import okhttp3.Request
 import okio.Buffer
 import org.session.libsignal.utilities.Base64
 import java.io.IOException
-import java.util.Locale
 
 internal fun Request.getHeadersForOnionRequest(): Map<String, Any> {
     val result = mutableMapOf<String, Any>()
@@ -17,7 +16,7 @@ internal fun Request.getHeadersForOnionRequest(): Map<String, Any> {
     for (name in headers.names()) {
         val value = headers.get(name)
         if (value != null) {
-            if (value.toLowerCase(Locale.US) == "true" || value.toLowerCase(Locale.US) == "false") {
+            if (value.equals("true", ignoreCase = true) || value.equals("false", ignoreCase = true)) {
                 result[name] = value.toBoolean()
             } else if (value.toIntOrNull() != null) {
                 result[name] = value.toInt()

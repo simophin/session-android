@@ -94,7 +94,7 @@ data class ConfigurationSyncJob(val destination: Destination): Job {
             Log.d(TAG, "Including delete request for current hashes")
         }
 
-        val batchResponse = SnodeAPI.getSingleTargetSnode(destination.destinationPublicKey()).bind { snode ->
+        val rawResponses = SnodeAPI.getSingleTargetSnode(destination.destinationPublicKey()).let { snode ->
             SnodeAPI.getRawBatchResponse(
                 snode,
                 destination.destinationPublicKey(),
@@ -104,7 +104,6 @@ data class ConfigurationSyncJob(val destination: Destination): Job {
         }
 
         try {
-            val rawResponses = batchResponse.get()
             @Suppress("UNCHECKED_CAST")
             val responseList = (rawResponses["results"] as List<RawResponse>)
             // we are always adding in deletions at the end

@@ -64,7 +64,7 @@ internal fun MessageReceiver.isBlocked(publicKey: String): Boolean {
     return recipient.isBlocked
 }
 
-fun MessageReceiver.handle(message: Message, proto: SignalServiceProtos.Content, threadId: Long, openGroupID: String?) {
+suspend fun MessageReceiver.handle(message: Message, proto: SignalServiceProtos.Content, threadId: Long, openGroupID: String?) {
     // Do nothing if the message was outdated
     if (MessageReceiver.messageIsOutdated(message, threadId, openGroupID)) { return }
 
@@ -191,7 +191,7 @@ private fun MessageReceiver.handleDataExtractionNotification(message: DataExtrac
     storage.insertDataExtractionNotificationMessage(senderPublicKey, notification, message.sentTimestamp!!)
 }
 
-private fun handleConfigurationMessage(message: ConfigurationMessage) {
+private suspend fun handleConfigurationMessage(message: ConfigurationMessage) {
     val context = MessagingModuleConfiguration.shared.context
     val storage = MessagingModuleConfiguration.shared.storage
     if (TextSecurePreferences.getConfigurationMessageSynced(context)
@@ -247,7 +247,7 @@ private fun handleConfigurationMessage(message: ConfigurationMessage) {
     storage.addContacts(message.contacts)
 }
 
-fun MessageReceiver.handleUnsendRequest(message: UnsendRequest): Long? {
+suspend fun MessageReceiver.handleUnsendRequest(message: UnsendRequest): Long? {
     val userPublicKey = MessagingModuleConfiguration.shared.storage.getUserPublicKey()
     if (message.sender != message.author && (message.sender != userPublicKey && userPublicKey != null)) { return null }
     val context = MessagingModuleConfiguration.shared.context
@@ -499,7 +499,7 @@ fun MessageReceiver.handleOpenGroupReactions(
 //endregion
 
 // region Closed Groups
-private fun MessageReceiver.handleClosedGroupControlMessage(message: ClosedGroupControlMessage) {
+private suspend fun MessageReceiver.handleClosedGroupControlMessage(message: ClosedGroupControlMessage) {
     when (message.kind!!) {
         is ClosedGroupControlMessage.Kind.New -> handleNewClosedGroup(message)
         is ClosedGroupControlMessage.Kind.EncryptionKeyPair -> handleClosedGroupEncryptionKeyPair(message)
@@ -532,7 +532,7 @@ private fun ClosedGroupControlMessage.getPublicKey(): String = kind!!.let { when
     is ClosedGroupControlMessage.Kind.NameChange -> groupPublicKey!!
 }}
 
-private fun MessageReceiver.handleNewClosedGroup(message: ClosedGroupControlMessage) {
+private suspend fun MessageReceiver.handleNewClosedGroup(message: ClosedGroupControlMessage) {
     val storage = MessagingModuleConfiguration.shared.storage
     val kind = message.kind!! as? ClosedGroupControlMessage.Kind.New ?: return
     val recipient = Recipient.from(MessagingModuleConfiguration.shared.context, Address.fromSerialized(message.sender!!), false)
@@ -546,7 +546,7 @@ private fun MessageReceiver.handleNewClosedGroup(message: ClosedGroupControlMess
     handleNewClosedGroup(message.sender!!, message.sentTimestamp!!, groupPublicKey, kind.name, kind.encryptionKeyPair!!, members, admins, message.sentTimestamp!!, expirationTimer)
 }
 
-private fun handleNewClosedGroup(sender: String, sentTimestamp: Long, groupPublicKey: String, name: String, encryptionKeyPair: ECKeyPair, members: List<String>, admins: List<String>, formationTimestamp: Long, expirationTimer: Int) {
+private suspend fun handleNewClosedGroup(sender: String, sentTimestamp: Long, groupPublicKey: String, name: String, encryptionKeyPair: ECKeyPair, members: List<String>, admins: List<String>, formationTimestamp: Long, expirationTimer: Int) {
     val context = MessagingModuleConfiguration.shared.context
     val storage = MessagingModuleConfiguration.shared.storage
     val userPublicKey = storage.getUserPublicKey()!!
@@ -679,7 +679,7 @@ private fun MessageReceiver.handleClosedGroupNameChanged(message: ClosedGroupCon
     }
 }
 
-private fun MessageReceiver.handleClosedGroupMembersAdded(message: ClosedGroupControlMessage) {
+private suspend fun MessageReceiver.handleClosedGroupMembersAdded(message: ClosedGroupControlMessage) {
     val context = MessagingModuleConfiguration.shared.context
     val storage = MessagingModuleConfiguration.shared.storage
     val userPublicKey = storage.getUserPublicKey()!!
@@ -752,7 +752,7 @@ private fun MessageReceiver.handleClosedGroupMembersAdded(message: ClosedGroupCo
 /// • the admin sent the message (only the admin can truly remove members).
 /// If we're among the users that were removed, delete all encryption key pairs and the group public key, unsubscribe
 /// from push notifications for this closed group, and remove the given members from the zombie list for this group.
-private fun MessageReceiver.handleClosedGroupMembersRemoved(message: ClosedGroupControlMessage) {
+private suspend fun MessageReceiver.handleClosedGroupMembersRemoved(message: ClosedGroupControlMessage) {
     val context = MessagingModuleConfiguration.shared.context
     val storage = MessagingModuleConfiguration.shared.storage
     val userPublicKey = storage.getUserPublicKey()!!
@@ -827,7 +827,7 @@ private fun MessageReceiver.handleClosedGroupMembersRemoved(message: ClosedGroup
 /// • Mark them as a zombie (to be removed by the admin later).
 /// If the admin left:
 /// • Unsubscribe from PNs, delete the group public key, etc. as the group will be disbanded.
-private fun MessageReceiver.handleClosedGroupMemberLeft(message: ClosedGroupControlMessage) {
+private suspend fun MessageReceiver.handleClosedGroupMemberLeft(message: ClosedGroupControlMessage) {
     val context = MessagingModuleConfiguration.shared.context
     val storage = MessagingModuleConfiguration.shared.storage
     val senderPublicKey = message.sender ?: return
@@ -892,7 +892,7 @@ private fun isValidGroupUpdate(group: GroupRecord, sentTimestamp: Long, senderPu
     return true
 }
 
-fun MessageReceiver.disableLocalGroupAndUnsubscribe(groupPublicKey: String, groupID: String, userPublicKey: String, delete: Boolean) {
+suspend fun MessageReceiver.disableLocalGroupAndUnsubscribe(groupPublicKey: String, groupID: String, userPublicKey: String, delete: Boolean) {
     val storage = MessagingModuleConfiguration.shared.storage
     storage.removeClosedGroupPublicKey(groupPublicKey)
     // Remove the key pairs

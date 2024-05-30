@@ -3,7 +3,6 @@ package org.session.libsession.messaging.jobs
 import com.esotericsoftware.kryo.Kryo
 import com.esotericsoftware.kryo.io.Input
 import com.esotericsoftware.kryo.io.Output
-import nl.komponents.kovenant.Promise
 import okio.Buffer
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.file_server.FileServerApi
@@ -76,7 +75,7 @@ class AttachmentUploadJob(val attachmentID: Long, val threadID: String, val mess
         }
     }
 
-    private fun upload(attachment: SignalServiceAttachmentStream, server: String, encrypt: Boolean, upload: (ByteArray) -> Promise<Long, Exception>): Pair<ByteArray, UploadResult> {
+    private suspend fun upload(attachment: SignalServiceAttachmentStream, server: String, encrypt: Boolean, upload: suspend (ByteArray) -> Long): Pair<ByteArray, UploadResult> {
         // Key
         val key = if (encrypt) Util.getSecretBytes(64) else ByteArray(0)
         // Length
@@ -102,7 +101,7 @@ class AttachmentUploadJob(val attachmentID: Long, val threadID: String, val mess
         drb.writeTo(b)
         val data = b.readByteArray()
         // Upload the data
-        val id = upload(data).get()
+        val id = upload(data)
         val digest = drb.transmittedDigest
         // Return
         return Pair(key, UploadResult(id, "${server}/file/$id", digest))

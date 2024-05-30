@@ -32,7 +32,7 @@ class GroupAvatarDownloadJob(val server: String, val room: String, val imageId: 
         }
 
         try {
-            val bytes = OpenGroupApi.downloadOpenGroupProfilePicture(server, room, imageId).get()
+            val bytes = OpenGroupApi.downloadOpenGroupProfilePicture(server, room, imageId)
 
             // Once the download is complete the imageId might no longer match, so we need to fetch it again just in case
             val postDownloadStoredImageId = storage.getOpenGroup(room, server)?.imageId

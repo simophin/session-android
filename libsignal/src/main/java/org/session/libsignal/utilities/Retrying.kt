@@ -1,5 +1,6 @@
 package org.session.libsignal.utilities
 
+import kotlinx.coroutines.delay
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.deferred
 import java.util.*
@@ -27,4 +28,21 @@ fun <V, T : Promise<V, Exception>> retryIfNeeded(maxRetryCount: Int, retryInterv
     }
     retryIfNeeded()
     return deferred.promise
+}
+
+suspend fun <T> runRetry(maxRetryCount: Int, retryInterval: Long = 1000L, body: suspend () -> T): T {
+    var nthRetry = 0
+
+    while (true) {
+        try {
+            return body()
+        } catch (e: Exception) {
+            if (nthRetry == maxRetryCount - 1) {
+                throw e
+            }
+
+            delay(retryInterval)
+            nthRetry++
+        }
+    }
 }

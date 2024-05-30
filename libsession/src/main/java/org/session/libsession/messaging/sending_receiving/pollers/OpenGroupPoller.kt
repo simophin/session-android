@@ -1,8 +1,14 @@
 package org.session.libsession.messaging.sending_receiving.pollers
 
 import com.google.protobuf.ByteString
-import nl.komponents.kovenant.Promise
-import nl.komponents.kovenant.functional.map
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.plus
 import org.session.libsession.messaging.BlindedIdMapping
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.jobs.BatchMessageReceiveJob
@@ -30,18 +36,14 @@ import org.session.libsession.utilities.GroupUtil
 import org.session.libsignal.protos.SignalServiceProtos
 import org.session.libsignal.utilities.Base64
 import org.session.libsignal.utilities.Log
-import org.session.libsignal.utilities.successBackground
-import java.util.UUID
-import java.util.concurrent.ScheduledExecutorService
-import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
 
-class OpenGroupPoller(private val server: String, private val executorService: ScheduledExecutorService?) {
-    var hasStarted = false
+class OpenGroupPoller(private val server: String) {
     var isCaughtUp = false
     var secondToLastJob: MessageReceiveJob? = null
-    private var future: ScheduledFuture<*>? = null
-    @Volatile private var runId: UUID = UUID.randomUUID()
+
+    private var pollingJob: Job? = null
+    private val scope = CoroutineScope(Dispatchers.IO) + SupervisorJob()
 
     companion object {
         private const val pollInterval: Long = 4000L
@@ -132,24 +134,34 @@ class OpenGroupPoller(private val server: String, private val executorService: S
         }
     }
 
+    @Synchronized
     fun startIfNeeded() {
-        if (hasStarted) { return }
-        hasStarted = true
-        runId = UUID.randomUUID()
-        future = executorService?.schedule(::poll, 0, TimeUnit.MILLISECONDS)
+        if (pollingJob?.isActive == true) return
+        pollingJob = scope.launch {
+            while (true) {
+                try {
+                    pollOnce()
+                } catch (e: Exception) {
+                    Log.e("Loki", "Failed to poll open group: $server.", e)
+                }
+                delay(pollInterval)
+            }
+        }
     }
 
+    @Synchronized
     fun stop() {
-        future?.cancel(false)
-        hasStarted = false
+        val job = pollingJob
+        pollingJob = null
+        job?.cancel()
     }
 
-    fun poll(isPostCapabilitiesRetry: Boolean = false): Promise<Unit, Exception> {
-        val currentRunId = runId
+    private suspend fun pollOnce(isPostCapabilitiesRetry: Boolean = false) {
         val storage = MessagingModuleConfiguration.shared.storage
-        val rooms = storage.getAllOpenGroups().values.filter { it.server == server }.map { it.room }
+        try {
+            val rooms = storage.getAllOpenGroups().values.filter { it.server == server }.map { it.room }
+            val responses = OpenGroupApi.poll(rooms, server)
 
-        return OpenGroupApi.poll(rooms, server).successBackground { responses ->
             responses.filterNot { it.body == null }.forEach { response ->
                 when (response.endpoint) {
                     is Endpoint.Capabilities -> {
@@ -176,30 +188,17 @@ class OpenGroupPoller(private val server: String, private val executorService: S
                     isCaughtUp = true
                 }
             }
-
-            // Only poll again if it's the same poller run
-            if (currentRunId == runId) {
-                future = executorService?.schedule(this@OpenGroupPoller::poll, pollInterval, TimeUnit.MILLISECONDS)
-            }
-        }.fail {
-            updateCapabilitiesIfNeeded(isPostCapabilitiesRetry, currentRunId, it)
-        }.map { }
+        } catch (e: Exception) {
+            updateCapabilitiesIfNeeded(isPostCapabilitiesRetry, e)
+            throw e
+        }
     }
 
-    private fun updateCapabilitiesIfNeeded(isPostCapabilitiesRetry: Boolean, currentRunId: UUID, exception: Exception) {
+    private suspend fun updateCapabilitiesIfNeeded(isPostCapabilitiesRetry: Boolean, exception: Exception) {
         if (exception is OnionRequestAPI.HTTPRequestFailedBlindingRequiredException) {
             if (!isPostCapabilitiesRetry) {
-                OpenGroupApi.getCapabilities(server).map {
-                    handleCapabilities(server, it)
-                }
-
-                // Only poll again if it's the same poller run
-                if (currentRunId == runId) {
-                    future = executorService?.schedule({ poll(isPostCapabilitiesRetry = true) }, pollInterval, TimeUnit.MILLISECONDS)
-                }
+                handleCapabilities(server, OpenGroupApi.getCapabilities(server))
             }
-        } else if (currentRunId == runId) {
-            future = executorService?.schedule(this@OpenGroupPoller::poll, pollInterval, TimeUnit.MILLISECONDS)
         }
     }
 
@@ -232,7 +231,7 @@ class OpenGroupPoller(private val server: String, private val executorService: S
         handleDeletedMessages(server, roomToken, deletions.map { it.id })
     }
 
-    private fun handleDirectMessages(
+    private suspend fun handleDirectMessages(
         server: String,
         fromOutbox: Boolean,
         messages: List<OpenGroupApi.DirectMessage>
@@ -295,7 +294,7 @@ class OpenGroupPoller(private val server: String, private val executorService: S
         // check thread still exists
         val threadId = storage.getThreadId(Address.fromSerialized(groupID)) ?: -1
         val threadExists = threadId >= 0
-        if (!hasStarted || !threadExists) { return }
+        if (!threadExists) { return }
         val envelopes =  mutableListOf<Triple<Long?, SignalServiceProtos.Envelope, Map<String, OpenGroupApi.Reaction>?>>()
         messages.sortedBy { it.serverID!! }.forEach { message ->
             if (!message.base64EncodedData.isNullOrEmpty()) {

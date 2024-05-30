@@ -27,11 +27,6 @@ class MessageReceiveJob(val data: ByteArray, val serverHash: String? = null, val
     }
 
     override suspend fun execute(dispatcherName: String) {
-        executeAsync(dispatcherName).get()
-    }
-
-    fun executeAsync(dispatcherName: String): Promise<Unit, Exception> {
-        val deferred = deferred<Unit, Exception>()
         try {
             val storage = MessagingModuleConfiguration.shared.storage
             val serverPublicKey = openGroupID?.let {
@@ -43,7 +38,6 @@ class MessageReceiveJob(val data: ByteArray, val serverHash: String? = null, val
             message.serverHash = serverHash
             MessageReceiver.handle(message, proto, threadId ?: -1, this.openGroupID)
             this.handleSuccess(dispatcherName)
-            deferred.resolve(Unit)
         } catch (e: Exception) {
             Log.e(TAG, "Couldn't receive message.", e)
             if (e is MessageReceiver.Error && !e.isRetryable) {
@@ -53,9 +47,7 @@ class MessageReceiveJob(val data: ByteArray, val serverHash: String? = null, val
                 Log.e("Loki", "Couldn't receive message.", e)
                 this.handleFailure(dispatcherName, e)
             }
-            deferred.resolve(Unit) // The promise is just used to keep track of when we're done
         }
-        return deferred.promise
     }
 
     private fun handleSuccess(dispatcherName: String) {
@@ -75,7 +67,7 @@ class MessageReceiveJob(val data: ByteArray, val serverHash: String? = null, val
         serverHash?.let { builder.putString(SERVER_HASH_KEY, it) }
         openGroupMessageServerID?.let { builder.putLong(OPEN_GROUP_MESSAGE_SERVER_ID_KEY, it) }
         openGroupID?.let { builder.putString(OPEN_GROUP_ID_KEY, it) }
-        return builder.build();
+        return builder.build()
     }
 
     override fun getFactoryKey(): String {
