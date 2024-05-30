@@ -218,6 +218,17 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         return cursor
     }
 
+    fun getMessages(messageIds: Collection<Long>): List<MessageRecord> {
+        return Reader(
+            rawQuery(
+                "${TABLE_NAME}._id IN (SELECT value FROM json_each(?))",
+                arrayOf(JSONArray(messageIds).toString())
+            )
+        ).use { reader ->
+            generateSequence { reader.next }.toList()
+        }
+    }
+
     val expireStartedMessages: Reader
         get() {
             val where = "$EXPIRE_STARTED > 0"

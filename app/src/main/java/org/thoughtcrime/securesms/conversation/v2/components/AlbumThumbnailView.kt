@@ -48,7 +48,7 @@ class AlbumThumbnailView : RelativeLayout {
 
     // region Interaction
 
-    fun calculateHitObject(event: MotionEvent, mms: MmsMessageRecord, threadRecipient: Recipient, onAttachmentNeedsDownload: (Long, Long) -> Unit) {
+    fun calculateHitObject(event: MotionEvent, mms: MmsMessageRecord, threadRecipient: Recipient, onAttachmentNeedsDownload: (DatabaseAttachment) -> Unit) {
         val rawXInt = event.rawX.toInt()
         val rawYInt = event.rawY.toInt()
         val eventRect = Rect(rawXInt, rawYInt, rawXInt, rawYInt)
@@ -63,7 +63,7 @@ class AlbumThumbnailView : RelativeLayout {
                 if (slide.transferState == AttachmentTransferProgress.TRANSFER_PROGRESS_FAILED) {
                     // Restart download here (on IO thread)
                     (slide.asAttachment() as? DatabaseAttachment)?.let { attachment ->
-                        onAttachmentNeedsDownload(attachment.attachmentId.rowId, mms.getId())
+                        onAttachmentNeedsDownload(attachment)
                     }
                 }
                 if (slide.isInProgress) return@forEach
