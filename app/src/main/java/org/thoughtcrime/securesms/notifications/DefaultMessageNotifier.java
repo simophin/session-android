@@ -56,7 +56,6 @@ import org.session.libsignal.utilities.Util;
 import org.thoughtcrime.securesms.ApplicationContext;
 import org.thoughtcrime.securesms.contacts.ContactUtil;
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2;
-import org.thoughtcrime.securesms.conversation.v2.utilities.MentionManagerUtilities;
 import org.thoughtcrime.securesms.conversation.v2.utilities.MentionUtilities;
 import org.thoughtcrime.securesms.crypto.KeyPairUtilities;
 import org.thoughtcrime.securesms.database.LokiThreadDatabase;
@@ -348,7 +347,6 @@ public class DefaultMessageNotifier implements MessageNotifier {
 
     builder.setThread(notifications.get(0).getRecipient());
     builder.setMessageCount(notificationState.getMessageCount());
-    MentionManagerUtilities.INSTANCE.populateUserPublicKeyCacheIfNeeded(notifications.get(0).getThreadId(),context);
 
     // TODO: Removing highlighting mentions in the notification because this context is the libsession one which
     // TODO: doesn't have access to the `R.attr.message_sent_text_color` and `R.attr.message_received_text_color`
