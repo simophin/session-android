@@ -29,6 +29,13 @@ class AttachmentDownloadHelper(
     jobQueue: JobQueue = JobQueue.shared,
     scope: CoroutineScope = CoroutineScope(Dispatchers.Default) + SupervisorJob(),
 ) {
+    companion object {
+        private const val BUFFER_TIMEOUT_MILLS = 500L
+        private const val BUFFER_MAX_ITEMS = 10
+
+        private const val LOG_TAG = "AttachmentDownloadHelper"
+    }
+
     private val downloadRequests = Channel<DatabaseAttachment>(UNLIMITED)
 
     /**
@@ -113,13 +120,9 @@ class AttachmentDownloadHelper(
             return false
         }
 
-        assert(message.id == mmsId) {
-            "Message ID mismatch: ${message.id} != $mmsId"
-        }
+        assert(message.id == mmsId) { "Message ID mismatch: ${message.id} != $mmsId" }
 
-        if (message.isOutgoing) {
-            return true
-        }
+        if (message.isOutgoing) return true
 
         val sender = message.individualRecipient.address.serialize()
         val contact = storage.getContactWithSessionID(sender)
@@ -135,9 +138,7 @@ class AttachmentDownloadHelper(
             return false
         }
 
-        if (threadRecipient.isGroupRecipient) {
-            return true
-        }
+        if (threadRecipient.isGroupRecipient) return true
 
         return contact.isTrusted
     }
@@ -153,12 +154,5 @@ class AttachmentDownloadHelper(
         }
 
         downloadRequests.trySend(attachment)
-    }
-
-    companion object {
-        private const val BUFFER_TIMEOUT_MILLS = 500L
-        private const val BUFFER_MAX_ITEMS = 10
-
-        private const val LOG_TAG = "AttachmentDownloadHelper"
     }
 }
