@@ -8,10 +8,10 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
+import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 import org.session.libsession.database.StorageProtocol
 import org.session.libsession.messaging.jobs.AttachmentDownloadJob
@@ -23,6 +23,8 @@ import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.database.MmsDatabase
 import org.thoughtcrime.securesms.database.model.MessageRecord
 
+private const val LOG_TAG = "AttachmentDownloadHelper"
+
 class AttachmentDownloadHelper(
     private val storage: StorageProtocol,
     mmsDatabase: MmsDatabase,
@@ -32,8 +34,6 @@ class AttachmentDownloadHelper(
     companion object {
         private const val BUFFER_TIMEOUT_MILLS = 500L
         private const val BUFFER_MAX_ITEMS = 10
-
-        private const val LOG_TAG = "AttachmentDownloadHelper"
     }
 
     private val downloadRequests = Channel<DatabaseAttachment>(UNLIMITED)
@@ -79,26 +79,27 @@ class AttachmentDownloadHelper(
     init {
         scope.launch {
             downloadRequestsFlow
-                .flowOn(Dispatchers.IO)
                 .map { attachments ->
-                    val pendingAttachmentIDs = storage
-                        .getAllPendingJobs(AttachmentDownloadJob.KEY, AttachmentUploadJob.KEY)
-                        .values
-                        .mapNotNullTo(hashSetOf()) {
-                            (it as? AttachmentUploadJob)?.attachmentID
-                                ?: (it as? AttachmentDownloadJob)?.attachmentID
+                    withContext(Dispatchers.IO) {
+                        val pendingAttachmentIDs = storage
+                            .getAllPendingJobs(AttachmentDownloadJob.KEY, AttachmentUploadJob.KEY)
+                            .values
+                            .mapNotNullTo(hashSetOf()) {
+                                (it as? AttachmentUploadJob)?.attachmentID
+                                    ?: (it as? AttachmentDownloadJob)?.attachmentID
+                            }
+
+                        val messagesByID = mmsDatabase.getMessages(attachments.map { it.mmsId })
+                            .associateBy { it.id }
+
+                        // Before handling out attachment to the download task, we need to
+                        // check the requisite for that attachment. This check is very likely to be
+                        // performed again in the download task, but adding stuff into job system
+                        // is expensive so we need to avoid spawning new task whenever we can.
+                        attachments.filter { attachment ->
+                            attachment.attachmentId.rowId !in pendingAttachmentIDs &&
+                                    eligibleForDownloadTask(attachment, messagesByID[attachment.mmsId])
                         }
-
-                    val messagesByID = mmsDatabase.getMessages(attachments.map { it.mmsId })
-                        .associateBy { it.id }
-
-                    // Before handling out attachment to the download task, we need to
-                    // check the requisite for that attachment. This check is very likely to be
-                    // performed again in the download task, but adding stuff into job system
-                    // is expensive so we need to avoid spawning new task whenever we can.
-                    attachments.filter {
-                        !pendingAttachmentIDs.contains(it.attachmentId.rowId) &&
-                                it.eligibleForDownloadTask(messagesByID[it.mmsId])
                     }
                 }
                 .collect { attachmentsToDownload ->
@@ -114,13 +115,13 @@ class AttachmentDownloadHelper(
         }
     }
 
-    private fun DatabaseAttachment.eligibleForDownloadTask(message: MessageRecord?): Boolean {
+    private fun eligibleForDownloadTask(attachment: DatabaseAttachment, message: MessageRecord?): Boolean {
         if (message == null) {
-            Log.w(LOG_TAG, "Message $mmsId not found for attachment $attachmentId")
+            Log.w(LOG_TAG, "Message ${attachment.mmsId} not found for attachment ${attachment.attachmentId}")
             return false
         }
 
-        assert(message.id == mmsId) { "Message ID mismatch: ${message.id} != $mmsId" }
+        assert(message.id == attachment.mmsId) { "Message ID mismatch: ${message.id} != ${attachment.mmsId}" }
 
         if (message.isOutgoing) return true
 
