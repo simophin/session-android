@@ -38,7 +38,7 @@ class AttachmentDownloadHelper(
     private val downloadRequests = Channel<DatabaseAttachment>(UNLIMITED)
 
     init {
-        scope.launch {
+        scope.launch(Dispatchers.Default) {
             downloadRequests
                 .receiveAsFlow()
                 .timedBuffer(BUFFER_TIMEOUT_MILLS, BUFFER_MAX_ITEMS)
@@ -72,7 +72,7 @@ class AttachmentDownloadHelper(
                             databaseMessageID = attachment.mmsId
                         )
                     )
-            }
+                }
         }
     }
 
