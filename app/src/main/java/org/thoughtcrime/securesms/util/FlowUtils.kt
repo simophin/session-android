@@ -1,9 +1,12 @@
 package org.thoughtcrime.securesms.util
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.flatMapConcat
 
 /**
  * Buffers items from the flow and emits them in batches. The batch will have size [maxItems] and
@@ -55,3 +58,6 @@ fun <T, S, R> Flow<T>.scanTransformLatest(state: S, transform: suspend (acc: S, 
         }
     }
 }
+
+@OptIn(ExperimentalCoroutinesApi::class)
+fun <T> Flow<Iterable<T>>.flatten(): Flow<T> = flatMapConcat { it.asFlow() }

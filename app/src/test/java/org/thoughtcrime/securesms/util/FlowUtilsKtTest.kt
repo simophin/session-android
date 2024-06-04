@@ -1,12 +1,11 @@
 package org.thoughtcrime.securesms.util
 
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.toCollection
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.*
-
+import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class FlowUtilsKtTest {
@@ -27,6 +26,7 @@ class FlowUtilsKtTest {
         assertEquals(listOf(6, 7, 8, 9, 10), result[1])
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun `timedBuffer should emit buffer when timeout expires`() = runTest {
         // Given
@@ -34,7 +34,7 @@ class FlowUtilsKtTest {
             emit(1)
             emit(2)
             emit(3)
-            delay(200)
+            testScheduler.advanceTimeBy(200L)
             emit(4)
         }
         val timeoutMillis = 100L

@@ -5,6 +5,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -19,6 +20,7 @@ import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAt
 import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.database.MmsDatabase
 import org.thoughtcrime.securesms.database.model.MessageRecord
+import org.thoughtcrime.securesms.util.flatten
 import org.thoughtcrime.securesms.util.timedBuffer
 
 class AttachmentDownloadHelper(
@@ -41,38 +43,36 @@ class AttachmentDownloadHelper(
                 .receiveAsFlow()
                 .timedBuffer(BUFFER_TIMEOUT_MILLS, BUFFER_MAX_ITEMS)
                 .map { attachments ->
-                    withContext(Dispatchers.IO) {
-                        val pendingAttachmentIDs = storage
-                            .getAllPendingJobs(AttachmentDownloadJob.KEY, AttachmentUploadJob.KEY)
-                            .values
-                            .mapNotNullTo(hashSetOf()) {
-                                (it as? AttachmentUploadJob)?.attachmentID
-                                    ?: (it as? AttachmentDownloadJob)?.attachmentID
-                            }
-
-                        val messagesByID = mmsDatabase.getMessages(attachments.map { it.mmsId })
-                            .associateBy { it.id }
-
-                        // Before handling out attachment to the download task, we need to
-                        // check the requisite for that attachment. This check is very likely to be
-                        // performed again in the download task, but adding stuff into job system
-                        // is expensive so we need to avoid spawning new task whenever we can.
-                        attachments.filter { attachment ->
-                            attachment.attachmentId.rowId !in pendingAttachmentIDs &&
-                                    eligibleForDownloadTask(attachment, messagesByID[attachment.mmsId])
+                    val pendingAttachmentIDs = storage
+                        .getAllPendingJobs(AttachmentDownloadJob.KEY, AttachmentUploadJob.KEY)
+                        .values
+                        .mapNotNullTo(hashSetOf()) {
+                            (it as? AttachmentUploadJob)?.attachmentID
+                                ?: (it as? AttachmentDownloadJob)?.attachmentID
                         }
+
+                    val messagesByID = mmsDatabase.getMessages(attachments.map { it.mmsId })
+                        .associateBy { it.id }
+
+                    // Before handling out attachment to the download task, we need to
+                    // check the requisite for that attachment. This check is very likely to be
+                    // performed again in the download task, but adding stuff into job system
+                    // is expensive so we need to avoid spawning new task whenever we can.
+                    attachments.filter { attachment ->
+                        attachment.attachmentId.rowId !in pendingAttachmentIDs &&
+                                eligibleForDownloadTask(attachment, messagesByID[attachment.mmsId])
                     }
                 }
-                .collect { attachmentsToDownload ->
-                    for (attachment in attachmentsToDownload) {
-                        jobQueue.add(
-                            AttachmentDownloadJob(
-                                attachmentID = attachment.attachmentId.rowId,
-                                databaseMessageID = attachment.mmsId
-                            )
+                .flowOn(Dispatchers.IO)
+                .flatten()
+                .collect { attachment ->
+                    jobQueue.add(
+                        AttachmentDownloadJob(
+                            attachmentID = attachment.attachmentId.rowId,
+                            databaseMessageID = attachment.mmsId
                         )
-                    }
-                }
+                    )
+            }
         }
     }
 
@@ -90,7 +90,7 @@ class AttachmentDownloadHelper(
         val contact = storage.getContactWithSessionID(sender)
 
         if (contact == null) {
-            Log.w(LOG_TAG, "Contact not found for $sender")
+            Log.w(LOG_TAG, "Contact not found")
             return false
         }
 
