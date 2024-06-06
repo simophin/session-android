@@ -6,9 +6,12 @@ import androidx.core.text.getSpans
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
+
+private const val SEARCH_QUERY_DEBOUNCE_MILLS = 100L
 
 /**
  * A subclass of [SpannableStringBuilder] that provides a way to observe the mention search query,
@@ -21,7 +24,9 @@ class MentionEditable : SpannableStringBuilder() {
     )
 
     fun observeMentionSearchQuery(): Flow<SearchQuery?> {
+        @Suppress("OPT_IN_USAGE")
         return queryChangeNotification
+            .debounce(SEARCH_QUERY_DEBOUNCE_MILLS)
             .onStart { emit(Unit) }
             .map { mentionSearchQuery }
             .distinctUntilChanged()
