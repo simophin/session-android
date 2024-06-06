@@ -119,6 +119,7 @@ import org.thoughtcrime.securesms.conversation.v2.input_bar.InputBarButton
 import org.thoughtcrime.securesms.conversation.v2.input_bar.InputBarDelegate
 import org.thoughtcrime.securesms.conversation.v2.input_bar.InputBarRecordingViewDelegate
 import org.thoughtcrime.securesms.conversation.v2.input_bar.mentions.MentionCandidateAdapter
+import org.thoughtcrime.securesms.conversation.v2.mention.MentionViewModel
 import org.thoughtcrime.securesms.conversation.v2.menus.ConversationActionModeCallback
 import org.thoughtcrime.securesms.conversation.v2.menus.ConversationActionModeCallbackDelegate
 import org.thoughtcrime.securesms.conversation.v2.menus.ConversationMenuHelper

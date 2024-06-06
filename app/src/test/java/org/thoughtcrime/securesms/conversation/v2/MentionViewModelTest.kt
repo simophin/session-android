@@ -20,6 +20,7 @@ import org.session.libsession.messaging.open_groups.GroupMemberRole
 import org.session.libsession.messaging.open_groups.OpenGroup
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.MainCoroutineRule
+import org.thoughtcrime.securesms.conversation.v2.mention.MentionViewModel
 
 @RunWith(RobolectricTestRunner::class)
 class MentionViewModelTest {

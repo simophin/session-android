@@ -1,4 +1,4 @@
-package org.thoughtcrime.securesms.conversation.v2
+package org.thoughtcrime.securesms.conversation.v2.mention
 
 import android.content.ContentResolver
 import android.graphics.Typeface
@@ -35,6 +35,13 @@ import org.thoughtcrime.securesms.database.Storage
 import org.thoughtcrime.securesms.database.ThreadDatabase
 import org.thoughtcrime.securesms.util.observeChanges
 
+/**
+ * A ViewModel that provides the mention search functionality for a text input.
+ *
+ * To use this ViewModel, you (a view) will need to:
+ * 1. Observe the [autoCompleteState] to get the mention search results.
+ * 2. Set the EditText's editable factory to [editableFactory], via [android.widget.EditText.setEditableFactory]
+ */
 class MentionViewModel(
     threadID: Long,
     contentResolver: ContentResolver,
@@ -47,6 +54,10 @@ class MentionViewModel(
 ) : ViewModel() {
     private val editable = MentionEditable()
 
+    /**
+     * A factory that creates a new [Editable] instance that is backed by the same source of truth
+     * used by this viewModel.
+     */
     val editableFactory = object : Editable.Factory() {
         override fun newEditable(source: CharSequence?): Editable {
             if (source === editable) {

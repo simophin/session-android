@@ -9,6 +9,8 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import org.thoughtcrime.securesms.conversation.v2.mention.MentionEditable
+import org.thoughtcrime.securesms.conversation.v2.mention.MentionViewModel
 
 @RunWith(RobolectricTestRunner::class)
 class MentionEditableTest {

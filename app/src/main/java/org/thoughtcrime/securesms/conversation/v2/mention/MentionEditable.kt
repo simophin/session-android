@@ -1,4 +1,4 @@
-package org.thoughtcrime.securesms.conversation.v2
+package org.thoughtcrime.securesms.conversation.v2.mention
 
 import android.text.Selection
 import android.text.SpannableStringBuilder
@@ -175,7 +175,6 @@ class MentionEditable : SpannableStringBuilder() {
     }
 }
 
-
 private fun CharSequence.indexOfStartingAt(offset: Int, predicate: (Char) -> Boolean): Int {
     var i = offset.coerceIn(0..length)
     while (i < length) {
@@ -187,8 +186,3 @@ private fun CharSequence.indexOfStartingAt(offset: Int, predicate: (Char) -> Boo
 
     return -1
 }
-
-
-class MentionSpan(
-    val member: MentionViewModel.Member
-)
