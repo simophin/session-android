@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -51,6 +52,7 @@ class MentionViewModel(
     contactDatabase: SessionContactDatabase,
     memberDatabase: GroupMemberDatabase,
     storage: Storage,
+    dispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : ViewModel() {
     private val editable = MentionEditable()
 
@@ -121,7 +123,7 @@ class MentionViewModel(
                     )
                 }
             }
-            .flowOn(Dispatchers.IO)
+            .flowOn(dispatcher)
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(10_000L), null)
 
 

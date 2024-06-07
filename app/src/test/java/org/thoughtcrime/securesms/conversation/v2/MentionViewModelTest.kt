@@ -4,6 +4,8 @@ import android.text.Selection
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -104,6 +106,7 @@ class MentionViewModelTest {
             storage = mock {
                 on { getOpenGroup(threadID) } doReturn openGroup
             },
+            dispatcher = StandardTestDispatcher()
         )
     }
 
