@@ -78,22 +78,22 @@ class MentionViewModel(
             .debounce(500L)
             .onStart { emit(Unit) }
             .mapLatest {
-                val r = checkNotNull(threadDatabase.getRecipientForThreadId(threadID)) {
+                val recipient = checkNotNull(threadDatabase.getRecipientForThreadId(threadID)) {
                     "Recipient not found for thread ID: $threadID"
                 }
 
                 val memberIDs = when {
-                    r.isClosedGroupRecipient -> {
-                        groupDatabase.getGroupMemberAddresses(r.address.toGroupString(), false)
+                    recipient.isClosedGroupRecipient -> {
+                        groupDatabase.getGroupMemberAddresses(recipient.address.toGroupString(), false)
                             .map { it.serialize() }
                     }
 
-                    r.isCommunityRecipient -> mmsDatabase.getRecentChatMemberIDs(threadID, 20)
-                    r.isContactRecipient -> listOf(r.address.serialize())
+                    recipient.isCommunityRecipient -> mmsDatabase.getRecentChatMemberIDs(threadID, 20)
+                    recipient.isContactRecipient -> listOf(recipient.address.serialize())
                     else -> listOf()
                 }
 
-                val moderatorIDs = if (r.isCommunityRecipient) {
+                val moderatorIDs = if (recipient.isCommunityRecipient) {
                     val groupId = storage.getOpenGroup(threadID)?.id
                     if (groupId.isNullOrBlank()) {
                         emptySet()
@@ -107,7 +107,7 @@ class MentionViewModel(
                     emptySet()
                 }
 
-                val contactContext = if (r.isCommunityRecipient) {
+                val contactContext = if (recipient.isCommunityRecipient) {
                     Contact.ContactContext.OPEN_GROUP
                 } else {
                     Contact.ContactContext.REGULAR
