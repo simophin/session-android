@@ -15,6 +15,7 @@ class MessagingModuleConfiguration(
     val messageDataProvider: MessageDataProvider,
     val getUserED25519KeyPair: () -> KeyPair?,
     val configFactory: ConfigFactoryProtocol,
+    val lastSentTimestampCache: LastSentTimestampCache,
     val toaster: Toaster,
 ) {
 

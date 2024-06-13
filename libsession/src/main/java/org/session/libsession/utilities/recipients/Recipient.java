@@ -70,7 +70,7 @@ public class Recipient implements RecipientModifiedListener {
   private final @NonNull Address address;
   private final @NonNull List<Recipient> participants = new LinkedList<>();
 
-  private           Context context;
+  private final     Context context;
   private @Nullable String  name;
   private @Nullable String  customLabel;
   private           boolean resolving;
@@ -133,7 +133,7 @@ public class Recipient implements RecipientModifiedListener {
             @NonNull  Optional<RecipientDetails> details,
             @NonNull  ListenableFutureTask<RecipientDetails> future)
   {
-    this.context   = context;
+    this.context   = context.getApplicationContext();
     this.address   = address;
     this.color     = null;
     this.resolving = true;
@@ -264,35 +264,35 @@ public class Recipient implements RecipientModifiedListener {
   }
 
   Recipient(@NonNull Context context, @NonNull Address address, @NonNull RecipientDetails details) {
-    this.context                 = context;
-    this.address                 = address;
-    this.contactUri              = details.contactUri;
-    this.name                    = details.name;
-    this.systemContactPhoto      = details.systemContactPhoto;
-    this.groupAvatarId           = details.groupAvatarId;
-    this.isLocalNumber           = details.isLocalNumber;
-    this.color                   = details.color;
-    this.customLabel             = details.customLabel;
-    this.messageRingtone         = details.messageRingtone;
-    this.callRingtone            = details.callRingtone;
-    this.mutedUntil              = details.mutedUntil;
-    this.notifyType              = details.notifyType;
+    this.context                = context.getApplicationContext();
+    this.address                = address;
+    this.contactUri             = details.contactUri;
+    this.name                   = details.name;
+    this.systemContactPhoto     = details.systemContactPhoto;
+    this.groupAvatarId          = details.groupAvatarId;
+    this.isLocalNumber          = details.isLocalNumber;
+    this.color                  = details.color;
+    this.customLabel            = details.customLabel;
+    this.messageRingtone        = details.messageRingtone;
+    this.callRingtone           = details.callRingtone;
+    this.mutedUntil             = details.mutedUntil;
+    this.notifyType             = details.notifyType;
     this.autoDownloadAttachments = details.autoDownloadAttachments;
-    this.blocked                 = details.blocked;
-    this.approved                = details.approved;
-    this.approvedMe              = details.approvedMe;
-    this.messageVibrate          = details.messageVibrateState;
-    this.callVibrate             = details.callVibrateState;
-    this.expireMessages          = details.expireMessages;
-    this.defaultSubscriptionId   = details.defaultSubscriptionId;
-    this.registered              = details.registered;
-    this.notificationChannel     = details.notificationChannel;
-    this.profileKey              = details.profileKey;
-    this.profileName             = details.profileName;
-    this.profileAvatar           = details.profileAvatar;
-    this.profileSharing          = details.profileSharing;
-    this.unidentifiedAccessMode  = details.unidentifiedAccessMode;
-    this.forceSmsSelection       = details.forceSmsSelection;
+    this.blocked                = details.blocked;
+    this.approved               = details.approved;
+    this.approvedMe             = details.approvedMe;
+    this.messageVibrate         = details.messageVibrateState;
+    this.callVibrate            = details.callVibrateState;
+    this.expireMessages         = details.expireMessages;
+    this.defaultSubscriptionId  = details.defaultSubscriptionId;
+    this.registered             = details.registered;
+    this.notificationChannel    = details.notificationChannel;
+    this.profileKey             = details.profileKey;
+    this.profileName            = details.profileName;
+    this.profileAvatar          = details.profileAvatar;
+    this.profileSharing         = details.profileSharing;
+    this.unidentifiedAccessMode = details.unidentifiedAccessMode;
+    this.forceSmsSelection      = details.forceSmsSelection;
     this.wrapperHash            = details.wrapperHash;
     this.blocksCommunityMessageRequests = details.blocksCommunityMessageRequests;
 

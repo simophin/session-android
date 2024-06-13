@@ -263,7 +263,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         viewModelFactory.create(threadId, MessagingModuleConfiguration.shared.getUserED25519KeyPair())
     }
     private var actionMode: ActionMode? = null
-    private var unreadCount = 0
+    private var unreadCount = Int.MAX_VALUE
     // Attachments
     private val audioRecorder = AudioRecorder(this)
     private val stopAudioHandler = Handler(Looper.getMainLooper())
@@ -298,8 +298,10 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         if (hexEncodedSeed == null) {
             hexEncodedSeed = IdentityKeyUtil.getIdentityKeyPair(this).hexEncodedPrivateKey // Legacy account
         }
+
+        val appContext = applicationContext
         val loadFileContents: (String) -> String = { fileName ->
-            MnemonicUtilities.loadFileContents(this, fileName)
+            MnemonicUtilities.loadFileContents(appContext, fileName)
         }
         MnemonicCodec(loadFileContents).encode(hexEncodedSeed!!, MnemonicCodec.Language.Configuration.english)
     }
@@ -336,7 +338,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 }
             },
             onAttachmentNeedsDownload = { attachmentId, mmsId ->
-                // Start download (on IO thread)
                 lifecycleScope.launch(Dispatchers.IO) {
                     JobQueue.shared.add(AttachmentDownloadJob(attachmentId, mmsId))
                 }
@@ -346,8 +347,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         )
         adapter.visibleMessageViewDelegate = this
 
-        // Register an AdapterDataObserver to scroll us to the bottom of the RecyclerView if we're
-        // already near the the bottom and the data changes.
+        // Register an AdapterDataObserver to scroll us to the bottom of the RecyclerView for if
+        // we're already near the the bottom and the data changes.
         adapter.registerAdapterDataObserver(ConversationAdapterDataObserver(binding?.conversationRecyclerView!!, adapter))
 
         adapter
@@ -588,7 +589,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         binding!!.conversationRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if (recyclerScrollState == RecyclerView.SCROLL_STATE_IDLE) {
+                // The unreadCount check is to prevent us scrolling to the bottom when we first enter a conversation
+                if (recyclerScrollState == RecyclerView.SCROLL_STATE_IDLE && unreadCount != Int.MAX_VALUE) {
                     scrollToMostRecentMessageIfWeShould()
                 }
                 handleRecyclerViewScrolled()
@@ -864,6 +866,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     override fun onDestroy() {
         viewModel.saveDraft(binding?.inputBar?.text?.trim() ?: "")
+        cancelVoiceMessage()
         tearDownRecipientObserver()
         super.onDestroy()
         binding = null
@@ -1063,7 +1066,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     override fun showVoiceMessageUI() {
-        binding?.inputBarRecordingView?.show()
+        binding?.inputBarRecordingView?.show(lifecycleScope)
         binding?.inputBar?.alpha = 0.0f
         val animation = ValueAnimator.ofObject(FloatEvaluator(), 1.0f, 0.0f)
         animation.duration = 250L
@@ -1318,6 +1321,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     // `position` is the adapter position; not the visual position
     private fun handleSwipeToReply(message: MessageRecord) {
+        if (message.isOpenGroupInvitation) return
         val recipient = viewModel.recipient ?: return
         binding?.inputBar?.draftQuote(recipient, message, glide)
     }

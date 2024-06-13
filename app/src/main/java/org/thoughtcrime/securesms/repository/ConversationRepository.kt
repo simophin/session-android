@@ -5,6 +5,9 @@ import android.content.Context
 import app.cash.copper.Query
 import app.cash.copper.flow.observeQuery
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import network.loki.messenger.libsession_util.util.ExpiryMode
@@ -374,9 +377,7 @@ class DefaultConversationRepository @Inject constructor(
         val cursor = mmsSmsDb.getConversation(threadId, true)
         mmsSmsDb.readerFor(cursor).use { reader ->
             while (reader.next != null) {
-                if (!reader.current.isOutgoing) {
-                    return true
-                }
+                if (!reader.current.isOutgoing) { return true }
             }
         }
         return false

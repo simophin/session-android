@@ -76,6 +76,7 @@ object MessageSender {
 
     // Convenience
     fun send(message: Message, destination: Destination, isSyncMessage: Boolean): Promise<Unit, Exception> {
+        if (message is VisibleMessage) MessagingModuleConfiguration.shared.lastSentTimestampCache.submitTimestamp(message.threadID!!, message.sentTimestamp!!)
         return if (destination is Destination.LegacyOpenGroup || destination is Destination.OpenGroup || destination is Destination.OpenGroupInbox) {
             sendToOpenGroupDestination(destination, message)
         } else {
@@ -412,6 +413,7 @@ object MessageSender {
 
     // Result Handling
     fun handleSuccessfulMessageSend(message: Message, destination: Destination, isSyncMessage: Boolean = false, openGroupSentTimestamp: Long = -1) {
+        if (message is VisibleMessage) MessagingModuleConfiguration.shared.lastSentTimestampCache.submitTimestamp(message.threadID!!, openGroupSentTimestamp)
         val storage = MessagingModuleConfiguration.shared.storage
         val userPublicKey = storage.getUserPublicKey()!!
         val timestamp = message.sentTimestamp!!

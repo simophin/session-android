@@ -47,7 +47,8 @@
         android:gravity="center"
         android:textColor="?android:textColorPrimary"
         android:textSize="@dimen/very_small_font_size"
-        tools:text="@string/MessageRecord_you_disabled_disappearing_messages" />
+        android:textStyle="bold"
+        tools:text="You disabled disappearing messages" />
 
     <FrameLayout
         android:id="@+id/call_view"

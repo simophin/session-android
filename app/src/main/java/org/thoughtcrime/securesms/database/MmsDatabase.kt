@@ -1205,13 +1205,9 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         }
     }
 
-    fun readerFor(cursor: Cursor?): Reader {
-        return Reader(cursor)
-    }
+    fun readerFor(cursor: Cursor?, getQuote: Boolean = true) = Reader(cursor, getQuote)
 
-    fun readerFor(message: OutgoingMediaMessage?, threadId: Long): OutgoingMessageReader {
-        return OutgoingMessageReader(message, threadId)
-    }
+    fun readerFor(message: OutgoingMediaMessage?, threadId: Long) = OutgoingMessageReader(message, threadId)
 
     fun setQuoteMissing(messageId: Long): Int {
         val contentValues = ContentValues()
@@ -1275,7 +1271,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
 
     }
 
-    inner class Reader(private val cursor: Cursor?) : Closeable {
+    inner class Reader(private val cursor: Cursor?, private val getQuote: Boolean = true) : Closeable {
         val next: MessageRecord?
             get() = if (cursor == null || !cursor.moveToNext()) null else current
         val current: MessageRecord
@@ -1284,7 +1280,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
                 return if (mmsType == PduHeaders.MESSAGE_TYPE_NOTIFICATION_IND.toLong()) {
                     getNotificationMmsMessageRecord(cursor)
                 } else {
-                    getMediaMmsMessageRecord(cursor)
+                    getMediaMmsMessageRecord(cursor, getQuote)
                 }
             }
 
@@ -1311,20 +1307,10 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
                     DELIVERY_RECEIPT_COUNT
                 )
             )
-            var readReceiptCount = cursor.getInt(cursor.getColumnIndexOrThrow(READ_RECEIPT_COUNT))
-            val subscriptionId = cursor.getInt(cursor.getColumnIndexOrThrow(SUBSCRIPTION_ID))
+            val readReceiptCount = if (isReadReceiptsEnabled(context)) cursor.getInt(cursor.getColumnIndexOrThrow(READ_RECEIPT_COUNT)) else 0
             val hasMention = (cursor.getInt(cursor.getColumnIndexOrThrow(HAS_MENTION)) == 1)
-            if (!isReadReceiptsEnabled(context)) {
-                readReceiptCount = 0
-            }
-            var contentLocationBytes: ByteArray? = null
-            var transactionIdBytes: ByteArray? = null
-            if (!contentLocation.isNullOrEmpty()) contentLocationBytes = toIsoBytes(
-                contentLocation
-            )
-            if (!transactionId.isNullOrEmpty()) transactionIdBytes = toIsoBytes(
-                transactionId
-            )
+            val contentLocationBytes: ByteArray? = contentLocation?.takeUnless { it.isEmpty() }?.let(::toIsoBytes)
+            val transactionIdBytes: ByteArray? = transactionId?.takeUnless { it.isEmpty() }?.let(::toIsoBytes)
             val slideDeck = SlideDeck(context, MmsNotificationAttachment(status, messageSize))
             return NotificationMmsMessageRecord(
                 id, recipient, recipient,
@@ -1335,7 +1321,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
             )
         }
 
-        private fun getMediaMmsMessageRecord(cursor: Cursor): MediaMmsMessageRecord {
+        private fun getMediaMmsMessageRecord(cursor: Cursor, getQuote: Boolean): MediaMmsMessageRecord {
             val id = cursor.getLong(cursor.getColumnIndexOrThrow(ID))
             val dateSent = cursor.getLong(cursor.getColumnIndexOrThrow(NORMALIZED_DATE_SENT))
             val dateReceived = cursor.getLong(
@@ -1386,7 +1372,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
                     .filterNot { o: DatabaseAttachment? -> o in contactAttachments }
                     .filterNot { o: DatabaseAttachment? -> o in previewAttachments }
             )
-            val quote = getQuote(cursor)
+            val quote = if (getQuote) getQuote(cursor) else null
             val reactions = get(context).reactionDatabase().getReactions(cursor)
             return MediaMmsMessageRecord(
                 id, recipient, recipient,
@@ -1439,7 +1425,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
             val quoteId = cursor.getLong(cursor.getColumnIndexOrThrow(QUOTE_ID))
             val quoteAuthor = cursor.getString(cursor.getColumnIndexOrThrow(QUOTE_AUTHOR))
             if (quoteId == 0L || quoteAuthor.isNullOrBlank()) return null
-            val retrievedQuote = get(context).mmsSmsDatabase().getMessageFor(quoteId, quoteAuthor)
+            val retrievedQuote = get(context).mmsSmsDatabase().getMessageFor(quoteId, quoteAuthor, false)
             val quoteText = retrievedQuote?.body
             val quoteMissing = retrievedQuote == null
             val quoteDeck = (
