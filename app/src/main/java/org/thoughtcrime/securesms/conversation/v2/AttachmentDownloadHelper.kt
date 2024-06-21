@@ -63,7 +63,6 @@ class AttachmentDownloadHelper(
                                 eligibleForDownloadTask(attachment, messagesByID[attachment.mmsId])
                     }
                 }
-                .flowOn(Dispatchers.IO)
                 .flatten()
                 .collect { attachment ->
                     jobQueue.add(
