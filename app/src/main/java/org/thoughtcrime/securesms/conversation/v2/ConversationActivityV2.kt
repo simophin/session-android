@@ -61,7 +61,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityConversationV2Binding
-import network.loki.messenger.databinding.ViewVisibleMessageBinding
 import network.loki.messenger.libsession_util.util.ExpiryMode
 import nl.komponents.kovenant.ui.successUi
 import org.session.libsession.messaging.MessagingModuleConfiguration
@@ -1558,8 +1557,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
         if (indexInAdapter < 0 || indexInAdapter >= adapter.itemCount) { return }
         val viewHolder = binding?.conversationRecyclerView?.findViewHolderForAdapterPosition(indexInAdapter) as? ConversationAdapter.VisibleMessageViewHolder ?: return
-        val visibleMessageView = ViewVisibleMessageBinding.bind(viewHolder.view).visibleMessageView
-        visibleMessageView.playVoiceMessage()
+        viewHolder.view.playVoiceMessage()
     }
 
     override fun sendMessage() {
