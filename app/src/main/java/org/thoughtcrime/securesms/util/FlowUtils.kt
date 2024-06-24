@@ -13,48 +13,27 @@ import kotlinx.coroutines.flow.flatMapConcat
  * time [timeoutMillis] limit.
  */
 fun <T> Flow<T>.timedBuffer(timeoutMillis: Long, maxItems: Int): Flow<List<T>> {
-    class State(
-        var buffer: MutableList<T> = mutableListOf(),
-        var deadline: Long = -1L
-    )
-
-    return scanTransformLatest(State()) { state, value ->
-        val now = System.currentTimeMillis()
-
-        if (state.buffer.isEmpty()) {
-            state.deadline = now + timeoutMillis
-        }
-
-        state.buffer.add(value)
-
-        if (state.buffer.size < maxItems && now < state.deadline) {
-            // If the buffer is not full and the timeout has not expired, keep waiting
-            // until the deadline is reached. This delay will get cancelled and our
-            // transform function will be called again for the new value.
-            delay(state.deadline - now)
-        }
-
-        // When we reach here, the buffer is either full or the timeout has expired,
-        // at which point we emit our buffer.
-        val result = state.buffer
-        state.buffer = mutableListOf()
-        state.deadline = -1L
-
-        result
-    }
-}
-
-/**
- * Scans the flow with a state and transform the latest value with the state.
- * This function is similar to [Flow.scan] but it differs in a major ways:
- * 1. The accumulator used by this function returns the transformed value rather than the state.
- *    This then potentially requires the state to be mutable.
- * 2. The transform function will get cancelled for the new value (this is where the name "latest" comes from).
- */
-fun <T, S, R> Flow<T>.scanTransformLatest(state: S, transform: suspend (acc: S, value: T) -> R): Flow<R> {
     return channelFlow {
+        val buffer = mutableListOf<T>()
+        var bufferBeganAt = -1L
+
         collectLatest { value ->
-            send(transform(state, value))
+            if (bufferBeganAt < 0) {
+                bufferBeganAt = System.currentTimeMillis()
+            }
+
+            buffer.add(value)
+
+            if (buffer.size < maxItems) {
+                // If the buffer is not full, wait until the time limit is reached
+                delay((System.currentTimeMillis() + timeoutMillis - bufferBeganAt).coerceAtLeast(0L))
+            }
+
+            // When we reach here, it's either the buffer is full, or the timeout has been reached:
+            // send out the buffer and reset the state
+            send(buffer.toList())
+            buffer.clear()
+            bufferBeganAt = -1L
         }
     }
 }
