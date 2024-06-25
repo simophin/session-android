@@ -62,7 +62,7 @@ class ConversationViewModel(
     val invitingAdmin: Recipient?
         get() {
             val recipient = recipient ?: return null
-            if (!recipient.isClosedGroupRecipient) return null
+            if (!recipient.isClosedGroupV2Recipient) return null
 
             return repository.getInvitingAdmin(threadId)
         }
@@ -76,14 +76,14 @@ class ConversationViewModel(
     val closedGroupMembers: List<GroupMember>
         get() {
             val recipient = recipient ?: return emptyList()
-            if (!recipient.isClosedGroupRecipient) return emptyList()
+            if (!recipient.isClosedGroupV2Recipient) return emptyList()
             return storage.getMembers(recipient.address.serialize())
         }
 
     val isClosedGroupAdmin: Boolean
         get() {
             val recipient = recipient ?: return false
-            return !recipient.isClosedGroupRecipient ||
+            return !recipient.isClosedGroupV2Recipient ||
                     (closedGroupMembers.firstOrNull { it.sessionId == storage.getUserPublicKey() }?.admin ?: false)
         }
 
@@ -142,7 +142,7 @@ class ConversationViewModel(
     fun block() {
         // inviting admin will be true if this request is a closed group message request
         val recipient = invitingAdmin ?: recipient ?: return Log.w("Loki", "Recipient was null for block action")
-        if (recipient.isContactRecipient || recipient.isClosedGroupRecipient) {
+        if (recipient.isContactRecipient || recipient.isClosedGroupV2Recipient) {
             repository.setBlocked(threadId, recipient, true)
         }
     }

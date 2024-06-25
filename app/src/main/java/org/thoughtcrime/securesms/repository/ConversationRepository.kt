@@ -44,9 +44,6 @@ import org.thoughtcrime.securesms.database.model.ThreadRecord
 import org.thoughtcrime.securesms.dependencies.ConfigFactory
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import javax.inject.Inject
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
-import kotlin.coroutines.suspendCoroutine
 
 interface ConversationRepository {
     fun maybeGetRecipientForThreadId(threadId: Long): Recipient?
@@ -239,7 +236,7 @@ class DefaultConversationRepository @Inject constructor(
                 if (recipient.isLegacyClosedGroupRecipient) {
                     publicKey = GroupUtil.doubleDecodeGroupID(publicKey).toHexString()
                 }
-                if (recipient.isClosedGroupRecipient) {
+                if (recipient.isClosedGroupV2Recipient) {
                     // admin check internally, assume either admin or all belong to user
                     storage.sendGroupUpdateDeleteMessage(recipient.address.serialize(), listOf(serverHash))
                     continuation.resume(ResultOf.Success(Unit))
@@ -258,7 +255,7 @@ class DefaultConversationRepository @Inject constructor(
     }
 
     override fun buildUnsendRequest(recipient: Recipient, message: MessageRecord): UnsendRequest? {
-        if (recipient.isCommunityRecipient || recipient.isClosedGroupRecipient) return null
+        if (recipient.isCommunityRecipient || recipient.isClosedGroupV2Recipient) return null
         messageDataProvider.getServerHashForMessage(message.id, message.isMms) ?: return null
         return UnsendRequest(
             author = message.takeUnless { it.isOutgoing }?.run { individualRecipient.address.contactIdentifier() } ?: textSecurePreferences.getLocalNumber(),
@@ -340,7 +337,7 @@ class DefaultConversationRepository @Inject constructor(
             while (reader.next != null) {
                 deleteMessageRequest(reader.current)
                 val recipient = reader.current.recipient
-                if (block && !recipient.isClosedGroupRecipient) {
+                if (block && !recipient.isClosedGroupV2Recipient) {
                     setBlocked(reader.current.threadId, recipient, true)
                 }
             }
@@ -350,7 +347,7 @@ class DefaultConversationRepository @Inject constructor(
 
     override suspend fun acceptMessageRequest(threadId: Long, recipient: Recipient): ResultOf<Unit> = suspendCoroutine { continuation ->
         storage.setRecipientApproved(recipient, true)
-        if (recipient.isClosedGroupRecipient) {
+        if (recipient.isClosedGroupV2Recipient) {
             storage.respondToClosedGroupInvitation(threadId, recipient, true)
         } else {
             val message = MessageRequestResponse(true)
@@ -366,7 +363,7 @@ class DefaultConversationRepository @Inject constructor(
 
     override fun declineMessageRequest(threadId: Long, recipient: Recipient) {
         sessionJobDb.cancelPendingMessageSendJobs(threadId)
-        if (recipient.isClosedGroupRecipient) {
+        if (recipient.isClosedGroupV2Recipient) {
             storage.respondToClosedGroupInvitation(threadId, recipient, false)
         } else {
             storage.deleteConversation(threadId)

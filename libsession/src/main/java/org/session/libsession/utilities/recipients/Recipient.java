@@ -326,7 +326,7 @@ public class Recipient implements RecipientModifiedListener {
     String sessionID = this.address.toString();
     if (isCommunityRecipient()) {
       return this.name;
-    } else if (isLegacyClosedGroupRecipient() || isClosedGroupRecipient()) {
+    } else if (isLegacyClosedGroupRecipient() || isClosedGroupV2Recipient()) {
       if (this.name == null) {
         List<String> names = new LinkedList<>();
         for (Recipient recipient : participants) {
@@ -483,8 +483,8 @@ public class Recipient implements RecipientModifiedListener {
     return address.isLegacyClosedGroup();
   }
 
-  public boolean isClosedGroupRecipient() {
-    return address.isClosedGroup();
+  public boolean isClosedGroupV2Recipient() {
+    return address.isClosedGroupV2();
   }
 
 

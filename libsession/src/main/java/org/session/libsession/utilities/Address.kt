@@ -22,7 +22,7 @@ class Address private constructor(address: String) : Parcelable, Comparable<Addr
         get() = GroupUtil.isEncodedGroup(address) || address.startsWith(IdPrefix.GROUP.value)
     val isLegacyClosedGroup: Boolean
         get() = GroupUtil.isLegacyClosedGroup(address)
-    val isClosedGroup: Boolean
+    val isClosedGroupV2: Boolean
         get() = address.startsWith(IdPrefix.GROUP.value)
     val isCommunity: Boolean
         get() = GroupUtil.isCommunity(address)

@@ -96,12 +96,12 @@ class ConversationSettingsActivity: PassphraseRequiredActionBarActivity(), View.
             else -> recipient.toShortString()
         }
         // Setup group description (if group)
-        binding.conversationSubtitle.isVisible = recipient.isClosedGroupRecipient.apply {
+        binding.conversationSubtitle.isVisible = recipient.isClosedGroupV2Recipient.apply {
             binding.conversationSubtitle.text = viewModel.closedGroupInfo()?.description
         }
 
         // Toggle group-specific settings
-        val areGroupOptionsVisible = recipient.isClosedGroupRecipient || recipient.isLegacyClosedGroupRecipient
+        val areGroupOptionsVisible = recipient.isClosedGroupV2Recipient || recipient.isLegacyClosedGroupRecipient
         groupOptions.forEach { v ->
             v.isVisible = areGroupOptionsVisible
         }
@@ -213,7 +213,7 @@ class ConversationSettingsActivity: PassphraseRequiredActionBarActivity(), View.
                             Log.e("Loki", e)
                         }
                     }
-                } else if (threadRecipient.isClosedGroupRecipient) {
+                } else if (threadRecipient.isClosedGroupV2Recipient) {
                     val groupInfo = viewModel.closedGroupInfo()
                     showSessionDialog {
 
@@ -249,7 +249,7 @@ class ConversationSettingsActivity: PassphraseRequiredActionBarActivity(), View.
                         val groupID: String = recipient.address.toGroupString()
                         putExtra(EditLegacyClosedGroupActivity.groupIDKey, groupID)
                     }
-                    recipient.isClosedGroupRecipient -> Intent(this, EditClosedGroupActivity::class.java).apply {
+                    recipient.isClosedGroupV2Recipient -> Intent(this, EditClosedGroupActivity::class.java).apply {
                         val groupID = recipient.address.serialize()
                         putExtra(EditClosedGroupActivity.groupIDKey, groupID)
                     }

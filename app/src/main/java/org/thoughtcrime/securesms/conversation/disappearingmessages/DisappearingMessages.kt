@@ -40,7 +40,7 @@ class DisappearingMessages @Inject constructor(
 
         messageExpirationManager.insertExpirationTimerMessage(message)
         MessageSender.send(message, address)
-        if (address.isClosedGroup) {
+        if (address.isClosedGroupV2) {
             ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(Destination.from(address))
         } else {
             ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
@@ -65,7 +65,7 @@ class DisappearingMessages @Inject constructor(
                 text = if (message.expiresIn == 0L) R.string.dialog_disappearing_messages_follow_setting_confirm else R.string.dialog_disappearing_messages_follow_setting_set,
                 contentDescriptionRes = if (message.expiresIn == 0L) R.string.AccessibilityId_confirm else R.string.AccessibilityId_set_button
         ) {
-            set(message.threadId, message.recipient.address, message.expiryMode, message.recipient.isClosedGroupRecipient)
+            set(message.threadId, message.recipient.address, message.expiryMode, message.recipient.isClosedGroupV2Recipient)
         }
         cancelButton()
     }

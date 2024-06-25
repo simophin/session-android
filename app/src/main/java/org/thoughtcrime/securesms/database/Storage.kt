@@ -159,7 +159,7 @@ open class Storage(
                         volatile.set(newVolatileParams)
                     }
                 }
-                address.isClosedGroup -> {
+                address.isClosedGroupV2 -> {
                     val sessionId = address.serialize()
                     groups.getClosedGroup(sessionId) ?: return Log.d("Closed group doesn't exist locally", NullPointerException())
                     val conversation = Conversation.ClosedGroup(
@@ -202,7 +202,7 @@ open class Storage(
             } else if (address.isCommunity) {
                 // these should be removed in the group leave / handling new configs
                 Log.w("Loki", "Thread delete called for open group address, expecting to be handled elsewhere")
-            } else if (address.isClosedGroup) {
+            } else if (address.isClosedGroupV2) {
                 Log.w("Loki", "Thread delete called for closed group address, expecting to be handled elsewhere")
             }
         } else {
@@ -342,7 +342,7 @@ open class Storage(
                 val convo = when {
                     // recipient closed group
                     recipient.isLegacyClosedGroupRecipient -> config.getOrConstructLegacyGroup(GroupUtil.doubleDecodeGroupId(recipient.address.serialize()))
-                    recipient.isClosedGroupRecipient -> config.getOrConstructClosedGroup(recipient.address.serialize())
+                    recipient.isClosedGroupV2Recipient -> config.getOrConstructClosedGroup(recipient.address.serialize())
                     // recipient is open group
                     recipient.isCommunityRecipient -> {
                         val openGroupJoinUrl = getOpenGroup(threadId)?.joinURL ?: return
@@ -2274,7 +2274,7 @@ open class Storage(
                     )
                     groups.set(newGroupInfo)
                 }
-                threadRecipient.isClosedGroupRecipient -> {
+                threadRecipient.isClosedGroupV2Recipient -> {
                     val newGroupInfo = groups.getOrConstructClosedGroup(threadRecipient.address.serialize()).copy (
                         priority = if (isPinned) PRIORITY_PINNED else PRIORITY_VISIBLE
                     )
@@ -2507,7 +2507,7 @@ open class Storage(
     }
 
     override fun getRecipientApproved(address: Address): Boolean {
-        return address.isClosedGroup || DatabaseComponent.get(context).recipientDatabase().getApproved(address)
+        return address.isClosedGroupV2 || DatabaseComponent.get(context).recipientDatabase().getApproved(address)
     }
 
     override fun setRecipientApproved(recipient: Recipient, approved: Boolean) {
@@ -2685,7 +2685,7 @@ open class Storage(
                 recipient.address.serialize().takeIf { it.startsWith(IdPrefix.STANDARD.value) }
                     ?.let { configFactory.contacts?.get(it)?.expiryMode }
             }
-            recipient.isClosedGroupRecipient -> {
+            recipient.isClosedGroupV2Recipient -> {
                 configFactory.getGroupInfoConfig(SessionId.from(recipient.address.serialize()))?.getExpiryTimer()?.let {
                     if (it == 0L) ExpiryMode.NONE else ExpiryMode.AfterSend(it)
                 }
@@ -2724,7 +2724,7 @@ open class Storage(
             val groupInfo = userGroups.getLegacyGroupInfo(groupPublicKey)
                 ?.copy(disappearingTimer = expiryMode.expirySeconds) ?: return
             userGroups.set(groupInfo)
-        } else if (recipient.isClosedGroupRecipient) {
+        } else if (recipient.isClosedGroupV2Recipient) {
             val groupSessionId = SessionId.from(recipient.address.serialize())
             val groupInfo = configFactory.getGroupInfoConfig(groupSessionId) ?: return
             groupInfo.setExpiryTimer(expiryMode.expirySeconds)

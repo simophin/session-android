@@ -135,7 +135,7 @@ public class MediaOverviewActivity extends PassphraseRequiredActionBarActivity i
             Util.runOnMain(() -> actionBar.setTitle(recipient.toShortString()));
         });
         View clearButton = toolbar.findViewById(R.id.clearMedia);
-        if (!this.recipient.isClosedGroupRecipient()) {
+        if (!this.recipient.isClosedGroupV2Recipient()) {
             clearButton.setVisibility(View.GONE);
         } else {
             String userPublicKey = TextSecurePreferences.getLocalNumber(this);

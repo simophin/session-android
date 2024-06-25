@@ -613,7 +613,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                             Log.e("Loki", e)
                         }
                     }
-                    if (recipient.address.isClosedGroup) {
+                    if (recipient.address.isClosedGroupV2) {
                         val groupLeave = LibSessionGroupLeavingJob(SessionId.from(recipient.address.serialize()), true)
                         JobQueue.shared.add(groupLeave)
                     }

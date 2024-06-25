@@ -44,7 +44,7 @@ class ConversationSettingsViewModel(
                 val group = storage.getGroup(recipient.address.toGroupString())
                 group?.admins?.contains(Address.fromSerialized(localUserAddress)) ?: false // this will have to be replaced for new closed groups
             }
-            recipient.isClosedGroupRecipient -> {
+            recipient.isClosedGroupV2Recipient -> {
                 val group = storage.getLibSessionClosedGroup(recipient.address.serialize()) ?: return@let false
                 group.hasAdminKey()
             }
@@ -69,7 +69,7 @@ class ConversationSettingsViewModel(
 
     fun closedGroupInfo(): GroupDisplayInfo? = recipient
         ?.address
-        ?.takeIf { it.isClosedGroup }
+        ?.takeIf { it.isClosedGroupV2 }
         ?.serialize()
         ?.let(storage::getClosedGroupDisplayInfo)
 

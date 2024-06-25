@@ -204,7 +204,7 @@ object ConfigurationMessageUtilities {
                         val (base, room, pubKey) = BaseCommunityInfo.parseFullUrl(openGroup.joinURL) ?: continue
                         convoConfig.getOrConstructCommunity(base, room, pubKey)
                     }
-                    recipient.isClosedGroupRecipient -> {
+                    recipient.isClosedGroupV2Recipient -> {
                         // It's probably safe to assume there will never be a case where new closed groups will ever be there before a dump is created...
                         // but just in case...
                         convoConfig.getOrConstructClosedGroup(recipient.address.serialize())

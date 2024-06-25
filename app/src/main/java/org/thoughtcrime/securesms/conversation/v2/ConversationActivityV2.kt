@@ -911,17 +911,17 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         binding.inputBar.showMediaControls = !isOutgoingMessageRequestThread()
         binding.messageRequestBar.isVisible = isIncomingMessageRequestThread()
         binding.sendAcceptsTextView.setText(
-            if (recipient.isClosedGroupRecipient) R.string.message_requests_send_group_notice
+            if (recipient.isClosedGroupV2Recipient) R.string.message_requests_send_group_notice
             else R.string.message_requests_send_notice
         )
         binding.acceptMessageRequestButton.setOnClickListener {
             acceptMessageRequest()
         }
-        binding.messageRequestBlock.isVisible = recipient.isContactRecipient || (recipient.isClosedGroupRecipient && viewModel.invitingAdmin != null)
+        binding.messageRequestBlock.isVisible = recipient.isContactRecipient || (recipient.isClosedGroupV2Recipient && viewModel.invitingAdmin != null)
         binding.messageRequestBlock.setOnClickListener {
             block(deleteThread = true)
         }
-        if (recipient.isClosedGroupRecipient) {
+        if (recipient.isClosedGroupV2Recipient) {
             binding.declineMessageRequestButton.setText(R.string.delete)
         }
         binding.declineMessageRequestButton.setOnClickListener {
@@ -950,7 +950,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     private fun isIncomingMessageRequestThread(): Boolean = viewModel.recipient?.run {
         !isLegacyClosedGroupRecipient && !isApproved && !isLocalNumber &&
         !threadDb.getLastSeenAndHasSent(viewModel.threadId).second() &&
-                        (threadDb.getMessageCount(viewModel.threadId) > 0 || isClosedGroupRecipient)
+                        (threadDb.getMessageCount(viewModel.threadId) > 0 || isClosedGroupV2Recipient)
     } ?: false
 
     override fun inputBarEditTextContentChanged(newContent: CharSequence) {
@@ -1228,7 +1228,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val body: String
         val invitingAdmin = viewModel.invitingAdmin
 
-        if (recipient.isClosedGroupRecipient && invitingAdmin != null) {
+        if (recipient.isClosedGroupV2Recipient && invitingAdmin != null) {
             // show the block user if we have them
             title = getString(R.string.RecipientPreferenceActivity_block)
             body = Phrase.from(this, R.string.RecipientPreferenceActivity_block_user_body)

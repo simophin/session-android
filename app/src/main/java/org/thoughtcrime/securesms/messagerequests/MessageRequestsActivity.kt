@@ -107,7 +107,7 @@ class MessageRequestsActivity : PassphraseRequiredActionBarActivity(), Conversat
         showSessionDialog {
             title(R.string.decline)
             text(resources.getString(R.string.message_requests_decline_message))
-            if (thread.recipient.isClosedGroupRecipient) {
+            if (thread.recipient.isClosedGroupV2Recipient) {
                 destructiveButton(R.string.delete, contentDescriptionRes = R.string.delete) { doDecline() }
             } else {
                 destructiveButton(R.string.decline, contentDescriptionRes = R.string.decline) { doDecline() }

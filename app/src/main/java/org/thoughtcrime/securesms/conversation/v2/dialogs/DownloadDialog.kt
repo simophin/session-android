@@ -36,7 +36,7 @@ class AutoDownloadDialog(private val threadRecipient: Recipient,
         val displayName = when {
             threadRecipient.isCommunityRecipient -> storage.getOpenGroup(threadId)?.name ?: "UNKNOWN"
             threadRecipient.isLegacyClosedGroupRecipient -> storage.getGroup(threadRecipient.address.toGroupString())?.title ?: "UNKNOWN"
-            threadRecipient.isClosedGroupRecipient -> threadRecipient.name ?: "UNKNOWN"
+            threadRecipient.isClosedGroupV2Recipient -> threadRecipient.name ?: "UNKNOWN"
             else -> storage.getContactWithSessionID(threadRecipient.address.serialize())?.displayName(Contact.ContactContext.REGULAR) ?: "UNKNOWN"
         }
         title(resources.getString(R.string.dialog_auto_download_title))

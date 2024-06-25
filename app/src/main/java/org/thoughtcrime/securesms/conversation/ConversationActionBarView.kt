@@ -81,7 +81,7 @@ class ConversationActionBarView @JvmOverloads constructor(
     ) {
         this.delegate = delegate
         binding.profilePictureView.layoutParams = resources.getDimensionPixelSize(
-            if (recipient.isClosedGroupRecipient) R.dimen.medium_profile_picture_size else R.dimen.small_profile_picture_size
+            if (recipient.isClosedGroupV2Recipient) R.dimen.medium_profile_picture_size else R.dimen.small_profile_picture_size
         ).let { LayoutParams(it, it) }
         MentionManagerUtilities.populateUserPublicKeyCacheIfNeeded(threadId, context)
         update(recipient, openGroup, config)
@@ -125,7 +125,7 @@ class ConversationActionBarView @JvmOverloads constructor(
                 val userCount = openGroup?.let { lokiApiDb.getUserCount(it.room, it.server) } ?: 0
                 context.getString(R.string.ConversationActivity_active_member_count, userCount)
             } else {
-                val userCount = if (recipient.isClosedGroupRecipient) {
+                val userCount = if (recipient.isClosedGroupV2Recipient) {
                     storage.getMembers(recipient.address.serialize()).size
                 } else { // legacy closed groups
                     groupDb.getGroupMemberAddresses(recipient.address.toGroupString(), true).size

@@ -55,7 +55,7 @@ class ControlMessageView : LinearLayout {
 
                     val threadRecipient = DatabaseComponent.get(context).threadDatabase().getRecipientForThreadId(message.threadId)
 
-                    if (threadRecipient?.isClosedGroupRecipient == true) {
+                    if (threadRecipient?.isClosedGroupV2Recipient == true) {
                         expirationTimerView.setTimerIcon()
                     } else {
                         expirationTimerView.setExpirationTime(message.expireStarted, message.expiresIn)

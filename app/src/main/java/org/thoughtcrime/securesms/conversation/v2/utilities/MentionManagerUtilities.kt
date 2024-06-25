@@ -17,7 +17,7 @@ object MentionManagerUtilities {
                 val members = DatabaseComponent.get(context).groupDatabase().getGroupMembers(recipient.address.toGroupString(), false).map { it.address.serialize() }
                 result.addAll(members)
             }
-            recipient.address.isClosedGroup -> {
+            recipient.address.isClosedGroupV2 -> {
                 val members = storage.getMembers(recipient.address.serialize())
                  result.addAll(members.map { it.sessionId })
             }

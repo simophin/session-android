@@ -356,7 +356,7 @@ fun MessageReceiver.handleVisibleMessage(
         )
     }
     // Handle group invite response if new closed group
-    if (threadRecipient?.isClosedGroupRecipient == true) {
+    if (threadRecipient?.isClosedGroupV2Recipient == true) {
         storage.setGroupInviteCompleteIfNeeded(
             approved = true,
             recipient.address.serialize(),

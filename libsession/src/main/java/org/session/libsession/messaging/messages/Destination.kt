@@ -61,7 +61,7 @@ sealed class Destination {
                         groupInboxId.last()
                     )
                 }
-                address.isClosedGroup -> {
+                address.isClosedGroupV2 -> {
                     ClosedGroup(address.serialize())
                 }
                 else -> {
