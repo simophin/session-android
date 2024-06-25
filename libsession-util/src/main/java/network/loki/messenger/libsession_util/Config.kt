@@ -40,11 +40,6 @@ sealed class ConfigBase(pointer: Long): Config(pointer) {
             is GroupMembersConfig -> Kind.CLOSED_GROUP_MEMBERS
         }
 
-        private const val ACTIVATE_TIME = 1690761600000
-
-        fun isNewConfigEnabled(forced: Boolean, currentTime: Long) =
-            forced || currentTime >= ACTIVATE_TIME
-
         const val PRIORITY_HIDDEN = -1L
         const val PRIORITY_VISIBLE = 0L
         const val PRIORITY_PINNED = 1L

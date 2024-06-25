@@ -3,6 +3,7 @@ package org.session.libsession.messaging.jobs
 import network.loki.messenger.libsession_util.Config
 import network.loki.messenger.libsession_util.ConfigBase
 import network.loki.messenger.libsession_util.GroupKeysConfig
+import network.loki.messenger.libsession_util.ConfigBase.Companion.protoKindFor
 import nl.komponents.kovenant.functional.bind
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.messages.Destination

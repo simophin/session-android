@@ -88,11 +88,6 @@ class ConfigFactory(
 
     override val user: UserProfile?
         get() = synchronizedWithLog(userLock) {
-            if (!ConfigBase.isNewConfigEnabled(
-                    isConfigForcedOn,
-                    SnodeAPI.nowWithOffset
-                )
-            ) return null
             if (_userConfig == null) {
                 val (secretKey, publicKey) = maybeGetUserInfo() ?: return null
                 val userDump = configDatabase.retrieveConfigAndHashes(
@@ -112,11 +107,6 @@ class ConfigFactory(
 
     override val contacts: Contacts?
         get() = synchronizedWithLog(contactsLock) {
-            if (!ConfigBase.isNewConfigEnabled(
-                    isConfigForcedOn,
-                    SnodeAPI.nowWithOffset
-                )
-            ) return null
             if (_contacts == null) {
                 val (secretKey, publicKey) = maybeGetUserInfo() ?: return null
                 val contactsDump = configDatabase.retrieveConfigAndHashes(
@@ -136,11 +126,6 @@ class ConfigFactory(
 
     override val convoVolatile: ConversationVolatileConfig?
         get() = synchronizedWithLog(convoVolatileLock) {
-            if (!ConfigBase.isNewConfigEnabled(
-                    isConfigForcedOn,
-                    SnodeAPI.nowWithOffset
-                )
-            ) return null
             if (_convoVolatileConfig == null) {
                 val (secretKey, publicKey) = maybeGetUserInfo() ?: return null
                 val convoDump = configDatabase.retrieveConfigAndHashes(
@@ -161,11 +146,6 @@ class ConfigFactory(
 
     override val userGroups: UserGroupsConfig?
         get() = synchronizedWithLog(userGroupsLock) {
-            if (!ConfigBase.isNewConfigEnabled(
-                    isConfigForcedOn,
-                    SnodeAPI.nowWithOffset
-                )
-            ) return null
             if (_userGroups == null) {
                 val (secretKey, publicKey) = maybeGetUserInfo() ?: return null
                 val userGroupsDump = configDatabase.retrieveConfigAndHashes(
@@ -373,8 +353,6 @@ class ConfigFactory(
         openGroupId: String?,
         visibleOnly: Boolean
     ): Boolean {
-        if (!ConfigBase.isNewConfigEnabled(isConfigForcedOn, SnodeAPI.nowWithOffset)) return true
-
         val (_, userPublicKey) = maybeGetUserInfo() ?: return true
 
         if (openGroupId != null) {
@@ -413,8 +391,6 @@ class ConfigFactory(
         publicKey: String,
         changeTimestampMs: Long
     ): Boolean {
-        if (!ConfigBase.isNewConfigEnabled(isConfigForcedOn, SnodeAPI.nowWithOffset)) return true
-
         val lastUpdateTimestampMs =
             configDatabase.retrieveConfigLastUpdateTimestamp(variant, publicKey)
 

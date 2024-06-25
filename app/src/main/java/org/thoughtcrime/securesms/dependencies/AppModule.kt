@@ -25,7 +25,6 @@ abstract class AppModule {
 
     @Binds
     abstract fun bindConversationRepository(repository: DefaultConversationRepository): ConversationRepository
-
 }
 
 @Module
@@ -43,4 +42,5 @@ class ToasterModule {
 @InstallIn(SingletonComponent::class)
 interface AppComponent {
     fun getPrefs(): TextSecurePreferences
+
 }

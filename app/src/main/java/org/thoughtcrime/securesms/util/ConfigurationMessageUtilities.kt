@@ -16,8 +16,6 @@ import org.session.libsession.messaging.jobs.ConfigurationSyncJob
 import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.messaging.messages.Destination
 import org.session.libsession.messaging.messages.control.ConfigurationMessage
-import org.session.libsession.messaging.sending_receiving.MessageSender
-import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.TextSecurePreferences
@@ -74,31 +72,7 @@ object ConfigurationMessageUtilities {
     fun syncConfigurationIfNeeded(context: Context) {
         // add if check here to schedule new config job process and return early
         val userPublicKey = TextSecurePreferences.getLocalNumber(context) ?: return
-        val forcedConfig = TextSecurePreferences.hasForcedNewConfig(context)
-        val currentTime = SnodeAPI.nowWithOffset
-        if (ConfigBase.isNewConfigEnabled(forcedConfig, currentTime)) {
-            scheduleConfigSync(Destination.Contact(userPublicKey))
-            return
-        }
-        val lastSyncTime = TextSecurePreferences.getLastConfigurationSyncTime(context)
-        val now = System.currentTimeMillis()
-        if (now - lastSyncTime < 7 * 24 * 60 * 60 * 1000) return
-        val contacts = ContactUtilities.getAllContacts(context).filter { recipient ->
-            !recipient.name.isNullOrEmpty() && !recipient.isLocalNumber && recipient.address.serialize().isNotEmpty()
-        }.map { recipient ->
-            ConfigurationMessage.Contact(
-                publicKey = recipient.address.serialize(),
-                name = recipient.name!!,
-                profilePicture = recipient.profileAvatar,
-                profileKey = recipient.profileKey,
-                isApproved = recipient.isApproved,
-                isBlocked = recipient.isBlocked,
-                didApproveMe = recipient.hasApprovedMe()
-            )
-        }
-        val configurationMessage = ConfigurationMessage.getCurrent(contacts) ?: return
-        MessageSender.send(configurationMessage, Address.fromSerialized(userPublicKey))
-        TextSecurePreferences.setLastConfigurationSyncTime(context, now)
+        scheduleConfigSync(Destination.Contact(userPublicKey))
     }
 
     fun forceSyncConfigurationNowIfNeeded(destination: Destination) {
@@ -107,15 +81,10 @@ object ConfigurationMessageUtilities {
 
 
     fun forceSyncConfigurationNowIfNeeded(context: Context) {
-        // add if check here to schedule new config job process and return early
         val userPublicKey = TextSecurePreferences.getLocalNumber(context) ?: return Log.e("Loki", NullPointerException("User Public Key is null"))
-        val forcedConfig = TextSecurePreferences.hasForcedNewConfig(context)
-        val currentTime = SnodeAPI.nowWithOffset
-        if (ConfigBase.isNewConfigEnabled(forcedConfig, currentTime)) {
-            // schedule job if none exist
-            // don't schedule job if we already have one
-            scheduleConfigSync(Destination.Contact(userPublicKey))
-        }
+        // schedule job if none exist
+        // don't schedule job if we already have one
+        scheduleConfigSync(Destination.Contact(userPublicKey))
     }
 
     private fun maybeUserSecretKey() = MessagingModuleConfiguration.shared.getUserED25519KeyPair()?.secretKey?.asBytes
