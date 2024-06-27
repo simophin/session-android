@@ -126,7 +126,7 @@ class Poller(private val configFactory: ConfigFactoryProtocol) {
         if (forConfigObject == null) return
 
         val messages = rawMessages["messages"] as? List<*>
-        val processed = if (messages != null && messages.isNotEmpty()) {
+        val processed = if (!messages.isNullOrEmpty()) {
             SnodeAPI.updateLastMessageHashValueIfPossible(snode, userPublicKey, messages, namespace)
             SnodeAPI.removeDuplicates(userPublicKey, messages, namespace, true).mapNotNull { messageBody ->
                 val rawMessageAsJSON = messageBody as? Map<*, *> ?: return@mapNotNull null
