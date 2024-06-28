@@ -41,7 +41,7 @@ class ConversationViewModelTest: BaseViewModelTest() {
     private lateinit var messageRecord: MessageRecord
 
     private val viewModel: ConversationViewModel by lazy {
-        ConversationViewModel(threadId, edKeyPair, repository, storage, mmsDatabase)
+        ConversationViewModel(threadId, edKeyPair, repository, storage, mock(), mmsDatabase)
     }
 
     @Before
