@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.session.libsession.database.MessageDataProvider
 import org.session.libsession.messaging.messages.ExpirationConfiguration
 import org.session.libsession.messaging.open_groups.OpenGroup
 import org.session.libsession.messaging.open_groups.OpenGroupApi
@@ -36,6 +37,7 @@ class ConversationViewModel(
     val edKeyPair: KeyPair?,
     private val repository: ConversationRepository,
     private val storage: Storage,
+    private val messageDataProvider: MessageDataProvider,
     database: MmsDatabase,
 ) : ViewModel() {
 
@@ -88,10 +90,10 @@ class ConversationViewModel(
         // allow reactions if the open group is null (normal conversations) or the open group's capabilities include reactions
         get() = (openGroup == null || OpenGroupApi.Capability.REACTIONS.name.lowercase() in serverCapabilities)
 
-    private val attachmentDownloadHelper = AttachmentDownloadHelper(
+    private val attachmentDownloadHandler = AttachmentDownloadHandler(
         storage = storage,
-        mmsDatabase = database,
-        scope = viewModelScope
+        messageDataProvider = messageDataProvider,
+        scope = viewModelScope,
     )
 
     init {
@@ -267,7 +269,7 @@ class ConversationViewModel(
     }
 
     fun onAttachmentDownloadRequest(attachment: DatabaseAttachment) {
-        attachmentDownloadHelper.onAttachmentDownloadRequest(attachment)
+        attachmentDownloadHandler.onAttachmentDownloadRequest(attachment)
     }
 
     @dagger.assisted.AssistedFactory
@@ -282,10 +284,18 @@ class ConversationViewModel(
         private val repository: ConversationRepository,
         private val storage: Storage,
         private val mmsDatabase: MmsDatabase,
+        private val messageDataProvider: MessageDataProvider,
     ) : ViewModelProvider.Factory {
 
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return ConversationViewModel(threadId, edKeyPair, repository, storage, mmsDatabase) as T
+            return ConversationViewModel(
+                threadId = threadId,
+                edKeyPair = edKeyPair,
+                repository = repository,
+                storage = storage,
+                messageDataProvider = messageDataProvider,
+                database = mmsDatabase
+            ) as T
         }
     }
 }

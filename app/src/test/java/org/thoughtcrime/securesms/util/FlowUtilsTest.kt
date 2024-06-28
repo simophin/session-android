@@ -4,11 +4,12 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.toCollection
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-class FlowUtilsKtTest {
+class FlowUtilsTest {
 
     @Test
     fun `timedBuffer should emit buffer when it's full`() = runTest {
@@ -18,7 +19,7 @@ class FlowUtilsKtTest {
         val maxItems = 5
 
         // When
-        val result = flow.timedBuffer(timeoutMillis, maxItems).toCollection(mutableListOf())
+        val result = flow.timedBuffer(timeoutMillis, maxItems).toList()
 
         // Then
         assertEquals(2, result.size)
@@ -41,7 +42,7 @@ class FlowUtilsKtTest {
         val maxItems = 5
 
         // When
-        val result = flow.timedBuffer(timeoutMillis, maxItems).toCollection(mutableListOf())
+        val result = flow.timedBuffer(timeoutMillis, maxItems).toList()
 
         // Then
         assertEquals(2, result.size)

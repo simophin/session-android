@@ -18,14 +18,17 @@ fun <T> Flow<T>.timedBuffer(timeoutMillis: Long, maxItems: Int): Flow<List<T>> {
         var bufferBeganAt = -1L
 
         collectLatest { value ->
-            if (bufferBeganAt < 0) {
+            if (buffer.isEmpty()) {
                 bufferBeganAt = System.currentTimeMillis()
             }
 
             buffer.add(value)
 
             if (buffer.size < maxItems) {
-                // If the buffer is not full, wait until the time limit is reached
+                // If the buffer is not full, wait until the time limit is reached.
+                // The delay here, as a suspension point, will be cancelled by `collectLatest`,
+                // if another item is collected while we are waiting for the `delay` to complete.
+                // Once the delay is cancelled, another round of `collectLatest` will be restarted.
                 delay((System.currentTimeMillis() + timeoutMillis - bufferBeganAt).coerceAtLeast(0L))
             }
 
@@ -33,7 +36,6 @@ fun <T> Flow<T>.timedBuffer(timeoutMillis: Long, maxItems: Int): Flow<List<T>> {
             // send out the buffer and reset the state
             send(buffer.toList())
             buffer.clear()
-            bufferBeganAt = -1L
         }
     }
 }
