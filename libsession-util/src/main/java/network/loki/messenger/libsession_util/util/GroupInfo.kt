@@ -14,6 +14,20 @@ sealed class GroupInfo {
         val invited: Boolean,
     ): GroupInfo() {
 
+        val kicked: Boolean
+            get() = adminKey.isEmpty() && authData.isEmpty()
+
+        fun setKicked(): ClosedGroupInfo {
+            if (kicked) {
+                return this
+            }
+
+            return copy(
+                adminKey = ByteArray(0),
+                authData = ByteArray(0),
+            )
+        }
+
         companion object {
             private const val AUTH_DATA_LENGTH = 100
             fun isAuthData(byteArray: ByteArray) = byteArray.size == AUTH_DATA_LENGTH
