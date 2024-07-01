@@ -15,16 +15,21 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import network.loki.messenger.libsession_util.util.GroupMember
 import org.session.libsession.database.StorageProtocol
+import org.session.libsession.database.MessageDataProvider
 import org.session.libsession.messaging.messages.ExpirationConfiguration
 import org.session.libsession.messaging.open_groups.OpenGroup
 import org.session.libsession.messaging.open_groups.OpenGroupApi
+import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAttachment
+import org.session.libsession.messaging.utilities.SessionId
 import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.Log
+import org.thoughtcrime.securesms.database.MmsDatabase
 import org.session.libsignal.utilities.SessionId
 import org.thoughtcrime.securesms.audio.AudioSlidePlayer
+import org.thoughtcrime.securesms.database.Storage
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.database.model.MmsMessageRecord
 import org.thoughtcrime.securesms.repository.ConversationRepository
@@ -34,7 +39,9 @@ class ConversationViewModel(
     val threadId: Long,
     val edKeyPair: KeyPair?,
     private val repository: ConversationRepository,
-    private val storage: StorageProtocol
+    private val storage: StorageProtocol,
+    private val messageDataProvider: MessageDataProvider,
+    database: MmsDatabase,
 ) : ViewModel() {
 
     val showSendAfterApprovalText: Boolean
@@ -109,6 +116,11 @@ class ConversationViewModel(
         // allow reactions if the open group is null (normal conversations) or the open group's capabilities include reactions
         get() = (openGroup == null || OpenGroupApi.Capability.REACTIONS.name.lowercase() in serverCapabilities)
 
+    private val attachmentDownloadHandler = AttachmentDownloadHandler(
+        storage = storage,
+        messageDataProvider = messageDataProvider,
+        scope = viewModelScope,
+    )
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
@@ -261,7 +273,7 @@ class ConversationViewModel(
             currentUiState.copy(uiMessages = messages)
         }
     }
-    
+
     fun messageShown(messageId: Long) {
         _uiState.update { currentUiState ->
             val messages = currentUiState.uiMessages.filterNot { it.id == messageId }
@@ -284,6 +296,10 @@ class ConversationViewModel(
         storage.getLastLegacyRecipient(address.serialize())?.let { Recipient.from(context, Address.fromSerialized(it), false) }
     }
 
+    fun onAttachmentDownloadRequest(attachment: DatabaseAttachment) {
+        attachmentDownloadHandler.onAttachmentDownloadRequest(attachment)
+    }
+
     @dagger.assisted.AssistedFactory
     interface AssistedFactory {
         fun create(threadId: Long, edKeyPair: KeyPair?): Factory
@@ -294,11 +310,20 @@ class ConversationViewModel(
         @Assisted private val threadId: Long,
         @Assisted private val edKeyPair: KeyPair?,
         private val repository: ConversationRepository,
-        private val storage: StorageProtocol
+        private val storage: StorageProtocol,
+        private val mmsDatabase: MmsDatabase,
+        private val messageDataProvider: MessageDataProvider,
     ) : ViewModelProvider.Factory {
 
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return ConversationViewModel(threadId, edKeyPair, repository, storage) as T
+            return ConversationViewModel(
+                threadId = threadId,
+                edKeyPair = edKeyPair,
+                repository = repository,
+                storage = storage,
+                messageDataProvider = messageDataProvider,
+                database = mmsDatabase
+            ) as T
         }
     }
 }

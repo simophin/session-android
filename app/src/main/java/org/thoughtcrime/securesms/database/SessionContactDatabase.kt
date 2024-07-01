@@ -3,6 +3,8 @@ package org.thoughtcrime.securesms.database
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
+import androidx.core.database.getStringOrNull
+import org.json.JSONArray
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsignal.utilities.Base64
 import org.session.libsignal.utilities.IdPrefix
@@ -38,6 +40,15 @@ class SessionContactDatabase(context: Context, helper: SQLCipherOpenHelper) : Da
         return database.get(sessionContactTable, "${Companion.sessionID} = ?", arrayOf( sessionID )) { cursor ->
             contactFromCursor(cursor)
         }
+    }
+
+    fun getContacts(sessionIDs: Collection<String>): List<Contact> {
+        val database = databaseHelper.readableDatabase
+        return database.getAll(
+            sessionContactTable,
+            "$sessionID IN (SELECT value FROM json_each(?))",
+            arrayOf(JSONArray(sessionIDs).toString())
+        ) { cursor -> contactFromCursor(cursor) }
     }
 
     fun getAllContacts(): Set<Contact> {

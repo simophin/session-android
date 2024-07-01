@@ -56,6 +56,7 @@ import kotlinx.coroutines.launch
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewVisibleMessageContentBinding
 import org.session.libsession.database.StorageProtocol
+import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAttachment
 import org.thoughtcrime.securesms.MediaPreviewActivity.getPreviewIntent
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.database.Storage
@@ -150,7 +151,7 @@ fun MessageDetails(
     onResend: (() -> Unit)? = null,
     onDelete: () -> Unit = {},
     onClickImage: (Int) -> Unit = {},
-    onAttachmentNeedsDownload: (Long, Long) -> Unit = { _, _ -> }
+    onAttachmentNeedsDownload: (DatabaseAttachment) -> Unit = { _ -> }
 ) {
     Column(
         modifier = Modifier
