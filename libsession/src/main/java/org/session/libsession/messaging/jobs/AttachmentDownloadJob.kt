@@ -66,8 +66,7 @@ class AttachmentDownloadJob(val attachmentID: Long, val databaseMessageID: Long)
             val sender = messageDataProvider.getIndividualRecipientForMms(databaseMessageID)?.address?.serialize()
                 ?: return false
 
-            // you can't be eligible without a contact entry (keeping in mind that a contact in this
-            // case is not 'phone contact', which is represented by 'isTrusted')
+            // you can't be eligible without a contact entry
             val contact = storage.getContactWithSessionID(sender) ?: return false
 
             // we are eligible if we are receiving a group message or the contact is trusted
