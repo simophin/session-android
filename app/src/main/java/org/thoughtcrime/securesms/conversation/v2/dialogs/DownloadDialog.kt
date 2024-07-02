@@ -11,10 +11,12 @@ import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.R
 import org.session.libsession.database.StorageProtocol
 import org.session.libsession.messaging.contacts.Contact
+import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAttachment
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.createSessionDialog
 import org.thoughtcrime.securesms.database.SessionContactDatabase
+import org.thoughtcrime.securesms.util.createAndStartAttachmentDownload
 import javax.inject.Inject
 
 /** Shown when receiving media from a contact for the first time, to confirm that
@@ -48,14 +50,14 @@ class AutoDownloadDialog(private val threadRecipient: Recipient,
         text(spannable)
 
         button(R.string.dialog_download_button_title, R.string.AccessibilityId_download_media) {
-            setAutoDownload(true)
+            setAutoDownload()
         }
-        cancelButton {
-            setAutoDownload(false)
-        }
+
+        cancelButton {  }
     }
 
-    private fun setAutoDownload(shouldDownload: Boolean) {
-        storage.setAutoDownloadAttachments(threadRecipient, shouldDownload)
+    private fun setAutoDownload() {
+        storage.setAutoDownloadAttachments(threadRecipient, true)
+        JobQueue.shared.createAndStartAttachmentDownload(databaseAttachment)
     }
 }

@@ -55,11 +55,9 @@ class PendingAttachmentView: LinearLayout {
 
     // region Interaction
     fun showDownloadDialog(threadRecipient: Recipient, attachment: DatabaseAttachment) {
-        JobQueue.shared.createAndStartAttachmentDownload(attachment)
-        if (!storage.hasAutoDownloadFlagBeenSet(threadRecipient)) {
+        if (!storage.shouldAutoDownloadAttachments(threadRecipient)) {
             // just download
             ActivityDispatcher.get(context)?.showDialog(AutoDownloadDialog(threadRecipient, attachment))
         }
     }
-
 }
