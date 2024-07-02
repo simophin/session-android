@@ -67,7 +67,7 @@ class MediaGalleryAdapter(private val itemClickListener: ItemClickListener): Rec
             val slide = MediaUtil.getSlideForAttachment(itemView.context, item.attachment)
 
             if (slide != null) {
-                binding.image.root.setImageResource(glide, slide, false, null)
+                binding.image.root.setImageResource(glide, slide, false)
             }
 
             binding.image.root.setOnClickListener { itemClickListener.onMediaClicked(item) }
